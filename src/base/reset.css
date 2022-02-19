@@ -65,7 +65,3 @@ button:not(:disabled) {
   padding: 0;
   border-style: none;
 }
-
-fieldset {
-  border: none;
-}
