@@ -12,7 +12,7 @@ specifiers:
   eslint-plugin-node: ^11.1.0
   eslint-plugin-prefer-let: ^3.0.1
   eslint-plugin-promise: ^6.0.0
-  nano-staged: ^0.5.0
+  nano-staged: ^0.6.0
   nanostores: ^0.5.10
   prettier: ^2.5.1
   simple-git-hooks: ^2.7.0
@@ -37,7 +37,7 @@ devDependencies:
   eslint-plugin-node: 11.1.0_eslint@8.9.0
   eslint-plugin-prefer-let: 3.0.1
   eslint-plugin-promise: 6.0.0_eslint@8.9.0
-  nano-staged: 0.5.0
+  nano-staged: 0.6.0
   prettier: 2.5.1
   simple-git-hooks: 2.7.0
   size-limit: 7.0.8
@@ -1708,8 +1708,8 @@ packages:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
     dev: true
 
-  /nano-staged/0.5.0:
-    resolution: {integrity: sha512-5jkhLvyZM974RmCyI8vt7zo0QK6GIAOCBe6e7L36awXIlG+40/5zJiDvESFrFmO4PhBCRm9lUlnH0SsWAFLDLg==}
+  /nano-staged/0.6.0:
+    resolution: {integrity: sha512-TqbdujUpBMwaBu582a5/BHlxTrs3Mu1DMk8KF2q38M0CTGiY34WRpwaQXTy5jRc5BXGjBCy4XByS69TSaS8WPw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
     dependencies:

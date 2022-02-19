@@ -27,7 +27,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "eslint-plugin-promise": "^6.0.0",
-    "nano-staged": "^0.5.0",
+    "nano-staged": "^0.6.0",
     "prettier": "^2.5.1",
     "simple-git-hooks": "^2.7.0",
     "size-limit": "^7.0.8",
