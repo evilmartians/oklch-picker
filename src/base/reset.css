@@ -1,0 +1,71 @@
+/* Remove default padding */
+
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd,
+pre,
+input,
+button,
+fieldset {
+  padding: 0;
+  margin: 0;
+}
+
+/* Use screen height */
+
+html {
+  height: 100%;
+}
+
+/* Prevent font size change after orientation changes in iOS */
+
+body {
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Global font in controls */
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Fix clickable styling in iOS and Safari */
+
+button {
+  -webkit-appearance: button;
+}
+
+/* Pointer cursor for all interactive elements */
+
+a,
+select:not(:disabled),
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+/* Remove border in Firefox */
+
+::-moz-focus-inner {
+  padding: 0;
+  border-style: none;
+}
+
+fieldset {
+  border: none;
+}

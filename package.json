@@ -1,0 +1,33 @@
+{
+  "name": "oklch-picker",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "lint": "eslint . && stylelint **/*.css && pnpm audit --prod",
+    "test": "pnpm lint && pnpm build && size-limit"
+  },
+  "dependencies": {
+    "vite": "^2.8.4"
+  },
+  "devDependencies": {
+    "@logux/eslint-config": "^46.1.1",
+    "@logux/stylelint-config": "^0.9.0",
+    "@size-limit/file": "^7.0.8",
+    "eslint": "^8.9.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prefer-let": "^3.0.1",
+    "eslint-plugin-promise": "^6.0.0",
+    "nano-staged": "^0.5.0",
+    "prettier": "^2.5.1",
+    "simple-git-hooks": "^2.7.0",
+    "size-limit": "^7.0.8",
+    "stylelint": "^14.5.1"
+  }
+}

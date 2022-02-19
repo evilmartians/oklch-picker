@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Files to download",
+    "path": "dist/**/*",
+    "limit": "1 KB"
+  },
+  {
+    "name": "All scripts to execute",
+    "path": "dist/*.js",
+    "gzip": false,
+    "limit": "1 KB"
+  }
+]

@@ -1,0 +1,4 @@
+{
+  "*.(js,html)": "prettier --write",
+  "*.css": "stylelint --fix"
+}
