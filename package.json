@@ -12,6 +12,7 @@
     "test": "pnpm lint && pnpm build && size-limit"
   },
   "dependencies": {
+    "nanostores": "^0.5.10",
     "vite": "^2.8.4"
   },
   "devDependencies": {

@@ -11,6 +11,7 @@ specifiers:
   eslint-plugin-prefer-let: ^3.0.1
   eslint-plugin-promise: ^6.0.0
   nano-staged: ^0.5.0
+  nanostores: ^0.5.10
   prettier: ^2.5.1
   simple-git-hooks: ^2.7.0
   size-limit: ^7.0.8
@@ -18,6 +19,7 @@ specifiers:
   vite: ^2.8.4
 
 dependencies:
+  nanostores: 0.5.10
   vite: 2.8.4
 
 devDependencies:
@@ -1575,6 +1577,11 @@ packages:
     dependencies:
       picocolors: 1.0.0
     dev: true
+
+  /nanostores/0.5.10:
+    resolution: {integrity: sha512-8Y7C8sF8PsHGpLVJochWT+ytEY34XrNRDA30hDqgvLcl5Ih4d/IFb7gUSFIwmgFAaht1pLwKZHTeFoJrNz88RQ==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+    dev: false
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
