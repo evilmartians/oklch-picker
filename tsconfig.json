@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowJs": true,
+    "target": "es2018",
+    "module": "esnext",
+    "strict": true,
+    "noEmit": true
+  },
+  "include": [
+    "**/*.ts"
+  ]
+}
