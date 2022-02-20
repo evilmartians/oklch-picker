@@ -31,7 +31,7 @@ jobs:
           key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: pnpm-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
+        run: pnpm install --frozen-lockfile
       - name: Generate spaces
         run: pnpm spaces
       - name: Run tests
