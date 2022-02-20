@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OKLCH Color Picker</title>
+    <script type="module" src="./src/index.ts" defer></script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OKLCH Color Picker</title>
-  <script type="module" src="./src/index.ts" defer></script>
-</head>
-
-<body>
-</body>
+  <body></body>
   <div class="numbers_item">
     <label for="numbers-l">L</label>
-    <input id="numbers-slider-l" type="range" min="0" max="100" step="0.01" aria-hidden="true" />
+    <input
+      id="numbers-slider-l"
+      type="range"
+      min="0"
+      max="100"
+      step="0.01"
+      aria-hidden="true"
+    />
     <input id="numbers-l" type="number" min="0" max="100" />
   </div>
   <div class="numbers_item">
     <label for="numbers-c">C</label>
-    <input id="numbers-slider-c" type="range" min="0" max="150" step="0.01" aria-hidden="true" />
-    <input id="numbers-c" type="number" min="0" max="130" />
+    <input
+      id="numbers-slider-c"
+      type="range"
+      min="0"
+      max="40"
+      step="0.01"
+      aria-hidden="true"
+    />
+    <input id="numbers-c" type="number" min="0" max="40" />
   </div>
   <div class="numbers_item">
     <label for="numbers-h">H</label>
-    <input id="numbers-slider-h" type="range" min="0" max="360" step="0.01" aria-hidden="true" />
+    <input
+      id="numbers-slider-h"
+      type="range"
+      min="0"
+      max="360"
+      step="0.01"
+      aria-hidden="true"
+    />
     <input id="numbers-h" type="number" min="0" max="360" />
   </div>
   <div class="spaces">
