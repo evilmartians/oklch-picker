@@ -32,6 +32,8 @@ jobs:
           restore-keys: pnpm-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Generate spaces
+        run: pnpm spaces
       - name: Run tests
         run: pnpm test
         env:

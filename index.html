@@ -10,7 +10,24 @@
 
 <body>
 </body>
-  <label>L: <input id="current-l" type="number" /></label>
-  <label>C: <input id="current-c" type="number" /></label>
-  <label>H: <input id="current-h" type="number" /></label>
+  <div class="numbers_item">
+    <label for="numbers-l">L</label>
+    <input id="numbers-slider-l" type="range" min="0" max="100" step="0.01" aria-hidden="true" />
+    <input id="numbers-l" type="number" min="0" max="100" />
+  </div>
+  <div class="numbers_item">
+    <label for="numbers-c">C</label>
+    <input id="numbers-slider-c" type="range" min="0" max="150" step="0.01" aria-hidden="true" />
+    <input id="numbers-c" type="number" min="0" max="130" />
+  </div>
+  <div class="numbers_item">
+    <label for="numbers-h">H</label>
+    <input id="numbers-slider-h" type="range" min="0" max="360" step="0.01" aria-hidden="true" />
+    <input id="numbers-h" type="number" min="0" max="360" />
+  </div>
+  <div class="spaces">
+    <img id="spaces-l" alt="" />
+    <img id="spaces-c" alt="" />
+    <img id="spaces-h" alt="" />
+  </div>
 </html>

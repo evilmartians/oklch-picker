@@ -1,0 +1,16 @@
+label {
+  width: 20px;
+}
+
+input[type="range"] {
+  width: 300px;
+}
+
+input[type="number"] {
+  width: 100px;
+  text-align: right;
+}
+
+.numbers_item {
+  display: flex;
+}

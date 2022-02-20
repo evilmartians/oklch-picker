@@ -65,3 +65,9 @@ button:not(:disabled) {
   padding: 0;
   border-style: none;
 }
+
+/* Fix default display */
+
+img {
+  display: block;
+}
