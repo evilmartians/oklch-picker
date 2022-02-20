@@ -30,8 +30,10 @@ jobs:
           path: ~/.pnpm-store
           key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: pnpm-
-      - name: Install headers
-        run: sudo apt-get install -y libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev libpangocairo-1.0-0 librsvg2-2
+      - name: Install build tools
+        run: |
+          sudo apt update
+          sudo apt install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev librsvg2-dev
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Generate spaces
