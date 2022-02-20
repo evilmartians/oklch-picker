@@ -24,15 +24,15 @@ function showProgress(value) {
     process.stdout.write('\x1b[1G\x1b[2K\x1b[1G')
   }
 
-  let percent = Math.round(100 * value)
+  let percent = Math.floor(100 * value)
   if (percent >= 100) {
-    process.stdout.write('100%')
+    process.stdout.write('100% ')
   } else {
-    process.stdout.write(String(percent).padStart(2))
+    process.stdout.write(String(percent).padStart(3))
     process.stdout.write('% ')
   }
 
-  let max = process.stdout.columns - 2 - 4
+  let max = process.stdout.columns - 2 - 5
   let line = Math.ceil(max * value)
   for (let i = 0; i <= line; i++) {
     process.stdout.write('#')
