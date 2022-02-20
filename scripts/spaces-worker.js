@@ -27,7 +27,7 @@ async function writeSpace(name, xMax, yMax, getColors) {
     let xValue = (xMax * x) / IMAGE_WIDTH
     let prevSRGB, prevP3
     for (let y = 0; y <= IMAGE_WIDTH; y++) {
-      let yValue = yMax - (yMax * y) / IMAGE_HEIGHT
+      let yValue = (yMax * y) / IMAGE_HEIGHT
 
       let [l, c, h] = getColors(xValue, yValue)
       let color = new Color('lch', [l, c, h])
@@ -39,7 +39,7 @@ async function writeSpace(name, xMax, yMax, getColors) {
       }
       if (inP3) {
         ctx.fillStyle = toOldRgb(color.srgb)
-        ctx.fillRect(x, y, 1, 1)
+        ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
       } else if (prevP3) {
         break
       }
