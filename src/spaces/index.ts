@@ -1,5 +1,5 @@
 import './index.css'
-import { current } from '../stores/current.js'
+import { onCurrentChange } from '../stores/current.js'
 
 let l = document.querySelector<HTMLInputElement>('#spaces-l')!
 let c = document.querySelector<HTMLInputElement>('#spaces-c')!
@@ -9,8 +9,14 @@ function getUrl(axis: 'l' | 'c' | 'h', value: number): string {
   return `/spaces/${axis}-${Math.round(value)}.webp`
 }
 
-current.subscribe(color => {
-  l.src = getUrl('l', color.l)
-  c.src = getUrl('c', color.c)
-  h.src = getUrl('h', color.h)
+onCurrentChange({
+  l(value) {
+    l.src = getUrl('l', value)
+  },
+  c(value) {
+    c.src = getUrl('c', value)
+  },
+  h(value) {
+    h.src = getUrl('h', value)
+  }
 })

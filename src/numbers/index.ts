@@ -1,5 +1,5 @@
 import './index.css'
-import { current } from '../stores/current.js'
+import { current, onCurrentChange } from '../stores/current.js'
 
 let l = document.querySelector<HTMLInputElement>('#numbers-l')!
 let c = document.querySelector<HTMLInputElement>('#numbers-c')!
@@ -12,6 +12,18 @@ current.subscribe(color => {
   sliderL.value = l.value = String(color.l)
   sliderC.value = c.value = String(color.c)
   sliderH.value = h.value = String(color.h)
+})
+
+onCurrentChange({
+  l(value) {
+    sliderL.value = l.value = String(value)
+  },
+  c(value) {
+    sliderC.value = c.value = String(value)
+  },
+  h(value) {
+    sliderH.value = h.value = String(value)
+  }
 })
 
 l.addEventListener('change', () => {
