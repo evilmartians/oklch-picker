@@ -33,7 +33,7 @@ jobs:
       - name: Install build tools
         run: |
           sudo apt update
-          sudo apt install -y libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev librsvg2-dev
+          sudo apt install -y libcairo2 librsvg2-2 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev librsvg2-dev
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Generate spaces
