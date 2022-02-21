@@ -4,7 +4,7 @@ import canvas from 'canvas'
 import Color from 'colorjs.io'
 import 'canvas-webp'
 
-import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH, IMAGE_HEIGHT } from './config.js'
+import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH, IMAGE_HEIGHT } from '../config.js'
 
 const BUILD = process.argv[5]
 

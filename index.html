@@ -8,6 +8,8 @@
   </head>
 
   <body></body>
+  <div class="example"></div>
+  <canvas id="scale-l" class="scale"></canvas>
   <div class="numbers_item">
     <label for="numbers-l">L</label>
     <input
@@ -20,6 +22,7 @@
     />
     <input id="numbers-l" type="number" min="0" max="100" />
   </div>
+  <canvas id="scale-c" class="scale"></canvas>
   <div class="numbers_item">
     <label for="numbers-c">C</label>
     <input
@@ -32,6 +35,7 @@
     />
     <input id="numbers-c" type="number" min="0" max="40" />
   </div>
+  <canvas id="scale-h" class="scale"></canvas>
   <div class="numbers_item">
     <label for="numbers-h">H</label>
     <input
@@ -45,8 +49,17 @@
     <input id="numbers-h" type="number" min="0" max="360" />
   </div>
   <div class="spaces">
-    <img id="spaces-l" alt="" />
-    <img id="spaces-c" alt="" />
-    <img id="spaces-h" alt="" />
+    <div class="spaces_space">
+      <div class="spaces_dot" id="spaces-dot-l"></div>
+      <img id="spaces-l" alt="" />
+    </div>
+    <div class="spaces_space">
+      <div class="spaces_dot" id="spaces-dot-c"></div>
+      <img id="spaces-c" alt="" />
+    </div>
+    <div class="spaces_space">
+      <div class="spaces_dot" id="spaces-dot-h"></div>
+      <img id="spaces-h" alt="" />
+    </div>
   </div>
 </html>

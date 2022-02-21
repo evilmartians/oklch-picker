@@ -2,6 +2,21 @@
   margin-left: 20px;
 }
 
+.spaces_space {
+  position: relative;
+  width: 300px;
+  height: 100px;
+}
+
+.spaces_dot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border: 1px solid #000;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #fff;
+}
+
 img {
   width: 300px;
   height: 100px;

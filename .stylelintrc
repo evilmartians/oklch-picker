@@ -4,6 +4,7 @@
   "rules": {
     "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla"],
     "alpha-value-notation": "percentage",
-    "color-named": "never"
+    "color-named": "never",
+    "color-no-hex": null
   }
 }

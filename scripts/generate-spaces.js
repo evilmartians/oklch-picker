@@ -4,7 +4,7 @@ import { isatty } from 'tty'
 import { spawn } from 'child_process'
 import { join } from 'path'
 
-import { L_MAX, C_MAX, H_MAX } from './config.js'
+import { L_MAX, C_MAX, H_MAX } from '../config.js'
 
 const ROOT = join(fileURLToPath(import.meta.url), '..', '..')
 const BUILD = join(ROOT, 'public', 'spaces')
