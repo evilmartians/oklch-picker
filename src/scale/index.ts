@@ -9,7 +9,7 @@ let canvasC = document.querySelector<HTMLCanvasElement>('#scale-c')!
 let canvasH = document.querySelector<HTMLCanvasElement>('#scale-h')!
 
 const WIDTH = canvasL.width * 2
-const HEIGHT = canvasL.height * 2
+const HEIGHT = 40
 
 canvasL.width = WIDTH
 canvasL.height = HEIGHT
