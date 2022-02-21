@@ -12,9 +12,9 @@
   position: absolute;
   width: 3px;
   height: 3px;
-  border: 1px solid #000;
+  border: 1px solid oklab(0% 0 0);
   border-radius: 50%;
-  box-shadow: 0 0 0 1px #fff;
+  box-shadow: 0 0 0 1px oklab(100% 0 0);
 }
 
 img {

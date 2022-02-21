@@ -1,6 +1,7 @@
 lockfileVersion: 5.3
 
 specifiers:
+  '@csstools/postcss-oklab-function': ^1.0.1
   '@logux/eslint-config': ^46.1.1
   '@logux/stylelint-config': ^0.9.0
   '@size-limit/file': ^7.0.8
@@ -17,6 +18,7 @@ specifiers:
   eslint-plugin-promise: ^6.0.0
   nano-staged: ^0.6.0
   nanostores: ^0.5.10
+  postcss: ^8.4.6
   prettier: ^2.5.1
   simple-git-hooks: ^2.7.0
   size-limit: ^7.0.8
@@ -25,10 +27,12 @@ specifiers:
   vite: ^2.8.4
 
 dependencies:
+  '@csstools/postcss-oklab-function': 1.0.1_postcss@8.4.6
   canvas: 2.9.0
   canvas-webp: 1.0.0
   colorjs.io: 0.0.5
   nanostores: 0.5.10
+  postcss: 8.4.6
   vite: 2.8.4
 
 devDependencies:
@@ -72,6 +76,27 @@ packages:
       chalk: 2.4.2
       js-tokens: 4.0.0
     dev: true
+
+  /@csstools/postcss-oklab-function/1.0.1_postcss@8.4.6:
+    resolution: {integrity: sha512-Bnly2FWWSTZX20hDJLYHpurhp1ot+ZGvojLOsrHa9frzOVruOv4oPYMZ6wQomi9KsbZZ+Af/CuRYaGReTyGtEg==}
+    engines: {node: ^12 || ^14 || >=16}
+    peerDependencies:
+      postcss: ^8.4
+    dependencies:
+      '@csstools/postcss-progressive-custom-properties': 1.2.0_postcss@8.4.6
+      postcss: 8.4.6
+      postcss-value-parser: 4.2.0
+    dev: false
+
+  /@csstools/postcss-progressive-custom-properties/1.2.0_postcss@8.4.6:
+    resolution: {integrity: sha512-YLpFPK5OaLIRKZhUfnrZPT9s9cmtqltIOg7W6jPcxmiDpnZ4lk+odfufZttOAgcg6IHWvNLgcITSLpJxIQB/qQ==}
+    engines: {node: ^12 || ^14 || >=16}
+    peerDependencies:
+      postcss: ^8.3
+    dependencies:
+      postcss: 8.4.6
+      postcss-value-parser: 4.2.0
+    dev: false
 
   /@eslint/eslintrc/1.1.0:
     resolution: {integrity: sha512-C1DfL7XX4nPqGd6jcP01W9pVM1HYCuUkFk1432D7F0v3JSlUIeOYn9oCoi3eoLZ+iwBSb29BMFxxny0YrrEZqg==}
@@ -2132,7 +2157,6 @@ packages:
 
   /postcss-value-parser/4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
-    dev: true
 
   /postcss/8.4.6:
     resolution: {integrity: sha512-OovjwIzs9Te46vlEx7+uXB0PLijpwjXGKXjVGGPIGubGpq7uh5Xgf6D6FiJ/SzJMBosHDp6a2hiXOS97iBXcaA==}
