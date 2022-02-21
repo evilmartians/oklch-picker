@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@logux/eslint-config"
+    "@logux/eslint-config/esm"
   ],
   "rules": {
     "node/no-unpublished-require": "off"
