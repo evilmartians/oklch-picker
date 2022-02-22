@@ -1,6 +1,6 @@
 import './index.css'
 import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH, IMAGE_HEIGHT } from '../../config.js'
-import { inP3, oklch, inRGB, formatHex } from '../../lib/colors.js'
+import { inP3, oklch, inRGB, formatRgb } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
@@ -33,7 +33,7 @@ onCurrentChange({
         if (inP3(color)) {
           let inSRGB = inRGB(color)
           if (prevSRGB === undefined || inSRGB === prevSRGB) {
-            ctx.fillStyle = formatHex(color)
+            ctx.fillStyle = formatRgb(color)
             ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
           }
           prevSRGB = inSRGB
@@ -56,7 +56,7 @@ onCurrentChange({
         if (inP3(color)) {
           let inSRGB = inRGB(color)
           if (prevSRGB === undefined || inSRGB === prevSRGB) {
-            ctx.fillStyle = formatHex(color)
+            ctx.fillStyle = formatRgb(color)
             ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
           }
           prevSRGB = inSRGB
@@ -79,7 +79,7 @@ onCurrentChange({
         if (inP3(color)) {
           let inSRGB = inRGB(color)
           if (prevSRGB === undefined || inSRGB === prevSRGB) {
-            ctx.fillStyle = formatHex(color)
+            ctx.fillStyle = formatRgb(color)
             ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
           }
           prevSRGB = inSRGB

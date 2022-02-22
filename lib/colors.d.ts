@@ -6,6 +6,6 @@ export function inRGB(color: Color): boolean
 
 export function inP3(color: Color): boolean
 
-export function oklch(l: number, c: number, h: number): Color
+export function oklch(l: number, c: number, h: number, alpha?: number): Color
 
-export function formatHex(color: Color): string
+export function formatRgb(color: Color): string

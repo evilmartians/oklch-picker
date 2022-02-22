@@ -2,60 +2,72 @@ import { map } from 'nanostores'
 
 import { reportBenchmark, benchmarking } from './benchmark.js'
 
-export interface CurrentValue {
+export interface LchColor {
   l: number
   c: number
   h: number
+  alpha: number
 }
 
-type PrevCurrentValue =
-  | CurrentValue
-  | { [key in keyof CurrentValue]?: undefined }
+type PrevCurrentValue = LchColor | { [key in keyof LchColor]?: undefined }
 
-function randomColor(): CurrentValue {
-  return { l: 0.7, c: 0.1, h: Math.round(360 * Math.random()) }
+function randomColor(): LchColor {
+  return { l: 0.7, c: 0.1, h: Math.round(360 * Math.random()), alpha: 1 }
 }
 
-export let current = map<CurrentValue>(randomColor())
+export let current = map<LchColor>(randomColor())
 
 interface LchCallbacks {
   l?(value: number): void
   c?(value: number): void
   h?(value: number): void
-  lc?(color: CurrentValue): void
-  ch?(color: CurrentValue): void
-  lh?(color: CurrentValue): void
+  alpha?(value: number): void
+  lc?(color: LchColor): void
+  ch?(color: LchColor): void
+  lh?(color: LchColor): void
+  lch?(color: LchColor): void
 }
 
 let listeners: LchCallbacks[] = []
 
 function runListeners(
   list: LchCallbacks[],
-  value: CurrentValue,
+  value: LchColor,
   prev: PrevCurrentValue
 ): void {
+  let lChanged = prev.l !== value.l
+  let cChanged = prev.c !== value.c
+  let hChanged = prev.h !== value.h
   let start = Date.now()
+
   for (let i of list) {
-    if (i.l && prev.l !== value.l) {
+    if (i.l && lChanged) {
       i.l(value.l)
     }
-    if (i.c && prev.c !== value.c) {
+    if (i.c && cChanged) {
       i.c(value.c)
     }
-    if (i.h && prev.h !== value.h) {
+    if (i.h && hChanged) {
       i.h(value.h)
     }
+    if (i.alpha && prev.alpha !== value.alpha) {
+      i.alpha(value.alpha)
+    }
 
-    if (i.lc && (prev.l !== value.l || prev.c !== value.c)) {
+    if (i.lc && (lChanged || cChanged)) {
       i.lc(value)
     }
-    if (i.ch && (prev.c !== value.c || prev.h !== value.h)) {
+    if (i.ch && (lChanged || hChanged)) {
       i.ch(value)
     }
-    if (i.lh && (prev.l !== value.l || prev.h !== value.h)) {
+    if (i.lh && (lChanged || hChanged)) {
       i.lh(value)
     }
+    if (i.lch && (lChanged || cChanged || hChanged)) {
+      i.lch(value)
+    }
   }
+
   reportBenchmark(Date.now() - start)
 }
 

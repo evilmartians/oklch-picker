@@ -4,9 +4,13 @@ import { current, onCurrentChange } from '../stores/current.js'
 let l = document.querySelector<HTMLInputElement>('#numbers-l')!
 let c = document.querySelector<HTMLInputElement>('#numbers-c')!
 let h = document.querySelector<HTMLInputElement>('#numbers-h')!
+let alpha = document.querySelector<HTMLInputElement>('#numbers-alpha')!
 let sliderL = document.querySelector<HTMLInputElement>('#numbers-slider-l')!
 let sliderC = document.querySelector<HTMLInputElement>('#numbers-slider-c')!
 let sliderH = document.querySelector<HTMLInputElement>('#numbers-slider-h')!
+let sliderAlpha = document.querySelector<HTMLInputElement>(
+  '#numbers-slider-alpha'
+)!
 
 current.subscribe(color => {
   sliderL.value = l.value = String(color.l)
@@ -23,6 +27,9 @@ onCurrentChange({
   },
   h(value) {
     sliderH.value = h.value = String(value)
+  },
+  alpha(value) {
+    sliderAlpha.value = alpha.value = String(value)
   }
 })
 
@@ -38,6 +45,10 @@ h.addEventListener('change', () => {
   current.setKey('h', parseFloat(h.value))
   sliderH.value = h.value
 })
+alpha.addEventListener('change', () => {
+  current.setKey('alpha', parseFloat(alpha.value))
+  sliderAlpha.value = alpha.value
+})
 
 sliderL.addEventListener('change', () => {
   current.setKey('l', parseFloat(sliderL.value))
@@ -50,4 +61,8 @@ sliderC.addEventListener('change', () => {
 sliderH.addEventListener('change', () => {
   current.setKey('h', parseFloat(sliderH.value))
   h.value = sliderH.value
+})
+sliderAlpha.addEventListener('change', () => {
+  current.setKey('alpha', parseFloat(sliderAlpha.value))
+  alpha.value = sliderAlpha.value
 })
