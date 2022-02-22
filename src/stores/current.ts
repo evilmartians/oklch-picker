@@ -77,6 +77,7 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
     let prev: PrevCurrentValue = {}
     current.subscribe(value => {
       runListeners(listeners, value, prev)
+      prev = value
     })
   } else {
     runListeners([callbacks], current.get(), {})
