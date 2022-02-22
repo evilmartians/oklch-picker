@@ -1,9 +1,6 @@
-// @ts-expect-error
-import { formatHex } from 'culori/fn'
-
 import './index.css'
+import { oklch, formatHex } from '../../lib/colors.js'
 import { current } from '../stores/current.js'
-import { oklch } from '../../lib/colors.js'
 
 let example = document.querySelector<HTMLCanvasElement>('.example')!
 

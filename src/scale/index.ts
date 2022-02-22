@@ -1,10 +1,7 @@
-// @ts-expect-error
-import { displayable, formatHex } from 'culori/fn'
-
 import './index.css'
 import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH } from '../../config.js'
+import { inP3, oklch, inRGB, formatHex } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
-import { inP3, oklch } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 let canvasL = document.querySelector<HTMLCanvasElement>('#scale-l')!
@@ -30,7 +27,7 @@ onCurrentChange({
     for (let x = 0; x <= WIDTH; x++) {
       let color = oklch(x * factor, c, h)
       if (inP3(color)) {
-        let inSRGB = displayable(color)
+        let inSRGB = inRGB(color)
         if (prevSRGB === undefined || inSRGB === prevSRGB) {
           ctx.fillStyle = formatHex(color)
           ctx.fillRect(x, 0, 1, HEIGHT)
@@ -49,7 +46,7 @@ onCurrentChange({
     for (let x = 0; x <= WIDTH; x++) {
       let color = oklch(l, x * factor, h)
       if (inP3(color)) {
-        let inSRGB = displayable(color)
+        let inSRGB = inRGB(color)
         if (prevSRGB === undefined || inSRGB === prevSRGB) {
           ctx.fillStyle = formatHex(color)
           ctx.fillRect(x, 0, 1, HEIGHT)
@@ -68,7 +65,7 @@ onCurrentChange({
     for (let x = 0; x <= WIDTH; x++) {
       let color = oklch(l, c, x * factor)
       if (inP3(color)) {
-        let inSRGB = displayable(color)
+        let inSRGB = inRGB(color)
         if (prevSRGB === undefined || inSRGB === prevSRGB) {
           ctx.fillStyle = formatHex(color)
           ctx.fillRect(x, 0, 1, HEIGHT)
