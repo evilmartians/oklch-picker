@@ -30,14 +30,8 @@ jobs:
           path: ~/.pnpm-store
           key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: pnpm-
-      - name: Install build tools
-        run: |
-          sudo apt update
-          sudo apt install -y libcairo2 librsvg2-2 libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev librsvg2-dev
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Generate spaces
-        run: pnpm spaces
       - name: Run tests
         run: pnpm test
         env:

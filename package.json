@@ -14,9 +14,7 @@
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.0.1",
-    "canvas": "^2.9.0",
-    "canvas-webp": "^1.0.0",
-    "colorjs.io": "^0.0.5",
+    "culori": "^2.0.3",
     "nanostores": "^0.5.10",
     "postcss": "^8.4.6",
     "vite": "^2.8.4"

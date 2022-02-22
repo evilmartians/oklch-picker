@@ -1,11 +1,13 @@
-import Color from 'colorjs.io'
+// @ts-expect-error
+import { formatHex } from 'culori/fn'
 
 import './index.css'
 import { current } from '../stores/current.js'
+import { oklch } from '../../lib/colors.js'
 
 let example = document.querySelector<HTMLCanvasElement>('.example')!
 
 current.subscribe(({ l, c, h }) => {
-  let color = new Color('oklch', [l / 100, c / 100, h])
-  example.style.background = color.to('srgb').toString()
+  let color = oklch(l, c, h)
+  example.style.background = formatHex(color)
 })
