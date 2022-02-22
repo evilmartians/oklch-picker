@@ -12,7 +12,11 @@ type PrevCurrentValue =
   | CurrentValue
   | { [key in keyof CurrentValue]?: undefined }
 
-export let current = map<CurrentValue>({ l: 0, c: 0, h: 0 })
+function randomColor(): CurrentValue {
+  return { l: 0.7, c: 0.1, h: Math.round(360 * Math.random()) }
+}
+
+export let current = map<CurrentValue>(randomColor())
 
 interface LchCallbacks {
   l?(value: number): void
