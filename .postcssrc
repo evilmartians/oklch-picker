@@ -1,5 +1,6 @@
 {
   "plugins": {
-    "@csstools/postcss-oklab-function": {}
+    "@csstools/postcss-oklab-function": {},
+    "postcss-nesting": {}
   }
 }

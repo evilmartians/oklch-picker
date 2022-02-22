@@ -17,6 +17,7 @@
     "culori": "^2.0.3",
     "nanostores": "^0.5.10",
     "postcss": "^8.4.6",
+    "postcss-nesting": "^10.1.2",
     "vite": "^2.8.4"
   },
   "devDependencies": {

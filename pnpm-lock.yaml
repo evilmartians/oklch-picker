@@ -17,6 +17,7 @@ specifiers:
   nano-staged: ^0.6.0
   nanostores: ^0.5.10
   postcss: ^8.4.6
+  postcss-nesting: ^10.1.2
   prettier: ^2.5.1
   simple-git-hooks: ^2.7.0
   size-limit: ^7.0.8
@@ -29,6 +30,7 @@ dependencies:
   culori: 2.0.3
   nanostores: 0.5.10
   postcss: 8.4.6
+  postcss-nesting: 10.1.2_postcss@8.4.6
   vite: 2.8.4
 
 devDependencies:
@@ -590,7 +592,6 @@ packages:
     resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
     engines: {node: '>=4'}
     hasBin: true
-    dev: true
 
   /culori/2.0.3:
     resolution: {integrity: sha512-920cvHdCgdrkmiTgV09/qyGpk3d0RrktiU38bUigBDrNcK/19xRobKBzhSGoBpS9dy03P1OfC8zorQcnZKkK7A==}
@@ -1937,6 +1938,16 @@ packages:
     resolution: {integrity: sha1-J7Ocb02U+Bsac7j3Y1HGCeXO8kQ=}
     dev: true
 
+  /postcss-nesting/10.1.2_postcss@8.4.6:
+    resolution: {integrity: sha512-dJGmgmsvpzKoVMtDMQQG/T6FSqs6kDtUDirIfl4KnjMCiY9/ETX8jdKyCd20swSRAbUYkaBKV20pxkzxoOXLqQ==}
+    engines: {node: ^12 || ^14 || >=16}
+    peerDependencies:
+      postcss: ^8.3
+    dependencies:
+      postcss: 8.4.6
+      postcss-selector-parser: 6.0.9
+    dev: false
+
   /postcss-resolve-nested-selector/0.1.1:
     resolution: {integrity: sha1-Kcy8fDfe36wwTp//C/FZaz9qDk4=}
     dev: true
@@ -1956,7 +1967,6 @@ packages:
     dependencies:
       cssesc: 3.0.0
       util-deprecate: 1.0.2
-    dev: true
 
   /postcss-sorting/7.0.1_postcss@8.4.6:
     resolution: {integrity: sha512-iLBFYz6VRYyLJEJsBJ8M3TCqNcckVzz4wFounSc5Oez35ogE/X+aoC5fFu103Ot7NyvjU3/xqIXn93Gp3kJk4g==}
@@ -2470,7 +2480,6 @@ packages:
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
-    dev: true
 
   /v8-compile-cache/2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}
