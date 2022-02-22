@@ -18,50 +18,72 @@ canvasC.height = HEIGHT
 canvasH.width = WIDTH
 canvasH.height = HEIGHT
 
-function render(
-  canvas: HTMLCanvasElement,
-  axis: 'l' | 'c' | 'h',
-  l: number,
-  c: number,
-  h: number
-): void {
-  let getColor: (x: number) => [number, number, number]
-  if (axis === 'l') {
-    getColor = x => [(L_MAX * x) / WIDTH / 100, c / 100, h]
-  } else if (axis === 'c') {
-    getColor = x => [l / 100, (C_MAX * x) / WIDTH / 100, h]
-  } else {
-    getColor = x => [l / 100, c / 100, (H_MAX * x) / WIDTH]
-  }
-
+function getCleanCtx(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
   let ctx = canvas.getContext('2d')!
   ctx.clearRect(0, 0, WIDTH, HEIGHT)
-
-  let prevSRGB: boolean | undefined
-  for (let x = 0; x <= WIDTH; x++) {
-    let color = new Color('oklch', getColor(x))
-    if (color.inGamut('p3')) {
-      let inSRGB = color.inGamut('srgb')
-      if (prevSRGB !== undefined && inSRGB !== prevSRGB) {
-        color = color.mix(l < L_MAX / 2 ? '#fff' : '#000')
-      }
-      ctx.fillStyle = color.to('srgb').toString()
-      ctx.fillRect(x, 0, 1, HEIGHT)
-      prevSRGB = inSRGB
-    } else {
-      prevSRGB = undefined
-    }
-  }
+  return ctx
 }
 
 onCurrentChange({
-  ch(color) {
-    render(canvasL, 'l', 0, color.c, color.h)
+  ch({ c, h }) {
+    let cMod = c / 100
+    let factor = L_MAX / WIDTH / 100
+    let ctx = getCleanCtx(canvasL)
+
+    let prevSRGB: boolean | undefined
+    for (let x = 0; x <= WIDTH; x++) {
+      let color = new Color('oklch', [x * factor, cMod, h])
+      if (color.inGamut('p3')) {
+        let inSRGB = color.inGamut('srgb')
+        if (prevSRGB === undefined || inSRGB === prevSRGB) {
+          ctx.fillStyle = color.to('srgb').toString()
+          ctx.fillRect(x, 0, 1, HEIGHT)
+        }
+        prevSRGB = inSRGB
+      } else {
+        prevSRGB = undefined
+      }
+    }
   },
-  lh(color) {
-    render(canvasC, 'c', color.l, 0, color.h)
+  lh({ l, h }) {
+    let lMod = l / 100
+    let factor = C_MAX / WIDTH / 100
+    let ctx = getCleanCtx(canvasC)
+
+    let prevSRGB: boolean | undefined
+    for (let x = 0; x <= WIDTH; x++) {
+      let color = new Color('oklch', [lMod, x * factor, h])
+      if (color.inGamut('p3')) {
+        let inSRGB = color.inGamut('srgb')
+        if (prevSRGB === undefined || inSRGB === prevSRGB) {
+          ctx.fillStyle = color.to('srgb').toString()
+          ctx.fillRect(x, 0, 1, HEIGHT)
+        }
+        prevSRGB = inSRGB
+      } else {
+        break
+      }
+    }
   },
-  lc(color) {
-    render(canvasH, 'h', color.l, color.c, 0)
+  lc({ l, c }) {
+    let lMod = l / 100
+    let cMod = c / 100
+    let factor = H_MAX / WIDTH
+    let ctx = getCleanCtx(canvasH)
+
+    let prevSRGB: boolean | undefined
+    for (let x = 0; x <= WIDTH; x++) {
+      let color = new Color('oklch', [lMod, cMod, x * factor])
+      if (color.inGamut('p3')) {
+        let inSRGB = color.inGamut('srgb')
+        if (prevSRGB === undefined || inSRGB === prevSRGB) {
+          ctx.fillStyle = color.to('srgb').toString()
+          ctx.fillRect(x, 0, 1, HEIGHT)
+        }
+        prevSRGB = inSRGB
+      } else {
+        prevSRGB = undefined
+      }
+    }
   }
 })
