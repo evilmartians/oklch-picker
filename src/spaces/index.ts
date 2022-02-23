@@ -26,6 +26,10 @@ canvasC.height = IMAGE_HEIGHT
 canvasH.width = IMAGE_WIDTH
 canvasH.height = IMAGE_HEIGHT
 
+interface GetColor {
+  (x: number, y: number): Color
+}
+
 let DEBUG = false
 
 const BLOCK = 4
@@ -60,7 +64,7 @@ function paintSlow(
   ctx: CanvasRenderingContext2D,
   fromX: number,
   fromY: number,
-  getColor: (x: number, y: number) => Color
+  getColor: GetColor
 ): void {
   for (let x = fromX; x < fromX + BLOCK; x += 1) {
     for (let y = fromY; y < fromY + BLOCK; y += 1) {
@@ -77,34 +81,43 @@ function paintSlow(
   }
 }
 
+function checkBlock(
+  getColor: GetColor,
+  x: number,
+  y: number
+): [boolean, boolean, boolean, boolean] {
+  let color00 = getColor(x, y)
+  let color07 = getColor(x, y + BLOCK - 1)
+  let color70 = getColor(x + BLOCK - 1, y)
+  let color77 = getColor(x + BLOCK - 1, y + BLOCK - 1)
+
+  let rgb00 = inRGB(color00)
+  let rgb07 = inRGB(color07)
+  let rgb70 = inRGB(color70)
+  let rgb77 = inRGB(color77)
+
+  let p300 = rgb00 || inP3(color00)
+  let p307 = rgb07 || inP3(color07)
+  let p370 = rgb70 || inP3(color70)
+  let p377 = rgb77 || inP3(color77)
+
+  let someRGB = rgb00 || rgb07 || rgb70 || rgb77
+  let allRGB = rgb00 && rgb07 && rgb70 && rgb77
+  let someP3 = p300 || p307 || p370 || p377
+  let allP3 = p300 && p307 && p370 && p377
+
+  return [someRGB, allRGB, someP3, allP3]
+}
+
 function paintVertical(
   ctx: CanvasRenderingContext2D,
   hasGaps: boolean,
   fastBlock: number,
-  getColor: (x: number, y: number) => Color
+  getColor: GetColor
 ): void {
   for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
     for (let y = 0; y <= IMAGE_HEIGHT; y += BLOCK) {
-      let color00 = getColor(x, y)
-      let color07 = getColor(x, y + BLOCK - 1)
-      let color70 = getColor(x + BLOCK - 1, y)
-      let color77 = getColor(x + BLOCK - 1, y + BLOCK - 1)
-
-      let rgb00 = inRGB(color00)
-      let rgb07 = inRGB(color07)
-      let rgb70 = inRGB(color70)
-      let rgb77 = inRGB(color77)
-
-      let p300 = rgb00 || inP3(color00)
-      let p307 = rgb07 || inP3(color07)
-      let p370 = rgb70 || inP3(color70)
-      let p377 = rgb77 || inP3(color77)
-
-      let someRGB = rgb00 || rgb07 || rgb70 || rgb77
-      let allRGB = rgb00 && rgb07 && rgb70 && rgb77
-      let someP3 = p300 || p307 || p370 || p377
-      let allP3 = p300 && p307 && p370 && p377
-
+      let [someRGB, allRGB, someP3, allP3] = checkBlock(getColor, x, y)
       if (allRGB) {
         paintFast(ctx, x, y, false, 4, fastBlock, getColor)
       } else if (allP3 && !someRGB) {
@@ -124,30 +137,11 @@ function paintVertical(
 
 function paintHorizontal(
   ctx: CanvasRenderingContext2D,
-  getColor: (x: number, y: number) => Color
+  getColor: GetColor
 ): void {
   for (let y = 0; y <= IMAGE_HEIGHT; y += BLOCK) {
     for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
-      let color00 = getColor(x, y)
-      let color07 = getColor(x, y + BLOCK - 1)
-      let color70 = getColor(x + BLOCK - 1, y)
-      let color77 = getColor(x + BLOCK - 1, y + BLOCK - 1)
-
-      let rgb00 = inRGB(color00)
-      let rgb07 = inRGB(color07)
-      let rgb70 = inRGB(color70)
-      let rgb77 = inRGB(color77)
-
-      let p300 = rgb00 || inP3(color00)
-      let p307 = rgb07 || inP3(color07)
-      let p370 = rgb70 || inP3(color70)
-      let p377 = rgb77 || inP3(color77)
-
-      let someRGB = rgb00 || rgb07 || rgb70 || rgb77
-      let allRGB = rgb00 && rgb07 && rgb70 && rgb77
-      let someP3 = p300 || p307 || p370 || p377
-      let allP3 = p300 && p307 && p370 && p377
-
+      let [someRGB, allRGB, someP3, allP3] = checkBlock(getColor, x, y)
       if (allRGB) {
         paintFast(ctx, x, y, false, 4, 2, getColor)
       } else if (allP3 && !someRGB) {
