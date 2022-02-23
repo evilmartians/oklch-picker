@@ -10,7 +10,7 @@ let canvasH = document.querySelector<HTMLCanvasElement>('#scale-h')!
 let divAlpha = document.querySelector<HTMLDivElement>('#scale-alpha')!
 
 const WIDTH = IMAGE_WIDTH * 2
-const HEIGHT = 40
+const HEIGHT = 1
 
 canvasL.width = WIDTH
 canvasL.height = HEIGHT
