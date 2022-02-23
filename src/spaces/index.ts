@@ -26,7 +26,7 @@ canvasC.height = IMAGE_HEIGHT
 canvasH.width = IMAGE_WIDTH
 canvasH.height = IMAGE_HEIGHT
 
-const BLOCK = 8
+const BLOCK = 4
 
 function paintFast(
   ctx: CanvasRenderingContext2D,
@@ -83,10 +83,10 @@ function paintVertical(
       let rgb70 = inRGB(color70)
       let rgb77 = inRGB(color77)
 
-      let p300 = inP3(color00)
-      let p307 = inP3(color07)
-      let p370 = inP3(color70)
-      let p377 = inP3(color77)
+      let p300 = rgb00 || inP3(color00)
+      let p307 = rgb07 || inP3(color07)
+      let p370 = rgb70 || inP3(color70)
+      let p377 = rgb77 || inP3(color77)
 
       let someRGB = rgb00 || rgb07 || rgb70 || rgb77
       let allRGB = rgb00 && rgb07 && rgb70 && rgb77
