@@ -85,7 +85,7 @@ function runListeners(
     if (i.lc && (lChanged || cChanged)) {
       i.lc(value)
     }
-    if (i.ch && (lChanged || hChanged)) {
+    if (i.ch && (cChanged || hChanged)) {
       i.ch(value)
     }
     if (i.lh && (lChanged || hChanged)) {
