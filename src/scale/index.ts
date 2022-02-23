@@ -1,6 +1,6 @@
 import './index.css'
+import { inP3, oklch, inRGB, formatRgb, Color } from '../../lib/colors.js'
 import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH } from '../../config.js'
-import { inP3, oklch, inRGB, formatRgb } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
@@ -19,63 +19,44 @@ canvasC.height = HEIGHT
 canvasH.width = WIDTH
 canvasH.height = HEIGHT
 
+function paintL(
+  ctx: CanvasRenderingContext2D,
+  hasGaps: boolean,
+  getColor: (x: number) => Color
+): void {
+  let prevSRGB: boolean | undefined
+  for (let x = 0; x <= WIDTH; x++) {
+    let color = getColor(x)
+    if (inP3(color)) {
+      let inSRGB = inRGB(color)
+      if (prevSRGB === undefined || inSRGB === prevSRGB) {
+        ctx.fillStyle = formatRgb(color)
+        ctx.fillRect(x, 0, 1, HEIGHT)
+      }
+      prevSRGB = inSRGB
+    } else if (hasGaps) {
+      prevSRGB = undefined
+    } else {
+      return
+    }
+  }
+}
+
 onCurrentChange({
   ch({ c, h }) {
     let factor = L_MAX / WIDTH
     let ctx = getCleanCtx(canvasL)
-
-    let prevSRGB: boolean | undefined
-    for (let x = 0; x <= WIDTH; x++) {
-      let color = oklch(x * factor, c, h)
-      if (inP3(color)) {
-        let inSRGB = inRGB(color)
-        if (prevSRGB === undefined || inSRGB === prevSRGB) {
-          ctx.fillStyle = formatRgb(color)
-          ctx.fillRect(x, 0, 1, HEIGHT)
-        }
-        prevSRGB = inSRGB
-      } else {
-        prevSRGB = undefined
-      }
-    }
+    paintL(ctx, true, x => oklch(x * factor, c, h))
   },
   lh({ l, h }) {
     let factor = C_MAX / WIDTH
     let ctx = getCleanCtx(canvasC)
-
-    let prevSRGB: boolean | undefined
-    for (let x = 0; x <= WIDTH; x++) {
-      let color = oklch(l, x * factor, h)
-      if (inP3(color)) {
-        let inSRGB = inRGB(color)
-        if (prevSRGB === undefined || inSRGB === prevSRGB) {
-          ctx.fillStyle = formatRgb(color)
-          ctx.fillRect(x, 0, 1, HEIGHT)
-        }
-        prevSRGB = inSRGB
-      } else {
-        break
-      }
-    }
+    paintL(ctx, false, x => oklch(l, x * factor, h))
   },
   lc({ l, c }) {
     let factor = H_MAX / WIDTH
     let ctx = getCleanCtx(canvasH)
-
-    let prevSRGB: boolean | undefined
-    for (let x = 0; x <= WIDTH; x++) {
-      let color = oklch(l, c, x * factor)
-      if (inP3(color)) {
-        let inSRGB = inRGB(color)
-        if (prevSRGB === undefined || inSRGB === prevSRGB) {
-          ctx.fillStyle = formatRgb(color)
-          ctx.fillRect(x, 0, 1, HEIGHT)
-        }
-        prevSRGB = inSRGB
-      } else {
-        prevSRGB = undefined
-      }
-    }
+    paintL(ctx, true, x => oklch(l, c, x * factor))
   },
   lch({ l, c, h }) {
     let from = formatRgb(oklch(l, c, h, 0))
