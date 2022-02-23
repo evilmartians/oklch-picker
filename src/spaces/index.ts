@@ -26,6 +26,8 @@ canvasC.height = IMAGE_HEIGHT
 canvasH.width = IMAGE_WIDTH
 canvasH.height = IMAGE_HEIGHT
 
+let DEBUG = false
+
 const BLOCK = 4
 
 function paintFast(
@@ -42,6 +44,12 @@ function paintFast(
       let color = getColor(x, y)
       if (p3) color.alpha = P3_ALPHA
       ctx.fillStyle = formatRgb(color)
+      if (DEBUG) {
+        ctx.fillStyle = 'rgba(0 200 0 / 0.6)'
+        ctx.fillRect(x, flipY - y, 1, step)
+        ctx.fillRect(x, flipY - y, step, 1)
+        ctx.fillStyle = 'rgba(0 200 0 / 0.3)'
+      }
       ctx.fillRect(x, flipY - y, step, step)
     }
   }
@@ -59,6 +67,9 @@ function paintSlow(
       if (inP3(color)) {
         if (!inRGB(color)) color.alpha = P3_ALPHA
         ctx.fillStyle = formatRgb(color)
+        if (DEBUG) {
+          ctx.fillStyle = 'rgba(200 100 0 / 0.3)'
+        }
         ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
       }
     }
@@ -100,6 +111,10 @@ function paintVertical(
       } else if (someP3) {
         paintSlow(ctx, x, y, getColor)
       } else if (!hasGaps) {
+        if (DEBUG) {
+          ctx.fillStyle = 'rgba(200 0 0 / 0.3)'
+          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, BLOCK)
+        }
         break
       }
     }
@@ -132,6 +147,10 @@ function paintHorizontal(
       ) {
         paintSlow(ctx, x, y, getColor)
       } else {
+        if (DEBUG) {
+          ctx.fillStyle = 'rgba(255 0 0 / 0.3)'
+          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, BLOCK)
+        }
         break
       }
     }
