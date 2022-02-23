@@ -1,4 +1,4 @@
-import { map } from 'nanostores'
+import { map, onSet } from 'nanostores'
 
 import { reportBenchmark, benchmarking } from './benchmark.js'
 
@@ -15,7 +15,35 @@ function randomColor(): LchColor {
   return { l: 0.7, c: 0.1, h: Math.round(360 * Math.random()), alpha: 1 }
 }
 
-export let current = map<LchColor>(randomColor())
+function parseHash(): LchColor | undefined {
+  let parts = location.hash.slice(1).split(',')
+  if (parts.length === 4) {
+    if (parts.every(i => /^\d+(\.\d+)?$/.test(i))) {
+      return {
+        l: parseFloat(parts[0]),
+        c: parseFloat(parts[1]),
+        h: parseFloat(parts[2]),
+        alpha: parseFloat(parts[3])
+      }
+    }
+  }
+  return undefined
+}
+
+export let current = map<LchColor>(parseHash() || randomColor())
+
+onSet(current, ({ newValue }) => {
+  let { l, c, h, alpha } = newValue
+  let hash = `#${l},${c},${h},${alpha}`
+  if (location.hash !== hash) {
+    history.pushState(null, '', `#${l},${c},${h},${alpha}`)
+  }
+})
+
+window.addEventListener('hashchange', () => {
+  let color = parseHash()
+  if (color) current.set(color)
+})
 
 interface LchCallbacks {
   l?(value: number): void
