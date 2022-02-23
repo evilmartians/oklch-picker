@@ -1,5 +1,12 @@
 import './index.css'
-import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH, IMAGE_HEIGHT } from '../../config.js'
+import {
+  IMAGE_HEIGHT,
+  IMAGE_WIDTH,
+  P3_ALPHA,
+  L_MAX,
+  C_MAX,
+  H_MAX
+} from '../../config.js'
 import { inP3, oklch, inRGB, formatRgb, Color } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
 import { getCleanCtx } from '../../lib/canvas.js'
@@ -19,26 +26,77 @@ canvasC.height = IMAGE_HEIGHT
 canvasH.width = IMAGE_WIDTH
 canvasH.height = IMAGE_HEIGHT
 
+const BLOCK = 8
+
+function paintFast(
+  ctx: CanvasRenderingContext2D,
+  fromX: number,
+  fromY: number,
+  p3: boolean,
+  getColor: (x: number, y: number) => Color
+): void {
+  for (let x = fromX; x < fromX + BLOCK; x += 2) {
+    for (let y = fromY; y < fromY + BLOCK; y += 2) {
+      let color = getColor(x, y)
+      if (p3) color.alpha = P3_ALPHA
+      ctx.fillStyle = formatRgb(color)
+      ctx.fillRect(x, IMAGE_HEIGHT - y - 1, 2, 2)
+    }
+  }
+}
+
+function paintSlow(
+  ctx: CanvasRenderingContext2D,
+  fromX: number,
+  fromY: number,
+  getColor: (x: number, y: number) => Color
+): void {
+  for (let x = fromX; x < fromX + BLOCK; x += 1) {
+    for (let y = fromY; y < fromY + BLOCK; y += 1) {
+      let color = getColor(x, y)
+      if (inP3(color)) {
+        if (!inRGB(color)) color.alpha = P3_ALPHA
+        ctx.fillStyle = formatRgb(color)
+        ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
+      }
+    }
+  }
+}
+
 function paintVertical(
   ctx: CanvasRenderingContext2D,
   hasGaps: boolean,
   getColor: (x: number, y: number) => Color
 ): void {
-  for (let x = 0; x <= IMAGE_WIDTH; x++) {
-    let prevSRGB
-    for (let y = 0; y <= IMAGE_HEIGHT; y++) {
-      let color = getColor(x, y)
+  for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
+    for (let y = 0; y <= IMAGE_HEIGHT; y += BLOCK) {
+      let color00 = getColor(x, y)
+      let color07 = getColor(x, y + BLOCK - 1)
+      let color70 = getColor(x + BLOCK - 1, y)
+      let color77 = getColor(x + BLOCK - 1, y + BLOCK - 1)
 
-      if (inP3(color)) {
-        let inSRGB = inRGB(color)
-        if (prevSRGB === undefined || inSRGB === prevSRGB) {
-          ctx.fillStyle = formatRgb(color)
-          ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
-        }
-        prevSRGB = inSRGB
-      } else if (hasGaps) {
-        prevSRGB = false
-      } else {
+      let rgb00 = inRGB(color00)
+      let rgb07 = inRGB(color07)
+      let rgb70 = inRGB(color70)
+      let rgb77 = inRGB(color77)
+
+      let p300 = inP3(color00)
+      let p307 = inP3(color07)
+      let p370 = inP3(color70)
+      let p377 = inP3(color77)
+
+      let someRGB = rgb00 || rgb07 || rgb70 || rgb77
+      let allRGB = rgb00 && rgb07 && rgb70 && rgb77
+      let someP3 = p300 || p307 || p370 || p377
+      let allP3 = p300 && p307 && p370 && p377
+
+      if (allRGB) {
+        paintFast(ctx, x, y, false, getColor)
+      } else if (allP3 && !someRGB) {
+        paintFast(ctx, x, y, true, getColor)
+      } else if (someP3) {
+        paintSlow(ctx, x, y, getColor)
+      } else if (!hasGaps) {
         break
       }
     }
@@ -49,20 +107,27 @@ function paintHorizontal(
   ctx: CanvasRenderingContext2D,
   getColor: (x: number, y: number) => Color
 ): void {
-  for (let y = 0; y <= IMAGE_HEIGHT; y++) {
-    let prevSRGB
-    for (let x = 0; x <= IMAGE_WIDTH; x++) {
-      let color = getColor(x, y)
+  for (let y = 0; y <= IMAGE_HEIGHT; y += BLOCK) {
+    for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
+      let color00 = getColor(x, y)
+      let color07 = getColor(x, y + BLOCK - 1)
+      let color70 = getColor(x + BLOCK - 1, y)
+      let color77 = getColor(x + BLOCK - 1, y + BLOCK - 1)
 
-      if (inP3(color)) {
-        let inSRGB = inRGB(color)
-        if (prevSRGB === undefined || inSRGB === prevSRGB) {
-          ctx.fillStyle = formatRgb(color)
-          ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
-        }
-        prevSRGB = inSRGB
-      } else {
-        prevSRGB = false
+      if (
+        inRGB(color00) &&
+        inRGB(color07) &&
+        inRGB(color70) &&
+        inRGB(color77)
+      ) {
+        paintFast(ctx, x, y, false, getColor)
+      } else if (
+        inP3(color00) ||
+        inP3(color07) ||
+        inP3(color70) ||
+        inP3(color77)
+      ) {
+        paintSlow(ctx, x, y, getColor)
       }
     }
   }

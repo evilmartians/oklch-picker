@@ -1,5 +1,6 @@
 export interface Color {
   mode: string
+  alpha?: number
 }
 
 export function inRGB(color: Color): boolean
