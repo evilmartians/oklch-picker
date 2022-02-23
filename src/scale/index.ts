@@ -19,7 +19,7 @@ canvasC.height = HEIGHT
 canvasH.width = WIDTH
 canvasH.height = HEIGHT
 
-function paintL(
+function paint(
   ctx: CanvasRenderingContext2D,
   hasGaps: boolean,
   getColor: (x: number) => Color
@@ -40,17 +40,17 @@ onCurrentChange({
   ch({ c, h }) {
     let factor = L_MAX / WIDTH
     let ctx = getCleanCtx(canvasL)
-    paintL(ctx, true, x => oklch(x * factor, c, h))
+    paint(ctx, true, x => oklch(x * factor, c, h))
   },
   lh({ l, h }) {
     let factor = C_MAX / WIDTH
     let ctx = getCleanCtx(canvasC)
-    paintL(ctx, false, x => oklch(l, x * factor, h))
+    paint(ctx, false, x => oklch(l, x * factor, h))
   },
   lc({ l, c }) {
     let factor = H_MAX / WIDTH
     let ctx = getCleanCtx(canvasH)
-    paintL(ctx, true, x => oklch(l, c, x * factor))
+    paint(ctx, true, x => oklch(l, c, x * factor))
   },
   lch({ l, c, h }) {
     let from = formatRgb(oklch(l, c, h, 0))
