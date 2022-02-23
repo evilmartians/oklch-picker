@@ -33,14 +33,16 @@ function paintFast(
   fromX: number,
   fromY: number,
   p3: boolean,
+  step: number,
   getColor: (x: number, y: number) => Color
 ): void {
-  for (let x = fromX; x < fromX + BLOCK; x += 2) {
-    for (let y = fromY; y < fromY + BLOCK; y += 2) {
+  let flipY = IMAGE_HEIGHT - step + 1
+  for (let x = fromX; x < fromX + BLOCK; x += step) {
+    for (let y = fromY; y < fromY + BLOCK; y += step) {
       let color = getColor(x, y)
       if (p3) color.alpha = P3_ALPHA
       ctx.fillStyle = formatRgb(color)
-      ctx.fillRect(x, IMAGE_HEIGHT - y - 1, 2, 2)
+      ctx.fillRect(x, flipY - y, step, step)
     }
   }
 }
@@ -66,6 +68,7 @@ function paintSlow(
 function paintVertical(
   ctx: CanvasRenderingContext2D,
   hasGaps: boolean,
+  fastBlock: number,
   getColor: (x: number, y: number) => Color
 ): void {
   for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
@@ -91,9 +94,9 @@ function paintVertical(
       let allP3 = p300 && p307 && p370 && p377
 
       if (allRGB) {
-        paintFast(ctx, x, y, false, getColor)
+        paintFast(ctx, x, y, false, fastBlock, getColor)
       } else if (allP3 && !someRGB) {
-        paintFast(ctx, x, y, true, getColor)
+        paintFast(ctx, x, y, true, fastBlock, getColor)
       } else if (someP3) {
         paintSlow(ctx, x, y, getColor)
       } else if (!hasGaps) {
@@ -120,7 +123,7 @@ function paintHorizontal(
         inRGB(color70) &&
         inRGB(color77)
       ) {
-        paintFast(ctx, x, y, false, getColor)
+        paintFast(ctx, x, y, false, 2, getColor)
       } else if (
         inP3(color00) ||
         inP3(color07) ||
@@ -138,13 +141,13 @@ onCurrentChange({
     let ctx = getCleanCtx(canvasL)
     let hFactor = H_MAX / IMAGE_WIDTH
     let cFactor = C_MAX / IMAGE_HEIGHT
-    paintVertical(ctx, false, (x, y) => oklch(l, y * cFactor, x * hFactor))
+    paintVertical(ctx, false, 4, (x, y) => oklch(l, y * cFactor, x * hFactor))
   },
   c(c) {
     let ctx = getCleanCtx(canvasC)
     let hFactor = H_MAX / IMAGE_WIDTH
     let lFactor = L_MAX / IMAGE_HEIGHT
-    paintVertical(ctx, true, (x, y) => oklch(y * lFactor, c, x * hFactor))
+    paintVertical(ctx, true, 2, (x, y) => oklch(y * lFactor, c, x * hFactor))
   },
   h(h) {
     let ctx = getCleanCtx(canvasH)
