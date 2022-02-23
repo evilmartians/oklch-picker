@@ -35,22 +35,23 @@ function paintFast(
   fromX: number,
   fromY: number,
   p3: boolean,
-  step: number,
+  stepX: number,
+  stepY: number,
   getColor: (x: number, y: number) => Color
 ): void {
-  let flipY = IMAGE_HEIGHT - step + 1
-  for (let x = fromX; x < fromX + BLOCK; x += step) {
-    for (let y = fromY; y < fromY + BLOCK; y += step) {
+  let flipY = IMAGE_HEIGHT - stepY + 1
+  for (let x = fromX; x < fromX + BLOCK; x += stepX) {
+    for (let y = fromY; y < fromY + BLOCK; y += stepY) {
       let color = getColor(x, y)
       if (p3) color.alpha = P3_ALPHA
       ctx.fillStyle = formatRgb(color)
       if (DEBUG) {
         ctx.fillStyle = 'rgba(0 200 0 / 0.6)'
-        ctx.fillRect(x, flipY - y, 1, step)
-        ctx.fillRect(x, flipY - y, step, 1)
+        ctx.fillRect(x, flipY - y, 1, stepY)
+        ctx.fillRect(x, flipY - y, stepX, 1)
         ctx.fillStyle = 'rgba(0 200 0 / 0.3)'
       }
-      ctx.fillRect(x, flipY - y, step, step)
+      ctx.fillRect(x, flipY - y, stepX, stepY)
     }
   }
 }
@@ -105,9 +106,9 @@ function paintVertical(
       let allP3 = p300 && p307 && p370 && p377
 
       if (allRGB) {
-        paintFast(ctx, x, y, false, fastBlock, getColor)
+        paintFast(ctx, x, y, false, 4, fastBlock, getColor)
       } else if (allP3 && !someRGB) {
-        paintFast(ctx, x, y, true, fastBlock, getColor)
+        paintFast(ctx, x, y, true, 4, fastBlock, getColor)
       } else if (someP3) {
         paintSlow(ctx, x, y, getColor)
       } else if (!hasGaps) {
@@ -138,7 +139,7 @@ function paintHorizontal(
         inRGB(color70) &&
         inRGB(color77)
       ) {
-        paintFast(ctx, x, y, false, 2, getColor)
+        paintFast(ctx, x, y, false, 4, 2, getColor)
       } else if (
         inP3(color00) ||
         inP3(color07) ||
