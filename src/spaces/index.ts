@@ -131,6 +131,10 @@ function paintVertical(
         }
         break
       }
+      if (DEBUG) {
+        ctx.fillStyle = 'rgba(0 0 0 / 0.5)'
+        ctx.fillRect(x + BLOCK / 2, IMAGE_HEIGHT - y - BLOCK / 2, 1, 1)
+      }
     }
   }
 }
@@ -154,6 +158,10 @@ function paintHorizontal(
           ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, -BLOCK)
         }
         break
+      }
+      if (DEBUG) {
+        ctx.fillStyle = 'rgba(0 0 0 / 0.5)'
+        ctx.fillRect(x + BLOCK / 2, IMAGE_HEIGHT - y - BLOCK / 2, 1, 1)
       }
     }
   }
