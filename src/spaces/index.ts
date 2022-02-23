@@ -114,7 +114,7 @@ function paintVertical(
       } else if (!hasGaps) {
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 0 0 / 0.3)'
-          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, BLOCK)
+          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, -BLOCK)
         }
         break
       }
@@ -150,7 +150,7 @@ function paintHorizontal(
       } else {
         if (DEBUG) {
           ctx.fillStyle = 'rgba(255 0 0 / 0.3)'
-          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, BLOCK)
+          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, -BLOCK)
         }
         break
       }
