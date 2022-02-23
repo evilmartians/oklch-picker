@@ -131,6 +131,8 @@ function paintHorizontal(
         inP3(color77)
       ) {
         paintSlow(ctx, x, y, getColor)
+      } else {
+        break
       }
     }
   }
