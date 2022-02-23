@@ -133,19 +133,26 @@ function paintHorizontal(
       let color70 = getColor(x + BLOCK - 1, y)
       let color77 = getColor(x + BLOCK - 1, y + BLOCK - 1)
 
-      if (
-        inRGB(color00) &&
-        inRGB(color07) &&
-        inRGB(color70) &&
-        inRGB(color77)
-      ) {
+      let rgb00 = inRGB(color00)
+      let rgb07 = inRGB(color07)
+      let rgb70 = inRGB(color70)
+      let rgb77 = inRGB(color77)
+
+      let p300 = rgb00 || inP3(color00)
+      let p307 = rgb07 || inP3(color07)
+      let p370 = rgb70 || inP3(color70)
+      let p377 = rgb77 || inP3(color77)
+
+      let someRGB = rgb00 || rgb07 || rgb70 || rgb77
+      let allRGB = rgb00 && rgb07 && rgb70 && rgb77
+      let someP3 = p300 || p307 || p370 || p377
+      let allP3 = p300 && p307 && p370 && p377
+
+      if (allRGB) {
         paintFast(ctx, x, y, false, 4, 2, getColor)
-      } else if (
-        inP3(color00) ||
-        inP3(color07) ||
-        inP3(color70) ||
-        inP3(color77)
-      ) {
+      } else if (allP3 && !someRGB) {
+        paintFast(ctx, x, y, true, 4, 2, getColor)
+      } else if (someP3) {
         paintSlow(ctx, x, y, getColor)
       } else {
         if (DEBUG) {
