@@ -7,7 +7,7 @@ import {
   C_MAX,
   H_MAX
 } from '../../config.js'
-import { inP3, oklch, inRGB, formatRgb, Color } from '../../lib/colors.js'
+import { inP3, oklch, inRGB, format, Color } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
@@ -48,7 +48,7 @@ function paintFast(
     for (let y = fromY; y < fromY + BLOCK; y += stepY) {
       let color = getColor(x, y)
       if (p3) color.alpha = P3_ALPHA
-      ctx.fillStyle = formatRgb(color)
+      ctx.fillStyle = format(color)
       if (DEBUG) {
         ctx.fillStyle = 'rgba(0 200 0 / 0.6)'
         ctx.fillRect(x, flipY - y, 1, stepY)
@@ -71,7 +71,7 @@ function paintSlow(
       let color = getColor(x, y)
       if (inP3(color)) {
         if (!inRGB(color)) color.alpha = P3_ALPHA
-        ctx.fillStyle = formatRgb(color)
+        ctx.fillStyle = format(color)
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 100 0 / 0.3)'
         }

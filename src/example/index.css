@@ -1,5 +1,50 @@
 .example {
+  display: flex;
   width: 300px;
   height: 100px;
   margin: 0 0 20px 20px;
+}
+
+.example_rgb,
+.example_p3,
+.example_unsupported {
+  position: relative;
+  width: 50%;
+  height: 100%;
+}
+
+.example_rgb {
+  @nest .example.is-rgb & {
+    width: 100%;
+  }
+}
+
+.example_p3,
+.example_unsupported {
+  display: none;
+}
+
+.example_p3 {
+  @nest .example.is-p3.is-supported & {
+    display: block;
+  }
+}
+
+.example_unsupported {
+  background: oklch(60% 0 0);
+
+  @nest .example.is-p3.is-unsupported & {
+    display: block;
+  }
+
+  @nest .example.is-out & {
+    display: block;
+  }
+}
+
+.example_label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  font-size: 14px;
 }
