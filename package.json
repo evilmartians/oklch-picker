@@ -16,7 +16,7 @@
     "@csstools/postcss-oklab-function": "^1.0.1",
     "culori": "^2.0.3",
     "nanostores": "^0.5.10",
-    "postcss": "^8.4.6",
+    "postcss": "^8.4.7",
     "postcss-nesting": "^10.1.2",
     "vite": "^2.8.4"
   },
@@ -26,7 +26,7 @@
     "@size-limit/file": "^7.0.8",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
-    "eslint": "^8.9.0",
+    "eslint": "^8.10.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-node": "^11.1.0",
