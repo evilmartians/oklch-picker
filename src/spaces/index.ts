@@ -30,7 +30,7 @@ interface GetColor {
 
 let DEBUG = false
 
-const BLOCK = pixelRation * 2
+const BLOCK = 4
 
 function paintFast(
   ctx: CanvasRenderingContext2D,
