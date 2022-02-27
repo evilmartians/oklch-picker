@@ -1,13 +1,7 @@
 import { computed } from 'nanostores'
 
-import {
-  hasP3Support,
-  mapToRgb,
-  format,
-  inRGB,
-  inP3,
-  oklch
-} from '../../lib/colors.js'
+import { mapToRgb, format, inRGB, inP3, oklch } from '../../lib/colors.js'
+import { hasP3Support } from '../../lib/screen.js'
 import { current } from './current.js'
 
 interface VisibleValue {

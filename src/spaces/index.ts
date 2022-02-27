@@ -1,14 +1,8 @@
 import './index.css'
-import {
-  IMAGE_HEIGHT,
-  IMAGE_WIDTH,
-  P3_ALPHA,
-  L_MAX,
-  C_MAX,
-  H_MAX
-} from '../../config.js'
+import { P3_ALPHA, L_MAX, C_MAX, H_MAX } from '../../config.js'
 import { inP3, oklch, inRGB, format, Color } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
+import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 let canvasL = document.querySelector<HTMLCanvasElement>('#spaces-l')!
@@ -19,12 +13,16 @@ let dotL = document.querySelector<HTMLDivElement>('#spaces-dot-l')!
 let dotC = document.querySelector<HTMLDivElement>('#spaces-dot-c')!
 let dotH = document.querySelector<HTMLDivElement>('#spaces-dot-h')!
 
-canvasL.width = IMAGE_WIDTH
-canvasL.height = IMAGE_HEIGHT
-canvasC.width = IMAGE_WIDTH
-canvasC.height = IMAGE_HEIGHT
-canvasH.width = IMAGE_WIDTH
-canvasH.height = IMAGE_HEIGHT
+let canvasSize = canvasL.getBoundingClientRect()
+const WIDTH = canvasSize.width * pixelRation
+const HEIGHT = canvasSize.height * pixelRation
+
+canvasL.width = WIDTH
+canvasL.height = HEIGHT
+canvasC.width = WIDTH
+canvasC.height = HEIGHT
+canvasH.width = WIDTH
+canvasH.height = HEIGHT
 
 interface GetColor {
   (x: number, y: number): Color
@@ -32,7 +30,7 @@ interface GetColor {
 
 let DEBUG = false
 
-const BLOCK = 4
+const BLOCK = pixelRation * 2
 
 function paintFast(
   ctx: CanvasRenderingContext2D,
@@ -43,7 +41,7 @@ function paintFast(
   stepY: number,
   getColor: (x: number, y: number) => Color
 ): void {
-  let flipY = IMAGE_HEIGHT - stepY + 1
+  let flipY = HEIGHT - stepY + 1
   for (let x = fromX; x < fromX + BLOCK; x += stepX) {
     for (let y = fromY; y < fromY + BLOCK; y += stepY) {
       let color = getColor(x, y)
@@ -75,7 +73,7 @@ function paintSlow(
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 100 0 / 0.3)'
         }
-        ctx.fillRect(x, IMAGE_HEIGHT - y, 1, 1)
+        ctx.fillRect(x, HEIGHT - y, 1, 1)
       }
     }
   }
@@ -115,25 +113,25 @@ function paintVertical(
   fastBlock: number,
   getColor: GetColor
 ): void {
-  for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
-    for (let y = 0; y <= IMAGE_HEIGHT; y += BLOCK) {
+  for (let x = 0; x <= WIDTH; x += BLOCK) {
+    for (let y = 0; y <= HEIGHT; y += BLOCK) {
       let [someRGB, allRGB, someP3, allP3] = checkBlock(getColor, x, y)
       if (allRGB) {
-        paintFast(ctx, x, y, false, 4, fastBlock, getColor)
+        paintFast(ctx, x, y, false, BLOCK, fastBlock, getColor)
       } else if (allP3 && !someRGB) {
-        paintFast(ctx, x, y, true, 4, fastBlock, getColor)
+        paintFast(ctx, x, y, true, BLOCK, fastBlock, getColor)
       } else if (someP3) {
         paintSlow(ctx, x, y, getColor)
       } else if (!hasGaps) {
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 0 0 / 0.3)'
-          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, -BLOCK)
+          ctx.fillRect(x, HEIGHT - y, BLOCK, -BLOCK)
         }
         break
       }
       if (DEBUG) {
         ctx.fillStyle = 'rgba(0 0 0 / 0.5)'
-        ctx.fillRect(x + BLOCK / 2, IMAGE_HEIGHT - y - BLOCK / 2, 1, 1)
+        ctx.fillRect(x + BLOCK / 2, HEIGHT - y - BLOCK / 2, 1, 1)
       }
     }
   }
@@ -143,25 +141,25 @@ function paintHorizontal(
   ctx: CanvasRenderingContext2D,
   getColor: GetColor
 ): void {
-  for (let y = 0; y <= IMAGE_HEIGHT; y += BLOCK) {
-    for (let x = 0; x <= IMAGE_WIDTH; x += BLOCK) {
+  for (let y = 0; y <= HEIGHT; y += BLOCK) {
+    for (let x = 0; x <= WIDTH; x += BLOCK) {
       let [someRGB, allRGB, someP3, allP3] = checkBlock(getColor, x, y)
       if (allRGB) {
-        paintFast(ctx, x, y, false, 4, 2, getColor)
+        paintFast(ctx, x, y, false, BLOCK, 2, getColor)
       } else if (allP3 && !someRGB) {
-        paintFast(ctx, x, y, true, 4, 2, getColor)
+        paintFast(ctx, x, y, true, BLOCK, 2, getColor)
       } else if (someP3) {
         paintSlow(ctx, x, y, getColor)
       } else {
         if (DEBUG) {
           ctx.fillStyle = 'rgba(255 0 0 / 0.3)'
-          ctx.fillRect(x, IMAGE_HEIGHT - y, BLOCK, -BLOCK)
+          ctx.fillRect(x, HEIGHT - y, BLOCK, -BLOCK)
         }
         break
       }
       if (DEBUG) {
         ctx.fillStyle = 'rgba(0 0 0 / 0.5)'
-        ctx.fillRect(x + BLOCK / 2, IMAGE_HEIGHT - y - BLOCK / 2, 1, 1)
+        ctx.fillRect(x + BLOCK / 2, HEIGHT - y - BLOCK / 2, 1, 1)
       }
     }
   }
@@ -170,20 +168,22 @@ function paintHorizontal(
 onCurrentChange({
   l(l) {
     let ctx = getCleanCtx(canvasL)
-    let hFactor = H_MAX / IMAGE_WIDTH
-    let cFactor = C_MAX / IMAGE_HEIGHT
-    paintVertical(ctx, false, 4, (x, y) => oklch(l, y * cFactor, x * hFactor))
+    let hFactor = H_MAX / WIDTH
+    let cFactor = C_MAX / HEIGHT
+    paintVertical(ctx, false, BLOCK, (x, y) => {
+      return oklch(l, y * cFactor, x * hFactor)
+    })
   },
   c(c) {
     let ctx = getCleanCtx(canvasC)
-    let hFactor = H_MAX / IMAGE_WIDTH
-    let lFactor = L_MAX / IMAGE_HEIGHT
+    let hFactor = H_MAX / WIDTH
+    let lFactor = L_MAX / HEIGHT
     paintVertical(ctx, true, 2, (x, y) => oklch(y * lFactor, c, x * hFactor))
   },
   h(h) {
     let ctx = getCleanCtx(canvasH)
-    let cFactor = C_MAX / IMAGE_WIDTH
-    let lFactor = L_MAX / IMAGE_HEIGHT
+    let cFactor = C_MAX / WIDTH
+    let lFactor = L_MAX / HEIGHT
     paintHorizontal(ctx, (x, y) => oklch(y * lFactor, x * cFactor, h))
   },
   ch({ c, h }) {

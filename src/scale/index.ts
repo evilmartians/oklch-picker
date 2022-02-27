@@ -1,7 +1,8 @@
 import './index.css'
-import { L_MAX, C_MAX, H_MAX, IMAGE_WIDTH, P3_ALPHA } from '../../config.js'
 import { inP3, oklch, inRGB, format, Color } from '../../lib/colors.js'
+import { L_MAX, C_MAX, H_MAX, P3_ALPHA } from '../../config.js'
 import { onCurrentChange } from '../stores/current.js'
+import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 let canvasL = document.querySelector<HTMLCanvasElement>('#scale-l')!
@@ -9,7 +10,7 @@ let canvasC = document.querySelector<HTMLCanvasElement>('#scale-c')!
 let canvasH = document.querySelector<HTMLCanvasElement>('#scale-h')!
 let divAlpha = document.querySelector<HTMLDivElement>('#scale-alpha')!
 
-const WIDTH = IMAGE_WIDTH * 2
+const WIDTH = canvasL.getBoundingClientRect().width * pixelRation
 const HEIGHT = 1
 
 canvasL.width = WIDTH
