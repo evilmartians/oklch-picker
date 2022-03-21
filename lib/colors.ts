@@ -2,6 +2,7 @@ import {
   clampChroma,
   displayable,
   modeOklch,
+  formatHex as originFormatHex,
   formatRgb as originFormatRgb,
   formatCss as originFormatCss,
   modeOklab,
@@ -34,6 +35,7 @@ export interface LchColor extends Color {
   h: number
 }
 
+export let formatHex = originFormatHex as (color: Color) => string
 export let formatRgb = originFormatRgb as (color: Color) => string
 export let formatCss = originFormatCss as (color: Color) => string
 export let parse = originParse as (value: string) => Color | undefined
@@ -61,7 +63,7 @@ export let format: (color: Color) => string
 if (hasP3Support) {
   format = color => formatCss(p3(color))
 } else {
-  format = formatRgb
+  format = formatHex
 }
 
 export function toRgbFormat(color: Color): string {
