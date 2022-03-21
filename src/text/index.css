@@ -6,3 +6,12 @@
 .text_input {
   width: 300px;
 }
+
+.text_error {
+  display: none;
+  color: oklch(62% 0.18 30);
+
+  &.is-show {
+    display: block;
+  }
+}

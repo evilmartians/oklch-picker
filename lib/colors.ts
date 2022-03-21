@@ -2,11 +2,16 @@ import {
   clampChroma,
   displayable,
   modeOklch,
-  formatRgb,
-  formatCss,
+  formatRgb as originFormatRgb,
+  formatCss as originFormatCss,
+  modeOklab,
   useMode,
   modeRgb,
-  modeP3
+  modeHsl,
+  modeLch,
+  modeLab,
+  modeP3,
+  parse as originParse
   // @ts-expect-error
 } from 'culori/fn'
 
@@ -29,9 +34,17 @@ export interface LchColor extends Color {
   h: number
 }
 
-let p3 = useMode(modeP3) as (color: Color) => RgbColor
-useMode(modeRgb)
-useMode(modeOklch)
+export let formatRgb = originFormatRgb as (color: Color) => string
+export let formatCss = originFormatCss as (color: Color) => string
+export let parse = originParse as (value: string) => Color | undefined
+
+export let oklch = useMode(modeOklch) as (color: Color) => LchColor
+export let rgb = useMode(modeRgb) as (color: Color) => RgbColor
+export let p3 = useMode(modeP3) as (color: Color) => RgbColor
+useMode(modeOklab)
+useMode(modeHsl)
+useMode(modeLch)
+useMode(modeLab)
 
 export const inRGB = displayable
 
@@ -40,7 +53,7 @@ export function inP3(color: Color): boolean {
   return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
 }
 
-export function oklch(l: number, c: number, h: number, alpha = 1): LchColor {
+export function build(l: number, c: number, h: number, alpha = 1): LchColor {
   return { mode: 'oklch', l, c, h, alpha }
 }
 
@@ -51,6 +64,6 @@ if (hasP3Support) {
   format = formatRgb
 }
 
-export function mapToRgb(color: Color): string {
+export function toRgbFormat(color: Color): string {
   return formatRgb(clampChroma(color, 'oklch'))
 }

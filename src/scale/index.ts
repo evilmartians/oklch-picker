@@ -1,5 +1,5 @@
 import './index.css'
-import { inP3, oklch, inRGB, format, Color } from '../../lib/colors.js'
+import { inP3, build, inRGB, format, Color } from '../../lib/colors.js'
 import { L_MAX, C_MAX, H_MAX, P3_ALPHA } from '../../config.js'
 import { onCurrentChange } from '../stores/current.js'
 import { pixelRation } from '../../lib/screen.js'
@@ -41,21 +41,21 @@ onCurrentChange({
   ch({ c, h }) {
     let factor = L_MAX / WIDTH
     let ctx = getCleanCtx(canvasL)
-    paint(ctx, true, x => oklch(x * factor, c, h))
+    paint(ctx, true, x => build(x * factor, c, h))
   },
   lh({ l, h }) {
     let factor = C_MAX / WIDTH
     let ctx = getCleanCtx(canvasC)
-    paint(ctx, false, x => oklch(l, x * factor, h))
+    paint(ctx, false, x => build(l, x * factor, h))
   },
   lc({ l, c }) {
     let factor = H_MAX / WIDTH
     let ctx = getCleanCtx(canvasH)
-    paint(ctx, true, x => oklch(l, c, x * factor))
+    paint(ctx, true, x => build(l, c, x * factor))
   },
   lch({ l, c, h }) {
-    let from = format(oklch(l, c, h, 0))
-    let to = format(oklch(l, c, h))
+    let from = format(build(l, c, h, 0))
+    let to = format(build(l, c, h))
     divAlpha.style.background = `linear-gradient(to right, ${from}, ${to})`
   }
 })

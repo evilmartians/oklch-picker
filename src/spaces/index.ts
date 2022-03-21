@@ -1,6 +1,6 @@
 import './index.css'
 import { P3_ALPHA, L_MAX, C_MAX, H_MAX } from '../../config.js'
-import { inP3, oklch, inRGB, format, Color } from '../../lib/colors.js'
+import { inP3, build, inRGB, format, Color } from '../../lib/colors.js'
 import { onCurrentChange } from '../stores/current.js'
 import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
@@ -171,20 +171,20 @@ onCurrentChange({
     let hFactor = H_MAX / WIDTH
     let cFactor = C_MAX / HEIGHT
     paintVertical(ctx, false, BLOCK, (x, y) => {
-      return oklch(l, y * cFactor, x * hFactor)
+      return build(l, y * cFactor, x * hFactor)
     })
   },
   c(c) {
     let ctx = getCleanCtx(canvasC)
     let hFactor = H_MAX / WIDTH
     let lFactor = L_MAX / HEIGHT
-    paintVertical(ctx, true, 2, (x, y) => oklch(y * lFactor, c, x * hFactor))
+    paintVertical(ctx, true, 2, (x, y) => build(y * lFactor, c, x * hFactor))
   },
   h(h) {
     let ctx = getCleanCtx(canvasH)
     let cFactor = C_MAX / WIDTH
     let lFactor = L_MAX / HEIGHT
-    paintHorizontal(ctx, (x, y) => oklch(y * lFactor, x * cFactor, h))
+    paintHorizontal(ctx, (x, y) => build(y * lFactor, x * cFactor, h))
   },
   ch({ c, h }) {
     dotL.style.bottom = `${(100 * c) / C_MAX}%`
