@@ -36,7 +36,6 @@ export interface LchColor extends Color {
 
 export let formatHex = originFormatHex as (color: Color) => string
 export let formatCss = originFormatCss as (color: Color) => string
-export let parse = originParse as (value: string) => Color | undefined
 
 export let oklch = useMode(modeOklch) as (color: Color) => LchColor
 export let rgb = useMode(modeRgb) as (color: Color) => RgbColor
@@ -62,6 +61,13 @@ if (hasP3Support) {
   format = color => formatCss(p3(color))
 } else {
   format = formatHex
+}
+
+export function parse(value: string): Color {
+  if (value.startsWith('oklch(')) {
+    value = value.replace(/^oklch\(/, 'color(--oklch ')
+  }
+  return originParse(value)
 }
 
 export function toRgb(color: Color): RgbColor {
