@@ -6,7 +6,8 @@ import {
   build,
   inRGB,
   toRgb,
-  inP3
+  inP3,
+  rgb
 } from '../../lib/colors.js'
 import { hasP3Support } from '../../lib/screen.js'
 import { current } from './current.js'
@@ -23,7 +24,7 @@ export let visible = computed<VisibleValue, typeof current>(
   ({ l, c, h, alpha }) => {
     let color = build(l, c, h, alpha)
     if (inRGB(color)) {
-      let rgbCss = formatRgb(color)
+      let rgbCss = formatRgb(rgb(color))
       return {
         type: 'rgb',
         supported: true,

@@ -7,7 +7,6 @@ let lchInput = document.querySelector<HTMLInputElement>('#text-lch')!
 let lchError = document.querySelector<HTMLDivElement>('#text-lch-error')!
 let rgbInput = document.querySelector<HTMLInputElement>('#text-rgb')!
 let rgbError = document.querySelector<HTMLDivElement>('#text-rgb-error')!
-// TODO 2-way convert
 
 function round(value: number): number {
   return Math.round(value * 1000) / 1000
