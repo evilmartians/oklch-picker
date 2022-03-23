@@ -66,6 +66,6 @@ if (hasP3Support) {
   format = formatHex
 }
 
-export function toRgbFormat(color: Color): string {
-  return formatRgb(clampChroma(color, 'oklch'))
+export function toRgb(color: Color): Color {
+  return clampChroma(color, 'oklch')
 }

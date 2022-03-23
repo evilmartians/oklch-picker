@@ -1,11 +1,11 @@
 import { computed } from 'nanostores'
 
 import {
-  toRgbFormat,
   formatRgb,
   format,
   build,
   inRGB,
+  toRgb,
   inP3
 } from '../../lib/colors.js'
 import { hasP3Support } from '../../lib/screen.js'
@@ -34,14 +34,14 @@ export let visible = computed<VisibleValue, typeof current>(
       return {
         type: 'p3',
         supported: hasP3Support,
-        rgb: toRgbFormat(color),
+        rgb: formatRgb(toRgb(color)),
         p3: hasP3Support ? format(color) : 'none'
       }
     } else {
       return {
         type: 'out',
         supported: false,
-        rgb: toRgbFormat(color),
+        rgb: formatRgb(toRgb(color)),
         p3: 'none'
       }
     }
