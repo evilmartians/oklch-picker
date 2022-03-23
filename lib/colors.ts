@@ -63,7 +63,7 @@ if (hasP3Support) {
   format = formatHex
 }
 
-export function parse(value: string): Color {
+export function parse(value: string): Color | undefined {
   if (value.startsWith('oklch(')) {
     value = value.replace(/^oklch\(/, 'color(--oklch ')
   }
