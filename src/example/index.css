@@ -7,7 +7,8 @@
 
 .example_rgb,
 .example_p3,
-.example_unsupported {
+.example_p3-no,
+.example_unvisible {
   position: relative;
   width: 50%;
   height: 100%;
@@ -20,26 +21,21 @@
 }
 
 .example_p3,
-.example_unsupported {
+.example_p3-no,
+.example_unvisible {
   display: none;
 }
 
-.example_p3 {
-  @nest .example.is-p3.is-supported & {
-    display: block;
-  }
+.example.is-p3.is-supported .example_p3 {
+  display: block;
 }
 
-.example_unsupported {
-  background: oklch(60% 0 0);
+.example.is-p3.is-unsupported .example_p3-no {
+  display: block;
+}
 
-  @nest .example.is-p3.is-unsupported & {
-    display: block;
-  }
-
-  @nest .example.is-out & {
-    display: block;
-  }
+.example.is-out .example_unvisible {
+  display: block;
 }
 
 .example_label {
