@@ -69,12 +69,18 @@ export function toRgb(color: Color): RgbColor {
 }
 
 export function formatRgb(color: RgbColor): string {
-  let r = Math.round(2550 * color.r) / 10
-  let g = Math.round(2550 * color.g) / 10
-  let b = Math.round(2550 * color.b) / 10
+  let r = Math.round(25500 * color.r) / 100
+  let g = Math.round(25500 * color.g) / 100
+  let b = Math.round(25500 * color.b) / 100
   if (color.alpha && color.alpha < 1) {
     return `rgba(${r}, ${g}, ${b}, ${color.alpha})`
   } else {
     return `rgb(${r}, ${g}, ${b})`
   }
+}
+
+export function formatLch(color: LchColor): string {
+  let { l, c, h, alpha } = color
+  let postfix = alpha && alpha < 1 ? ` / ${100 * alpha}%` : ''
+  return `oklch(${100 * l}% ${c} ${h}${postfix})`
 }

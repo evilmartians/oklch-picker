@@ -1,6 +1,6 @@
 import './index.css'
-import { parse, oklch } from '../../lib/colors.js'
-import { current } from '../stores/current.js'
+import { current, setCurrentRound } from '../stores/current.js'
+import { parse, oklch, formatLch } from '../../lib/colors.js'
 import { visible } from '../stores/visible.js'
 
 let lchInput = document.querySelector<HTMLInputElement>('#text-lch')!
@@ -8,19 +8,14 @@ let lchError = document.querySelector<HTMLDivElement>('#text-lch-error')!
 let rgbInput = document.querySelector<HTMLInputElement>('#text-rgb')!
 let rgbError = document.querySelector<HTMLDivElement>('#text-rgb-error')!
 
-function round(value: number): number {
-  return Math.round(value * 1000) / 1000
-}
-
 // TODO aria connection with <input>
 function toggle(div: HTMLDivElement, show: boolean): void {
   div.ariaHidden = show ? 'false' : 'true'
   div.classList.toggle('is-show', show)
 }
 
-current.subscribe(({ l, c, h, alpha }) => {
-  let postfix = alpha < 1 ? ` / ${round(100 * alpha)}%` : ''
-  lchInput.value = `oklch(${round(100 * l)}% ${round(c)} ${round(h)}${postfix})`
+current.subscribe(color => {
+  lchInput.value = formatLch({ mode: 'lch', ...color })
   toggle(lchError, false)
 })
 
@@ -40,8 +35,7 @@ function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
 
     let parsed = parse(newValue)
     if (parsed) {
-      let { l, c, h, alpha } = oklch(parsed)
-      current.set({ l, c, h, alpha: alpha ?? 1 })
+      setCurrentRound(oklch(parsed))
       toggle(error, false)
     } else {
       toggle(error, true)

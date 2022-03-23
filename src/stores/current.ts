@@ -1,21 +1,22 @@
 import { map, onSet } from 'nanostores'
 
 import { reportBenchmark, benchmarking } from './benchmark.js'
+import { LchColor } from '../../lib/colors.js'
 
-export interface LchColor {
+export interface LchValue {
   l: number
   c: number
   h: number
   alpha: number
 }
 
-type PrevCurrentValue = LchColor | { [key in keyof LchColor]?: undefined }
+type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
-function randomColor(): LchColor {
+function randomColor(): LchValue {
   return { l: 0.7, c: 0.1, h: Math.round(360 * Math.random()), alpha: 1 }
 }
 
-function parseHash(): LchColor | undefined {
+function parseHash(): LchValue | undefined {
   let parts = location.hash.slice(1).split(',')
   if (parts.length === 4) {
     if (parts.every(i => /^\d+(\.\d+)?$/.test(i))) {
@@ -30,7 +31,7 @@ function parseHash(): LchColor | undefined {
   return undefined
 }
 
-export let current = map<LchColor>(parseHash() || randomColor())
+export let current = map<LchValue>(parseHash() || randomColor())
 
 onSet(current, ({ newValue }) => {
   let { l, c, h, alpha } = newValue
@@ -50,17 +51,17 @@ interface LchCallbacks {
   c?(value: number): void
   h?(value: number): void
   alpha?(value: number): void
-  lc?(color: LchColor): void
-  ch?(color: LchColor): void
-  lh?(color: LchColor): void
-  lch?(color: LchColor): void
+  lc?(color: LchValue): void
+  ch?(color: LchValue): void
+  lh?(color: LchValue): void
+  lch?(color: LchValue): void
 }
 
 let listeners: LchCallbacks[] = []
 
 function runListeners(
   list: LchCallbacks[],
-  value: LchColor,
+  value: LchValue,
   prev: PrevCurrentValue
 ): void {
   let lChanged = prev.l !== value.l
@@ -110,6 +111,15 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
   } else {
     runListeners([callbacks], current.get(), {})
   }
+}
+
+export function setCurrentRound(color: LchColor): void {
+  current.set({
+    l: Math.round(100 * color.l) / 100,
+    c: Math.round(100 * color.c) / 100,
+    h: Math.round(100 * color.h) / 100,
+    alpha: color.alpha ?? 1
+  })
 }
 
 benchmarking.listen(enabled => {
