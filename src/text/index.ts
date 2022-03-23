@@ -8,20 +8,30 @@ let lchError = document.querySelector<HTMLDivElement>('#text-lch-error')!
 let rgbInput = document.querySelector<HTMLInputElement>('#text-rgb')!
 let rgbError = document.querySelector<HTMLDivElement>('#text-rgb-error')!
 
-// TODO aria connection with <input>
-function toggle(div: HTMLDivElement, show: boolean): void {
-  div.ariaHidden = show ? 'false' : 'true'
-  div.classList.toggle('is-show', show)
+function toggle(
+  input: HTMLInputElement,
+  error: HTMLDivElement,
+  invalid: boolean
+): void {
+  if (invalid) {
+    input.setAttribute('aria-invalid', 'true')
+    input.setAttribute('aria-errormessage', error.id)
+  } else {
+    input.removeAttribute('aria-invalid')
+    input.removeAttribute('aria-errormessage')
+  }
+  error.ariaHidden = invalid ? 'false' : 'true'
+  error.classList.toggle('is-show', invalid)
 }
 
 current.subscribe(color => {
   lchInput.value = formatLch({ mode: 'lch', ...color })
-  toggle(lchError, false)
+  toggle(lchInput, lchError, false)
 })
 
 visible.subscribe(({ rgb }) => {
   rgbInput.value = rgb
-  toggle(rgbError, false)
+  toggle(rgbInput, rgbError, false)
 })
 
 function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
@@ -36,9 +46,9 @@ function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
     let parsed = parse(newValue)
     if (parsed) {
       setCurrentRound(oklch(parsed))
-      toggle(error, false)
+      toggle(input, error, false)
     } else {
-      toggle(error, true)
+      toggle(input, error, true)
     }
   }
 
