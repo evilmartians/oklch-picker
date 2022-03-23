@@ -2,6 +2,7 @@ import {
   clampChroma,
   displayable,
   modeOklch,
+  formatRgb as fastFormatRgb,
   formatHex as originFormatHex,
   formatCss as originFormatCss,
   modeOklab,
@@ -60,7 +61,7 @@ export let format: (color: Color) => string
 if (hasP3Support) {
   format = color => formatCss(p3(color))
 } else {
-  format = formatHex
+  format = fastFormatRgb
 }
 
 export function parse(value: string): Color | undefined {
