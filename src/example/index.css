@@ -8,21 +8,19 @@
 .example_rgb,
 .example_p3,
 .example_p3-no,
-.example_unvisible {
+.example_invisible {
   position: relative;
   width: 50%;
   height: 100%;
 }
 
-.example_rgb {
-  @nest .example.is-rgb & {
-    width: 100%;
-  }
+.example.is-rgb .example_rgb {
+  width: 100%;
 }
 
 .example_p3,
 .example_p3-no,
-.example_unvisible {
+.example_invisible {
   display: none;
 }
 
@@ -34,7 +32,7 @@
   display: block;
 }
 
-.example.is-out .example_unvisible {
+.example.is-out .example_invisible {
   display: block;
 }
 

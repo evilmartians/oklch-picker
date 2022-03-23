@@ -72,7 +72,7 @@ export function parse(value: string): Color | undefined {
 }
 
 export function toRgb(color: Color): RgbColor {
-  return clampChroma(color, 'oklch')
+  return rgb(clampChroma(color, 'oklch'))
 }
 
 export function formatRgb(color: RgbColor): string {
