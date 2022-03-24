@@ -88,6 +88,12 @@ export function formatRgb(color: RgbColor): string {
 
 export function formatLch(color: LchColor): string {
   let { l, c, h, alpha } = color
-  let postfix = alpha && alpha < 1 ? ` / ${100 * alpha}%` : ''
-  return `oklch(${100 * l}% ${c} ${h}${postfix})`
+  let postfix = alpha && alpha < 1 ? ` / ${toPercent(alpha)}` : ''
+  return `oklch(${toPercent(l)} ${c} ${h}${postfix})`
+}
+
+function toPercent(value: number): string {
+  // Hack to avoid ,999999 because of float bug implementation
+  // https://stackoverflow.com/a/18908122
+  return `${parseFloat(`${(1000 * value) / 10}`)}%`
 }
