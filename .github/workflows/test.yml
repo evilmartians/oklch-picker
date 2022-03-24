@@ -15,7 +15,7 @@ jobs:
         uses: asdf-vm/actions/setup@v1
       - name: Cache asdf
         id: asdf-cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.asdf
           key: asdf-${{ hashFiles('**/.tool-versions') }}
@@ -23,7 +23,7 @@ jobs:
         if: steps.asdf-cache.outputs.cache-hit != 'true'
         uses: asdf-vm/actions/install@v1
       - name: Cache pnpm modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-pnpm-modules
         with:
