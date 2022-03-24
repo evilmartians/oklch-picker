@@ -117,7 +117,7 @@ export function setCurrentRound(color: LchColor): void {
   current.set({
     l: Math.round(100 * color.l) / 100,
     c: Math.round(100 * color.c) / 100,
-    h: Math.round(100 * color.h) / 100,
+    h: Math.round(100 * (color.h ?? 0)) / 100,
     alpha: color.alpha ?? 1
   })
 }

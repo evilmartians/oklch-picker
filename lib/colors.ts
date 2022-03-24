@@ -32,7 +32,7 @@ export interface RgbColor extends Color {
 export interface LchColor extends Color {
   l: number
   c: number
-  h: number
+  h?: number
 }
 
 export let formatHex = originFormatHex as (color: Color) => string
