@@ -18,14 +18,14 @@
     "nanostores": "^0.5.12",
     "postcss": "^8.4.12",
     "postcss-nesting": "^10.1.3",
-    "vite": "^2.8.6"
+    "vite": "^2.9.1"
   },
   "devDependencies": {
     "@logux/eslint-config": "^46.1.1",
     "@logux/stylelint-config": "^0.9.0",
     "@size-limit/file": "^7.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.16.0",
-    "@typescript-eslint/parser": "^5.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.17.0",
     "eslint": "^8.12.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
