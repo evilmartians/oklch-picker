@@ -1,6 +1,6 @@
 import { map, onSet } from 'nanostores'
 
-import { reportBenchmark, benchmarking } from './benchmark.js'
+import { reportFreeze, benchmarking } from './benchmark.js'
 import { LchColor } from '../../lib/colors.js'
 
 export interface LchValue {
@@ -97,7 +97,7 @@ function runListeners(
     }
   }
 
-  reportBenchmark(Date.now() - start)
+  reportFreeze(Date.now() - start)
 }
 
 export function onCurrentChange(callbacks: LchCallbacks): void {

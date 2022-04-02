@@ -1,6 +1,7 @@
 import type { MessageData } from './worker.js'
 
 import './index.css'
+import { reportPaint, bindFreezeToPaint } from '../stores/benchmark.js'
 import { pixelRation, hasP3Support } from '../../lib/screen.js'
 import { paintL, paintC, paintH } from './lib.js'
 import { L_MAX, C_MAX, H_MAX } from '../../config.js'
@@ -60,6 +61,9 @@ if (canvasL.transferControlToOffscreen) {
       height: HEIGHT,
       p3: hasP3Support ?? false
     })
+    worker.onmessage = (e: MessageEvent<number>) => {
+      reportPaint(e.data)
+    }
     return worker
   }
 
@@ -79,6 +83,7 @@ if (canvasL.transferControlToOffscreen) {
     }
   })
 } else {
+  bindFreezeToPaint()
   onCurrentChange({
     l(l) {
       paintL(canvasL, WIDTH, HEIGHT, l)

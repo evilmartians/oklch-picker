@@ -1,12 +1,27 @@
-import { atom } from 'nanostores'
+import { atom, map } from 'nanostores'
 
 export let benchmarking = atom(false)
 
-export let lastBenchmark = atom(0)
+export let lastBenchmark = map({ freeze: 0, paint: 0 })
 
-export function reportBenchmark(ms: number): void {
+let bound = false
+export function bindFreezeToPaint(): void {
+  bound = true
+}
+
+export function reportFreeze(ms: number): void {
   if (benchmarking.get()) {
-    lastBenchmark.set(ms)
+    if (bound) {
+      lastBenchmark.set({ freeze: ms, paint: ms })
+    } else {
+      lastBenchmark.setKey('freeze', ms)
+    }
+  }
+}
+
+export function reportPaint(ms: number): void {
+  if (benchmarking.get()) {
+    lastBenchmark.setKey('paint', ms)
   }
 }
 

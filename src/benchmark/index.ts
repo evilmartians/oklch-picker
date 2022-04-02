@@ -1,19 +1,22 @@
 import './index.css'
 import { benchmarking, lastBenchmark } from '../stores/benchmark.js'
 
-let result = document.querySelector<HTMLDivElement>('.benchmark')!
+let block = document.querySelector<HTMLDivElement>('.benchmark')!
+let freeze = document.querySelector<HTMLSpanElement>('#benchmark-freeze')!
+let paint = document.querySelector<HTMLSpanElement>('#benchmark-paint')!
 
 let unbind: undefined | (() => void)
 benchmarking.subscribe(enabled => {
   if (enabled) {
-    result.classList.add('is-enabled')
-    result.setAttribute('aria-hidden', 'false')
-    unbind = lastBenchmark.subscribe(value => {
-      result.innerText = `${value}`
+    block.classList.add('is-enabled')
+    block.setAttribute('aria-hidden', 'false')
+    unbind = lastBenchmark.subscribe(result => {
+      freeze.innerText = `${result.freeze}`
+      paint.innerText = `${result.paint}`
     })
   } else {
-    result.classList.remove('is-enabled')
-    result.setAttribute('aria-hidden', 'true')
+    block.classList.remove('is-enabled')
+    block.setAttribute('aria-hidden', 'true')
     if (unbind) {
       unbind()
       unbind = undefined

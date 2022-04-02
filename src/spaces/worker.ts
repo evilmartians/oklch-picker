@@ -19,11 +19,15 @@ onmessage = (e: MessageEvent<MessageData>) => {
   if (e.data.type === 'init') {
     setColorSupport(e.data.p3)
     prefix = [e.data.canvas, e.data.width, e.data.height]
-  } else if (e.data.type === 'l' && prefix) {
-    paintL(...prefix, e.data.l)
-  } else if (e.data.type === 'c' && prefix) {
-    paintC(...prefix, e.data.c)
-  } else if (e.data.type === 'h' && prefix) {
-    paintH(...prefix, e.data.h)
+  } else if (prefix) {
+    let start = Date.now()
+    if (e.data.type === 'l') {
+      paintL(...prefix, e.data.l)
+    } else if (e.data.type === 'c') {
+      paintC(...prefix, e.data.c)
+    } else {
+      paintH(...prefix, e.data.h)
+    }
+    postMessage(Date.now() - start)
   }
 }
