@@ -16,7 +16,7 @@ import {
   // @ts-expect-error
 } from 'culori/fn'
 
-// import { hasP3Support } from './screen.js'
+import { hasP3Support } from './screen.js'
 
 export interface Color {
   mode: string
@@ -67,6 +67,9 @@ export function setColorSupport(hasP3: boolean): void {
   }
 }
 
+if (typeof hasP3Support !== 'undefined') {
+  setColorSupport(hasP3Support)
+}
 
 export function parse(value: string): Color | undefined {
   if (value.startsWith('oklch(')) {
