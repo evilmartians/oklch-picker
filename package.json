@@ -13,11 +13,11 @@
     "test": "pnpm lint && pnpm build && size-limit && pnpm audit --prod"
   },
   "dependencies": {
-    "@csstools/postcss-oklab-function": "^1.0.2",
+    "@csstools/postcss-oklab-function": "^1.1.0",
     "culori": "^2.0.3",
     "nanostores": "^0.5.12",
     "postcss": "^8.4.12",
-    "postcss-nesting": "^10.1.3",
+    "postcss-nesting": "^10.1.4",
     "vite": "^2.9.1"
   },
   "devDependencies": {
