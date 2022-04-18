@@ -6,17 +6,67 @@
   position: relative;
   width: 300px;
   height: 150px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
-.spaces_dot {
+.spaces_line {
   position: absolute;
-  width: 3px;
-  height: 3px;
-  border: 1px solid oklch(0% 0 0);
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px oklch(100% 0 0);
-  transform: translate(-2px, 3px);
+  background: oklch(33% 0 0);
+  opacity: 50%;
+
+  &.is-horizontal {
+    right: 0;
+    left: 0;
+    height: 1px;
+  }
+
+  &.is-vertical {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
+
+  &.is-l.is-horizontal {
+    bottom: var(--spaces-l);
+  }
+
+  &.is-l.is-vertical {
+    left: var(--spaces-l);
+  }
+
+  &.is-c.is-horizontal {
+    bottom: var(--spaces-c);
+  }
+
+  &.is-c.is-vertical {
+    left: var(--spaces-c);
+  }
+
+  &.is-h.is-horizontal {
+    bottom: var(--spaces-h);
+  }
+
+  &.is-h.is-vertical {
+    left: var(--spaces-h);
+  }
+}
+
+.spaces_label {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  font-size: 12px;
+  text-align: center;
+
+  @nest .spaces_line.is-horizontal & {
+    top: -7px;
+    right: 100%;
+  }
+
+  @nest .spaces_line.is-vertical & {
+    top: 100%;
+    left: -7px;
+  }
 }
 
 .spaces canvas {

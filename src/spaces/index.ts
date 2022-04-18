@@ -7,13 +7,11 @@ import { paintL, paintC, paintH } from './lib.js'
 import { L_MAX, C_MAX, H_MAX } from '../../config.js'
 import { onCurrentChange } from '../stores/current.js'
 
+let root = document.querySelector<HTMLCanvasElement>('.spaces')!
+
 let canvasL = document.querySelector<HTMLCanvasElement>('#spaces-l')!
 let canvasC = document.querySelector<HTMLCanvasElement>('#spaces-c')!
 let canvasH = document.querySelector<HTMLCanvasElement>('#spaces-h')!
-
-let dotL = document.querySelector<HTMLDivElement>('#spaces-dot-l')!
-let dotC = document.querySelector<HTMLDivElement>('#spaces-dot-c')!
-let dotH = document.querySelector<HTMLDivElement>('#spaces-dot-h')!
 
 let canvasSize = canvasL.getBoundingClientRect()
 const WIDTH = canvasSize.width * pixelRation
@@ -27,17 +25,14 @@ canvasH.width = WIDTH
 canvasH.height = HEIGHT
 
 onCurrentChange({
-  ch({ c, h }) {
-    dotL.style.bottom = `${(100 * c) / C_MAX}%`
-    dotL.style.left = `${(100 * h) / H_MAX}%`
+  l(l) {
+    root.style.setProperty('--spaces-l', `${(100 * l) / L_MAX}%`)
   },
-  lh({ l, h }) {
-    dotC.style.bottom = `${(100 * l) / L_MAX}%`
-    dotC.style.left = `${(100 * h) / H_MAX}%`
+  c(c) {
+    root.style.setProperty('--spaces-c', `${(100 * c) / C_MAX}%`)
   },
-  lc({ l, c }) {
-    dotH.style.bottom = `${(100 * l) / L_MAX}%`
-    dotH.style.left = `${(100 * c) / C_MAX}%`
+  h(h) {
+    root.style.setProperty('--spaces-h', `${(100 * h) / H_MAX}%`)
   }
 })
 
