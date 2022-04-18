@@ -5,7 +5,7 @@
 .spaces_space {
   position: relative;
   width: 300px;
-  height: 100px;
+  height: 150px;
   margin-top: 10px;
 }
 
@@ -20,6 +20,6 @@
 }
 
 .spaces canvas {
-  width: 300px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
 }
