@@ -13,9 +13,9 @@
   position: absolute;
   width: 3px;
   height: 3px;
-  border: 1px solid oklab(0% 0 0);
+  border: 1px solid oklch(0% 0 0);
   border-radius: 50%;
-  box-shadow: 0 0 0 1px oklab(100% 0 0);
+  box-shadow: 0 0 0 1px oklch(100% 0 0);
   transform: translate(-2px, 3px);
 }
 
