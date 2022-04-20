@@ -1,4 +1,9 @@
 .spaces {
+  display: grid;
+  grid-template-areas:
+    "L H"
+    "C .";
+  width: 650px;
   margin-left: 20px;
 }
 
@@ -7,6 +12,18 @@
   width: 300px;
   height: 150px;
   margin-top: 20px;
+
+  &.is-l {
+    grid-area: L;
+  }
+
+  &.is-c {
+    grid-area: C;
+  }
+
+  &.is-h {
+    grid-area: H;
+  }
 }
 
 .spaces_line {

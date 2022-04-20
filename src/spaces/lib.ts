@@ -87,7 +87,7 @@ function checkBlock(
   return [someRGB, allRGB, someP3, allP3]
 }
 
-function paintVertical(
+function paint(
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
@@ -119,36 +119,6 @@ function paintVertical(
   }
 }
 
-function paintHorizontal(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  getColor: GetColor
-): void {
-  for (let y = 0; y <= height; y += BLOCK) {
-    for (let x = 0; x <= width; x += BLOCK) {
-      let [someRGB, allRGB, someP3, allP3] = checkBlock(getColor, x, y)
-      if (allRGB) {
-        paintFast(ctx, height, x, y, false, BLOCK, 2, getColor)
-      } else if (allP3 && !someRGB) {
-        paintFast(ctx, height, x, y, true, BLOCK, 2, getColor)
-      } else if (someP3) {
-        paintSlow(ctx, height, x, y, getColor)
-      } else {
-        if (DEBUG) {
-          ctx.fillStyle = 'rgba(255 0 0 / 0.3)'
-          ctx.fillRect(x, height - y, BLOCK, -BLOCK)
-        }
-        break
-      }
-      if (DEBUG) {
-        ctx.fillStyle = 'rgba(0 0 0 / 0.5)'
-        ctx.fillRect(x + BLOCK / 2, height - y - BLOCK / 2, 1, 1)
-      }
-    }
-  }
-}
-
 export function paintL(
   canvas: HTMLCanvasElement,
   width: number,
@@ -158,7 +128,7 @@ export function paintL(
   let ctx = getCleanCtx(canvas)
   let hFactor = H_MAX / width
   let cFactor = C_MAX / height
-  paintVertical(ctx, width, height, false, BLOCK, (x, y) => {
+  paint(ctx, width, height, false, BLOCK, (x, y) => {
     return build(l, y * cFactor, x * hFactor)
   })
 }
@@ -172,7 +142,7 @@ export function paintC(
   let ctx = getCleanCtx(canvas)
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
-  paintVertical(ctx, width, height, true, 2, (x, y) => {
+  paint(ctx, width, height, true, 2, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
   })
 }
@@ -184,9 +154,9 @@ export function paintH(
   h: number
 ): void {
   let ctx = getCleanCtx(canvas)
-  let cFactor = C_MAX / width
-  let lFactor = L_MAX / height
-  paintHorizontal(ctx, width, height, (x, y) => {
-    return build(y * lFactor, x * cFactor, h)
+  let lFactor = L_MAX / width
+  let cFactor = C_MAX / height
+  paint(ctx, width, height, true, BLOCK, (x, y) => {
+    return build(x * lFactor, y * cFactor, h)
   })
 }

@@ -2,7 +2,7 @@
   display: flex;
   width: 300px;
   height: 100px;
-  margin: 0 0 20px 20px;
+  margin-left: 20px;
 }
 
 .example_rgb,
