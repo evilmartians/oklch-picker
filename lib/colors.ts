@@ -86,7 +86,7 @@ export function formatRgb(color: RgbColor): string {
   let r = Math.round(25500 * color.r) / 100
   let g = Math.round(25500 * color.g) / 100
   let b = Math.round(25500 * color.b) / 100
-  if (color.alpha && color.alpha < 1) {
+  if (typeof color.alpha !== 'undefined' && color.alpha < 1) {
     return `rgba(${r}, ${g}, ${b}, ${color.alpha})`
   } else {
     return `rgb(${r}, ${g}, ${b})`
@@ -95,7 +95,10 @@ export function formatRgb(color: RgbColor): string {
 
 export function formatLch(color: LchColor): string {
   let { l, c, h, alpha } = color
-  let postfix = alpha && alpha < 1 ? ` / ${toPercent(alpha)}` : ''
+  let postfix = ''
+  if (typeof alpha !== 'undefined' && alpha < 1) {
+    postfix = ` / ${toPercent(alpha)}`
+  }
   return `oklch(${toPercent(l)} ${c} ${h}${postfix})`
 }
 
