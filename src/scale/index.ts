@@ -10,8 +10,10 @@ let canvasC = document.querySelector<HTMLCanvasElement>('#scale-c')!
 let canvasH = document.querySelector<HTMLCanvasElement>('#scale-h')!
 let divAlpha = document.querySelector<HTMLDivElement>('#scale-alpha')!
 
-const WIDTH = canvasL.getBoundingClientRect().width * pixelRation
-const HEIGHT = 1
+let canvasSize = canvasL.getBoundingClientRect()
+const WIDTH = canvasSize.width * pixelRation
+const HEIGHT = canvasSize.height * pixelRation
+const HALF_HEIGHT = Math.floor(HEIGHT / 2)
 
 canvasL.width = WIDTH
 canvasL.height = HEIGHT
@@ -28,9 +30,16 @@ function paint(
   for (let x = 0; x <= WIDTH; x++) {
     let color = getColor(x)
     if (inP3(color)) {
-      if (!inRGB(color)) color.alpha = P3_ALPHA
-      ctx.fillStyle = format(color)
-      ctx.fillRect(x, 0, 1, HEIGHT)
+      if (!inRGB(color)) {
+        ctx.fillStyle = format(color)
+        ctx.fillRect(x, HALF_HEIGHT, 1, HEIGHT)
+        color.alpha = P3_ALPHA
+        ctx.fillStyle = format(color)
+        ctx.fillRect(x, 0, 1, HALF_HEIGHT)
+      } else {
+        ctx.fillStyle = format(color)
+        ctx.fillRect(x, 0, 1, HEIGHT)
+      }
     } else if (!hasGaps) {
       return
     }
