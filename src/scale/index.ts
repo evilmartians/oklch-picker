@@ -5,10 +5,12 @@ import { onCurrentChange } from '../stores/current.js'
 import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
-let canvasL = document.querySelector<HTMLCanvasElement>('#scale-l')!
-let canvasC = document.querySelector<HTMLCanvasElement>('#scale-c')!
-let canvasH = document.querySelector<HTMLCanvasElement>('#scale-h')!
-let divAlpha = document.querySelector<HTMLDivElement>('#scale-alpha')!
+let canvasL = document.querySelector<HTMLCanvasElement>('.scale.is-l')!
+let canvasC = document.querySelector<HTMLCanvasElement>('.scale.is-c')!
+let canvasH = document.querySelector<HTMLCanvasElement>('.scale.is-h')!
+let divAlpha = document.querySelector<HTMLDivElement>(
+  '.scale.is-alpha .scale_area'
+)!
 
 let canvasSize = canvasL.getBoundingClientRect()
 const WIDTH = canvasSize.width * pixelRation

@@ -1,5 +1,15 @@
 .scale {
+  position: relative;
   width: 300px;
   height: 20px;
   margin: 20px 0 0 20px;
+
+  &.is-alpha {
+    background: var(--transparent);
+  }
+}
+
+.scale_area {
+  position: absolute;
+  inset: 0;
 }

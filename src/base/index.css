@@ -1,3 +1,9 @@
+:root {
+  --transparent:
+    repeating-conic-gradient(oklch(94% 0 0) 0% 25%, oklch(100% 0 0) 0% 50%)
+    50% / 8px 8px;
+}
+
 body {
   padding: 50px;
   font-family: sans-serif;

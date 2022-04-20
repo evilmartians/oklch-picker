@@ -3,6 +3,12 @@
   width: 300px;
   height: 100px;
   margin-left: 20px;
+  background: var(--transparent);
+}
+
+.example_invisible,
+.example_p3-no {
+  background: oklch(100% 0 0);
 }
 
 .example_rgb,
