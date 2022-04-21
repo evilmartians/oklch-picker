@@ -63,7 +63,7 @@ jobs:
           key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: pnpm-production-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prod
+        run: pnpm install --frozen-lockfile --production --ignore-scripts
       - name: Build
         run: pnpm build
         env:
