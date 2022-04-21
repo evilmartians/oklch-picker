@@ -55,9 +55,6 @@ jobs:
         with:
           path: ~/.asdf
           key: asdf-${{ hashFiles('**/.tool-versions') }}
-      - name: Install asdf tools
-        if: steps.asdf-cache.outputs.cache-hit != 'true'
-        uses: asdf-vm/actions/install@v1
       - name: Cache pnpm modules
         uses: actions/cache@v3
         env:
@@ -68,7 +65,7 @@ jobs:
           restore-keys: pnpm-production-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prod
-      - name: Run tests
+      - name: Build
         run: pnpm build
         env:
           FORCE_COLOR: 2
