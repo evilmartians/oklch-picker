@@ -43,14 +43,12 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test
-    if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
       - name: Install asdf
         uses: asdf-vm/actions/setup@v1
       - name: Cache asdf
-        id: asdf-cache
         uses: actions/cache@v3
         with:
           path: ~/.asdf
@@ -64,8 +62,24 @@ jobs:
           key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: pnpm-production-
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --prod
+        run: pnpm install --frozen-lockfile --production --ignore-scripts
       - name: Build
         run: pnpm build
         env:
           FORCE_COLOR: 2
+      - name: Preview OKLCH
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        if: github.ref != 'refs/heads/main'
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: ai-oklch
+          expires: 7d
+      - name: Deploy OKLCH
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        if: github.ref == 'refs/heads/main'
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: ai-oklch
+          channelId: live
