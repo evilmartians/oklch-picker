@@ -1,5 +1,8 @@
 lockfileVersion: 5.3
 
+overrides:
+  async@<2.6.4: '>=2.6.4'
+
 specifiers:
   '@csstools/postcss-oklab-function': ^1.1.0
   '@logux/eslint-config': ^47.0.0
@@ -811,10 +814,6 @@ packages:
     resolution: {integrity: sha512-Z7tMw1ytTXt5jqMcOP+OQteU1VuNK9Y02uuJtKQ1Sv69jXQKKg5cibLwGJow8yzZP+eAc18EmLGPal0bp36rvQ==}
     engines: {node: '>=8'}
     dev: true
-
-  /async/1.5.2:
-    resolution: {integrity: sha1-7GphrlZIDAw8skHJVhjiCJL5Zyo=}
-    dev: false
 
   /async/2.6.4:
     resolution: {integrity: sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==}
@@ -4196,7 +4195,7 @@ packages:
   /nash/3.0.0:
     resolution: {integrity: sha512-M5SahEycXUmko3zOvsBkF6p94CWLhnyy9hfpQ9Qzp+rQkQ8D1OaTlfTl1OBWktq9Fak3oDXKU+ev7tiMaMu+1w==}
     dependencies:
-      async: 1.5.2
+      async: 3.2.3
       flat-arguments: 1.0.2
       lodash: 4.17.21
       minimist: 1.2.6
