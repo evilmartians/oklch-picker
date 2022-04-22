@@ -73,8 +73,7 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          target: oklch
-          projectId: oklch
+          projectId: ai-oklch
           expires: 7d
       - name: Deploy OKLCH
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -82,6 +81,5 @@ jobs:
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-          target: oklch
-          projectId: oklch
+          projectId: ai-oklch
           channelId: live
