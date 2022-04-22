@@ -67,7 +67,7 @@ jobs:
         run: pnpm build
         env:
           FORCE_COLOR: 2
-      - name: Preview OKLCH
+      - name: Deploy preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         if: github.ref != 'refs/heads/main'
         with:
@@ -75,7 +75,7 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
           projectId: ai-oklch
           expires: 7d
-      - name: Deploy OKLCH
+      - name: Deploy website
         uses: FirebaseExtended/action-hosting-deploy@v0
         if: github.ref == 'refs/heads/main'
         with:
