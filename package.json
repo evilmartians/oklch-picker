@@ -7,7 +7,6 @@
   },
   "scripts": {
     "start": "vite",
-    "spaces": "node scripts/generate-spaces.js",
     "build": "vite build -m production",
     "lint": "tsc --noEmit && eslint . && stylelint **/*.css",
     "test": "pnpm lint && pnpm build && size-limit && pnpm audit --prod"
