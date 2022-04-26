@@ -7,133 +7,140 @@
     <script type="module" src="./src/index.ts" defer></script>
   </head>
 
-  <body></body>
-  <div class="example">
-    <div class="example_invisible">
-      <div class="example_label">Not visible</div>
+  <body>
+
+    <div class="example">
+      <div class="example_invisible">
+        <div class="example_label">Not visible</div>
+      </div>
+      <div class="example_p3">
+        <div class="example_label">P3</div>
+      </div>
+      <div class="example_p3-no">
+        <div class="example_label">P3 is not supported on this device</div>
+      </div>
+      <div class="example_rgb"></div>
     </div>
-    <div class="example_p3">
-      <div class="example_label">P3</div>
+
+    <canvas class="scale is-l"></canvas>
+    <div class="numbers_item">
+      <label for="numbers-l">L</label>
+      <input
+        id="numbers-slider-l"
+        type="range"
+        min="0"
+        max="1"
+        step="0.005"
+        aria-hidden="true"
+      />
+      <input id="numbers-l" type="number" min="0" max="1" step="0.05" />
     </div>
-    <div class="example_p3-no">
-      <div class="example_label">P3 is not supported on this device</div>
+    <canvas class="scale is-c"></canvas>
+    <div class="numbers_item">
+      <label for="numbers-c">C</label>
+      <input
+        id="numbers-slider-c"
+        type="range"
+        min="0"
+        max="0.4"
+        step="0.001"
+        aria-hidden="true"
+      />
+      <input id="numbers-c" type="number" min="0" max="0.4" step="0.01" />
     </div>
-    <div class="example_rgb"></div>
-  </div>
-  <canvas class="scale is-l"></canvas>
-  <div class="numbers_item">
-    <label for="numbers-l">L</label>
-    <input
-      id="numbers-slider-l"
-      type="range"
-      min="0"
-      max="1"
-      step="0.005"
+    <canvas class="scale is-h"></canvas>
+    <div class="numbers_item">
+      <label for="numbers-h">H</label>
+      <input
+        id="numbers-slider-h"
+        type="range"
+        min="0"
+        max="360"
+        step="0.05"
+        aria-hidden="true"
+      />
+      <input id="numbers-h" type="number" min="0" max="360" step="0.5" />
+    </div>
+    <div class="scale is-alpha">
+      <div class="scale_area"></div>
+    </div>
+    <div class="numbers_item">
+      <label for="numbers-alpha">α</label>
+      <input
+        id="numbers-slider-alpha"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        aria-hidden="true"
+      />
+      <input id="numbers-alpha" type="number" min="0" max="1" step="0.1" />
+    </div>
+
+    <div class="text_value">
+      <input
+        class="text_input"
+        id="text-lch"
+        type="text"
+        value=""
+        aria-label="LCH CSS value"
+      />
+      <div class="text_error" id="text-lch-error" aria-hidden="true">
+        Error in color
+      </div>
+    </div>
+    <div class="text_value">
+      <input
+        class="text_input"
+        id="text-rgb"
+        type="text"
+        value=""
+        aria-label="RGB CSS value"
+      />
+      <div class="text_error" id="text-rgb-error" aria-hidden="true">
+        Error in color
+      </div>
+    </div>
+
+    <div class="spaces">
+      <div class="spaces_space is-l">
+        <div class="spaces_line is-horizontal is-c">
+          <div class="spaces_label">C</div>
+        </div>
+        <div class="spaces_line is-vertical is-h">
+          <div class="spaces_label">H</div>
+        </div>
+        <canvas id="spaces-l"></canvas>
+      </div>
+      <div class="spaces_space is-c">
+        <div class="spaces_line is-horizontal is-l">
+          <div class="spaces_label">L</div>
+        </div>
+        <div class="spaces_line is-vertical is-h">
+          <div class="spaces_label">H</div>
+        </div>
+        <canvas id="spaces-c"></canvas>
+      </div>
+      <div class="spaces_space is-h">
+        <div class="spaces_line is-horizontal is-c">
+          <div class="spaces_label">C</div>
+        </div>
+        <div class="spaces_line is-vertical is-l">
+          <div class="spaces_label">L</div>
+        </div>
+        <canvas id="spaces-h"></canvas>
+      </div>
+    </div>
+
+    <div
+      class="benchmark"
+      aria-live="polite"
+      aria-label="benchmark"
       aria-hidden="true"
-    />
-    <input id="numbers-l" type="number" min="0" max="1" step="0.05" />
-  </div>
-  <canvas class="scale is-c"></canvas>
-  <div class="numbers_item">
-    <label for="numbers-c">C</label>
-    <input
-      id="numbers-slider-c"
-      type="range"
-      min="0"
-      max="0.4"
-      step="0.001"
-      aria-hidden="true"
-    />
-    <input id="numbers-c" type="number" min="0" max="0.4" step="0.01" />
-  </div>
-  <canvas class="scale is-h"></canvas>
-  <div class="numbers_item">
-    <label for="numbers-h">H</label>
-    <input
-      id="numbers-slider-h"
-      type="range"
-      min="0"
-      max="360"
-      step="0.05"
-      aria-hidden="true"
-    />
-    <input id="numbers-h" type="number" min="0" max="360" step="0.5" />
-  </div>
-  <div class="scale is-alpha">
-    <div class="scale_area"></div>
-  </div>
-  <div class="numbers_item">
-    <label for="numbers-alpha">α</label>
-    <input
-      id="numbers-slider-alpha"
-      type="range"
-      min="0"
-      max="1"
-      step="0.01"
-      aria-hidden="true"
-    />
-    <input id="numbers-alpha" type="number" min="0" max="1" step="0.1" />
-  </div>
-  <div class="text_value">
-    <input
-      class="text_input"
-      id="text-lch"
-      type="text"
-      value=""
-      aria-label="LCH CSS value"
-    />
-    <div class="text_error" id="text-lch-error" aria-hidden="true">
-      Error in color
+    >
+      <div>F <span id="benchmark-freeze"></span></div>
+      <div>P <span id="benchmark-paint"></span></div>
     </div>
-  </div>
-  <div class="text_value">
-    <input
-      class="text_input"
-      id="text-rgb"
-      type="text"
-      value=""
-      aria-label="RGB CSS value"
-    />
-    <div class="text_error" id="text-rgb-error" aria-hidden="true">
-      Error in color
-    </div>
-  </div>
-  <div class="spaces">
-    <div class="spaces_space is-l">
-      <div class="spaces_line is-horizontal is-c">
-        <div class="spaces_label">C</div>
-      </div>
-      <div class="spaces_line is-vertical is-h">
-        <div class="spaces_label">H</div>
-      </div>
-      <canvas id="spaces-l"></canvas>
-    </div>
-    <div class="spaces_space is-c">
-      <div class="spaces_line is-horizontal is-l">
-        <div class="spaces_label">L</div>
-      </div>
-      <div class="spaces_line is-vertical is-h">
-        <div class="spaces_label">H</div>
-      </div>
-      <canvas id="spaces-c"></canvas>
-    </div>
-    <div class="spaces_space is-h">
-      <div class="spaces_line is-horizontal is-c">
-        <div class="spaces_label">C</div>
-      </div>
-      <div class="spaces_line is-vertical is-l">
-        <div class="spaces_label">L</div>
-      </div>
-      <canvas id="spaces-h"></canvas>
-    </div>
-  </div>
-  <div
-    class="benchmark"
-    aria-live="polite"
-    aria-label="benchmark"
-    aria-hidden="true"
-  >
-    <div>F <span id="benchmark-freeze"></span></div>
-    <div>P <span id="benchmark-paint"></span></div>
-  </div>
+
+  </body>
 </html>
