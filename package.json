@@ -13,11 +13,14 @@
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.1.0",
+    "autoprefixer": "^10.4.5",
     "culori": "^2.0.3",
     "firebase-tools": "^10.7.1",
     "nanostores": "^0.5.12",
     "postcss": "^8.4.12",
+    "postcss-media-minmax": "^5.0.0",
     "postcss-nesting": "^10.1.4",
+    "postcss-opacity-percentage": "^1.1.2",
     "vite": "^2.9.5"
   },
   "devDependencies": {

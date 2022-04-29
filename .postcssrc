@@ -1,6 +1,8 @@
 {
   "plugins": {
     "@csstools/postcss-oklab-function": {},
-    "postcss-nesting": {}
+    "postcss-nesting": {},
+    "postcss-media-minmax": {},
+    "autoprefixer": {}
   }
 }
