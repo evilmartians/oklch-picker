@@ -8,3 +8,11 @@ interface Worker extends EventTarget, AbstractWorker {
     transfer: (Transferable | HTMLCanvasElement)[]
   ): void
 }
+
+declare class ViteWorker extends Worker {
+  constructor()
+}
+
+declare module '*?worker' {
+  export default ViteWorker
+}

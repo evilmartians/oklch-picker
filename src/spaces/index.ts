@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import type { MessageData } from './worker.js'
 
 import './index.css'
@@ -6,6 +7,7 @@ import { pixelRation, hasP3Support } from '../../lib/screen.js'
 import { paintL, paintC, paintH } from './lib.js'
 import { L_MAX, C_MAX, H_MAX } from '../../config.js'
 import { onCurrentChange } from '../stores/current.js'
+import PaintWorker from './worker?worker'
 
 let root = document.querySelector<HTMLCanvasElement>('.spaces')!
 
@@ -45,10 +47,8 @@ if (canvasL.transferControlToOffscreen) {
     }
   }
 
-  let workerUrl = new URL('./worker.ts', import.meta.url)
-
   function init(canvas: HTMLCanvasElement): Worker {
-    let worker = new Worker(workerUrl, { type: 'module' })
+    let worker = new PaintWorker()
     send(worker, {
       type: 'init',
       canvas: canvas.transferControlToOffscreen!(),
