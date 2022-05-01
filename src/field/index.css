@@ -1,0 +1,9 @@
+.field {
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--input-height);
+
+  &[type="number"] {
+    text-align: right;
+  }
+}

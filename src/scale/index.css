@@ -1,10 +1,9 @@
 .scale {
-  position: relative;
-  width: 300px;
-  height: 20px;
-  margin: 20px 0 0 20px;
+  width: var(--space-width);
+  height: 100%;
 
   &.is-alpha {
+    position: relative;
     background: var(--transparent);
   }
 }

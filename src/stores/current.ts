@@ -1,7 +1,7 @@
 import { map, onSet } from 'nanostores'
 
 import { reportFreeze, benchmarking } from './benchmark.js'
-import { LchColor } from '../../lib/colors.js'
+import { LchColor, build } from '../../lib/colors.js'
 
 export interface LchValue {
   l: number
@@ -13,7 +13,7 @@ export interface LchValue {
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
 function randomColor(): LchValue {
-  return { l: 0.7, c: 0.1, h: Math.round(360 * Math.random()), alpha: 1 }
+  return { l: 70, c: 0.1, h: Math.round(360 * Math.random()), alpha: 100 }
 }
 
 function parseHash(): LchValue | undefined {
@@ -115,11 +115,15 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
 
 export function setCurrentRound(color: LchColor): void {
   current.set({
-    l: Math.round(100 * color.l) / 100,
+    l: Math.round(100 * color.l) / 10000,
     c: Math.round(100 * color.c) / 100,
     h: Math.round(100 * (color.h ?? 0)) / 100,
-    alpha: color.alpha ?? 1
+    alpha: color.alpha ? color.alpha / 100 : 100
   })
+}
+
+export function valueToColor(value: LchValue): LchColor {
+  return build(value.l / 100, value.c, value.h, value.alpha / 100)
 }
 
 benchmarking.listen(enabled => {

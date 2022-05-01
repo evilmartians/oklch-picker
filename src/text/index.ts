@@ -1,5 +1,5 @@
 import './index.css'
-import { current, setCurrentRound } from '../stores/current.js'
+import { current, setCurrentRound, valueToColor } from '../stores/current.js'
 import { parse, oklch, formatLch } from '../../lib/colors.js'
 import { visible } from '../stores/visible.js'
 
@@ -24,8 +24,8 @@ function toggle(
   error.classList.toggle('is-show', invalid)
 }
 
-current.subscribe(color => {
-  lchInput.value = formatLch({ mode: 'lch', ...color })
+current.subscribe(value => {
+  lchInput.value = formatLch(valueToColor(value))
   toggle(lchInput, lchError, false)
 })
 

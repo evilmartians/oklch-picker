@@ -1,17 +1,26 @@
 .spaces {
   display: grid;
-  grid-template-areas:
-    "L H"
-    "C .";
-  width: 650px;
-  margin-left: 20px;
+
+  @media (max-width: 800px) {
+    grid-template-areas:
+      "L"
+      "C"
+      "H";
+  }
+
+  @media (min-width: 801px) {
+    grid-template-areas:
+      "L H"
+      "C .";
+    gap: 20px;
+    width: 650px;
+  }
 }
 
 .spaces_space {
   position: relative;
-  width: 300px;
+  width: var(--space-width);
   height: 150px;
-  margin-top: 20px;
 
   &.is-l {
     grid-area: L;

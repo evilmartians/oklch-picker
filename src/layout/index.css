@@ -1,0 +1,40 @@
+.layout {
+  display: grid;
+  align-content: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  @media (max-width: 800px) {
+    grid-template-areas:
+      "Example"
+      "Code"
+      "Scales"
+      "Space";
+    padding: 20px;
+  }
+
+  @media (min-width: 801px) {
+    grid-template-areas:
+      "Scales Example"
+      "Scales Code"
+      "Space  Space";
+    padding: 50px;
+  }
+}
+
+.layout_example {
+  grid-area: Example;
+}
+
+.layout_scales {
+  grid-area: Scales;
+}
+
+.layout_code {
+  grid-area: Code;
+  margin-bottom: 10px;
+}
+
+.layout_space {
+  grid-area: Space;
+}

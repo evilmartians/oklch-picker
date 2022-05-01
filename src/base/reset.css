@@ -21,6 +21,11 @@ fieldset {
   margin: 0;
 }
 
+/* Remove unexpacted flex behaviour */
+* {
+  flex-shrink: 0;
+}
+
 /* Use screen height */
 
 html {

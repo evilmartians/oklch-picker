@@ -1,7 +1,7 @@
 import './index.css'
 import { inP3, build, inRGB, format, Color } from '../../lib/colors.js'
+import { onCurrentChange, valueToColor } from '../stores/current.js'
 import { L_MAX, C_MAX, H_MAX, P3_ALPHA } from '../../config.js'
-import { onCurrentChange } from '../stores/current.js'
 import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
@@ -37,7 +37,7 @@ function paint(
         ctx.fillRect(x, HALF_HEIGHT, 1, HEIGHT)
         color.alpha = P3_ALPHA
         ctx.fillStyle = format(color)
-        ctx.fillRect(x, 0, 1, HALF_HEIGHT)
+        ctx.fillRect(x, 0, 1, HEIGHT)
       } else {
         ctx.fillStyle = format(color)
         ctx.fillRect(x, 0, 1, HEIGHT)
@@ -49,24 +49,32 @@ function paint(
 }
 
 onCurrentChange({
-  ch({ c, h }) {
+  ch(value) {
+    let color = valueToColor(value)
+    let c = color.c
+    let h = color.h ?? 0
     let factor = L_MAX / WIDTH
     let ctx = getCleanCtx(canvasL)
     paint(ctx, true, x => build(x * factor, c, h))
   },
-  lh({ l, h }) {
+  lh(value) {
+    let color = valueToColor(value)
+    let l = color.l
+    let h = color.h ?? 0
     let factor = C_MAX / WIDTH
     let ctx = getCleanCtx(canvasC)
     paint(ctx, false, x => build(l, x * factor, h))
   },
-  lc({ l, c }) {
+  lc(value) {
+    let { l, c } = valueToColor(value)
     let factor = H_MAX / WIDTH
     let ctx = getCleanCtx(canvasH)
     paint(ctx, true, x => build(l, c, x * factor))
   },
-  lch({ l, c, h }) {
-    let from = format(build(l, c, h, 0))
-    let to = format(build(l, c, h))
+  lch(value) {
+    let color = valueToColor(value)
+    let from = format({ ...color, alpha: 0 })
+    let to = format(color)
     divAlpha.style.background = `linear-gradient(to right, ${from}, ${to})`
   }
 })
