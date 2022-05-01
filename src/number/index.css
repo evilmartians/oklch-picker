@@ -33,6 +33,7 @@
     border: 1px solid oklch(0% 0 0);
     border-radius: 0;
     -webkit-appearance: none;
+    transform: rotate(45deg) translate(11px, 11px);
   }
 
   &::-moz-range-thumb {
