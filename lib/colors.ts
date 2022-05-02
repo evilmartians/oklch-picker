@@ -1,10 +1,10 @@
 import {
-  clampChroma,
-  displayable,
-  modeOklch,
   formatRgb as fastFormatRgb,
   formatHex as originFormatHex,
   formatCss as originFormatCss,
+  clampChroma,
+  displayable,
+  modeOklch,
   modeOklab,
   useMode,
   modeRgb,
