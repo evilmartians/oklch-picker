@@ -75,6 +75,10 @@ export function parse(value: string): Color | undefined {
   if (value.startsWith('oklch(')) {
     value = value.replace(/^oklch\(/, 'color(--oklch ')
   }
+  value = value.replace(/\s*;$/, '')
+  if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(value)) {
+    value = value.replace(/^[\w-]+:\s*/, '')
+  }
   return originParse(value)
 }
 
@@ -102,8 +106,11 @@ export function formatLch(color: LchColor): string {
   return `${COLOR_FN}(${toPercent(l / L_MAX)} ${c} ${h}${postfix})`
 }
 
+// Hack to avoid ,999999 because of float bug implementation
+function clean(value: number): number {
+  return Math.round(parseFloat((value * 10 ** 2).toFixed(2))) / 10 ** 2
+}
+
 function toPercent(value: number): string {
-  // Hack to avoid ,999999 because of float bug implementation
-  // https://stackoverflow.com/a/18908122
-  return `${parseFloat(`${(1000 * value) / 10}`)}%`
+  return `${clean(100 * value)}%`
 }
