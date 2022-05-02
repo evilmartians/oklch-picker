@@ -9,7 +9,7 @@
     "start": "vite",
     "build": "vite build -m production",
     "lint": "tsc --noEmit && eslint . && stylelint **/*.css",
-    "test": "pnpm audit --prod && pnpm lint && pnpm build && size-limit && LCH=1 pnpm builds"
+    "test": "pnpm audit --prod && pnpm lint && pnpm build && size-limit && LCH=1 pnpm build"
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.1.0",
