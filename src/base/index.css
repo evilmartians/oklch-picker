@@ -7,16 +7,40 @@
 }
 
 :root {
-  --transparent:
-    repeating-conic-gradient(oklch(94% 0 0) 0% 25%, oklch(100% 0 0) 0% 50%)
-    50% / 8px 8px;
-  --card-background: oklch(100% 0 0);
+  /* Colors */
+  --surface-0: oklch(96% 0 300);
+  --surface-1: oklch(100% 0 0);
+  --surface-2: oklch(99% 0 0 / 85%);
+  --text-primary: oklch(0% 0 0);
+  --chess: oklch(94% 0 0);
+  --ui-bg: oklch(70% 0.05 310 / 18%);
+  --accent: oklch(58% 0.24 288);
+
+  /* Sizes */
   --input-height: 32px;
+  --radius: 12px;
   --space-width: 350px;
+
+  /* Styles */
+  --opacity-pattern:
+    repeating-conic-gradient(var(--chess) 0% 25%, transparent 0% 50%)
+    50% / 8px 8px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-0: oklch(0% 0 0);
+    --surface-1: oklch(29% 0.01 300);
+    --surface-2: oklch(29% 0 0 / 85%);
+    --text-primary: oklch(100% 0 0);
+    --chess: oklch(38% 0.01 297);
+  }
 }
 
 body {
   font-family: "Martian Mono", monospace;
   font-size: 15px;
   line-height: 16px;
+  color: var(--text-primary);
+  background: var(--surface-0);
 }

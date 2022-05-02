@@ -3,7 +3,7 @@
   width: 300px;
   height: 100px;
   margin-left: 20px;
-  background: var(--transparent);
+  background: var(--opacity-pattern);
 }
 
 .example_invisible,

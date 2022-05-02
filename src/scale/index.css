@@ -4,7 +4,7 @@
 
   &.is-a {
     position: relative;
-    background: var(--transparent);
+    background: var(--opacity-pattern);
   }
 }
 
