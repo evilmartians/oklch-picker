@@ -54,7 +54,7 @@ export function inP3(color: Color): boolean {
 }
 
 export function build(l: number, c: number, h: number, alpha = 1): LchColor {
-  return { mode: 'oklch', l, c, h, alpha }
+  return { mode: COLOR_FN, l, c, h, alpha }
 }
 
 export let format = fastFormatRgb
@@ -79,7 +79,7 @@ export function parse(value: string): Color | undefined {
 }
 
 export function toRgb(color: Color): RgbColor {
-  return rgb(clampChroma(color, 'oklch'))
+  return rgb(clampChroma(color, COLOR_FN))
 }
 
 export function formatRgb(color: RgbColor): string {
@@ -99,7 +99,7 @@ export function formatLch(color: LchColor): string {
   if (typeof alpha !== 'undefined' && alpha < 1) {
     postfix = ` / ${toPercent(alpha)}`
   }
-  return `oklch(${toPercent(l)} ${c} ${h}${postfix})`
+  return `${COLOR_FN}(${toPercent(l / L_MAX)} ${c} ${h}${postfix})`
 }
 
 function toPercent(value: number): string {

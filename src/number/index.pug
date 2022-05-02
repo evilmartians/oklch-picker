@@ -4,49 +4,54 @@
     type="range"
     min="0"
     max="100"
-    step="0.5"
+    step=L_STEP / 10
     aria-hidden="true"
   )
   canvas.scale.is-l
   .number_text
-    input#numbers-l.field( type="number" min="0" max="100" step="5" )
+    input#numbers-l.field( type="number" min="0" max="100" step=L_STEP )
 
 .number.is-c
   label.number_label( for="numbers-c" ) C
   input.number_range(
     type="range"
     min="0"
-    max="0.4"
-    step="0.001"
+    max=C_MAX
+    step=C_STEP / 10
     aria-hidden="true"
   )
   canvas.scale.is-c
   .number_text
-    input#numbers-c.field( type="number" min="0" max="0.4" step="0.01" )
+    input#numbers-c.field( type="number" min="0" max=C_MAX step=C_STEP )
 
 .number.is-h
   label.number_label( for="numbers-h" ) H
   input.number_range(
     type="range"
     min="0"
-    max="360"
-    step="0.05"
+    max=H_MAX
+    step=H_STEP / 10
     aria-hidden="true"
   )
   canvas.scale.is-h
   .number_text
-    input#numbers-h.field( type="number" min="0" max="360" step="0.5" )
+    input#numbers-h.field( type="number" min="0" max=H_MAX step=H_STEP )
 
 .number.is-alpha
   label.number_label( for="numbers-alpha" ) &alpha;
   input.number_range(
     type="range"
     min="0"
-    max="100"
-    step="1"
+    max=ALPHA_MAX
+    step=ALPHA_STEP / 10
     aria-hidden="true"
   )
   .scale.is-alpha
     .scale_area
   .number_text
-    input#numbers-alpha.field( type="number" min="0" max="100" step="10" )
+    input#numbers-alpha.field(
+      type="number"
+      min="0"
+      max=ALPHA_MAX
+      step=ALPHA_STEP
+    )

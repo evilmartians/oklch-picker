@@ -1,5 +1,4 @@
 import { inP3, inRGB, format, Color, build } from '../../lib/colors.js'
-import { P3_ALPHA, L_MAX, C_MAX, H_MAX } from '../../config.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 interface GetColor {

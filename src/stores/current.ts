@@ -13,7 +13,7 @@ export interface LchValue {
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
 function randomColor(): LchValue {
-  return { l: 70, c: 0.1, h: Math.round(360 * Math.random()), alpha: 100 }
+  return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), alpha: 100 }
 }
 
 function parseHash(): LchValue | undefined {
@@ -123,7 +123,7 @@ export function setCurrentRound(color: LchColor): void {
 }
 
 export function valueToColor(value: LchValue): LchColor {
-  return build(value.l / 100, value.c, value.h, value.alpha / 100)
+  return build((L_MAX * value.l) / 100, value.c, value.h, value.alpha / 100)
 }
 
 benchmarking.listen(enabled => {

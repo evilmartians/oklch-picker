@@ -5,7 +5,6 @@ import './index.css'
 import { bindFreezeToPaint, reportPaint } from '../stores/benchmark.js'
 import { pixelRation, hasP3Support } from '../../lib/screen.js'
 import { paintL, paintC, paintH } from './lib.js'
-import { L_MAX, C_MAX, H_MAX } from '../../config.js'
 import { onCurrentChange } from '../stores/current.js'
 import PaintWorker from './worker?worker'
 
@@ -28,7 +27,7 @@ canvasH.height = HEIGHT
 
 onCurrentChange({
   l(l) {
-    root.style.setProperty('--spaces-l', `${l / L_MAX}%`)
+    root.style.setProperty('--spaces-l', `${(100 * l) / L_MAX}%`)
   },
   c(c) {
     root.style.setProperty('--spaces-c', `${(100 * c) / C_MAX}%`)
@@ -81,7 +80,7 @@ if (canvasL.transferControlToOffscreen) {
   bindFreezeToPaint()
   onCurrentChange({
     l(l) {
-      paintL(canvasL, WIDTH, HEIGHT, l / 100)
+      paintL(canvasL, WIDTH, HEIGHT, (L_MAX * l) / 100)
     },
     c(c) {
       paintC(canvasC, WIDTH, HEIGHT, c)

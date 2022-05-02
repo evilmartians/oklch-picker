@@ -16,3 +16,15 @@ declare class ViteWorker extends Worker {
 declare module '*?worker' {
   export default ViteWorker
 }
+
+declare const COLOR_FN: string
+declare const L_MAX: number
+declare const L_STEP: number
+declare const C_MAX: number
+declare const C_STEP: number
+declare const C_RANDOM: number
+declare const H_MAX: number
+declare const H_STEP: number
+declare const ALPHA_MAX: number
+declare const ALPHA_STEP: number
+declare const P3_ALPHA: number

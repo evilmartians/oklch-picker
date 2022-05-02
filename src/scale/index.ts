@@ -1,7 +1,6 @@
 import './index.css'
 import { inP3, build, inRGB, format, Color } from '../../lib/colors.js'
 import { onCurrentChange, valueToColor } from '../stores/current.js'
-import { L_MAX, C_MAX, H_MAX, P3_ALPHA } from '../../config.js'
 import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
