@@ -7,13 +7,13 @@ export interface LchValue {
   l: number
   c: number
   h: number
-  alpha: number
+  a: number
 }
 
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
 function randomColor(): LchValue {
-  return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), alpha: 100 }
+  return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
 }
 
 function parseHash(): LchValue | undefined {
@@ -24,7 +24,7 @@ function parseHash(): LchValue | undefined {
         l: parseFloat(parts[0]),
         c: parseFloat(parts[1]),
         h: parseFloat(parts[2]),
-        alpha: parseFloat(parts[3])
+        a: parseFloat(parts[3])
       }
     }
   }
@@ -34,10 +34,10 @@ function parseHash(): LchValue | undefined {
 export let current = map<LchValue>(parseHash() || randomColor())
 
 onSet(current, ({ newValue }) => {
-  let { l, c, h, alpha } = newValue
-  let hash = `#${l},${c},${h},${alpha}`
+  let { l, c, h, a } = newValue
+  let hash = `#${l},${c},${h},${a}`
   if (location.hash !== hash) {
-    history.pushState(null, '', `#${l},${c},${h},${alpha}`)
+    history.pushState(null, '', `#${l},${c},${h},${a}`)
   }
 })
 
@@ -79,8 +79,8 @@ function runListeners(
     if (i.h && hChanged) {
       i.h(value.h)
     }
-    if (i.alpha && prev.alpha !== value.alpha) {
-      i.alpha(value.alpha)
+    if (i.alpha && prev.a !== value.a) {
+      i.alpha(value.a)
     }
 
     if (i.lc && (lChanged || cChanged)) {
@@ -114,16 +114,26 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
 }
 
 export function setCurrentRound(color: LchColor): void {
+  let value = colorToValue(color)
   current.set({
-    l: Math.round(100 * color.l) / 10000,
-    c: Math.round(100 * color.c) / 100,
-    h: Math.round(100 * (color.h ?? 0)) / 100,
-    alpha: color.alpha ? color.alpha / 100 : 100
+    l: Math.round(100 * value.l) / 100,
+    c: Math.round(100 * value.c) / 100,
+    h: Math.round(100 * value.h) / 100,
+    a: Math.round(100 * value.a) / 100
   })
 }
 
 export function valueToColor(value: LchValue): LchColor {
-  return build((L_MAX * value.l) / 100, value.c, value.h, value.alpha / 100)
+  return build((L_MAX * value.l) / 100, value.c, value.h, value.a / 100)
+}
+
+export function colorToValue(color: LchColor): LchValue {
+  return {
+    l: (100 * color.l) / L_MAX,
+    c: color.c,
+    h: color.h ?? 0,
+    a: (color.alpha ?? 1) * 100
+  }
 }
 
 benchmarking.listen(enabled => {

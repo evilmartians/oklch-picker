@@ -2,7 +2,7 @@
   width: var(--space-width);
   height: 100%;
 
-  &.is-alpha {
+  &.is-a {
     position: relative;
     background: var(--transparent);
   }

@@ -7,9 +7,7 @@ import { getCleanCtx } from '../../lib/canvas.js'
 let canvasL = document.querySelector<HTMLCanvasElement>('.scale.is-l')!
 let canvasC = document.querySelector<HTMLCanvasElement>('.scale.is-c')!
 let canvasH = document.querySelector<HTMLCanvasElement>('.scale.is-h')!
-let divAlpha = document.querySelector<HTMLDivElement>(
-  '.scale.is-alpha .scale_area'
-)!
+let divA = document.querySelector<HTMLDivElement>('.scale.is-a .scale_area')!
 
 let canvasSize = canvasL.getBoundingClientRect()
 const WIDTH = canvasSize.width * pixelRation
@@ -74,6 +72,6 @@ onCurrentChange({
     let color = valueToColor(value)
     let from = format({ ...color, alpha: 0 })
     let to = format(color)
-    divAlpha.style.background = `linear-gradient(to right, ${from}, ${to})`
+    divA.style.background = `linear-gradient(to right, ${from}, ${to})`
   }
 })

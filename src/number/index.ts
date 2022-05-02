@@ -3,7 +3,7 @@ import './index.css'
 import { current, onCurrentChange } from '../stores/current.js'
 
 function initInputs(
-  type: 'l' | 'c' | 'h' | 'alpha'
+  type: 'l' | 'c' | 'h' | 'a'
 ): [HTMLInputElement, HTMLInputElement] {
   let div = document.querySelector<HTMLInputElement>(`.number.is-${type}`)!
   let range = div.querySelector<HTMLInputElement>('[type=range]')!
@@ -25,7 +25,7 @@ function initInputs(
 let [rangeL, textL] = initInputs('l')
 let [rangeC, textC] = initInputs('c')
 let [rangeH, textH] = initInputs('h')
-let [rangeAlpha, textAlpha] = initInputs('alpha')
+let [rangeA, textA] = initInputs('a')
 
 onCurrentChange({
   l(value) {
@@ -38,6 +38,6 @@ onCurrentChange({
     rangeH.value = textH.value = String(value)
   },
   alpha(value) {
-    rangeAlpha.value = textAlpha.value = String(value)
+    rangeA.value = textA.value = String(value)
   }
 })

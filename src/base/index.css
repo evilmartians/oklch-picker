@@ -2,6 +2,7 @@
   --transparent:
     repeating-conic-gradient(oklch(94% 0 0) 0% 25%, oklch(100% 0 0) 0% 50%)
     50% / 8px 8px;
+  --card-background: oklch(100% 0 0);
   --input-height: 32px;
   --space-width: 350px;
 }
