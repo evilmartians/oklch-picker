@@ -32,6 +32,7 @@
 
   &.is-h {
     grid-area: H;
+    width: 150px;
   }
 }
 

@@ -22,7 +22,7 @@ canvasL.width = WIDTH
 canvasL.height = HEIGHT
 canvasC.width = WIDTH
 canvasC.height = HEIGHT
-canvasH.width = WIDTH
+canvasH.width = HEIGHT
 canvasH.height = HEIGHT
 
 onCurrentChange({
@@ -46,12 +46,12 @@ if (canvasL.transferControlToOffscreen) {
     }
   }
 
-  function init(canvas: HTMLCanvasElement): Worker {
+  function init(canvas: HTMLCanvasElement, isSquare = false): Worker {
     let worker = new PaintWorker()
     send(worker, {
       type: 'init',
       canvas: canvas.transferControlToOffscreen!(),
-      width: WIDTH,
+      width: isSquare ? HEIGHT : WIDTH,
       height: HEIGHT,
       p3: hasP3Support ?? false
     })
@@ -63,7 +63,7 @@ if (canvasL.transferControlToOffscreen) {
 
   let workerL = init(canvasL)
   let workerC = init(canvasC)
-  let workerH = init(canvasH)
+  let workerH = init(canvasH, true)
 
   onCurrentChange({
     l(l) {
@@ -86,7 +86,7 @@ if (canvasL.transferControlToOffscreen) {
       paintC(canvasC, WIDTH, HEIGHT, c)
     },
     h(h) {
-      paintH(canvasH, WIDTH, HEIGHT, h)
+      paintH(canvasH, HEIGHT, HEIGHT, h)
     }
   })
 }
