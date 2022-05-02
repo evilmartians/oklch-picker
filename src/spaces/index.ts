@@ -27,7 +27,7 @@ canvasH.height = HEIGHT
 
 onCurrentChange({
   l(l) {
-    root.style.setProperty('--spaces-l', `${(100 * l) / L_MAX}%`)
+    root.style.setProperty('--spaces-l', `${l}%`)
   },
   c(c) {
     root.style.setProperty('--spaces-c', `${(100 * c) / C_MAX}%`)
