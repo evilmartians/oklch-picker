@@ -113,13 +113,17 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
   }
 }
 
+function round2(value: number): number {
+  return parseFloat(value.toFixed(2))
+}
+
 export function setCurrentRound(color: LchColor): void {
   let value = colorToValue(color)
   current.set({
-    l: Math.round(100 * value.l) / 100,
-    c: Math.round(100 * value.c) / 100,
-    h: Math.round(100 * value.h) / 100,
-    a: Math.round(100 * value.a) / 100
+    l: round2(value.l),
+    c: round2(value.c),
+    h: round2(value.h),
+    a: round2(value.a)
   })
 }
 
