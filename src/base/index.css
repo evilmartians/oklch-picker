@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "Martian Mono";
+  font-weight: 100 800;
+  font-stretch: 75% 112.5%;
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianMono-0.9.1.woff2") format("woff2");
+  font-display: swap;
+}
+
 :root {
   --transparent:
     repeating-conic-gradient(oklch(94% 0 0) 0% 25%, oklch(100% 0 0) 0% 50%)
@@ -8,5 +16,7 @@
 }
 
 body {
-  font-family: sans-serif;
+  font-family: "Martian Mono", monospace;
+  font-size: 15px;
+  line-height: 16px;
 }
