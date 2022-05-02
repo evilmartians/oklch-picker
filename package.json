@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.1.0",
-    "autoprefixer": "^10.4.5",
+    "autoprefixer": "^10.4.7",
     "culori": "^2.0.3",
     "firebase-tools": "^10.7.2",
     "nanostores": "^0.5.12",
@@ -21,15 +21,15 @@
     "postcss-media-minmax": "^5.0.0",
     "postcss-nesting": "^10.1.4",
     "postcss-opacity-percentage": "^1.1.2",
-    "vite": "^2.9.6",
+    "vite": "^2.9.7",
     "vite-plugin-pug-transformer": "^1.0.1"
   },
   "devDependencies": {
     "@logux/eslint-config": "^47.2.0",
     "@logux/stylelint-config": "^0.10.0",
     "@size-limit/file": "^7.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.21.0",
-    "@typescript-eslint/parser": "^5.21.0",
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.14.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
