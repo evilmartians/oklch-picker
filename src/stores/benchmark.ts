@@ -1,5 +1,7 @@
 import { atom, map } from 'nanostores'
 
+import { formatHex, LchColor } from '../../lib/colors.js'
+
 export let benchmarking = atom(false)
 
 if (location.search === '?bench') {
@@ -58,3 +60,15 @@ setTimeout(() => {
     }
   }
 }, 1)
+
+const BEST = 150
+const WORST = 40
+const MAX_TIME = 300
+
+export function getLastBenchmarkColor(): string {
+  let { freeze } = lastBenchmark.get()
+  let hue = BEST - ((BEST - WORST) * freeze) / MAX_TIME
+  if (hue < WORST) hue = WORST
+  let oklch: LchColor = { mode: 'oklch', l: 0.65, c: 0.12, h: hue }
+  return formatHex(oklch)
+}

@@ -2,10 +2,26 @@
   display: none;
 
   &.is-enabled {
-    position: absolute;
+    position: fixed;
     top: 0;
     right: 0;
     display: block;
-    font-size: 14px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 200;
+    color: oklch(100% 0 0);
+    background: var(--benchmark-color);
   }
+}
+
+.benchmark_row + .benchmark_row {
+  padding-top: 4px;
+}
+
+.benchmark_freeze,
+.benchmark_paint {
+  display: inline-block;
+  min-width: 25px;
+  font-weight: 400;
+  text-align: right;
 }

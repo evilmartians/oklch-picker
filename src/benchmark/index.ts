@@ -1,9 +1,13 @@
 import './index.css'
-import { benchmarking, lastBenchmark } from '../stores/benchmark.js'
+import {
+  getLastBenchmarkColor,
+  lastBenchmark,
+  benchmarking
+} from '../stores/benchmark.js'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
-let freeze = document.querySelector<HTMLSpanElement>('#benchmark-freeze')!
-let paint = document.querySelector<HTMLSpanElement>('#benchmark-paint')!
+let freeze = block.querySelector<HTMLSpanElement>('.benchmark_freeze')!
+let paint = block.querySelector<HTMLSpanElement>('.benchmark_paint')!
 
 let unbind: undefined | (() => void)
 benchmarking.subscribe(enabled => {
@@ -11,6 +15,7 @@ benchmarking.subscribe(enabled => {
     block.classList.add('is-enabled')
     block.setAttribute('aria-hidden', 'false')
     unbind = lastBenchmark.subscribe(result => {
+      block.style.setProperty('--benchmark-color', getLastBenchmarkColor())
       freeze.innerText = `${result.freeze}`
       paint.innerText = `${result.paint}`
     })

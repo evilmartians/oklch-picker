@@ -2,7 +2,7 @@ let config = {
   COLOR_FN: '"oklch"',
 
   L_MAX: 1,
-  L_STEP: 5,
+  L_STEP: 1,
 
   C_MAX: 0.5,
   C_STEP: 0.01,
