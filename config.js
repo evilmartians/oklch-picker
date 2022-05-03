@@ -1,9 +1,3 @@
-//   COLOR_FN: 'lch'
-//   L_MAX: 100
-//   C_MAX: 140
-//   C_STEP: 1
-//   C_RANDOM: 39
-
 let config = {
   COLOR_FN: '"oklch"',
 
