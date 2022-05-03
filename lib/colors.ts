@@ -1,8 +1,8 @@
 import {
+  clampChroma as originClampChroma,
   formatRgb as fastFormatRgb,
   formatHex as originFormatHex,
   formatCss as originFormatCss,
-  clampChroma,
   displayable,
   modeRec2020,
   modeOklch,
@@ -35,6 +35,11 @@ export interface LchColor extends Color {
   c: number
   h?: number
 }
+
+export let clampChroma = originClampChroma as (
+  color: Color,
+  mode: string
+) => Color
 
 export let formatHex = originFormatHex as (color: Color) => string
 export let formatCss = originFormatCss as (color: Color) => string
