@@ -4,7 +4,7 @@ import { formatHex, LchColor } from '../../lib/colors.js'
 
 export let benchmarking = atom(false)
 
-if (location.search === '?bench') {
+if (/^\?bench(=|&|$)/.test(location.search)) {
   benchmarking.set(true)
 }
 benchmarking.listen(value => {
