@@ -11,10 +11,13 @@
   --surface-0: oklch(96% 0 300);
   --surface-1: oklch(100% 0 0);
   --surface-2: oklch(99% 0 0 / 85%);
+  --surface-ui-regular: oklch(70% 0.05 311);
+  --surface-ui-accent: oklch(70% 0.17 286 / 20%);
   --text-primary: oklch(0% 0 0);
+  --text-secondary: oklch(54% 0.01 286 / 85%);
   --chess: oklch(94% 0 0);
   --ui-bg: oklch(70% 0.05 310 / 18%);
-  --accent: oklch(58% 0.24 288);
+  --accent: oklch(57% 0.18 286);
 
   /* Sizes */
   --input-height: 32px;
@@ -43,4 +46,22 @@ body {
   line-height: 16px;
   color: var(--text-primary);
   background: var(--surface-0);
+  accent-color: var(--accent);
+}
+
+input,
+button {
+  outline-offset: 3px;
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  &:focus {
+    outline: var(--accent) solid 3px;
+  }
+
+  &:not(:focus-visible):focus {
+    outline: none;
+  }
 }
