@@ -21,6 +21,7 @@
   position: relative;
   width: var(--space-width);
   height: 150px;
+  cursor: pointer;
 
   &.is-l {
     grid-area: L;

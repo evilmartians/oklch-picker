@@ -135,6 +135,8 @@ function round3(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
+let roundC = COLOR_FN === 'oklch' ? round3 : round2
+
 export function setCurrentFromColor(color: Color): void {
   if (color.mode === COLOR_FN) {
     current.set(colorToValue(color as LchColor))
@@ -142,7 +144,7 @@ export function setCurrentFromColor(color: Color): void {
     let value = colorToValue(COLOR_FN === 'oklch' ? oklch(color) : lch(color))
     current.set({
       l: round2(value.l),
-      c: COLOR_FN === 'oklch' ? round3(value.c) : round2(value.c),
+      c: roundC(value.c),
       h: round2(value.h),
       a: round2(value.a)
     })
@@ -160,6 +162,16 @@ export function colorToValue(color: LchColor): LchValue {
     h: color.h ?? 0,
     a: (color.alpha ?? 1) * 100
   }
+}
+
+export function setCurrentComponents(parts: Partial<LchValue>): void {
+  let value = current.get()
+  current.set({
+    l: typeof parts.l === 'undefined' ? value.l : round2(parts.l),
+    c: typeof parts.c === 'undefined' ? value.c : roundC(parts.c),
+    h: typeof parts.h === 'undefined' ? value.h : round2(parts.h),
+    a: value.a
+  })
 }
 
 benchmarking.listen(enabled => {

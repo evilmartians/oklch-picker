@@ -2,17 +2,21 @@
 import type { MessageData } from './worker.js'
 
 import './index.css'
+import {
+  setCurrentComponents,
+  onCurrentChange,
+  onPaint
+} from '../stores/current.js'
 import { bindFreezeToPaint, reportPaint } from '../stores/benchmark.js'
 import { pixelRation, hasP3Support } from '../../lib/screen.js'
-import { onCurrentChange, onPaint } from '../stores/current.js'
 import { paintL, paintC, paintH } from './lib.js'
 import PaintWorker from './worker?worker'
 
 let root = document.querySelector<HTMLCanvasElement>('.spaces')!
 
-let canvasL = document.querySelector<HTMLCanvasElement>('#spaces-l')!
-let canvasC = document.querySelector<HTMLCanvasElement>('#spaces-c')!
-let canvasH = document.querySelector<HTMLCanvasElement>('#spaces-h')!
+let canvasL = root.querySelector<HTMLCanvasElement>('#spaces-l')!
+let canvasC = root.querySelector<HTMLCanvasElement>('#spaces-c')!
+let canvasH = root.querySelector<HTMLCanvasElement>('#spaces-h')!
 
 let canvasSize = canvasL.getBoundingClientRect()
 const WIDTH = canvasSize.width * pixelRation
@@ -36,6 +40,32 @@ onCurrentChange({
     root.style.setProperty('--spaces-h', `${(100 * h) / H_MAX}%`)
   }
 })
+
+let spaces = root.querySelectorAll<HTMLDivElement>('.spaces_space')!
+
+for (let space of spaces) {
+  space.addEventListener('click', e => {
+    let rect = space.getBoundingClientRect()
+    let x = e.clientX - rect.left
+    let y = rect.height - (e.clientY - rect.top)
+    if (space.classList.contains('is-l')) {
+      setCurrentComponents({
+        h: (H_MAX * x) / rect.width,
+        c: (C_MAX * y) / rect.height
+      })
+    } else if (space.classList.contains('is-c')) {
+      setCurrentComponents({
+        l: (100 * y) / rect.height,
+        h: (H_MAX * x) / rect.width
+      })
+    } else if (space.classList.contains('is-h')) {
+      setCurrentComponents({
+        l: (100 * x) / rect.width,
+        c: (C_MAX * y) / rect.height
+      })
+    }
+  })
+}
 
 if (canvasL.transferControlToOffscreen) {
   function send(worker: Worker, message: MessageData): void {
