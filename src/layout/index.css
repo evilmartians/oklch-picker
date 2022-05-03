@@ -7,6 +7,7 @@
 
   @media (max-width: 800px) {
     grid-template-areas:
+      "Title"
       "Example"
       "Code"
       "Scales"
@@ -17,12 +18,17 @@
 
   @media (min-width: 801px) {
     grid-template-areas:
+      "Title    Title"
       "Scales   Example"
       "Scales   Code"
       "Space    Space"
       "Settings Settings";
     padding: 50px;
   }
+}
+
+.layout_title {
+  grid-area: Title;
 }
 
 .layout_example {
