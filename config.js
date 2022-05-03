@@ -18,9 +18,7 @@ let config = {
   H_STEP: 0.5,
 
   ALPHA_MAX: 100,
-  ALPHA_STEP: 10,
-
-  P3_ALPHA: 0.5
+  ALPHA_STEP: 10
 }
 
 if (process.env.LCH) {
@@ -28,7 +26,7 @@ if (process.env.LCH) {
     ...config,
     COLOR_FN: '"lch"',
     L_MAX: 100,
-    C_MAX: 140,
+    C_MAX: 195,
     C_STEP: 1,
     C_RANDOM: 39
   }

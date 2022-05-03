@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.1.0",
+    "@nanostores/persistent": "^0.5.2",
     "autoprefixer": "^10.4.7",
     "culori": "^2.0.3",
     "firebase-tools": "^10.7.2",

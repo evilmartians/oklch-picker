@@ -1,6 +1,13 @@
 import './index.css'
-import { inP3, build, inRGB, format, Color } from '../../lib/colors.js'
-import { onCurrentChange, valueToColor } from '../stores/current.js'
+import {
+  generateIsVisible,
+  generateGetAlpha,
+  format,
+  build,
+  inRGB,
+  Color
+} from '../../lib/colors.js'
+import { onPaint, valueToColor } from '../stores/current.js'
 import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
@@ -24,49 +31,57 @@ canvasH.height = HEIGHT
 function paint(
   ctx: CanvasRenderingContext2D,
   hasGaps: boolean,
+  showP3: boolean,
+  showRec2020: boolean,
   getColor: (x: number) => Color
 ): void {
+  let getAlpha = generateGetAlpha(showP3, showRec2020)
+  let isVisible = generateIsVisible(showP3, showRec2020)
+
   for (let x = 0; x <= WIDTH; x++) {
     let color = getColor(x)
-    if (inP3(color)) {
-      if (!inRGB(color)) {
-        ctx.fillStyle = format(color)
-        ctx.fillRect(x, HALF_HEIGHT, 1, HEIGHT)
-        color.alpha = P3_ALPHA
-        ctx.fillStyle = format(color)
-        ctx.fillRect(x, 0, 1, HEIGHT)
+    if (!isVisible(color)) {
+      if (hasGaps) {
+        continue
       } else {
-        ctx.fillStyle = format(color)
-        ctx.fillRect(x, 0, 1, HEIGHT)
+        return
       }
-    } else if (!hasGaps) {
-      return
+    }
+    if (!inRGB(color)) {
+      ctx.fillStyle = format(color)
+      ctx.fillRect(x, HALF_HEIGHT, 1, HEIGHT)
+      color.alpha = getAlpha(color)
+      ctx.fillStyle = format(color)
+      ctx.fillRect(x, 0, 1, HALF_HEIGHT)
+    } else {
+      ctx.fillStyle = format(color)
+      ctx.fillRect(x, 0, 1, HEIGHT)
     }
   }
 }
 
-onCurrentChange({
-  ch(value) {
+onPaint({
+  ch(value, showP3, showRec2020) {
     let color = valueToColor(value)
     let c = color.c
     let h = color.h ?? 0
     let factor = L_MAX / WIDTH
     let ctx = getCleanCtx(canvasL)
-    paint(ctx, true, x => build(x * factor, c, h))
+    paint(ctx, true, showP3, showRec2020, x => build(x * factor, c, h))
   },
-  lh(value) {
+  lh(value, showP3, showRec2020) {
     let color = valueToColor(value)
     let l = color.l
     let h = color.h ?? 0
     let factor = C_MAX / WIDTH
     let ctx = getCleanCtx(canvasC)
-    paint(ctx, false, x => build(l, x * factor, h))
+    paint(ctx, false, showP3, showRec2020, x => build(l, x * factor, h))
   },
-  lc(value) {
+  lc(value, showP3, showRec2020) {
     let { l, c } = valueToColor(value)
     let factor = H_MAX / WIDTH
     let ctx = getCleanCtx(canvasH)
-    paint(ctx, true, x => build(l, c, x * factor))
+    paint(ctx, true, showP3, showRec2020, x => build(l, c, x * factor))
   },
   lch(value) {
     let color = valueToColor(value)

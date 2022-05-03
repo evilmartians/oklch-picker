@@ -7,6 +7,7 @@ specifiers:
   '@csstools/postcss-oklab-function': ^1.1.0
   '@logux/eslint-config': ^47.2.0
   '@logux/stylelint-config': ^0.10.0
+  '@nanostores/persistent': ^0.5.2
   '@size-limit/file': ^7.0.8
   '@typescript-eslint/eslint-plugin': ^5.22.0
   '@typescript-eslint/parser': ^5.22.0
@@ -34,6 +35,7 @@ specifiers:
 
 dependencies:
   '@csstools/postcss-oklab-function': 1.1.0_postcss@8.4.13
+  '@nanostores/persistent': 0.5.2_nanostores@0.5.12
   autoprefixer: 10.4.7_postcss@8.4.13
   culori: 2.0.3
   firebase-tools: 10.7.2
@@ -279,6 +281,15 @@ packages:
       stylelint-config-standard: 25.0.0_stylelint@14.8.1
       stylelint-order: 5.0.0_stylelint@14.8.1
     dev: true
+
+  /@nanostores/persistent/0.5.2_nanostores@0.5.12:
+    resolution: {integrity: sha512-0q+tk9Jza66sIZiuDKq/MAFylqWCRPAjkXuwIpyhz6FD9ht35jTXIp1Idh/f1qDSdpyn4shiXsQVgdN4r/VMfQ==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+    peerDependencies:
+      nanostores: ^0.5.0
+    dependencies:
+      nanostores: 0.5.12
+    dev: false
 
   /@nodelib/fs.scandir/2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}

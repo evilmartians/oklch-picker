@@ -4,6 +4,7 @@ import {
   formatCss as originFormatCss,
   clampChroma,
   displayable,
+  modeRec2020,
   modeOklch,
   modeOklab,
   useMode,
@@ -38,6 +39,7 @@ export interface LchColor extends Color {
 export let formatHex = originFormatHex as (color: Color) => string
 export let formatCss = originFormatCss as (color: Color) => string
 
+export let rec2020 = useMode(modeRec2020) as (color: Color) => RgbColor
 export let oklch = useMode(modeOklch) as (color: Color) => LchColor
 export let rgb = useMode(modeRgb) as (color: Color) => RgbColor
 export let p3 = useMode(modeP3) as (color: Color) => RgbColor
@@ -50,6 +52,11 @@ export const inRGB = displayable
 
 export function inP3(color: Color): boolean {
   let { r, b, g } = p3(color)
+  return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
+}
+
+export function inRec2020(color: Color): boolean {
+  let { r, b, g } = rec2020(color)
   return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
 }
 
@@ -113,4 +120,44 @@ function clean(value: number): number {
 
 function toPercent(value: number): string {
   return `${clean(100 * value)}%`
+}
+
+export type GetAlpha = (color: Color) => number
+
+export function generateGetAlpha(
+  showP3: boolean,
+  showRec2020: boolean
+): GetAlpha {
+  if (showRec2020 && showP3) {
+    return color => {
+      if (inRGB(color)) {
+        return 1
+      } else if (inP3(color)) {
+        return 0.6
+      } else {
+        return 0.4
+      }
+    }
+  } else if (showRec2020 && !showP3) {
+    return color => (inRGB(color) ? 1 : 0.4)
+  } else if (!showRec2020 && showP3) {
+    return color => (inRGB(color) ? 1 : 0.6)
+  } else {
+    return () => 1
+  }
+}
+
+export type IsVisible = (color: Color) => boolean
+
+export function generateIsVisible(
+  showP3: boolean,
+  showRec2020: boolean
+): IsVisible {
+  if (showRec2020) {
+    return inRec2020
+  } else if (showP3) {
+    return inP3
+  } else {
+    return inRGB
+  }
 }

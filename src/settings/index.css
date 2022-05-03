@@ -1,0 +1,7 @@
+.settings {
+  padding-top: 40px;
+}
+
+.settings label + label {
+  margin-left: 40px;
+}

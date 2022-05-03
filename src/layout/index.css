@@ -1,4 +1,5 @@
 .layout {
+  box-sizing: border-box;
   display: grid;
   align-content: center;
   justify-content: center;
@@ -9,15 +10,17 @@
       "Example"
       "Code"
       "Scales"
-      "Space";
+      "Space"
+      "Settings";
     padding: 20px;
   }
 
   @media (min-width: 801px) {
     grid-template-areas:
-      "Scales Example"
-      "Scales Code"
-      "Space  Space";
+      "Scales   Example"
+      "Scales   Code"
+      "Space    Space"
+      "Settings Settings";
     padding: 50px;
   }
 }
@@ -37,4 +40,8 @@
 
 .layout_space {
   grid-area: Space;
+}
+
+.layout_settings {
+  grid-area: Settings;
 }

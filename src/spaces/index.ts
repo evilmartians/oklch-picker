@@ -4,8 +4,8 @@ import type { MessageData } from './worker.js'
 import './index.css'
 import { bindFreezeToPaint, reportPaint } from '../stores/benchmark.js'
 import { pixelRation, hasP3Support } from '../../lib/screen.js'
+import { onCurrentChange, onPaint } from '../stores/current.js'
 import { paintL, paintC, paintH } from './lib.js'
-import { onCurrentChange } from '../stores/current.js'
 import PaintWorker from './worker?worker'
 
 let root = document.querySelector<HTMLCanvasElement>('.spaces')!
@@ -53,7 +53,7 @@ if (canvasL.transferControlToOffscreen) {
       canvas: canvas.transferControlToOffscreen!(),
       width: isSquare ? HEIGHT : WIDTH,
       height: HEIGHT,
-      p3: hasP3Support ?? false
+      hasP3Support: !!hasP3Support
     })
     worker.onmessage = (e: MessageEvent<number>) => {
       reportPaint(e.data)
@@ -65,28 +65,28 @@ if (canvasL.transferControlToOffscreen) {
   let workerC = init(canvasC)
   let workerH = init(canvasH, true)
 
-  onCurrentChange({
-    l(l) {
-      send(workerL, { type: 'l', l: l / 100 })
+  onPaint({
+    l(l, showP3, showRec2020) {
+      send(workerL, { type: 'l', l: l / 100, showP3, showRec2020 })
     },
-    c(c) {
-      send(workerC, { type: 'c', c })
+    c(c, showP3, showRec2020) {
+      send(workerC, { type: 'c', c, showP3, showRec2020 })
     },
-    h(h) {
-      send(workerH, { type: 'h', h })
+    h(h, showP3, showRec2020) {
+      send(workerH, { type: 'h', h, showP3, showRec2020 })
     }
   })
 } else {
   bindFreezeToPaint()
-  onCurrentChange({
-    l(l) {
-      paintL(canvasL, WIDTH, HEIGHT, (L_MAX * l) / 100)
+  onPaint({
+    l(l, showP3, showRec2020) {
+      paintL(canvasL, WIDTH, HEIGHT, (L_MAX * l) / 100, showP3, showRec2020)
     },
-    c(c) {
-      paintC(canvasC, WIDTH, HEIGHT, c)
+    c(c, showP3, showRec2020) {
+      paintC(canvasC, WIDTH, HEIGHT, c, showP3, showRec2020)
     },
-    h(h) {
-      paintH(canvasH, HEIGHT, HEIGHT, h)
+    h(h, showP3, showRec2020) {
+      paintH(canvasH, HEIGHT, HEIGHT, h, showP3, showRec2020)
     }
   })
 }
