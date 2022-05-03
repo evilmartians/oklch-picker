@@ -131,6 +131,10 @@ function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
+function round3(value: number): number {
+  return parseFloat(value.toFixed(2))
+}
+
 export function setCurrentFromColor(color: Color): void {
   if (color.mode === COLOR_FN) {
     current.set(colorToValue(color as LchColor))
@@ -138,7 +142,7 @@ export function setCurrentFromColor(color: Color): void {
     let value = colorToValue(COLOR_FN === 'oklch' ? oklch(color) : lch(color))
     current.set({
       l: round2(value.l),
-      c: round2(value.c),
+      c: COLOR_FN === 'oklch' ? round3(value.c) : round2(value.c),
       h: round2(value.h),
       a: round2(value.a)
     })
