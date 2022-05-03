@@ -5,4 +5,4 @@ export const hasP3Support =
       CSS.supports('color', 'color(display-p3 0 0 0)')
 
 export const pixelRation =
-  typeof window === 'undefined' ? 2 : window.devicePixelRatio
+  typeof window === 'undefined' ? 2 : Math.ceil(window.devicePixelRatio)
