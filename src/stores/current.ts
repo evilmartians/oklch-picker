@@ -3,6 +3,7 @@ import { map, onSet } from 'nanostores'
 import { reportFreeze, benchmarking } from './benchmark.js'
 import { LchColor, Color, build, oklch, lch } from '../../lib/colors.js'
 import { settings } from './settings.js'
+import { support } from './support.js'
 
 export interface LchValue {
   l: number
@@ -178,4 +179,8 @@ benchmarking.listen(enabled => {
   if (enabled) {
     runListeners(paintListeners, {})
   }
+})
+
+support.listen(() => {
+  runListeners(paintListeners, {})
 })

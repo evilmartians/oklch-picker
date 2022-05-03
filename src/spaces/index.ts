@@ -8,8 +8,9 @@ import {
   onPaint
 } from '../stores/current.js'
 import { bindFreezeToPaint, reportPaint } from '../stores/benchmark.js'
-import { pixelRation, hasP3Support } from '../../lib/screen.js'
 import { paintL, paintC, paintH } from './lib.js'
+import { pixelRation } from '../../lib/screen.js'
+import { support } from '../stores/support.js'
 import PaintWorker from './worker?worker'
 
 let root = document.querySelector<HTMLCanvasElement>('.spaces')!
@@ -76,14 +77,11 @@ if (canvasL.transferControlToOffscreen) {
     }
   }
 
-  function init(canvas: HTMLCanvasElement, isSquare = false): Worker {
+  function init(canvas: HTMLCanvasElement): Worker {
     let worker = new PaintWorker()
     send(worker, {
       type: 'init',
-      canvas: canvas.transferControlToOffscreen!(),
-      width: isSquare ? HEIGHT : WIDTH,
-      height: HEIGHT,
-      hasP3Support: !!hasP3Support
+      canvas: canvas.transferControlToOffscreen!()
     })
     worker.onmessage = (e: MessageEvent<number>) => {
       reportPaint(e.data)
@@ -93,17 +91,41 @@ if (canvasL.transferControlToOffscreen) {
 
   let workerL = init(canvasL)
   let workerC = init(canvasC)
-  let workerH = init(canvasH, true)
+  let workerH = init(canvasH)
 
   onPaint({
     l(l, showP3, showRec2020) {
-      send(workerL, { type: 'l', l: l / 100, showP3, showRec2020 })
+      send(workerL, {
+        type: 'l',
+        l: l / 100,
+        showP3,
+        showRec2020,
+        hasP3: support.get(),
+        width: WIDTH,
+        height: HEIGHT
+      })
     },
     c(c, showP3, showRec2020) {
-      send(workerC, { type: 'c', c, showP3, showRec2020 })
+      send(workerC, {
+        type: 'c',
+        c,
+        showP3,
+        showRec2020,
+        hasP3: support.get(),
+        width: WIDTH,
+        height: HEIGHT
+      })
     },
     h(h, showP3, showRec2020) {
-      send(workerH, { type: 'h', h, showP3, showRec2020 })
+      send(workerH, {
+        type: 'h',
+        h,
+        showP3,
+        showRec2020,
+        hasP3: support.get(),
+        width: HEIGHT,
+        height: HEIGHT
+      })
     }
   })
 } else {

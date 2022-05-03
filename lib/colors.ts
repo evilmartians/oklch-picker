@@ -17,7 +17,7 @@ import {
   // @ts-expect-error
 } from 'culori/fn'
 
-import { hasP3Support } from './screen.js'
+import { support } from '../src/stores/support.js'
 
 export interface Color {
   mode: string
@@ -66,17 +66,13 @@ export function build(l: number, c: number, h: number, alpha = 1): LchColor {
 
 export let format = fastFormatRgb
 
-export function setColorSupport(hasP3: boolean): void {
+support.subscribe(hasP3 => {
   if (hasP3) {
     format = (color: Color) => formatCss(p3(color))
   } else {
     format = fastFormatRgb
   }
-}
-
-if (typeof hasP3Support !== 'undefined') {
-  setColorSupport(hasP3Support)
-}
+})
 
 export function parse(value: string): Color | undefined {
   if (value.startsWith('oklch(')) {
