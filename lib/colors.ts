@@ -42,10 +42,10 @@ export let formatCss = originFormatCss as (color: Color) => string
 export let rec2020 = useMode(modeRec2020) as (color: Color) => RgbColor
 export let oklch = useMode(modeOklch) as (color: Color) => LchColor
 export let rgb = useMode(modeRgb) as (color: Color) => RgbColor
+export let lch = useMode(modeLch) as (color: Color) => LchColor
 export let p3 = useMode(modeP3) as (color: Color) => RgbColor
 useMode(modeOklab)
 useMode(modeHsl)
-useMode(modeLch)
 useMode(modeLab)
 
 export const inRGB = displayable

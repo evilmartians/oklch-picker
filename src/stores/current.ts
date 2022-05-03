@@ -1,7 +1,7 @@
 import { map, onSet } from 'nanostores'
 
 import { reportFreeze, benchmarking } from './benchmark.js'
-import { LchColor, build } from '../../lib/colors.js'
+import { LchColor, Color, build, oklch, lch } from '../../lib/colors.js'
 import { settings } from './settings.js'
 
 export interface LchValue {
@@ -131,14 +131,18 @@ function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
-export function setCurrentRound(color: LchColor): void {
-  let value = colorToValue(color)
-  current.set({
-    l: round2(value.l),
-    c: round2(value.c),
-    h: round2(value.h),
-    a: round2(value.a)
-  })
+export function setCurrentFromColor(color: Color): void {
+  if (color.mode === COLOR_FN) {
+    current.set(colorToValue(color as LchColor))
+  } else {
+    let value = colorToValue(COLOR_FN === 'oklch' ? oklch(color) : lch(color))
+    current.set({
+      l: round2(value.l),
+      c: round2(value.c),
+      h: round2(value.h),
+      a: round2(value.a)
+    })
+  }
 }
 
 export function valueToColor(value: LchValue): LchColor {

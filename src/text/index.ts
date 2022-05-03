@@ -1,6 +1,10 @@
 import './index.css'
-import { current, setCurrentRound, valueToColor } from '../stores/current.js'
-import { parse, oklch, formatLch } from '../../lib/colors.js'
+import {
+  setCurrentFromColor,
+  valueToColor,
+  current
+} from '../stores/current.js'
+import { parse, formatLch } from '../../lib/colors.js'
 import { visible } from '../stores/visible.js'
 
 let lchInput = document.querySelector<HTMLInputElement>('#text-lch')!
@@ -45,7 +49,7 @@ function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
 
     let parsed = parse(newValue)
     if (parsed) {
-      setCurrentRound(oklch(parsed))
+      setCurrentFromColor(parsed)
       toggle(input, error, false)
     } else {
       toggle(input, error, true)
