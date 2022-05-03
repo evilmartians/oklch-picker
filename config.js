@@ -4,7 +4,7 @@ let config = {
   L_MAX: 1,
   L_STEP: 5,
 
-  C_MAX: 0.4,
+  C_MAX: 0.5,
   C_STEP: 0.01,
   C_RANDOM: 0.1,
 
