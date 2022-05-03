@@ -69,6 +69,6 @@ export function getLastBenchmarkColor(): string {
   let { freeze } = lastBenchmark.get()
   let hue = BEST - ((BEST - WORST) * freeze) / MAX_TIME
   if (hue < WORST) hue = WORST
-  let oklch: LchColor = { mode: 'oklch', l: 0.65, c: 0.12, h: hue }
+  let oklch: LchColor = { mode: 'oklch', l: 0.57, c: 0.11, h: hue }
   return formatHex(oklch)
 }
