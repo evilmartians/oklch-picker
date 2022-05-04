@@ -8,7 +8,11 @@ if (/^\?bench(=|&|$)/.test(location.search)) {
   benchmarking.set(true)
 }
 benchmarking.listen(value => {
-  history.pushState(null, '', location.pathname + (value ? '?bench' : ''))
+  history.pushState(
+    null,
+    '',
+    location.pathname + (value ? '?bench' : '') + location.hash
+  )
 })
 
 function keyUp(e: KeyboardEvent): void {
