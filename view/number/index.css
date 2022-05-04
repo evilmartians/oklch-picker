@@ -4,7 +4,7 @@
   position: relative;
   display: flex;
   width: calc(var(--number-label) + var(--space-width) + 95px);
-  height: var(--input-height);
+  height: 40px;
   margin: 10px 0 10px calc(var(--number-label) * -1);
 }
 
@@ -15,37 +15,7 @@
 }
 
 .number_range {
-  position: absolute;
-  left: calc(var(--number-label) - 10px);
-  z-index: 2;
-  width: calc(100% - var(--number-label) - 95px + 20px);
-  height: 100%;
-  cursor: pointer;
-  background: transparent;
-  appearance: none;
-
-  &::-webkit-slider-thumb {
-    box-sizing: border-box;
-    width: 22px;
-    height: 22px;
-    cursor: grab;
-    background: oklch(100% 0 0);
-    border: 1px solid oklch(0% 0 0);
-    border-radius: 0;
-    -webkit-appearance: none;
-    transform: rotate(45deg) translate(11px, 11px);
-  }
-
-  &::-moz-range-thumb {
-    box-sizing: border-box;
-    width: 22px;
-    height: 22px;
-    cursor: grab;
-    background: oklch(100% 0 0);
-    border: 1px solid oklch(0% 0 0);
-    border-radius: 0;
-    transform: rotate(45deg) translate(11px, 11px);
-  }
+  width: var(--space-width);
 }
 
 .number_text {

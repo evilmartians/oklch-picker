@@ -1,0 +1,13 @@
+mixin range(type, max, step)
+  .range( class=`is-${type}` )
+    if type === 'a'
+      .range_gradient
+    else
+      canvas.range_space
+    input.range_input(
+      type="range"
+      min="0"
+      max=max
+      step=step / 10
+      aria-hidden="true"
+    )

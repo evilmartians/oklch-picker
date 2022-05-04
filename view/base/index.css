@@ -19,17 +19,19 @@
   --text-badge: oklch(100% 0 0);
   --chess: oklch(94% 0 0);
   --ui-bg: oklch(70% 0.05 310 / 18%);
+  --ui-border: oklch(70% 0 0 / 20%);
   --accent: oklch(57% 0.18 286);
+  --shadow: oklch(18% 0.03 310 / 12%);
 
   /* Sizes */
-  --input-height: 32px;
-  --radius: 12px;
   --space-width: 350px;
 
   /* Styles */
+  --radius: 12px;
   --opacity-pattern:
     repeating-conic-gradient(var(--chess) 0% 25%, transparent 0% 50%)
     50% / 8px 8px;
+  --above: 0 1px 6px 0 var(--shadow), 0 0 1px 0.5px var(--shadow);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,15 +41,18 @@
     --surface-2: oklch(29% 0 0 / 85%);
     --text-primary: oklch(100% 0 0);
     --chess: oklch(38% 0.01 297);
+    --ui-border: oklch(70% 0 0 / 50%);
   }
 }
 
 body {
+  --current-surface: var(--surface-0);
+
   font-family: "Martian Mono", monospace;
   font-size: 15px;
   line-height: 16px;
   color: var(--text-primary);
-  background: var(--surface-0);
+  background: var(--current-surface);
   accent-color: var(--accent);
 }
 
