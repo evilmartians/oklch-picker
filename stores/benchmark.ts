@@ -1,6 +1,6 @@
 import { atom, map } from 'nanostores'
 
-import { formatHex, LchColor } from '../../lib/colors.js'
+import { formatHex, LchColor } from '../lib/colors.js'
 
 export let benchmarking = atom(false)
 

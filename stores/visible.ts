@@ -8,7 +8,7 @@ import {
   toRgb,
   inP3,
   rgb
-} from '../../lib/colors.js'
+} from '../lib/colors.js'
 import { current, valueToColor } from './current.js'
 import { support } from './support.js'
 

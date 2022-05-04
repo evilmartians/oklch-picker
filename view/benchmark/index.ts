@@ -3,7 +3,7 @@ import {
   getLastBenchmarkColor,
   lastBenchmark,
   benchmarking
-} from '../stores/benchmark.js'
+} from '../../stores/benchmark.js'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
 let freeze = block.querySelector<HTMLSpanElement>('.benchmark_freeze')!

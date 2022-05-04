@@ -17,7 +17,7 @@ import {
   // @ts-expect-error
 } from 'culori/fn'
 
-import { support } from '../src/stores/support.js'
+import { support } from '../stores/support.js'
 
 export interface Color {
   mode: string

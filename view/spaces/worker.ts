@@ -1,5 +1,5 @@
 import { paintL, paintC, paintH } from './lib.js'
-import { support } from '../stores/support.js'
+import { support } from '../../stores/support.js'
 
 export type MessageData =
   | {

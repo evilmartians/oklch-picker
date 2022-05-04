@@ -1,5 +1,5 @@
 import './index.css'
-import { settings } from '../stores/settings.js'
+import { settings } from '../../stores/settings.js'
 
 let p3 = document.querySelector<HTMLInputElement>('#settings-p3')!
 let rec2020 = document.querySelector<HTMLInputElement>('#settings-rec2020')!

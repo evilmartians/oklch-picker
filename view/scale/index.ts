@@ -7,7 +7,7 @@ import {
   inRGB,
   Color
 } from '../../lib/colors.js'
-import { onPaint, valueToColor } from '../stores/current.js'
+import { onPaint, valueToColor } from '../../stores/current.js'
 import { pixelRation } from '../../lib/screen.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 

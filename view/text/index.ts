@@ -3,9 +3,9 @@ import {
   setCurrentFromColor,
   valueToColor,
   current
-} from '../stores/current.js'
+} from '../../stores/current.js'
 import { parse, formatLch } from '../../lib/colors.js'
-import { visible } from '../stores/visible.js'
+import { visible } from '../../stores/visible.js'
 
 let lchInput = document.querySelector<HTMLInputElement>('#text-lch')!
 let lchError = document.querySelector<HTMLDivElement>('#text-lch-error')!

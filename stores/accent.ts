@@ -1,6 +1,6 @@
 import { computed } from 'nanostores'
 
-import { toRgb, formatRgb, LchColor } from '../../lib/colors.js'
+import { toRgb, formatRgb, LchColor } from '../lib/colors.js'
 import { current } from './current.js'
 
 function clamp(l: number, c: number, h: number, alpha = 1): string {

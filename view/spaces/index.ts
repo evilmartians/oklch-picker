@@ -6,11 +6,11 @@ import {
   setCurrentComponents,
   onCurrentChange,
   onPaint
-} from '../stores/current.js'
-import { bindFreezeToPaint, reportPaint } from '../stores/benchmark.js'
+} from '../../stores/current.js'
+import { bindFreezeToPaint, reportPaint } from '../../stores/benchmark.js'
 import { paintL, paintC, paintH } from './lib.js'
 import { pixelRation } from '../../lib/screen.js'
-import { support } from '../stores/support.js'
+import { support } from '../../stores/support.js'
 import PaintWorker from './worker?worker'
 
 let root = document.querySelector<HTMLCanvasElement>('.spaces')!

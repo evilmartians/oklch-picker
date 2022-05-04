@@ -1,6 +1,6 @@
 import './index.css'
 
-import { current, onCurrentChange } from '../stores/current.js'
+import { current, onCurrentChange } from '../../stores/current.js'
 
 function initInputs(
   type: 'l' | 'c' | 'h' | 'a'

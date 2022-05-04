@@ -1,5 +1,5 @@
 import './index.css'
-import { visible } from '../stores/visible.js'
+import { visible } from '../../stores/visible.js'
 
 let sample = document.querySelector<HTMLDivElement>('.sample')!
 let spaceNote = sample.querySelector<HTMLDivElement>('.sample_note.is-space')!
