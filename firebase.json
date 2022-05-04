@@ -24,7 +24,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; font-src https://cdn.evilmartians.com"
+            "value": "default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; font-src 'self';"
           }
         ]
       }
