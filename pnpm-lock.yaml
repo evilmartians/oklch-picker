@@ -1,8 +1,5 @@
 lockfileVersion: 5.4
 
-overrides:
-  async@<2.6.4: '>=2.6.4'
-
 specifiers:
   '@csstools/postcss-oklab-function': ^1.1.0
   '@logux/eslint-config': ^47.2.0
@@ -19,7 +16,7 @@ specifiers:
   eslint-plugin-n: ^15.2.0
   eslint-plugin-prefer-let: ^3.0.1
   eslint-plugin-promise: ^6.0.0
-  firebase-tools: ^10.7.2
+  firebase-tools: ^10.8.0
   nano-staged: ^0.8.0
   nanostores: ^0.5.12
   postcss: ^8.4.13
@@ -30,7 +27,7 @@ specifiers:
   size-limit: ^7.0.8
   stylelint: ^14.8.2
   typescript: ^4.6.4
-  vite: ^2.9.7
+  vite: ^2.9.8
   vite-plugin-pug-transformer: ^1.0.1
 
 dependencies:
@@ -38,14 +35,14 @@ dependencies:
   '@nanostores/persistent': 0.5.2_nanostores@0.5.12
   autoprefixer: 10.4.7_postcss@8.4.13
   culori: 2.0.3
-  firebase-tools: 10.7.2
+  firebase-tools: 10.8.0
   nanostores: 0.5.12
   postcss: 8.4.13
   postcss-media-minmax: 5.0.0_postcss@8.4.13
   postcss-nesting: 10.1.4_postcss@8.4.13
   postcss-opacity-percentage: 1.1.2
-  vite: 2.9.7
-  vite-plugin-pug-transformer: 1.0.1_vite@2.9.7
+  vite: 2.9.8
+  vite-plugin-pug-transformer: 1.0.1_vite@2.9.8
 
 devDependencies:
   '@logux/eslint-config': 47.2.0_4nplxmjvkgcnqocjmji457cfg4
@@ -1026,7 +1023,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001335
-      electron-to-chromium: 1.4.132
+      electron-to-chromium: 1.4.133
       escalade: 3.1.1
       node-releases: 2.0.4
       picocolors: 1.0.0
@@ -1788,8 +1785,8 @@ packages:
     resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
     dev: false
 
-  /electron-to-chromium/1.4.132:
-    resolution: {integrity: sha512-JYdZUw/1068NWN+SwXQ7w6Ue0bWYGihvSUNNQwurvcDV/SM7vSiGZ3NuFvFgoEiCs4kB8xs3cX2an3wB7d4TBw==}
+  /electron-to-chromium/1.4.133:
+    resolution: {integrity: sha512-ZiIO/VXWqY9WME7vztTySSqwm4+A8o66upAb4AmxPwOLejUM8dffcDKY+Hj6oBq/1de7w75n4GxYFxF52ewnUQ==}
     dev: false
 
   /emoji-regex/8.0.0:
@@ -2627,8 +2624,8 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /firebase-tools/10.7.2:
-    resolution: {integrity: sha512-KU6cQ9XPBn2++gMBkR393LYbl4YEbKbHG/KsUR/JnfB2p5rhSPL/X4TntIl59QFs5527+VcLpeeeRRIB4Z9wUw==}
+  /firebase-tools/10.8.0:
+    resolution: {integrity: sha512-A4yp73VYh9iKEBH59mBbC9BgQdIiYsr3MP28g1sD2bmGtU50NU9o7Ygdnmf5zmWvGhpIGtTue1wLjYOwvi/9+g==}
     engines: {node: '>= 12'}
     hasBin: true
     dependencies:
@@ -6228,7 +6225,7 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /vite-plugin-pug-transformer/1.0.1_vite@2.9.7:
+  /vite-plugin-pug-transformer/1.0.1_vite@2.9.8:
     resolution: {integrity: sha512-N62fXAqRNY2O35dUf0ioe/wDBX60UTg58IgcYSpXb/406jH7XB2ZuOll1WJ+qOxc/GfTOfME/TKvwnK4u0c6wQ==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
@@ -6236,11 +6233,11 @@ packages:
     dependencies:
       picocolors: 1.0.0
       pug: 3.0.2
-      vite: 2.9.7
+      vite: 2.9.8
     dev: false
 
-  /vite/2.9.7:
-    resolution: {integrity: sha512-5hH7aNQe8rJiTTqCtPNX/6mIKlGw+1wg8UXwAxDIIN8XaSR+Zx3GT2zSu7QKa1vIaBqfUODGh3vpwY8r0AW/jw==}
+  /vite/2.9.8:
+    resolution: {integrity: sha512-zsBGwn5UT3YS0NLSJ7hnR54+vUKfgzMUh/Z9CxF1YKEBVIe213+63jrFLmZphgGI5zXwQCSmqIdbPuE8NJywPw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
