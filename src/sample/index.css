@@ -1,6 +1,6 @@
-.example_normal,
-.example_real,
-.example_fallback {
+.sample_normal,
+.sample_real,
+.sample_fallback {
   position: relative;
   height: 84px;
   background: var(--opacity-pattern);
@@ -14,7 +14,7 @@
   }
 }
 
-.example_unsupported {
+.sample_unsupported {
   position: absolute;
   top: 8px;
   right: 0;
@@ -24,41 +24,41 @@
   color: var(--text-secondary);
   text-align: center;
 
-  @nest .example.is-supported & {
+  @nest .sample.is-supported & {
     display: none;
   }
 
-  @nest .example.is-out & {
+  @nest .sample.is-out & {
     display: none;
   }
 }
 
-.example_compare {
+.sample_compare {
   display: flex;
 
-  @nest .example.is-srgb & {
+  @nest .sample.is-srgb & {
     display: none;
   }
 }
 
-.example_normal {
-  @nest .example:not(.is-srgb) & {
+.sample_normal {
+  @nest .sample:not(.is-srgb) & {
     display: none;
   }
 }
 
-.example_real,
-.example_fallback {
+.sample_real,
+.sample_fallback {
   width: 50%;
 }
 
-.example_normal::before,
-.example_real::before {
-  background: var(--example-real);
+.sample_normal::before,
+.sample_real::before {
+  background: var(--sample-real);
 }
 
-.example_real {
-  @nest .example:not(.is-supported) & {
+.sample_real {
+  @nest .sample:not(.is-supported) & {
     background: transparent;
 
     &::before {
@@ -67,11 +67,11 @@
   }
 }
 
-.example_fallback::before {
-  background: var(--example-fallback);
+.sample_fallback::before {
+  background: var(--sample-fallback);
 }
 
-.example_note {
+.sample_note {
   position: absolute;
   padding: 4px 6px;
   font-size: 11.25px;
@@ -90,7 +90,7 @@
     bottom: 4px;
     left: 4px;
 
-    @nest .example.is-out & {
+    @nest .sample.is-out & {
       display: none;
     }
   }
@@ -100,7 +100,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
 
-    @nest .example:not(.is-out) & {
+    @nest .sample:not(.is-out) & {
       display: none;
     }
   }
