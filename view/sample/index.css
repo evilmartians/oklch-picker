@@ -1,7 +1,46 @@
+.sample {
+  margin-left: 20px;
+}
+
+.sample_unavailable {
+  box-sizing: border-box;
+  display: none;
+  align-items: center;
+  width: 50%;
+  height: 84px;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+  border: 1px dashed var(--text-secondary);
+  border-radius: var(--radius);
+
+  @nest .sample:not(.is-supported).is-p3 &.is-p3 {
+    display: flex;
+  }
+
+  @nest .sample:not(.is-supported).is-rec2020 &.is-rec2020 {
+    display: flex;
+  }
+
+  @nest .sample:not(.is-supported).is-out &.is-out {
+    display: flex;
+  }
+}
+
+.sample_compare {
+  display: flex;
+
+  @nest .sample.is-srgb & {
+    display: none;
+  }
+}
+
 .sample_normal,
 .sample_real,
 .sample_fallback {
   position: relative;
+  flex-grow: 1;
   height: 84px;
   background: var(--opacity-pattern);
   border-radius: var(--radius);
@@ -14,57 +53,21 @@
   }
 }
 
-.sample_unsupported {
-  position: absolute;
-  top: 8px;
-  right: 0;
-  left: 0;
-  font-size: 11.25px;
-  line-height: 13px;
-  color: var(--text-secondary);
-  text-align: center;
-
-  @nest .sample.is-supported & {
-    display: none;
-  }
-
-  @nest .sample.is-out & {
-    display: none;
-  }
-}
-
-.sample_compare {
-  display: flex;
-
-  @nest .sample.is-srgb & {
-    display: none;
-  }
-}
-
 .sample_normal {
   @nest .sample:not(.is-srgb) & {
     display: none;
   }
 }
 
-.sample_real,
-.sample_fallback {
-  width: 50%;
+.sample_real {
+  @nest .sample:not(.is-supported) & {
+    display: none;
+  }
 }
 
 .sample_normal::before,
 .sample_real::before {
   background: var(--sample-real);
-}
-
-.sample_real {
-  @nest .sample:not(.is-supported) & {
-    background: transparent;
-
-    &::before {
-      display: none;
-    }
-  }
 }
 
 .sample_fallback::before {
@@ -73,6 +76,8 @@
 
 .sample_note {
   position: absolute;
+  bottom: 4px;
+  left: 50%;
   padding: 4px 6px;
   font-size: 11.25px;
   line-height: 13px;
@@ -80,28 +85,5 @@
   text-transform: capitalize;
   background: var(--surface-badge);
   border-radius: 8px;
-
-  &.is-fallback {
-    right: 4px;
-    bottom: 4px;
-  }
-
-  &.is-space {
-    bottom: 4px;
-    left: 4px;
-
-    @nest .sample.is-out & {
-      display: none;
-    }
-  }
-
-  &.is-out {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    @nest .sample:not(.is-out) & {
-      display: none;
-    }
-  }
+  transform: translateX(-50%);
 }
