@@ -61,7 +61,7 @@ jobs:
           key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --production --ignore-scripts
-      - name: Build
+      - name: Build OKLCH
         run: pnpm build
         env:
           FORCE_COLOR: 2
@@ -70,14 +70,28 @@ jobs:
         if: github.ref != 'refs/heads/main'
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
           projectId: ai-oklch
           expires: 7d
-      - name: Deploy website
+      - name: Deploy OKLCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         if: github.ref == 'refs/heads/main'
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
           projectId: ai-oklch
+          channelId: live
+      - name: Build LCH
+        run: pnpm build
+        if: github.ref == 'refs/heads/main'
+        env:
+          FORCE_COLOR: 2
+          LCH: 1
+      - name: Deploy LCH
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        if: github.ref == 'refs/heads/main'
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_LCH_ACCOUNT }}"
+          projectId: ai-lch
           channelId: live
