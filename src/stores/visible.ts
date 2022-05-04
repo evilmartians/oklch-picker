@@ -1,13 +1,21 @@
 import { computed } from 'nanostores'
 
-import { formatRgb, format, inRGB, toRgb, inP3, rgb } from '../../lib/colors.js'
+import {
+  inRec2020,
+  formatRgb,
+  format,
+  inRGB,
+  toRgb,
+  inP3,
+  rgb
+} from '../../lib/colors.js'
 import { current, valueToColor } from './current.js'
 import { support } from './support.js'
 
 interface VisibleValue {
-  type: 'rgb' | 'p3' | 'out'
-  rgb: string
-  p3: string
+  space: 'srgb' | 'p3' | 'rec2020' | 'out'
+  fallback: string
+  real: string | false
 }
 
 export let visible = computed<VisibleValue, [typeof current, typeof support]>(
@@ -17,21 +25,24 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
     if (inRGB(color)) {
       let rgbCss = formatRgb(rgb(color))
       return {
-        type: 'rgb',
-        rgb: rgbCss,
-        p3: rgbCss
-      }
-    } else if (inP3(color)) {
-      return {
-        type: 'p3',
-        rgb: formatRgb(toRgb(color)),
-        p3: hasP3 ? format(color) : 'none'
+        space: 'srgb',
+        fallback: rgbCss,
+        real: rgbCss
       }
     } else {
-      return {
-        type: 'out',
-        rgb: formatRgb(toRgb(color)),
-        p3: 'none'
+      let fallback = formatRgb(toRgb(color))
+      if (inP3(color)) {
+        return {
+          space: 'p3',
+          fallback,
+          real: hasP3 ? format(color) : false
+        }
+      } else {
+        return {
+          space: inRec2020(color) ? 'rec2020' : 'out',
+          fallback,
+          real: false
+        }
       }
     }
   }

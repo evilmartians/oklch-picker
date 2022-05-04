@@ -33,8 +33,8 @@ current.subscribe(value => {
   toggle(lchInput, lchError, false)
 })
 
-visible.subscribe(({ rgb }) => {
-  rgbInput.value = rgb
+visible.subscribe(({ real, fallback }) => {
+  rgbInput.value = real || fallback
   toggle(rgbInput, rgbError, false)
 })
 

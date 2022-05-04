@@ -1,50 +1,107 @@
-.example {
-  display: flex;
-  width: 300px;
-  height: 100px;
-  margin-left: 20px;
-  background: var(--opacity-pattern);
-}
-
-.example_invisible,
-.example_p3-no {
-  background: var(--surface-0);
-}
-
-.example_rgb,
-.example_p3,
-.example_p3-no,
-.example_invisible {
+.example_normal,
+.example_real,
+.example_fallback {
   position: relative;
-  width: 50%;
-  height: 100%;
+  height: 84px;
+  background: var(--opacity-pattern);
+  border-radius: var(--radius);
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    content: "";
+    border-radius: var(--radius);
+  }
 }
 
-.example.is-rgb .example_rgb {
-  width: 100%;
-}
-
-.example_p3,
-.example_p3-no,
-.example_invisible {
-  display: none;
-}
-
-.example.is-p3.is-supported .example_p3 {
-  display: block;
-}
-
-.example.is-p3.is-unsupported .example_p3-no {
-  display: block;
-}
-
-.example.is-out .example_invisible {
-  display: block;
-}
-
-.example_label {
+.example_unsupported {
   position: absolute;
-  bottom: 0;
+  top: 8px;
+  right: 0;
   left: 0;
-  font-size: 14px;
+  font-size: 11.25px;
+  line-height: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+
+  @nest .example.is-supported & {
+    display: none;
+  }
+
+  @nest .example.is-out & {
+    display: none;
+  }
+}
+
+.example_compare {
+  display: flex;
+
+  @nest .example.is-srgb & {
+    display: none;
+  }
+}
+
+.example_normal {
+  @nest .example:not(.is-srgb) & {
+    display: none;
+  }
+}
+
+.example_real,
+.example_fallback {
+  width: 50%;
+}
+
+.example_normal::before,
+.example_real::before {
+  background: var(--example-real);
+}
+
+.example_real {
+  @nest .example:not(.is-supported) & {
+    background: transparent;
+
+    &::before {
+      display: none;
+    }
+  }
+}
+
+.example_fallback::before {
+  background: var(--example-fallback);
+}
+
+.example_note {
+  position: absolute;
+  padding: 4px 6px;
+  font-size: 11.25px;
+  line-height: 13px;
+  color: var(--text-badge);
+  text-transform: capitalize;
+  background: var(--surface-badge);
+  border-radius: 8px;
+
+  &.is-fallback {
+    right: 4px;
+    bottom: 4px;
+  }
+
+  &.is-space {
+    bottom: 4px;
+    left: 4px;
+
+    @nest .example.is-out & {
+      display: none;
+    }
+  }
+
+  &.is-out {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    @nest .example:not(.is-out) & {
+      display: none;
+    }
+  }
 }

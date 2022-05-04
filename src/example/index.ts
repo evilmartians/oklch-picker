@@ -1,20 +1,14 @@
 import './index.css'
 import { visible } from '../stores/visible.js'
-import { support } from '../stores/support.js'
 
-let example = document.querySelector<HTMLCanvasElement>('.example')!
-let exampleRgb = document.querySelector<HTMLCanvasElement>('.example_rgb')!
-let exampleP3 = document.querySelector<HTMLCanvasElement>('.example_p3')!
+let example = document.querySelector<HTMLDivElement>('.example')!
+let spaceNote = example.querySelector<HTMLDivElement>('.example_note.is-space')!
 
-support.subscribe(hasP3 => {
-  example.classList.toggle('is-supported', hasP3)
-  example.classList.toggle('is-unsupported', !hasP3)
-})
-
-visible.subscribe(({ rgb, p3, type }) => {
-  example.classList.toggle('is-rgb', type === 'rgb')
-  example.classList.toggle('is-p3', type === 'p3')
-  example.classList.toggle('is-out', type === 'out')
-  exampleP3.style.background = p3
-  exampleRgb.style.background = rgb
+visible.subscribe(({ space, real, fallback }) => {
+  example.classList.toggle('is-srgb', space === 'srgb')
+  example.classList.toggle('is-out', space === 'out')
+  example.classList.toggle('is-supported', !!real)
+  example.style.setProperty('--example-real', real || 'transparent')
+  example.style.setProperty('--example-fallback', fallback)
+  spaceNote.innerText = space === 'p3' || space === 'rec2020' ? space : ''
 })
