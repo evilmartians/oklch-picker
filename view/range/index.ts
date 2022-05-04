@@ -133,8 +133,8 @@ onPaint({
 visible.subscribe(({ real, fallback }) => {
   let color = real || fallback
   document.body.style.setProperty('--range-color', real || fallback)
-  rangeA.style.setProperty(
-    '--range-from',
-    format({ ...parse(color), alpha: 0 })
-  )
+
+  let parsed = parse(color)
+  rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
+  rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
 })
