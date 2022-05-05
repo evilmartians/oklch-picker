@@ -1,14 +1,14 @@
 .text_value
   input.text_input.field#text-lch(
     type="text"
-    value="oklch(70% 0.1 286)"
+    value=COLOR_FN === '"oklch"' ? "oklch(70% 0.1 286)" : 'lch(70% 39 286)'
     aria-label="LCH CSS value"
   )
   .text_error#text-lch-error( aria-hidden="true" ) Error in color
 .text_value
   input.text_input.field#text-rgb(
     type="text"
-    value="rgb(152.91, 149.15, 218.03)"
+    value=COLOR_FN === '"oklch"' ? "rgb(152.91, 149.15, 218.03)" : "rgb(161.39, 166.51, 239.43)"
     aria-label="RGB CSS value"
   )
   .text_error#text-rgb-error( aria-hidden="true" ) Error in color
