@@ -2,7 +2,7 @@
   {
     "name": "Files to download",
     "path": "dist/**/*",
-    "limit": "55 KB"
+    "limit": "60 KB"
   },
   {
     "name": "All scripts to execute",
