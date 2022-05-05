@@ -6,7 +6,7 @@
     "S C"
     / 1fr 1fr;
   gap: 4px;
-  padding: 24px 32px 32px;
+  padding: 24px var(--card-padding) 32px var(--card-padding);
   background: var(--surface-1);
   border-radius: 0 0 36px 36px;
 }
@@ -21,7 +21,7 @@
 .main_mode {
   position: absolute;
   top: 24px;
-  right: 32px;
+  right: var(--card-padding);
 }
 
 .main_sample {

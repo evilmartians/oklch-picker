@@ -1,6 +1,13 @@
+body {
+  --card-padding: 32px;
+
+  @media (width >= 980px) {
+    --card-padding: 72px;
+  }
+}
+
 .card {
   --current-surface: var(--surface-1);
-  --card-padding: 32px;
 
   position: relative;
   width: 340px;
@@ -10,10 +17,6 @@
 
   @media (width <= 404px) {
     width: auto;
-  }
-
-  @media (width >= 980px) {
-    --card-padding: 72px;
   }
 }
 
