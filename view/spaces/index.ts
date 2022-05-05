@@ -42,30 +42,32 @@ onCurrentChange({
   }
 })
 
-let spaces = root.querySelectorAll<HTMLDivElement>('.spaces_space')!
+function onSelect(e: MouseEvent): void {
+  let space = (e.target as Element).closest<HTMLDivElement>('.spaces_space')!
+  let rect = space.getBoundingClientRect()
+  let x = e.clientX - rect.left
+  let y = rect.height - (e.clientY - rect.top)
+  if (space.classList.contains('is-l')) {
+    setCurrentComponents({
+      h: (H_MAX * x) / rect.width,
+      c: (C_MAX * y) / rect.height
+    })
+  } else if (space.classList.contains('is-c')) {
+    setCurrentComponents({
+      l: (100 * y) / rect.height,
+      h: (H_MAX * x) / rect.width
+    })
+  } else if (space.classList.contains('is-h')) {
+    setCurrentComponents({
+      l: (100 * x) / rect.width,
+      c: (C_MAX * y) / rect.height
+    })
+  }
+}
 
+let spaces = root.querySelectorAll<HTMLDivElement>('.spaces_space')!
 for (let space of spaces) {
-  space.addEventListener('click', e => {
-    let rect = space.getBoundingClientRect()
-    let x = e.clientX - rect.left
-    let y = rect.height - (e.clientY - rect.top)
-    if (space.classList.contains('is-l')) {
-      setCurrentComponents({
-        h: (H_MAX * x) / rect.width,
-        c: (C_MAX * y) / rect.height
-      })
-    } else if (space.classList.contains('is-c')) {
-      setCurrentComponents({
-        l: (100 * y) / rect.height,
-        h: (H_MAX * x) / rect.width
-      })
-    } else if (space.classList.contains('is-h')) {
-      setCurrentComponents({
-        l: (100 * x) / rect.width,
-        c: (C_MAX * y) / rect.height
-      })
-    }
-  })
+  space.addEventListener('click', onSelect)
 }
 
 if (canvasL.transferControlToOffscreen) {
