@@ -1,6 +1,7 @@
 {
   "plugins": {
     "@csstools/postcss-oklab-function": {},
+    "postcss-opacity-percentage": {},
     "postcss-mixins": {},
     "postcss-nesting": {},
     "postcss-media-minmax": {},

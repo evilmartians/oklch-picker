@@ -24,14 +24,24 @@
   height: 32px;
   background: var(--surface-ui-regular);
   border-radius: 16px;
-  transition: background 150ms;
-
-  @nest :checked + & {
-    background: var(--accent);
-  }
+  transition: background 1500ms;
 }
 
 .checkbox_icon::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: var(--accent);
+  border-radius: 16px;
+  opacity: 0%;
+  transition: opacity 150ms;
+
+  @nest :checked + & {
+    opacity: 100%;
+  }
+}
+
+.checkbox_icon::after {
   position: absolute;
   top: 2px;
   left: 2px;
