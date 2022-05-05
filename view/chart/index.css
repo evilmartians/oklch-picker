@@ -1,8 +1,10 @@
-.chart {
-  --chart-l: 70;
+body {
+  --chart-l: 70%;
   --chart-c: 20%;
   --chart-h: 79%;
+}
 
+.chart {
   position: relative;
   box-sizing: border-box;
   height: 100%;
