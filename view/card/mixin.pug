@@ -10,6 +10,7 @@ mixin card(type)
           type="number"
           min="0"
           max="100"
+          value="70"
           step=L_STEP
           aria-label="L"
         )
@@ -25,13 +26,14 @@ mixin card(type)
           type="number"
           min="0"
           max=C_MAX
+          value=LCH ? '39' : '0.1'
           step=C_STEP
           aria-label="C"
         )
       .card_chart
         +chart('l', 'c', 'h')
       .card_range
-        +range('c', C_MAX, C_STEP, COLOR_FN === '"oklch"' ? 0.1 : 39)
+        +range('c', C_MAX, C_STEP, LCH ? 39 : 0.1)
 
     else if type === 'h'
       h2.card_title Hue
@@ -40,6 +42,7 @@ mixin card(type)
           type="number"
           min="0"
           max=H_MAX
+          value="286"
           step=H_STEP
           aria-label="H"
         )

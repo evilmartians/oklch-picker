@@ -1,7 +1,7 @@
 nav.mode
-  if COLOR_FN === '"oklch"'
-    a.mode_link.is-current OKLCH
-    a.mode_link( href="https://lch.evilmartians.io" ) LCH
-  else
+  if LCH
     a.mode_link( href="https://oklch.evilmartians.io" ) OKLCH
     a.mode_link.is-current LCH
+  else
+    a.mode_link.is-current OKLCH
+    a.mode_link( href="https://lch.evilmartians.io" ) LCH
