@@ -52,16 +52,16 @@
 
 .range_input {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: -1px;
+  left: -13px;
   z-index: 2;
   width: calc(100% + 26px);
-  height: 100%;
-  margin-left: -13px;
+  height: calc(100% + 2px);
   cursor: pointer;
   background: transparent;
   border-radius: var(--radius);
   appearance: none;
+  outline-offset: 3px -10px;
 
   &:active {
     transform: none;
