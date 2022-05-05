@@ -1,25 +1,21 @@
 .checkbox {
   position: relative;
   display: block;
-  padding: 12px 44px 12px 0;
+  padding: 12px 48px 12px 12px;
   margin-bottom: 12px;
+  margin-left: -12px;
   cursor: pointer;
-  border-radius: var(--radius);
+  border-radius: 20px;
 }
 
 .checkbox_input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+  display: none;
 }
 
 .checkbox_icon {
   position: absolute;
   top: 4px;
-  right: 0;
+  right: 4px;
   width: 56px;
   height: 32px;
   background: var(--surface-ui-regular);

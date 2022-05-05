@@ -56,7 +56,8 @@ body {
 }
 
 input,
-button {
+button,
+label[tabindex="0"] {
   outline-offset: 3px;
 
   &:focus {
