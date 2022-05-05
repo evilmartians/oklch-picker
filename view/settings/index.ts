@@ -1,8 +1,9 @@
 import './index.css'
 import { settings } from '../../stores/settings.js'
+import { getCheckbox } from '../checkbox/index.js'
 
-let p3 = document.querySelector<HTMLInputElement>('#settings-p3')!
-let rec2020 = document.querySelector<HTMLInputElement>('#settings-rec2020')!
+let p3 = getCheckbox('p3')!
+let rec2020 = getCheckbox('rec2020')!!
 
 settings.subscribe(value => {
   p3.checked = value.p3 === 'show'

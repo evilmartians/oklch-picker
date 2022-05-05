@@ -1,7 +1,5 @@
+include ../checkbox/mixin.pug
+
 .settings
-  label
-    input#settings-p3( type="checkbox" checked )
-    = " Show P3"
-  label
-    input#settings-rec2020( type="checkbox" )
-    = " Show Rec2020"
+  +checkbox('p3', 'Show P3', true)
+  +checkbox('rec2020', 'Show Rec2020', true)

@@ -1,0 +1,49 @@
+.checkbox {
+  position: relative;
+  display: block;
+  padding: 12px 44px 12px 0;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.checkbox_input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.checkbox_icon {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  width: 56px;
+  height: 32px;
+  background: var(--surface-ui-regular);
+  border-radius: 16px;
+  transition: background 150ms;
+
+  @nest :checked + & {
+    background: var(--accent);
+  }
+}
+
+.checkbox_icon::before {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 28px;
+  height: 28px;
+  content: "";
+  background: oklch(100% 0 0);
+  border-radius: 50%;
+  transition: transform 150ms;
+  transform: translateX(0);
+
+  @nest :checked + & {
+    transform: translateX(24px);
+  }
+}
