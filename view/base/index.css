@@ -61,10 +61,6 @@ input,
 button {
   outline-offset: 3px;
 
-  &:active {
-    transform: translateY(1px);
-  }
-
   &:focus {
     outline: var(--accent) solid 3px;
   }

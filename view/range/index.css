@@ -63,10 +63,6 @@
   appearance: none;
   outline-offset: 3px -10px;
 
-  &:active {
-    transform: none;
-  }
-
   &::-moz-range-thumb {
     @mixin range-thumb;
   }
