@@ -184,3 +184,8 @@ benchmarking.listen(enabled => {
 support.listen(() => {
   runListeners(paintListeners, {})
 })
+
+let media = window.matchMedia('(prefers-color-scheme: dark)')
+media.addEventListener('change', () => {
+  runListeners(paintListeners, {})
+})
