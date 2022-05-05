@@ -81,6 +81,9 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
           projectId: ai-oklch
           channelId: live
+      - name: Clean build dir
+        if: github.ref == 'refs/heads/main'
+        run: rm -Rf ./dist/
       - name: Build LCH
         run: pnpm build
         if: github.ref == 'refs/heads/main'
