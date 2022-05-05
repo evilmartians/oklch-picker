@@ -15,7 +15,8 @@ mixin card(type)
           aria-label="L"
         )
       .card_chart
-        +chart('h', 'c', 'l')
+        .card_size
+          +chart('h', 'c', 'l')
       .card_range
         +range('l', 100, L_STEP, 70)
 
@@ -31,7 +32,8 @@ mixin card(type)
           aria-label="C"
         )
       .card_chart
-        +chart('l', 'c', 'h')
+        .card_size
+          +chart('l', 'c', 'h')
       .card_range
         +range('c', C_MAX, C_STEP, LCH ? 39 : 0.1)
 
@@ -47,7 +49,8 @@ mixin card(type)
           aria-label="H"
         )
       .card_chart
-        +chart('c', 'l', 'h')
+        .card_size
+          +chart('c', 'l', 'h')
       .card_range
         +range('h', H_MAX, H_STEP, 286)
 
