@@ -51,7 +51,6 @@ body {
   line-height: 16px;
   color: var(--text-primary);
   background: var(--current-surface);
-  accent-color: var(--accent);
   -webkit-tap-highlight-color: oklch(0% 0 0 / 0);
 }
 
