@@ -1,4 +1,6 @@
 .sample_unavailable {
+  --sample-real: var(--default-color);
+
   box-sizing: border-box;
   display: none;
   align-items: center;
