@@ -1,5 +1,5 @@
 mixin chart(type, xAxis, yAxis)
-  .chart( class=`is-${type}` aria-hidden=true )
+  .chart( class=`is-${type}` aria-hidden="true" )
     .chart_line.is-x( class=`is-${xAxis}` )
       .chart_label= xAxis
     .chart_line.is-y( class=`is-${yAxis}` )
