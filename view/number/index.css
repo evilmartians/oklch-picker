@@ -3,7 +3,7 @@
 
   position: relative;
   display: flex;
-  width: calc(var(--number-label) + var(--space-width) + 95px);
+  width: calc(var(--number-label) + var(--space-width) + 105px);
   height: 40px;
   margin: 10px 0 10px calc(var(--number-label) * -1);
 }
@@ -19,6 +19,6 @@
 }
 
 .number_text {
-  width: 90px;
+  width: 100px;
   margin-left: 5px;
 }

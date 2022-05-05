@@ -11,7 +11,7 @@
   --surface-0: oklch(96% 0 300);
   --surface-1: oklch(100% 0 0);
   --surface-2: oklch(99% 0 0 / 85%);
-  --surface-ui-regular: oklch(70% 0.05 311);
+  --surface-ui-regular: oklch(70% 0.05 311 / 18%);
   --surface-ui-accent: oklch(70% 0.17 286 / 20%);
   --surface-badge: oklch(32% 0 0 / 85%);
   --text-primary: oklch(0% 0 0);

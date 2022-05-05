@@ -1,7 +1,11 @@
 .field {
   box-sizing: border-box;
   width: 100%;
-  height: var(--input-height);
+  height: 40px;
+  padding: 0 12px;
+  background: var(--surface-ui-regular);
+  border: none;
+  border-radius: var(--radius);
 
   &[type="number"] {
     text-align: right;
