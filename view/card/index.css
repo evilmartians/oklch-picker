@@ -1,14 +1,19 @@
 .card {
   --current-surface: var(--surface-1);
+  --card-padding: 32px;
 
   position: relative;
   width: 340px;
-  padding: 20px 32px 32px;
+  padding: 20px var(--card-padding) 32px var(--card-padding);
   background: var(--current-surface);
   border-radius: 36px;
 
   @media (width <= 404px) {
     width: auto;
+  }
+
+  @media (width >= 980px) {
+    --card-padding: 72px;
   }
 }
 
@@ -22,7 +27,7 @@
 .card_number {
   position: absolute;
   top: 20px;
-  right: 32px;
+  right: var(--card-padding);
   width: 110px;
 }
 
