@@ -21,6 +21,7 @@
   --ui-border: oklch(70% 0 0 / 20%);
   --accent: oklch(57% 0.18 286);
   --shadow: oklch(18% 0.03 310 / 12%);
+  --default-color: oklch(70% 0.1 286);
 
   /* Tokens */
   --radius: 12px;

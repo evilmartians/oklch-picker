@@ -1,3 +1,7 @@
+body {
+  --range-color: var(--default-color);
+}
+
 .range {
   position: relative;
   box-sizing: border-box;

@@ -1,4 +1,8 @@
 .chart {
+  --chart-l: 70;
+  --chart-c: 20%;
+  --chart-h: 79%;
+
   position: relative;
   box-sizing: border-box;
   height: 100%;

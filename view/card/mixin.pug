@@ -16,7 +16,7 @@ mixin card(type)
       .card_chart
         +chart('h', 'c', 'l')
       .card_range
-        +range('l', 100, L_STEP)
+        +range('l', 100, L_STEP, 70)
 
     else if type === 'c'
       h2.card_title Chroma
@@ -31,7 +31,7 @@ mixin card(type)
       .card_chart
         +chart('l', 'c', 'h')
       .card_range
-        +range('c', C_MAX, C_STEP)
+        +range('c', C_MAX, C_STEP, COLOR_FN === '"oklch"' ? 0.1 : 39)
 
     else if type === 'h'
       h2.card_title Hue
@@ -46,7 +46,7 @@ mixin card(type)
       .card_chart
         +chart('c', 'l', 'h')
       .card_range
-        +range('h', H_MAX, H_STEP)
+        +range('h', H_MAX, H_STEP, 286)
 
     else if type === 'a'
       h2.card_title Alpha
@@ -59,4 +59,4 @@ mixin card(type)
           aria-label="Alpha"
         )
       .card_range
-        +range('a', ALPHA_MAX, ALPHA_STEP)
+        +range('a', ALPHA_MAX, ALPHA_STEP, 100)

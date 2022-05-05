@@ -1,4 +1,4 @@
-mixin range(type, max, step)
+mixin range(type, max, step, defaultValue)
   .range( class=`is-${type}` )
     if type === 'a'
       .range_gradient
@@ -10,5 +10,6 @@ mixin range(type, max, step)
       max=max
       step=step / 10
       aria-hidden="true"
+      value=defaultValue
       tabindex="-1"
     )
