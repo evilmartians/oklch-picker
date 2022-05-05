@@ -9,3 +9,7 @@ accent.subscribe(({ main, surface }) => {
   document.body.style.setProperty('--surface-ui-accent', surface)
   theme.content = main
 })
+
+setTimeout(() => {
+  document.body.classList.add('was-loaded')
+}, 10)
