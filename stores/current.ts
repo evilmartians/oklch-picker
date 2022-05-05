@@ -130,9 +130,6 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
       runListeners(changeListeners, prev)
       prev = value
     })
-    settings.listen(() => {
-      runListeners(changeListeners, {})
-    })
   } else {
     runListeners([callbacks], {})
   }
@@ -140,11 +137,7 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
 
 export function onPaint(callbacks: LchCallbacks): void {
   onCurrentChange(callbacks)
-
   paintListeners.push(callbacks)
-  settings.listen(() => {
-    runListeners(paintListeners, {})
-  })
 }
 
 function round2(value: number): number {
@@ -202,6 +195,10 @@ benchmarking.listen(enabled => {
 
 support.listen(() => {
   runListeners(paintListeners, {})
+})
+
+settings.listen(() => {
+  runListeners(changeListeners, {})
 })
 
 let media = window.matchMedia('(prefers-color-scheme: dark)')
