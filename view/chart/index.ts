@@ -2,48 +2,47 @@
 import type { MessageData } from './worker.js'
 
 import './index.css'
+
 import {
   setCurrentComponents,
   onCurrentChange,
   onPaint
 } from '../../stores/current.js'
 import { bindFreezeToPaint, reportPaint } from '../../stores/benchmark.js'
-import { paintL, paintC, paintH } from './lib.js'
-import { pixelRation } from '../../lib/screen.js'
+import { paintL, paintC, paintH } from './paint.js'
+import { initCanvasSize } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 import PaintWorker from './worker?worker'
 
-let root = document.querySelector<HTMLCanvasElement>('.spaces')!
+function findCanvas(type: 'l' | 'c' | 'h'): HTMLCanvasElement {
+  return document.querySelector<HTMLCanvasElement>(
+    `.chart.is-${type} .chart_canvas`
+  )!
+}
 
-let canvasL = root.querySelector<HTMLCanvasElement>('#spaces-l')!
-let canvasC = root.querySelector<HTMLCanvasElement>('#spaces-c')!
-let canvasH = root.querySelector<HTMLCanvasElement>('#spaces-h')!
+function getBackground(canvas: HTMLCanvasElement): string {
+  return window.getComputedStyle(canvas).getPropertyValue('--current-surface')
+}
 
-let canvasSize = canvasL.getBoundingClientRect()
-const WIDTH = canvasSize.width * pixelRation
-const HEIGHT = canvasSize.height * pixelRation
-
-canvasL.width = WIDTH
-canvasL.height = HEIGHT
-canvasC.width = WIDTH
-canvasC.height = HEIGHT
-canvasH.width = HEIGHT
-canvasH.height = HEIGHT
+let charts = document.querySelectorAll<HTMLDivElement>('.chart')
+let canvasL = findCanvas('l')
+let canvasC = findCanvas('c')
+let canvasH = findCanvas('h')
 
 onCurrentChange({
   l(l) {
-    root.style.setProperty('--spaces-l', `${l}%`)
+    document.body.style.setProperty('--chart-l', `${l}%`)
   },
   c(c) {
-    root.style.setProperty('--spaces-c', `${(100 * c) / C_MAX}%`)
+    document.body.style.setProperty('--chart-c', `${(100 * c) / C_MAX}%`)
   },
   h(h) {
-    root.style.setProperty('--spaces-h', `${(100 * h) / H_MAX}%`)
+    document.body.style.setProperty('--chart-h', `${(100 * h) / H_MAX}%`)
   }
 })
 
 function onSelect(e: MouseEvent): void {
-  let space = (e.target as Element).closest<HTMLDivElement>('.spaces_space')!
+  let space = e.currentTarget as HTMLDivElement
   let rect = space.getBoundingClientRect()
   let x = e.clientX - rect.left
   let y = rect.height - (e.clientY - rect.top)
@@ -65,10 +64,13 @@ function onSelect(e: MouseEvent): void {
   }
 }
 
-let spaces = root.querySelectorAll<HTMLDivElement>('.spaces_space')!
-for (let space of spaces) {
-  space.addEventListener('click', onSelect)
+for (let chart of charts) {
+  chart.addEventListener('click', onSelect)
 }
+
+let [width, height] = initCanvasSize(canvasL)
+initCanvasSize(canvasC)
+initCanvasSize(canvasH)
 
 if (canvasL.transferControlToOffscreen) {
   function send(worker: Worker, message: MessageData): void {
@@ -97,36 +99,42 @@ if (canvasL.transferControlToOffscreen) {
 
   onPaint({
     l(l, showP3, showRec2020) {
+      let bg = getBackground(canvasL)
       send(workerL, {
         type: 'l',
         l: l / 100,
+        bg,
         showP3,
         showRec2020,
         hasP3: support.get(),
-        width: WIDTH,
-        height: HEIGHT
+        width,
+        height
       })
     },
     c(c, showP3, showRec2020) {
+      let bg = getBackground(canvasC)
       send(workerC, {
         type: 'c',
         c,
+        bg,
         showP3,
         showRec2020,
         hasP3: support.get(),
-        width: WIDTH,
-        height: HEIGHT
+        width,
+        height
       })
     },
     h(h, showP3, showRec2020) {
+      let bg = getBackground(canvasH)
       send(workerH, {
         type: 'h',
         h,
+        bg,
         showP3,
         showRec2020,
         hasP3: support.get(),
-        width: HEIGHT,
-        height: HEIGHT
+        width,
+        height
       })
     }
   })
@@ -134,13 +142,16 @@ if (canvasL.transferControlToOffscreen) {
   bindFreezeToPaint()
   onPaint({
     l(l, showP3, showRec2020) {
-      paintL(canvasL, WIDTH, HEIGHT, (L_MAX * l) / 100, showP3, showRec2020)
+      let bg = getBackground(canvasL)
+      paintL(canvasL, width, height, bg, showP3, showRec2020, (L_MAX * l) / 100)
     },
     c(c, showP3, showRec2020) {
-      paintC(canvasC, WIDTH, HEIGHT, c, showP3, showRec2020)
+      let bg = getBackground(canvasC)
+      paintC(canvasC, width, height, bg, showP3, showRec2020, c)
     },
     h(h, showP3, showRec2020) {
-      paintH(canvasH, HEIGHT, HEIGHT, h, showP3, showRec2020)
+      let bg = getBackground(canvasH)
+      paintH(canvasH, width, height, bg, showP3, showRec2020, h)
     }
   })
 }

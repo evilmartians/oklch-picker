@@ -51,3 +51,38 @@
 .layout_settings {
   grid-area: Settings;
 }
+
+.layout_charts {
+  display: grid;
+
+  @media (max-width: 800px) {
+    grid-template-areas:
+      "L"
+      "C"
+      "H";
+  }
+
+  @media (min-width: 801px) {
+    grid-template-areas:
+      "L H"
+      "C .";
+    gap: 20px;
+    width: 650px;
+  }
+}
+
+.layout_chart {
+  position: relative;
+
+  &.is-l {
+    grid-area: L;
+  }
+
+  &.is-c {
+    grid-area: C;
+  }
+
+  &.is-h {
+    grid-area: H;
+  }
+}

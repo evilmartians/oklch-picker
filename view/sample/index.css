@@ -12,7 +12,7 @@
   line-height: 16px;
   color: var(--text-secondary);
   text-align: center;
-  border: 1px dashed var(--text-secondary);
+  border: var(--unavailable-border);
   border-radius: var(--radius);
 
   @nest .sample:not(.is-supported).is-p3 &.is-p3 {

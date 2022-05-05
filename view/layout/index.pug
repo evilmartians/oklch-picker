@@ -1,3 +1,5 @@
+include ../chart/mixin.pug
+
 .layout
   .layout_title
     include ../title/index.pug
@@ -8,6 +10,12 @@
   .layout_code
     include ../text/index.pug
   .layout_space
-    include ../spaces/index.pug
+    .layout_charts
+      .layout_chart.is-l
+        +chart('l', 'c', 'h')
+      .layout_chart.is-c
+        +chart('c', 'l', 'h')
+      .layout_chart.is-h
+        +chart('h', 'c', 'l')
   .layout_settings
     include ../settings/index.pug

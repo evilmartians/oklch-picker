@@ -3,7 +3,7 @@
 
   position: relative;
   display: flex;
-  width: calc(var(--number-label) + var(--space-width) + 105px);
+  width: calc(var(--number-label) + 350px + 105px);
   height: 40px;
   margin: 10px 0 10px calc(var(--number-label) * -1);
 }
@@ -15,7 +15,7 @@
 }
 
 .number_range {
-  width: var(--space-width);
+  width: 350px;
 }
 
 .number_text {

@@ -1,4 +1,4 @@
-import { paintL, paintC, paintH } from './lib'
+import { paintL, paintC, paintH } from './paint'
 import { support } from '../../stores/support'
 
 export type MessageData =
@@ -9,6 +9,7 @@ export type MessageData =
   | {
       type: 'l'
       l: number
+      bg: string
       hasP3: boolean
       showP3: boolean
       showRec2020: boolean
@@ -18,6 +19,7 @@ export type MessageData =
   | {
       type: 'c'
       c: number
+      bg: string
       hasP3: boolean
       showP3: boolean
       showRec2020: boolean
@@ -27,6 +29,7 @@ export type MessageData =
   | {
       type: 'h'
       h: number
+      bg: string
       hasP3: boolean
       showP3: boolean
       showRec2020: boolean
@@ -50,27 +53,30 @@ onmessage = (e: MessageEvent<MessageData>) => {
         canvas,
         e.data.width,
         e.data.height,
-        e.data.l,
+        e.data.bg,
         e.data.showP3,
-        e.data.showRec2020
+        e.data.showRec2020,
+        e.data.l
       )
     } else if (e.data.type === 'c') {
       paintC(
         canvas,
         e.data.width,
         e.data.height,
-        e.data.c,
+        e.data.bg,
         e.data.showP3,
-        e.data.showRec2020
+        e.data.showRec2020,
+        e.data.c
       )
     } else {
       paintH(
         canvas,
         e.data.width,
         e.data.height,
-        e.data.h,
+        e.data.bg,
         e.data.showP3,
-        e.data.showRec2020
+        e.data.showRec2020,
+        e.data.h
       )
     }
     postMessage(Date.now() - start)

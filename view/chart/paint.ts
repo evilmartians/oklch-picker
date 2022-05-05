@@ -20,9 +20,29 @@ let DEBUG = false
 
 const BLOCK = 4
 
+function paintDot(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  background: string,
+  color: Color,
+  alpha: number
+): void {
+  if (alpha < 1) {
+    ctx.fillStyle = background
+    ctx.fillRect(x, y, width, height)
+    color.alpha = alpha
+  }
+  ctx.fillStyle = format(color)
+  ctx.fillRect(x, y, width, height)
+}
+
 function paintFast(
   ctx: CanvasRenderingContext2D,
   height: number,
+  bg: string,
   fromX: number,
   fromY: number,
   stepX: number,
@@ -34,15 +54,13 @@ function paintFast(
   for (let x = fromX; x < fromX + BLOCK; x += stepX) {
     for (let y = fromY; y < fromY + BLOCK; y += stepY) {
       let color = getColor(x, y)
-      color.alpha = getAlpha(color)
-      ctx.fillStyle = format(color)
       if (DEBUG) {
         ctx.fillStyle = 'rgba(0 200 0 / 0.6)'
         ctx.fillRect(x, flipY - y, 1, stepY)
         ctx.fillRect(x, flipY - y, stepX, 1)
         ctx.fillStyle = 'rgba(0 200 0 / 0.3)'
       }
-      ctx.fillRect(x, flipY - y, stepX, stepY)
+      paintDot(ctx, x, flipY - y, stepX, stepY, bg, color, getAlpha(color))
     }
   }
 }
@@ -50,6 +68,7 @@ function paintFast(
 function paintSlow(
   ctx: CanvasRenderingContext2D,
   height: number,
+  bg: string,
   fromX: number,
   fromY: number,
   isVisible: IsVisible,
@@ -60,12 +79,10 @@ function paintSlow(
     for (let y = fromY; y < fromY + BLOCK; y += 1) {
       let color = getColor(x, y)
       if (isVisible(color)) {
-        color.alpha = getAlpha(color)
-        ctx.fillStyle = format(color)
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 100 0 / 0.3)'
         }
-        ctx.fillRect(x, height - y, 1, 1)
+        paintDot(ctx, x, height - y, 1, 1, bg, color, getAlpha(color))
       }
     }
   }
@@ -83,6 +100,7 @@ function paint(
   height: number,
   hasGaps: boolean,
   fastBlock: number,
+  bg: string,
   showP3: boolean,
   showRec2020: boolean,
   getColor: GetColor
@@ -214,9 +232,9 @@ function paint(
     for (let y = 0; y <= height; y += BLOCK) {
       let pos = getMode(x, y)
       if (pos === PaintMode.Inside) {
-        paintFast(ctx, height, x, y, BLOCK, fastBlock, getAlpha, getColor)
+        paintFast(ctx, height, bg, x, y, BLOCK, fastBlock, getAlpha, getColor)
       } else if (pos === PaintMode.Between) {
-        paintSlow(ctx, height, x, y, isVisible, getAlpha, getColor)
+        paintSlow(ctx, height, bg, x, y, isVisible, getAlpha, getColor)
       } else if (!hasGaps) {
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 0 0 / 0.3)'
@@ -236,14 +254,15 @@ export function paintL(
   canvas: HTMLCanvasElement,
   width: number,
   height: number,
-  l: number,
+  bg: string,
   showP3: boolean,
-  showRec2020: boolean
+  showRec2020: boolean,
+  l: number
 ): void {
   let ctx = getCleanCtx(canvas)
   let hFactor = H_MAX / width
   let cFactor = C_MAX / height
-  paint(ctx, width, height, false, BLOCK, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
     return build(l, y * cFactor, x * hFactor)
   })
 }
@@ -252,14 +271,15 @@ export function paintC(
   canvas: HTMLCanvasElement,
   width: number,
   height: number,
-  c: number,
+  bg: string,
   showP3: boolean,
-  showRec2020: boolean
+  showRec2020: boolean,
+  c: number
 ): void {
   let ctx = getCleanCtx(canvas)
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
-  paint(ctx, width, height, true, 2, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
   })
 }
@@ -268,14 +288,15 @@ export function paintH(
   canvas: HTMLCanvasElement,
   width: number,
   height: number,
-  h: number,
+  bg: string,
   showP3: boolean,
-  showRec2020: boolean
+  showRec2020: boolean,
+  h: number
 ): void {
   let ctx = getCleanCtx(canvas)
   let lFactor = L_MAX / width
   let cFactor = C_MAX / height
-  paint(ctx, width, height, true, BLOCK, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, true, BLOCK, bg, showP3, showRec2020, (x, y) => {
     return build(x * lFactor, y * cFactor, h)
   })
 }
