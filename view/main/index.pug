@@ -1,6 +1,8 @@
 .main
   h1.main_title
     = `${COLOR_FN === '"oklch"' ? 'OKLCH' : 'LCH'} Color Picker & Converter`
+  .main_mode
+    include ../mode/index.pug
   .main_sample
     include ../sample/index.pug
   .main_code

@@ -1,4 +1,5 @@
 .main {
+  position: relative;
   display: grid;
   grid-template:
     "T T"
@@ -12,9 +13,15 @@
 
 .main_title {
   grid-area: T;
-  padding-bottom: 20px;
+  padding: 12px 0 24px;
   font-size: inherit;
   font-weight: inherit;
+}
+
+.main_mode {
+  position: absolute;
+  top: 24px;
+  right: 32px;
 }
 
 .main_sample {

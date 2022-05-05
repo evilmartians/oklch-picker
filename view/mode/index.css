@@ -1,0 +1,22 @@
+.mode {
+  display: flex;
+  padding: 2px;
+  background: var(--surface-ui-regular);
+  border-radius: var(--radius);
+}
+
+.mode_link {
+  display: block;
+  width: 96px;
+  height: 36px;
+  line-height: 36px;
+  color: inherit;
+  text-align: center;
+  text-decoration: none;
+  border-radius: calc(var(--radius) - 2px);
+
+  &.is-current {
+    cursor: default;
+    background: var(--surface-1);
+  }
+}
