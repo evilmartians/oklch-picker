@@ -1,23 +1,25 @@
 import './index.css'
+import { getCheckbox, onChange } from '../checkbox/index.js'
 import { settings } from '../../stores/settings.js'
-import { getCheckbox } from '../checkbox/index.js'
 
 let p3 = getCheckbox('p3')!
-let rec2020 = getCheckbox('rec2020')!!
+let rec2020 = getCheckbox('rec2020')!
+let charts = getCheckbox('charts')!
 
 settings.subscribe(value => {
   p3.checked = value.p3 === 'show'
   rec2020.checked = value.rec2020 === 'show'
+  charts.checked = value.charts === 'show'
 })
 
-p3.addEventListener('change', () => {
-  setTimeout(() => {
-    settings.setKey('p3', p3.checked ? 'show' : 'hide')
-  }, 0)
+onChange(charts, checked => {
+  settings.setKey('charts', checked ? 'show' : 'hide')
 })
 
-rec2020.addEventListener('change', () => {
-  setTimeout(() => {
-    settings.setKey('rec2020', rec2020.checked ? 'show' : 'hide')
-  }, 0)
+onChange(p3, checked => {
+  settings.setKey('p3', checked ? 'show' : 'hide')
+})
+
+onChange(rec2020, checked => {
+  settings.setKey('rec2020', checked ? 'show' : 'hide')
 })

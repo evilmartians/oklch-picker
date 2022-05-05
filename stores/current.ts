@@ -48,15 +48,33 @@ window.addEventListener('hashchange', () => {
   if (color) current.set(color)
 })
 
+interface ComponentCallback {
+  (
+    value: number,
+    showP3: boolean,
+    showRec2020: boolean,
+    showCharts: boolean
+  ): void
+}
+
+interface LchCallback {
+  (
+    value: LchValue,
+    showP3: boolean,
+    showRec2020: boolean,
+    showCharts: boolean
+  ): void
+}
+
 interface LchCallbacks {
-  l?(value: number, p3: boolean, rec2020: boolean): void
-  c?(value: number, p3: boolean, rec2020: boolean): void
-  h?(value: number, p3: boolean, rec2020: boolean): void
-  alpha?(value: number, p3: boolean, rec2020: boolean): void
-  lc?(color: LchValue, p3: boolean, rec2020: boolean): void
-  ch?(color: LchValue, p3: boolean, rec2020: boolean): void
-  lh?(color: LchValue, p3: boolean, rec2020: boolean): void
-  lch?(color: LchValue, p3: boolean, rec2020: boolean): void
+  l?: ComponentCallback
+  c?: ComponentCallback
+  h?: ComponentCallback
+  alpha?: ComponentCallback
+  lc?: LchCallback
+  ch?: LchCallback
+  lh?: LchCallback
+  lch?: LchCallback
 }
 
 let changeListeners: LchCallbacks[] = []
@@ -69,34 +87,35 @@ function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let hChanged = prev.h !== value.h
   let start = Date.now()
 
-  let p3 = settings.get().p3 === 'show'
-  let rec2020 = settings.get().rec2020 === 'show'
+  let showP3 = settings.get().p3 === 'show'
+  let showRec2020 = settings.get().rec2020 === 'show'
+  let showCharts = settings.get().charts === 'show'
 
   for (let i of list) {
     if (i.l && lChanged) {
-      i.l(value.l, p3, rec2020)
+      i.l(value.l, showP3, showRec2020, showCharts)
     }
     if (i.c && cChanged) {
-      i.c(value.c, p3, rec2020)
+      i.c(value.c, showP3, showRec2020, showCharts)
     }
     if (i.h && hChanged) {
-      i.h(value.h, p3, rec2020)
+      i.h(value.h, showP3, showRec2020, showCharts)
     }
     if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a, p3, rec2020)
+      i.alpha(value.a, showP3, showRec2020, showCharts)
     }
 
     if (i.lc && (lChanged || cChanged)) {
-      i.lc(value, p3, rec2020)
+      i.lc(value, showP3, showRec2020, showCharts)
     }
     if (i.ch && (cChanged || hChanged)) {
-      i.ch(value, p3, rec2020)
+      i.ch(value, showP3, showRec2020, showCharts)
     }
     if (i.lh && (lChanged || hChanged)) {
-      i.lh(value, p3, rec2020)
+      i.lh(value, showP3, showRec2020, showCharts)
     }
     if (i.lch && (lChanged || cChanged || hChanged)) {
-      i.lch(value, p3, rec2020)
+      i.lch(value, showP3, showRec2020, showCharts)
     }
   }
 

@@ -30,4 +30,8 @@
   position: relative;
   height: 150px;
   margin-bottom: 24px;
+
+  @nest .card.is-chart-hidden & {
+    display: none;
+  }
 }

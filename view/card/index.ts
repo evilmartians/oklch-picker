@@ -1,22 +1,24 @@
 import './index.css'
-
 import { current, onCurrentChange } from '../../stores/current.js'
+import { settings } from '../../stores/settings.js'
 
-function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
-  let div = document.querySelector<HTMLInputElement>(`.card.is-${type}`)!
-  let text = div.querySelector<HTMLInputElement>('[type=number]')!
+function initInput(
+  type: 'l' | 'c' | 'h' | 'a'
+): [HTMLInputElement, HTMLDivElement] {
+  let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
+  let text = card.querySelector<HTMLInputElement>('[type=number]')!
 
   text.addEventListener('change', () => {
     current.setKey(type, parseFloat(text.value))
   })
 
-  return text
+  return [text, card]
 }
 
-let textL = initInput('l')
-let textC = initInput('c')
-let textH = initInput('h')
-let textA = initInput('a')
+let [textL, cardL] = initInput('l')
+let [textC, cardC] = initInput('c')
+let [textH, carsH] = initInput('h')
+let [textA] = initInput('a')
 
 onCurrentChange({
   l(value) {
@@ -31,4 +33,10 @@ onCurrentChange({
   alpha(value) {
     textA.value = String(value)
   }
+})
+
+settings.subscribe(({ charts }) => {
+  cardL.classList.toggle('is-chart-hidden', charts === 'hide')
+  cardC.classList.toggle('is-chart-hidden', charts === 'hide')
+  carsH.classList.toggle('is-chart-hidden', charts === 'hide')
 })
