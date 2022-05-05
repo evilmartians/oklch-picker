@@ -102,7 +102,7 @@ if (canvasL.transferControlToOffscreen) {
       let bg = getBackground(canvasL)
       send(workerL, {
         type: 'l',
-        l: l / 100,
+        l: (L_MAX * l) / 100,
         bg,
         showP3,
         showRec2020,
