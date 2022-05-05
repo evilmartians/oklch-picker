@@ -1,0 +1,62 @@
+include ../range/mixin.pug
+
+mixin card(type)
+  section.card( class=`is-${type}` )
+
+    if type === 'l'
+      h2.card_title Lightness
+      .card_number
+        input.field(
+          type="number"
+          min="0"
+          max="100"
+          step=L_STEP
+          aria-label="L"
+        )
+      .card_chart
+        +chart('h', 'c', 'l')
+      .card_range
+        +range('l', 100, L_STEP)
+
+    else if type === 'c'
+      h2.card_title Chroma
+      .card_number
+        input.field(
+          type="number"
+          min="0"
+          max=C_MAX
+          step=C_STEP
+          aria-label="C"
+        )
+      .card_chart
+        +chart('l', 'c', 'h')
+      .card_range
+        +range('c', C_MAX, C_STEP)
+
+    else if type === 'h'
+      h2.card_title Hue
+      .card_number
+        input.field(
+          type="number"
+          min="0"
+          max=H_MAX
+          step=H_STEP
+          aria-label="H"
+        )
+      .card_chart
+        +chart('c', 'l', 'h')
+      .card_range
+        +range('h', H_MAX, H_STEP)
+
+    else if type === 'a'
+      h2.card_title Alpha
+      .card_number
+        input.field(
+          type="number"
+          min="0"
+          max=ALPHA_MAX
+          step=ALPHA_STEP
+          aria-label="Alpha"
+        )
+      .card_range
+        +range('a', ALPHA_MAX, ALPHA_STEP)

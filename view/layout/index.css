@@ -1,88 +1,62 @@
 .layout {
-  box-sizing: border-box;
   display: grid;
-  align-content: center;
-  justify-content: center;
+  gap: 4px;
+  width: fit-content;
   min-height: 100vh;
+  margin: 0 auto;
 
-  @media (max-width: 800px) {
+  @media (width < 908px) {
     grid-template-areas:
-      "Title"
-      "Example"
-      "Code"
-      "Scales"
-      "Space"
-      "Settings";
-    padding: 20px;
+      "M"
+      "L"
+      "C"
+      "H"
+      "A"
+      "S"
+      "."
+      "F";
+    gap: 4px;
   }
 
-  @media (min-width: 801px) {
-    grid-template-areas:
-      "Title    Title"
-      "Scales   Example"
-      "Scales   Code"
-      "Space    Space"
-      "Settings Settings";
-    padding: 50px;
+  @media (width >= 908px) {
+    grid-template:
+      "M M" auto
+      "L C" auto
+      "A H" auto
+      "S H" auto
+      ". ." 1fr
+      "F F" auto;
   }
 }
 
-.layout_title {
-  grid-area: Title;
+.layout_main {
+  grid-area: M;
 }
 
-.layout_example {
-  grid-area: Example;
+.layout_l {
+  grid-area: L;
+  height: fit-content;
 }
 
-.layout_scales {
-  grid-area: Scales;
+.layout_c {
+  grid-area: C;
+  height: fit-content;
 }
 
-.layout_code {
-  grid-area: Code;
-  margin-bottom: 10px;
+.layout_h {
+  grid-area: H;
+  height: fit-content;
 }
 
-.layout_space {
-  grid-area: Space;
+.layout_a {
+  grid-area: A;
+  height: fit-content;
 }
 
 .layout_settings {
-  grid-area: Settings;
+  grid-area: S;
 }
 
-.layout_charts {
-  display: grid;
-
-  @media (max-width: 800px) {
-    grid-template-areas:
-      "L"
-      "C"
-      "H";
-  }
-
-  @media (min-width: 801px) {
-    grid-template-areas:
-      "L H"
-      "C .";
-    gap: 20px;
-    width: 650px;
-  }
-}
-
-.layout_chart {
-  position: relative;
-
-  &.is-l {
-    grid-area: L;
-  }
-
-  &.is-c {
-    grid-area: C;
-  }
-
-  &.is-h {
-    grid-area: H;
-  }
+.layout_footer {
+  grid-area: F;
 }

@@ -1,8 +1,7 @@
 .chart {
   position: relative;
   box-sizing: border-box;
-  width: 350px;
-  height: 150px;
+  height: 100%;
   cursor: pointer;
   border: var(--unavailable-border);
 }

@@ -1,21 +1,17 @@
 include ../chart/mixin.pug
+include ../card/mixin.pug
 
 .layout
-  .layout_title
-    include ../title/index.pug
-  .layout_example
-    include ../sample/index.pug
-  .layout_scales
-    include ../number/index.pug
-  .layout_code
-    include ../text/index.pug
-  .layout_space
-    .layout_charts
-      .layout_chart.is-l
-        +chart('l', 'c', 'h')
-      .layout_chart.is-c
-        +chart('c', 'l', 'h')
-      .layout_chart.is-h
-        +chart('h', 'c', 'l')
+  .layout_main
+    include ../main/index.pug
+  .layout_l
+    +card('l')
+  .layout_c
+    +card('c')
+  .layout_h
+    +card('h')
+  .layout_a
+    +card('a')
+
   .layout_settings
     include ../settings/index.pug

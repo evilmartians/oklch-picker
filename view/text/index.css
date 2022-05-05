@@ -1,10 +1,9 @@
-.text_value {
-  margin-top: 10px;
-  margin-left: 20px;
+.text_value + .text_value {
+  margin-top: 4px;
 }
 
 .text_input {
-  width: 300px;
+  width: 100%;
 }
 
 .text_error {

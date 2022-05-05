@@ -1,0 +1,26 @@
+.main {
+  display: grid;
+  grid-template:
+    "T T"
+    "S C"
+    / 1fr 1fr;
+  gap: 4px;
+  padding: 24px 32px 32px;
+  background: var(--surface-1);
+  border-radius: 0 0 36px 36px;
+}
+
+.main_title {
+  grid-area: T;
+  padding-bottom: 20px;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.main_sample {
+  grid-area: S;
+}
+
+.main_code {
+  grid-area: C;
+}

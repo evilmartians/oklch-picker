@@ -1,0 +1,33 @@
+.card {
+  --current-surface: var(--surface-1);
+
+  position: relative;
+  width: 340px;
+  padding: 20px 32px 32px;
+  background: var(--current-surface);
+  border-radius: 36px;
+
+  @media (width <= 404px) {
+    width: auto;
+  }
+}
+
+.card_title {
+  height: 40px;
+  margin-bottom: 12px;
+  font: inherit;
+  line-height: 40px;
+}
+
+.card_number {
+  position: absolute;
+  top: 20px;
+  right: 32px;
+  width: 110px;
+}
+
+.card_chart {
+  position: relative;
+  height: 150px;
+  margin-bottom: 24px;
+}
