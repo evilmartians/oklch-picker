@@ -15,8 +15,9 @@ import {
   Color,
   parse
 } from '../../lib/colors.js'
-import { visible } from '../../stores/visible.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
+import { settings } from '../../stores/settings.js'
+import { visible } from '../../stores/visible.js'
 
 function initRange(
   type: 'l' | 'c' | 'h' | 'a'
@@ -115,7 +116,7 @@ onPaint({
     let l = color.l
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasC)
-    let factor = C_MAX / width
+    let factor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / width
     paint(canvasC, width, height, false, showP3, showRec2020, x => {
       return build(l, x * factor, h)
     })
@@ -137,4 +138,8 @@ visible.subscribe(({ real, fallback }) => {
   let parsed = parse(color)
   rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
   rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
+})
+
+settings.subscribe(({ rec2020 }) => {
+  inputC.max = String(rec2020 === 'show' ? C_MAX_REC2020 : C_MAX)
 })

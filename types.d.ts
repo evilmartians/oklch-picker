@@ -22,6 +22,7 @@ declare const LCH: boolean
 declare const L_MAX: number
 declare const L_STEP: number
 declare const C_MAX: number
+declare const C_MAX_REC2020: number
 declare const C_STEP: number
 declare const C_RANDOM: number
 declare const H_MAX: number

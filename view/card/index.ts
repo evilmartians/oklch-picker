@@ -35,8 +35,9 @@ onCurrentChange({
   }
 })
 
-settings.subscribe(({ charts }) => {
+settings.subscribe(({ charts, rec2020 }) => {
   cardL.classList.toggle('is-chart-hidden', charts === 'hide')
   cardC.classList.toggle('is-chart-hidden', charts === 'hide')
   carsH.classList.toggle('is-chart-hidden', charts === 'hide')
+  textC.max = String(rec2020 === 'show' ? C_MAX_REC2020 : C_MAX)
 })

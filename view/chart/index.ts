@@ -26,12 +26,16 @@ let canvasL = chartL.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasC = chartC.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
 
+function getMaxC(): number {
+  return settings.get().rec2020 === 'show' ? C_MAX_REC2020 : C_MAX
+}
+
 onCurrentChange({
   l(l) {
     document.body.style.setProperty('--chart-l', `${l}%`)
   },
   c(c) {
-    document.body.style.setProperty('--chart-c', `${(100 * c) / C_MAX}%`)
+    document.body.style.setProperty('--chart-c', `${(100 * c) / getMaxC()}%`)
   },
   h(h) {
     document.body.style.setProperty('--chart-h', `${(100 * h) / H_MAX}%`)
@@ -46,7 +50,7 @@ function onSelect(e: MouseEvent): void {
   if (space.classList.contains('is-l')) {
     setCurrentComponents({
       h: (H_MAX * x) / rect.width,
-      c: (C_MAX * y) / rect.height
+      c: (getMaxC() * y) / rect.height
     })
   } else if (space.classList.contains('is-c')) {
     setCurrentComponents({
@@ -56,7 +60,7 @@ function onSelect(e: MouseEvent): void {
   } else if (space.classList.contains('is-h')) {
     setCurrentComponents({
       l: (100 * x) / rect.width,
-      c: (C_MAX * y) / rect.height
+      c: (getMaxC() * y) / rect.height
     })
   }
 }

@@ -261,7 +261,7 @@ export function paintL(
 ): void {
   let ctx = getCleanCtx(canvas)
   let hFactor = H_MAX / width
-  let cFactor = C_MAX / height
+  let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
   paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
     return build(l, y * cFactor, x * hFactor)
   })
@@ -295,7 +295,7 @@ export function paintH(
 ): void {
   let ctx = getCleanCtx(canvas)
   let lFactor = L_MAX / width
-  let cFactor = C_MAX / height
+  let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
   paint(ctx, width, height, true, BLOCK, bg, showP3, showRec2020, (x, y) => {
     return build(x * lFactor, y * cFactor, h)
   })
