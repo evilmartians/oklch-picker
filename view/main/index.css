@@ -4,6 +4,17 @@
   padding: 24px var(--card-padding) 0 var(--card-padding);
   background: var(--surface-1);
   border-radius: 36px;
+
+  @media (width < 908px) {
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 36px 36px 0 0;
+
+    @supports (backdrop-filter: blur(10px)) {
+      background: var(--surface-2);
+      backdrop-filter: blur(10px);
+    }
+  }
 }
 
 .main_row {

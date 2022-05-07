@@ -2,12 +2,12 @@
   display: grid;
   gap: 4px;
   width: fit-content;
+  padding-bottom: 390px;
   margin: 0 auto;
 
   @media (width < 908px) {
     grid-template:
       "T"
-      "M"
       "L"
       "C"
       "H"
@@ -38,26 +38,30 @@
 
 .layout_main {
   grid-area: M;
+
+  @media (width < 908px) {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+  }
 }
 
 .layout_l {
   grid-area: L;
-  height: fit-content;
 }
 
 .layout_c {
   grid-area: C;
-  height: fit-content;
 }
 
 .layout_h {
   grid-area: H;
-  height: fit-content;
 }
 
 .layout_a {
   grid-area: A;
-  height: fit-content;
 }
 
 .layout_settings {
