@@ -1,4 +1,5 @@
 import './index.css'
+
 import {
   setCurrentFromColor,
   valueToColor,
@@ -7,38 +8,31 @@ import {
 import { parse, formatLch } from '../../lib/colors.js'
 import { visible } from '../../stores/visible.js'
 
-let lchInput = document.querySelector<HTMLInputElement>('#text-lch')!
-let lchError = document.querySelector<HTMLDivElement>('#text-lch-error')!
-let rgbInput = document.querySelector<HTMLInputElement>('#text-rgb')!
-let rgbError = document.querySelector<HTMLDivElement>('#text-rgb-error')!
+let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
+let lchInput = lch.querySelector<HTMLInputElement>('.code_input')!
 
-function toggle(
-  input: HTMLInputElement,
-  error: HTMLDivElement,
-  invalid: boolean
-): void {
+let rgb = document.querySelector<HTMLDivElement>('.code.is-rgb')!
+let rgbInput = rgb.querySelector<HTMLInputElement>('.code_input')!
+
+function toggle(input: HTMLInputElement, invalid: boolean): void {
   if (invalid) {
     input.setAttribute('aria-invalid', 'true')
-    input.setAttribute('aria-errormessage', error.id)
   } else {
     input.removeAttribute('aria-invalid')
-    input.removeAttribute('aria-errormessage')
   }
-  error.ariaHidden = invalid ? 'false' : 'true'
-  error.classList.toggle('is-show', invalid)
 }
 
 current.subscribe(value => {
   lchInput.value = formatLch(valueToColor(value))
-  toggle(lchInput, lchError, false)
+  toggle(lchInput, false)
 })
 
 visible.subscribe(({ real, fallback }) => {
   rgbInput.value = real || fallback
-  toggle(rgbInput, rgbError, false)
+  toggle(rgbInput, false)
 })
 
-function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
+function listenChanges(input: HTMLInputElement): void {
   let prevValue = input.value.trim()
 
   function processChange(): void {
@@ -50,9 +44,9 @@ function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
     let parsed = parse(newValue)
     if (parsed) {
       setCurrentFromColor(parsed)
-      toggle(input, error, false)
+      toggle(input, false)
     } else {
-      toggle(input, error, true)
+      toggle(input, true)
     }
   }
 
@@ -60,5 +54,5 @@ function listenChanges(input: HTMLInputElement, error: HTMLDivElement): void {
   input.addEventListener('keyup', processChange)
 }
 
-listenChanges(lchInput, lchError)
-listenChanges(rgbInput, rgbError)
+listenChanges(lchInput)
+listenChanges(rgbInput)

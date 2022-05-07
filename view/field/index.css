@@ -11,4 +11,13 @@
   &[type="number"] {
     text-align: right;
   }
+
+  &[aria-invalid] {
+    color: var(--text-danger);
+    background: var(--surface-ui-danger);
+
+    &:focus {
+      outline-color: var(--danger);
+    }
+  }
 }
