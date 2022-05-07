@@ -2,7 +2,6 @@
   display: grid;
   gap: 4px;
   width: fit-content;
-  padding-bottom: 390px;
   margin: 0 auto;
 
   @media (width < 908px) {
@@ -13,6 +12,7 @@
       "H"
       "A"
       "S";
+    padding-bottom: 390px;
   }
 
   @media (width >= 908px) and (width < 1230px) {
