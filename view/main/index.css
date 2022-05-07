@@ -9,7 +9,7 @@
     box-sizing: border-box;
     width: 100%;
     border-radius: 36px 36px 0 0;
-    box-shadow: 0 0 2px oklch(0% 0 0 / 40%), 0 0 18px oklch(0% 0 0 / 40%);
+    box-shadow: 0 0 2px var(--surface-2-shadow), 0 0 18px var(--surface-2-shadow);
 
     @supports (backdrop-filter: blur(24px)) {
       background: var(--surface-2);
