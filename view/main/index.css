@@ -1,15 +1,73 @@
 .main {
   position: relative;
   width: var(--card-width);
-  padding: 24px var(--card-padding) 32px var(--card-padding);
+  padding: 24px var(--card-padding) 0 var(--card-padding);
   background: var(--surface-1);
   border-radius: 36px;
 }
 
 .main_row {
-  margin-top: 24px;
+  margin-bottom: 24px;
+}
 
-  &:first-child {
-    margin-top: 0;
+.main_footer {
+  padding-bottom: 46px;
+  font-size: 10px;
+  font-weight: 200;
+  line-height: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+
+  & > a {
+    font-weight: 400;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--text-primary);
+      text-decoration: underline;
+    }
+  }
+}
+
+.main_logo {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 88px;
+  height: 38px;
+  transform: translateX(-50%);
+}
+
+.main_martian,
+.main_human {
+  position: absolute;
+  bottom: 0;
+  width: 44px;
+
+  & > path {
+    fill: var(--surface-ui-regular);
+  }
+
+  @nest .main_logo:hover & {
+    opacity: 85%;
+  }
+}
+
+.main_martian {
+  left: 0;
+  height: 38px;
+
+  @nest .main_logo:hover & > path {
+    fill: var(--martian);
+  }
+}
+
+.main_human {
+  right: 0;
+  height: 34px;
+
+  @nest .main_logo:hover & > path {
+    fill: var(--human);
   }
 }

@@ -13,6 +13,7 @@ export let accent = computed(current, value => {
   if (h === 0) h = 286
   return {
     main: clamp(0.57, 0.18, h),
-    surface: clamp(0.7, 0.17, h, 0.2)
+    surface: clamp(0.7, 0.17, h, 0.2),
+    martian: clamp(0.85, 0.04, h)
   }
 })

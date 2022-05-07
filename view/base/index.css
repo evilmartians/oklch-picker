@@ -22,6 +22,8 @@
   --accent: oklch(57% 0.18 286);
   --shadow: oklch(18% 0.03 310 / 12%);
   --default-color: oklch(70% 0.1 286);
+  --martian: oklch(85% 0.04 286);
+  --human: oklch(85% 0.04 66);
 
   /* Tokens */
   --radius: 12px;
