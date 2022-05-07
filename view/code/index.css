@@ -1,3 +1,11 @@
 .code + .code {
   margin-top: 4px;
 }
+
+.code_note {
+  padding: 0 12px;
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+}
