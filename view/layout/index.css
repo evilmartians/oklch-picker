@@ -2,31 +2,38 @@
   display: grid;
   gap: 4px;
   width: fit-content;
-  min-height: 100vh;
   margin: 0 auto;
 
   @media (width < 908px) {
-    grid-template-areas:
+    grid-template:
+      "T"
       "M"
       "L"
       "C"
       "H"
       "A"
-      "S"
-      "."
-      "F";
-    gap: 4px;
+      "S";
   }
 
-  @media (width >= 908px) {
+  @media (width >= 908px) and (width < 1230px) {
     grid-template:
-      "M M" auto
-      "L C" auto
-      "A H" auto
-      "S H" auto
-      ". ." 1fr
-      "F F" auto;
+      "T T"
+      "M S"
+      "L C"
+      "A H";
   }
+
+  @media (width >= 1230px) {
+    grid-template:
+      "T T T"
+      "M L C"
+      "M A H"
+      ". S H";
+  }
+}
+
+.layout_title {
+  grid-area: T;
 }
 
 .layout_main {
@@ -55,8 +62,4 @@
 
 .layout_settings {
   grid-area: S;
-}
-
-.layout_footer {
-  grid-area: F;
 }

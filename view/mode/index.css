@@ -1,6 +1,8 @@
 .mode {
   display: flex;
+  width: fit-content;
   padding: 2px;
+  margin: 0 auto;
   background: var(--surface-ui-regular);
   border-radius: var(--radius);
 }

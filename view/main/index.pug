@@ -1,9 +1,7 @@
 .main
-  h1.main_title
-    = `${LCH ? 'LCH' : 'OKLCH'} Color Picker & Converter`
-  .main_mode
-    include ../mode/index.pug
-  .main_sample
+  .main_row
     include ../sample/index.pug
-  .main_code
+  .main_row
     include ../text/index.pug
+  .main_row
+    include ../mode/index.pug

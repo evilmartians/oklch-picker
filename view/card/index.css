@@ -1,8 +1,13 @@
 body {
   --card-padding: 32px;
+  --card-width: 340px;
 
-  @media (width >= 980px) {
+  @media (width >= 1470px) {
     --card-padding: 72px;
+  }
+
+  @media (width <= 404px) {
+    --card-width: auto;
   }
 }
 
@@ -10,14 +15,10 @@ body {
   --current-surface: var(--surface-1);
 
   position: relative;
-  width: 340px;
+  width: var(--card-width);
   padding: 20px var(--card-padding) 32px var(--card-padding);
   background: var(--current-surface);
   border-radius: 36px;
-
-  @media (width <= 404px) {
-    width: auto;
-  }
 }
 
 .card_title {
