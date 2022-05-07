@@ -20,7 +20,6 @@
   --ui-bg: oklch(70% 0.05 310 / 18%);
   --ui-border: oklch(70% 0 0 / 20%);
   --accent: oklch(57% 0.18 286);
-  --shadow: oklch(18% 0.03 310 / 12%);
   --default-color: oklch(70% 0.1 286);
   --martian: oklch(85% 0.04 286);
   --human: oklch(85% 0.04 66);
@@ -30,7 +29,6 @@
   --opacity-pattern:
     repeating-conic-gradient(var(--chess) 0% 25%, var(--surface-1) 0% 50%)
     50% / 8px 8px;
-  --above: 0 1px 6px 0 var(--shadow), 0 0 1px 0.5px var(--shadow);
   --unavailable-border: 1px dashed oklch(60% 0.05 310 / 40%);
 }
 
