@@ -5,16 +5,14 @@ let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
 let originViewport = meta.content
 
-let onFocus = (e: FocusEvent): void => {
+function onFocus(e: FocusEvent): void {
   let input = e.target as HTMLInputElement
   input.select()
 }
 
 if (/iPhone/.test(navigator.userAgent)) {
-  let originFocus = onFocus
-  onFocus = (e: FocusEvent): void => {
-    meta.content = originViewport + ',maximum-scale=1'
-    originFocus(e)
+  function onMouseOver(): void {
+    meta.content = originViewport + ',maximum-scale=1,user-scalable=0'
   }
 
   function onBlur(): void {
@@ -23,7 +21,8 @@ if (/iPhone/.test(navigator.userAgent)) {
 
   for (let field of fields) {
     let input = field.querySelector<HTMLInputElement>('input')!
-    input.addEventListener('focus', onBlur)
+    input.addEventListener('mouseover', onMouseOver)
+    input.addEventListener('blur', onBlur)
   }
 }
 
