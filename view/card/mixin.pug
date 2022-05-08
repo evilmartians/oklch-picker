@@ -6,7 +6,7 @@ mixin card(type)
     if type === 'l'
       h2.card_title Lightness
       .card_number
-        +field('L', {
+        +field('L', 'l', {
           type: 'number',
           min: 0,
           max: 100,
@@ -22,7 +22,7 @@ mixin card(type)
     else if type === 'c'
       h2.card_title Chroma
       .card_number
-        +field('C', {
+        +field('C', 'c', {
           type: 'number',
           min: 0,
           max: C_MAX,
@@ -38,7 +38,7 @@ mixin card(type)
     else if type === 'h'
       h2.card_title Hue
       .card_number
-        +field('H', {
+        +field('H', 'h', {
           type: 'number',
           min: 0,
           max: H_MAX,
@@ -54,7 +54,7 @@ mixin card(type)
     else if type === 'a'
       h2.card_title Alpha
       .card_number
-        +field('Alpha', {
+        +field('Alpha', 'a', {
           type: 'number',
           min: 0,
           max: ALPHA_MAX,

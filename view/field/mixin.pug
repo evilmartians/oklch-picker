@@ -1,2 +1,4 @@
-mixin field(label, opts = {})
-  input.field( aria-label=label )&attributes({ type: 'text', ...opts })
+mixin field(label, hotkey, opts = {})
+  .field
+    kbd.field_hotket= hotkey
+    input.field_input( aria-label=label )&attributes({ type: 'text', ...opts })
