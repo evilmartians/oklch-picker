@@ -59,11 +59,10 @@ body {
   -webkit-tap-highlight-color: oklch(0% 0 0 / 0);
 }
 
+a,
 input,
 button,
 label[tabindex="0"] {
-  outline-offset: 3px;
-
   &:focus {
     outline: var(--accent) solid 3px;
   }

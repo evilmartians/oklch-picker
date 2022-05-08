@@ -79,6 +79,11 @@ body {
     color: var(--accent);
     text-decoration: underline;
   }
+
+  &:focus {
+    border-radius: 2px;
+    outline-width: 2px;
+  }
 }
 
 .main_logo {

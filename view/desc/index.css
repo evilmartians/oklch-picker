@@ -12,6 +12,8 @@
 
 .desc a {
   color: inherit;
+  border-radius: 2px;
+  outline-width: 2px;
 
   &:hover {
     color: var(--accent);
