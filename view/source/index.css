@@ -11,7 +11,7 @@
   background: var(--surface-1);
   border-radius: var(--radius);
 
-  @media (width < 908px) {
+  @media (width < 830px) {
     width: calc(100% - 64px);
     margin: 0 32px;
   }

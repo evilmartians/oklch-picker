@@ -5,7 +5,7 @@
   width: fit-content;
   margin: 0 auto;
 
-  @media (width < 908px) {
+  @media (width < 830px) {
     grid-template:
       "T"
       "L"
@@ -22,13 +22,13 @@
     }
   }
 
-  @media (width >= 908px) and (width < 1230px) {
+  @media (width >= 830px) and (width < 1230px) {
     grid-template:
       "T T"
       "M M"
       "L C"
       "A H"
-      "P P";
+      "P H";
   }
 
   @media (width >= 1230px) {
@@ -48,7 +48,7 @@
 .layout_main {
   grid-area: M;
 
-  @media (width >= 908px) and (width < 1230px) {
+  @media (width >= 830px) and (width < 1230px) {
     display: flex;
   }
 }
@@ -74,7 +74,7 @@
 }
 
 .layout_panel {
-  @media (width < 908px) {
+  @media (width < 830px) {
     position: fixed;
     right: 0;
     bottom: 0;
@@ -89,13 +89,13 @@
 }
 
 .layout_source {
-  @media (width >= 908px) {
+  @media (width >= 830px) {
     position: absolute;
     top: 18px;
     right: 0;
   }
 
-  @media (width < 908px) {
+  @media (width < 830px) {
     grid-area: "S";
   }
 }

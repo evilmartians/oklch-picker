@@ -14,7 +14,7 @@ function init(): void {
   window.addEventListener('scroll', onScroll)
 }
 
-let mobile = window.matchMedia('(max-width: 908px)')
+let mobile = window.matchMedia('(max-width:830px)')
 if (mobile.matches) {
   init()
 } else {

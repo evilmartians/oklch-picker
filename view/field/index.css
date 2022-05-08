@@ -42,7 +42,7 @@
   border-bottom-width: 2px;
   border-radius: 2px;
 
-  @media (width < 908px) {
+  @media (width < 830px) {
     display: none;
   }
 }

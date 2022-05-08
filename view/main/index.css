@@ -13,7 +13,7 @@ body {
   background: var(--surface-1);
   border-radius: 36px;
 
-  @media (width < 908px) {
+  @media (width < 830px) {
     box-sizing: border-box;
     width: 100%;
     padding-top: 0;
@@ -30,11 +30,11 @@ body {
 }
 
 .main_expand {
-  @media (width >= 908px) {
+  @media (width >= 830px) {
     display: none;
   }
 
-  @media (width < 908px) {
+  @media (width < 830px) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,7 +47,7 @@ body {
 }
 
 .main_expand::before {
-  @media (width < 908px) {
+  @media (width < 830px) {
     display: block;
     width: 32px;
     height: 4px;
