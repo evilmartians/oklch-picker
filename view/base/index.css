@@ -17,7 +17,7 @@
   --surface-ui-danger: oklch(79% 0.18 3 / 20%);
   --surface-badge: oklch(32% 0 0 / 85%);
   --text-primary: oklch(0% 0 0);
-  --text-secondary: oklch(54% 0 0 / 85%);
+  --text-secondary: oklch(54% 0 0);
   --text-badge: oklch(100% 0 0);
   --chess: oklch(94% 0 0);
   --ui-bg: oklch(70% 0.05 310 / 18%);
