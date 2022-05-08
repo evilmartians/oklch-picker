@@ -35,6 +35,14 @@ emText.addEventListener('mouseleave', () => {
   emLogo.classList.remove('is-hover')
 })
 
+emText.addEventListener('focus', () => {
+  emLogo.classList.add('is-hover')
+})
+
+emText.addEventListener('blur', () => {
+  emLogo.classList.remove('is-hover')
+})
+
 emLogo.addEventListener('mouseenter', () => {
   emText.classList.add('is-hover')
 })

@@ -12,10 +12,14 @@
 
 .desc a {
   color: inherit;
-  border-radius: 2px;
-  outline-width: 2px;
 
   &:hover {
     color: var(--accent);
+  }
+
+  &:focus {
+    text-decoration: none;
+    border-radius: 2px;
+    outline-offset: 2px;
   }
 }
