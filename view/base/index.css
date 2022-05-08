@@ -8,11 +8,12 @@
 
 :root {
   /* Colors */
-  --surface-0: oklch(96% 0 300);
+  --surface-0: oklch(96% 0.005 300);
   --surface-1: oklch(100% 0 0);
   --surface-2: oklch(99% 0 0 / 85%);
   --surface-2-shadow: oklch(0% 0 0 / 6%);
   --surface-ui-regular: oklch(70% 0.05 310 / 18%);
+  --surface-ui-accent: oklch(69% 0.17 286 / 20%);
   --surface-ui-danger: oklch(79% 0.18 3 / 20%);
   --surface-badge: oklch(32% 0 0 / 85%);
   --text-primary: oklch(0% 0 0);
