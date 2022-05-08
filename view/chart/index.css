@@ -11,6 +11,11 @@ body {
   cursor: pointer;
   border: var(--unavailable-border);
   border-width: 1px 0;
+
+  &.is-l,
+  &.is-h {
+    border-bottom-color: transparent;
+  }
 }
 
 .chart_line {
