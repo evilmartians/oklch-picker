@@ -1,10 +1,30 @@
 import './index.css'
 
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
+let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
-function onFocus(e: FocusEvent): void {
+let originViewport = meta.content
+
+let onFocus = (e: FocusEvent): void => {
   let input = e.target as HTMLInputElement
   input.select()
+}
+
+if (/iPhone/.test(navigator.userAgent)) {
+  let originFocus = onFocus
+  onFocus = (e: FocusEvent): void => {
+    meta.content = originViewport + ',maximum-scale=1'
+    originFocus(e)
+  }
+
+  function onBlur(): void {
+    meta.content = originViewport
+  }
+
+  for (let field of fields) {
+    let input = field.querySelector<HTMLInputElement>('input')!
+    input.addEventListener('focus', onBlur)
+  }
 }
 
 let hotkeys: Partial<Record<string, HTMLInputElement>> = {}
