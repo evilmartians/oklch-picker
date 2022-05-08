@@ -2,9 +2,8 @@
   padding: 32px 0;
   font-size: 17.5px;
   line-height: 20px;
-  text-align: center;
 
-  @media (width >= 908px) and (width < 1230px) {
-    text-align: left;
+  @media (width < 908px) {
+    text-align: center;
   }
 }
