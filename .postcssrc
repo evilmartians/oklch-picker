@@ -1,6 +1,10 @@
 {
   "plugins": {
-    "@csstools/postcss-oklab-function": {},
+    "@csstools/postcss-oklab-function": {
+      "subFeatures": {
+        "displayP3": false
+      }
+    },
     "postcss-opacity-percentage": {},
     "postcss-mixins": {},
     "postcss-nesting": {},
