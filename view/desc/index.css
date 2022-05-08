@@ -9,3 +9,11 @@
 .desc li {
   padding-top: 10px;
 }
+
+.desc a {
+  color: inherit;
+
+  &:hover {
+    color: var(--accent);
+  }
+}

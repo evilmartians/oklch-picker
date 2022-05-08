@@ -17,6 +17,7 @@
     "autoprefixer": "^10.4.7",
     "culori": "^2.0.3",
     "firebase-tools": "^10.8.0",
+    "jstransformer-markdown-it": "^2.1.0",
     "nanostores": "^0.5.12",
     "postcss": "^8.4.13",
     "postcss-media-minmax": "^5.0.0",
