@@ -15,10 +15,10 @@
       "P"
       "M"
       "S";
-    padding-bottom: 450px;
+    padding-bottom: 430px;
 
     @nest body.is-main-collapsed & {
-      padding-bottom: 160px;
+      padding-bottom: calc(430px - 287px);
     }
   }
 
