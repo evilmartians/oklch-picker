@@ -99,6 +99,10 @@ body {
     fill: var(--surface-ui-regular);
   }
 
+  @nest .main_logo:hover & > path {
+    fill: var(--accent);
+  }
+
   @nest .main_logo:hover & {
     opacity: 85%;
   }
@@ -107,17 +111,9 @@ body {
 .main_martian {
   left: 0;
   height: 38px;
-
-  @nest .main_logo:hover & > path {
-    fill: var(--martian);
-  }
 }
 
 .main_human {
   right: 0;
   height: 34px;
-
-  @nest .main_logo:hover & > path {
-    fill: var(--human);
-  }
 }

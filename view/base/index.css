@@ -24,8 +24,6 @@
   --ui-border: oklch(70% 0 0 / 20%);
   --accent: oklch(57% 0.18 286);
   --default-color: oklch(70% 0.1 286);
-  --martian: oklch(85% 0.04 286);
-  --human: oklch(85% 0.04 66);
   --danger: oklch(59% 0.23 7);
 
   /* Tokens */
