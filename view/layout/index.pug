@@ -5,7 +5,10 @@ include ../card/mixin.pug
   .layout_title
     include ../title/index.pug
   .layout_main
-    include ../main/index.pug
+    .layout_panel
+      include ../main/index.pug
+    .layout_desc
+      include ../desc/index.pug
 
   .layout_l
     +card('l')

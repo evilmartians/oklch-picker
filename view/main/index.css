@@ -1,14 +1,17 @@
+body {
+  --main-padding: 32px;
+
+  @media (width >= 1320px) {
+    --main-padding: 72px;
+  }
+}
+
 .main {
   position: relative;
   width: var(--card-width);
-  padding: 24px 32px 0;
+  padding: 24px var(--main-padding) 0 var(--main-padding);
   background: var(--surface-1);
   border-radius: 36px;
-
-  @media (width >= 1320px) {
-    padding-right: 72px;
-    padding-left: 72px;
-  }
 
   @media (width < 908px) {
     box-sizing: border-box;

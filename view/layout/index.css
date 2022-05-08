@@ -11,16 +11,19 @@
       "C"
       "H"
       "A"
-      "S";
-    padding-bottom: 390px;
+      "S"
+      "M";
+    width: 100%;
+    padding-bottom: 420px;
   }
 
   @media (width >= 908px) and (width < 1230px) {
     grid-template:
       "T T"
-      "M S"
+      "M M"
       "L C"
-      "A H";
+      "A H"
+      "S S";
   }
 
   @media (width >= 1230px) {
@@ -39,17 +42,8 @@
 .layout_main {
   grid-area: M;
 
-  @media (width < 908px) {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
-    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
-
-    @nest body.is-main-collapsed & {
-      transform: translateY(287px);
-    }
+  @media (width >= 908px) and (width < 1230px) {
+    display: flex;
   }
 }
 
@@ -71,4 +65,19 @@
 
 .layout_settings {
   grid-area: S;
+}
+
+.layout_panel {
+  @media (width < 908px) {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    @nest body.is-main-collapsed & {
+      transform: translateY(287px);
+    }
+  }
 }

@@ -1,0 +1,11 @@
+.desc {
+  width: fit-content;
+  width: var(--card-width);
+  padding: 24px var(--main-padding);
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.desc li {
+  padding-top: 10px;
+}
