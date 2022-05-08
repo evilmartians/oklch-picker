@@ -5,8 +5,15 @@
   margin-bottom: 12px;
   margin-left: -12px;
   cursor: pointer;
-  border-radius: 20px;
-  outline-offset: 3px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &:focus {
+    border-radius: 20px;
+    outline-offset: 3px;
+  }
 }
 
 .checkbox_input {

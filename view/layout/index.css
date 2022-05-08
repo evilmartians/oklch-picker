@@ -12,13 +12,13 @@
       "C"
       "H"
       "A"
-      "P"
       "M"
+      "P"
       "S";
-    padding-bottom: 430px;
+    padding-bottom: 450px;
 
     @nest body.is-main-collapsed & {
-      padding-bottom: calc(430px - 287px);
+      padding-bottom: calc(450px - 287px);
     }
   }
 
