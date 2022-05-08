@@ -1,10 +1,9 @@
 import './index.css'
 
-let main = document.querySelector<HTMLDivElement>('.main')!
 let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
 
 function onScroll(): void {
-  main.classList.add('is-collapsed')
+  document.body.classList.add('is-main-collapsed')
   window.removeEventListener('scroll', onScroll)
 }
 
@@ -22,5 +21,5 @@ if (mobile.matches) {
 }
 
 expand.addEventListener('click', () => {
-  main.classList.toggle('is-collapsed')
+  document.body.classList.toggle('is-main-collapsed')
 })

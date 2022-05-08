@@ -18,11 +18,6 @@
     box-shadow:
       0 0 2px var(--surface-2-shadow),
       0 0 18px var(--surface-2-shadow);
-    transition: transform 150ms;
-
-    &.is-collapsed {
-      transform: translateY(287px);
-    }
 
     @supports (backdrop-filter: blur(24px)) {
       background: var(--surface-2);
