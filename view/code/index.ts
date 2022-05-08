@@ -14,6 +14,11 @@ let lchInput = lch.querySelector<HTMLInputElement>('.code_input')!
 let rgb = document.querySelector<HTMLDivElement>('.code.is-rgb')!
 let rgbInput = rgb.querySelector<HTMLInputElement>('.code_input')!
 
+let notePaste = document.querySelector<HTMLDivElement>('.code_note.is-paste')!
+let noteFallback = document.querySelector<HTMLDivElement>(
+  '.code_note.is-fallback'
+)!
+
 function toggle(input: HTMLInputElement, invalid: boolean): void {
   if (invalid) {
     input.setAttribute('aria-invalid', 'true')
@@ -27,8 +32,15 @@ current.subscribe(value => {
   toggle(lchInput, false)
 })
 
-visible.subscribe(({ real, fallback }) => {
+visible.subscribe(({ real, fallback, space }) => {
   rgbInput.value = real || fallback
+  if (space === 'srgb') {
+    notePaste.classList.remove('is-hidden')
+    noteFallback.classList.add('is-hidden')
+  } else {
+    notePaste.classList.add('is-hidden')
+    noteFallback.classList.remove('is-hidden')
+  }
   toggle(rgbInput, false)
 })
 
