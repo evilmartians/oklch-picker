@@ -8,7 +8,8 @@ include ../card/mixin.pug
     .layout_panel
       include ../main/index.pug
     .layout_desc
-      include ../desc/index.pug
+      if !LCH
+        include ../desc/index.pug
 
   .layout_l
     +card('l')
