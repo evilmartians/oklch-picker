@@ -1,10 +1,5 @@
 body {
-  --card-padding: 32px;
   --card-width: 340px;
-
-  @media (width >= 1470px) {
-    --card-padding: 72px;
-  }
 
   @media (width <= 404px) {
     --card-width: auto;
@@ -16,7 +11,7 @@ body {
 
   position: relative;
   width: var(--card-width);
-  padding: 20px var(--card-padding) 32px var(--card-padding);
+  padding: 20px 32px 32px;
   background: var(--current-surface);
   border-radius: 36px;
 }
@@ -32,7 +27,7 @@ body {
 .card_number {
   position: absolute;
   top: 20px;
-  right: var(--card-padding);
+  right: 32px;
   width: 110px;
 }
 
