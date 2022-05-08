@@ -140,12 +140,12 @@ export function onPaint(callbacks: LchCallbacks): void {
   paintListeners.push(callbacks)
 }
 
-function round2(value: number): number {
+export function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
-function round3(value: number): number {
-  return parseFloat(value.toFixed(2))
+export function round3(value: number): number {
+  return parseFloat(value.toFixed(3))
 }
 
 let roundC = LCH ? round3 : round2
