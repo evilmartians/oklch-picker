@@ -32,8 +32,8 @@ current.subscribe(value => {
   toggle(lchInput, false)
 })
 
-visible.subscribe(({ real, fallback, space }) => {
-  rgbInput.value = real || fallback
+visible.subscribe(({ fallback, space }) => {
+  rgbInput.value = fallback
   if (space === 'srgb') {
     notePaste.classList.remove('is-hidden')
     noteFallback.classList.add('is-hidden')
