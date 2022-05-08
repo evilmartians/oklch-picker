@@ -18,21 +18,22 @@
   }
 }
 
-.source_github,
-.source_external {
+.source_github > svg,
+.source_external > svg {
   position: absolute;
   top: 15px;
-  width: 17px;
+  width: 16px;
+  height: 16px;
 
   & > path {
     fill: var(--accent);
   }
 }
 
-.source_github {
+.source_github > svg {
   left: 15px;
 }
 
-.source_external {
+.source_external > svg {
   right: 15px;
 }

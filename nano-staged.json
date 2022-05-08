@@ -1,3 +1,4 @@
 {
-  "*.css": "stylelint --fix"
+  "*.css": "stylelint --fix",
+  "*.svg": "svgo"
 }

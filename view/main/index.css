@@ -67,16 +67,16 @@ body {
   line-height: 16px;
   color: var(--text-secondary);
   text-align: center;
+}
 
-  & > a {
-    font-weight: bold;
-    color: inherit;
-    text-decoration: none;
+.main_link {
+  font-weight: bold;
+  color: inherit;
+  text-decoration: none;
 
-    &:hover {
-      color: var(--text-primary);
-      text-decoration: underline;
-    }
+  &:hover {
+    color: var(--text-primary);
+    text-decoration: underline;
   }
 }
 
@@ -84,36 +84,20 @@ body {
   position: absolute;
   bottom: 0;
   left: 50%;
-  width: 88px;
+  width: 96px;
   height: 38px;
   transform: translateX(-50%);
-}
 
-.main_martian,
-.main_human {
-  position: absolute;
-  bottom: 0;
-  width: 44px;
+  & > svg {
+    width: 100%;
+    height: 100%;
+  }
 
-  & > path {
+  & > svg > path {
     fill: var(--surface-ui-regular);
   }
 
-  @nest .main_logo:hover & > path {
+  &:hover > svg > path {
     fill: var(--accent);
   }
-
-  @nest .main_logo:hover & {
-    opacity: 85%;
-  }
-}
-
-.main_martian {
-  left: 0;
-  height: 38px;
-}
-
-.main_human {
-  right: 0;
-  height: 34px;
 }
