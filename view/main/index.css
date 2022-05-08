@@ -37,6 +37,7 @@
     justify-content: center;
     width: 100%;
     height: 32px;
+    user-select: none;
     background: transparent;
     border: none;
   }
