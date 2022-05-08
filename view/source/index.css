@@ -6,7 +6,7 @@
   padding: 0 44px;
   font-size: 10px;
   line-height: 48px;
-  color: var(--accent);
+  color: var(--text-primary);
   text-decoration: none;
   background: var(--surface-1);
   border-radius: var(--radius);
@@ -31,7 +31,7 @@
   height: 16px;
 
   & > path {
-    fill: var(--accent);
+    fill: var(--text-primary);
   }
 }
 
