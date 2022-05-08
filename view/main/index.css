@@ -13,13 +13,48 @@
   @media (width < 908px) {
     box-sizing: border-box;
     width: 100%;
+    padding-top: 0;
     border-radius: 36px 36px 0 0;
-    box-shadow: 0 0 2px var(--surface-2-shadow), 0 0 18px var(--surface-2-shadow);
+    box-shadow:
+      0 0 2px var(--surface-2-shadow),
+      0 0 18px var(--surface-2-shadow);
+    transition: transform 150ms;
+
+    &.is-collapsed {
+      transform: translateY(242px);
+    }
 
     @supports (backdrop-filter: blur(24px)) {
       background: var(--surface-2);
       backdrop-filter: blur(24px);
     }
+  }
+}
+
+.main_expand {
+  @media (width >= 908px) {
+    display: none;
+  }
+
+  @media (width < 908px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 32px;
+    background: transparent;
+    border: none;
+  }
+}
+
+.main_expand::before {
+  @media (width < 908px) {
+    display: block;
+    width: 32px;
+    height: 4px;
+    content: "";
+    background: var(--surface-ui-regular);
+    border-radius: 2px;
   }
 }
 
