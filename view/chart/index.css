@@ -10,6 +10,7 @@ body {
   height: 100%;
   cursor: pointer;
   border: var(--unavailable-border);
+  border-width: 1px 0;
 }
 
 .chart_line {
@@ -69,7 +70,7 @@ body {
 .chart_canvas {
   position: absolute;
   top: -1px;
-  left: -1px;
-  width: calc(100% + 2px);
+  left: 0;
+  width: 100%;
   height: calc(100% + 2px);
 }
