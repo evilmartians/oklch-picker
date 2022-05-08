@@ -30,13 +30,12 @@
 .main_footer {
   padding-bottom: 46px;
   font-size: 10px;
-  font-weight: 200;
   line-height: 16px;
   color: var(--text-secondary);
   text-align: center;
 
   & > a {
-    font-weight: 400;
+    font-weight: bold;
     color: inherit;
     text-decoration: none;
 
