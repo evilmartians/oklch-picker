@@ -5,11 +5,6 @@ let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
 let originViewport = meta.content
 
-function onFocus(e: FocusEvent): void {
-  let input = e.target as HTMLInputElement
-  input.select()
-}
-
 if (/iPhone/.test(navigator.userAgent)) {
   function onMouseOver(): void {
     meta.content = originViewport + ',maximum-scale=1,user-scalable=0'
@@ -26,11 +21,28 @@ if (/iPhone/.test(navigator.userAgent)) {
   }
 }
 
+function onFocus(e: FocusEvent): void {
+  let input = e.target as HTMLInputElement
+  input.select()
+}
+
+function onKeyDown(e: KeyboardEvent): void {
+  if (hotkeys[e.key]) {
+    e.preventDefault()
+    hotkeys[e.key]?.focus()
+  }
+}
+
 let hotkeys: Partial<Record<string, HTMLInputElement>> = {}
 
 for (let field of fields) {
   let input = field.querySelector<HTMLInputElement>('input')!
   input.addEventListener('focus', onFocus)
+
+  if (input.type === 'number') {
+    input.addEventListener('keydown', onKeyDown)
+  }
+
   let hotkey = field.querySelector('kbd')!.innerText.trim().toLowerCase()
   hotkeys[hotkey] = input
 }
