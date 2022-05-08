@@ -53,6 +53,7 @@ body {
 
   font-family: "Martian Mono", monospace;
   font-size: 15px;
+  font-stretch: 112.5%;
   line-height: 16px;
   color: var(--text-primary);
   background: var(--current-surface);
