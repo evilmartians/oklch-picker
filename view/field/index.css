@@ -41,4 +41,8 @@
   border: 1px solid var(--surface-ui-regular);
   border-bottom-width: 2px;
   border-radius: 2px;
+
+  @media (width < 908px) {
+    display: none;
+  }
 }
