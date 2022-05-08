@@ -21,4 +21,9 @@
     cursor: default;
     background: var(--surface-1);
   }
+
+  &:not(.is-current) {
+    position: relative;
+    z-index: 2;
+  }
 }
