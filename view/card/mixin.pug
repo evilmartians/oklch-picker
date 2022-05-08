@@ -6,14 +6,13 @@ mixin card(type)
     if type === 'l'
       h2.card_title Lightness
       .card_number
-        input.field(
-          type="number"
-          min="0"
-          max="100"
-          value="70"
-          step=L_STEP
-          aria-label="L"
-        )
+        +field('L', {
+          type: 'number',
+          min: 0,
+          max: 100,
+          value: 70,
+          step: L_STEP
+        })
       .card_chart
         .card_size
           +chart('h', 'c', 'l')
@@ -23,14 +22,13 @@ mixin card(type)
     else if type === 'c'
       h2.card_title Chroma
       .card_number
-        input.field(
-          type="number"
-          min="0"
-          max=C_MAX
-          value=LCH ? '39' : '0.1'
-          step=C_STEP
-          aria-label="C"
-        )
+        +field('C', {
+          type: 'number',
+          min: 0,
+          max: C_MAX,
+          value: LCH ? 39 : 0.1,
+          step: C_STEP
+        })
       .card_chart
         .card_size
           +chart('l', 'c', 'h')
@@ -40,14 +38,13 @@ mixin card(type)
     else if type === 'h'
       h2.card_title Hue
       .card_number
-        input.field(
-          type="number"
-          min="0"
-          max=H_MAX
-          value="286"
-          step=H_STEP
-          aria-label="H"
-        )
+        +field('H', {
+          type: 'number',
+          min: 0,
+          max: H_MAX,
+          value: 286,
+          step: H_STEP
+        })
       .card_chart
         .card_size
           +chart('c', 'l', 'h')
@@ -57,12 +54,11 @@ mixin card(type)
     else if type === 'a'
       h2.card_title Alpha
       .card_number
-        input.field(
-          type="number"
-          min="0"
-          max=ALPHA_MAX
-          step=ALPHA_STEP
-          aria-label="Alpha"
-        )
+        +field('Alpha', {
+          type: 'number',
+          min: 0,
+          max: ALPHA_MAX,
+          step: ALPHA_STEP,
+        })
       .card_range
         +range('a', ALPHA_MAX, ALPHA_STEP, 100)

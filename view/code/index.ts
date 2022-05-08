@@ -9,10 +9,10 @@ import { parse, formatLch } from '../../lib/colors.js'
 import { visible } from '../../stores/visible.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
-let lchInput = lch.querySelector<HTMLInputElement>('.code_input')!
+let lchInput = lch.querySelector<HTMLInputElement>('input')!
 
 let rgb = document.querySelector<HTMLDivElement>('.code.is-rgb')!
-let rgbInput = rgb.querySelector<HTMLInputElement>('.code_input')!
+let rgbInput = rgb.querySelector<HTMLInputElement>('input')!
 
 let notePaste = document.querySelector<HTMLDivElement>('.code_note.is-paste')!
 let noteFallback = document.querySelector<HTMLDivElement>(

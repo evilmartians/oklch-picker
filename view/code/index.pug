@@ -1,16 +1,14 @@
 .code.is-lch
-  input.code_input.field(
-    type="text"
-    value=LCH ? 'lch(70% 39 286)' : 'oklch(70% 0.1 286)'
-    aria-label=LCH ? "LCH CSS code" : "OKLCH CSS code"
-  )
+  +field(LCH ? 'LCH CSS code' : 'OKLCH CSS code', {
+    type: 'text',
+    value: LCH ? 'lch(70% 39 286)' : 'oklch(70% 0.1 286)'
+  })
 
 .code.is-rgb
-  input.code_input.field(
-    type="text"
-    value=LCH ? 'rgb(161.39, 166.51, 239.43)' : 'rgb(152.91, 149.15, 218.03)'
-    aria-label="RGB CSS code"
-  )
+  +field('RGB CSS code', {
+    type: 'text',
+    value: LCH ? 'rgb(161.39, 166.51, 239.43)' : 'rgb(152.91, 149.15, 218.03)'
+  })
   .code_note.is-paste
     = `Paste HEX, RGBA or HSL to convert to ${LCH ? 'LCH' : 'OKLCH'}`
   .code_note.is-fallback.is-hidden
