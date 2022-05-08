@@ -1,0 +1,38 @@
+.source {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  height: 48px;
+  padding: 0 44px;
+  font-size: 10px;
+  line-height: 46px;
+  color: var(--accent);
+  text-decoration: none;
+  background: var(--surface-1);
+  border: 1px solid var(--surface-ui-accent);
+  border-radius: var(--radius);
+
+  @media (width < 908px) {
+    width: calc(100% - 64px);
+    margin: 0 32px;
+  }
+}
+
+.source_github,
+.source_external {
+  position: absolute;
+  top: 15px;
+  width: 17px;
+
+  & > path {
+    fill: var(--accent);
+  }
+}
+
+.source_github {
+  left: 15px;
+}
+
+.source_external {
+  right: 15px;
+}

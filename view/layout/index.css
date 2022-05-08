@@ -1,4 +1,5 @@
 .layout {
+  position: relative;
   display: grid;
   gap: 4px;
   width: fit-content;
@@ -11,10 +12,10 @@
       "C"
       "H"
       "A"
-      "S"
-      "M";
-    width: 100%;
-    padding-bottom: 420px;
+      "P"
+      "M"
+      "S";
+    padding-bottom: 450px;
   }
 
   @media (width >= 908px) and (width < 1230px) {
@@ -23,7 +24,7 @@
       "M M"
       "L C"
       "A H"
-      "S S";
+      "P P";
   }
 
   @media (width >= 1230px) {
@@ -31,7 +32,7 @@
       "T T T"
       "M L C"
       "M A H"
-      "M S H"
+      "M P H"
       "M . .";
   }
 }
@@ -64,8 +65,8 @@
   grid-area: A;
 }
 
-.layout_settings {
-  grid-area: S;
+.layout_prefs {
+  grid-area: P;
 }
 
 .layout_panel {
@@ -80,5 +81,17 @@
     @nest body.is-main-collapsed & {
       transform: translateY(287px);
     }
+  }
+}
+
+.layout_source {
+  @media (width >= 908px) {
+    position: absolute;
+    top: 18px;
+    right: 0;
+  }
+
+  @media (width < 908px) {
+    grid-area: "S";
   }
 }
