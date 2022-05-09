@@ -1,13 +1,14 @@
 .desc
   :markdown-it
-    OKLCH is a new way to encode colors (like hex, RGBA or HSL).
+    OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 
-    - Has native support in browsers.
-    - Can encode more colors for modern screens (P3, Rec2020, and beyond).
-    - In contrast [with HSL], has always predictable contrast after color transformation.
-    - In contrast [with LCH and Lab] has no [hue shift] on chroma changes.
+    - OKLCH has native browser support.
+    - It can encode more colors for modern screens (P3, Rec. 2020, and beyond).
+    - [Unlike HSL], OKLCH always has predictable contrast
+      after color transformation.
+    - In contrast [with LCH and Lab], no [hue shift] on chroma changes.
     - Provides great a11y on palette generation.
 
-    [with HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
+    [Unlike HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
     [with LCH and Lab]: https://bottosson.github.io/posts/oklab/#blending-colors
     [hue shift]: https://lch.evilmartians.io/#35,55,297,100

@@ -5,23 +5,23 @@ Color picker and converter for OKLab and Lab color space.
 * [`oklch.evilmartians.io`](https://oklch.evilmartians.io/)
 * [`lch.evilmartians.io`](https://lch.evilmartians.io/)
 
-OKLab is a new way to encode colors:
+OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 
-* It is natively supported by [CSS Colors 4].
-* Has support for P3 colors and any future monitors with new colors.
-* Allow to predictably change the colors. This is very useful
-  for native color transformations by `color(from …)` from [CSS Colors 5].
-  * In contrast with HSL it has predictable contrast for all colors with
-    the same `L`.
-  * In contrast with Lab it has no hue shift in blue on chrome changes.
+- OKLCH has native browser support.
+- It can encode more colors for modern screens (P3, Rec. 2020, and beyond).
+- [Unlike HSL], OKLCH always has predictable contrast
+  after color transformation.
+- In contrast [with LCH and Lab], no [hue shift] on chroma changes.
+- Provides great a11y on palette generation.
 
 Additional links about OKLab:
 
 * [The article by OKLab creator](https://bottosson.github.io/posts/oklab/)
 * [Slides about OKCH in CSS](https://slides.com/ai/oklch-css)
 
-[CSS Colors 4]: https://www.w3.org/TR/css-color-4/#resolving-oklab-oklch-values
-[CSS Colors 5]: https://www.w3.org/TR/css-color-5/#relative-colors
+[Unlike HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
+[with LCH and Lab]: https://bottosson.github.io/posts/oklab/#blending-colors
+[hue shift]: https://lch.evilmartians.io/#35,55,297,100
 
 
 ## Development
