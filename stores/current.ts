@@ -140,6 +140,10 @@ export function onPaint(callbacks: LchCallbacks): void {
   paintListeners.push(callbacks)
 }
 
+export function round1(value: number): number {
+  return parseFloat(value.toFixed(2))
+}
+
 export function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
@@ -148,7 +152,7 @@ export function round3(value: number): number {
   return parseFloat(value.toFixed(3))
 }
 
-let roundC = LCH ? round3 : round2
+let roundC = LCH ? round2 : round3
 
 export function setCurrentFromColor(color: Color): void {
   if (color.mode === COLOR_FN) {
@@ -156,7 +160,7 @@ export function setCurrentFromColor(color: Color): void {
   } else {
     let value = colorToValue(LCH ? lch(color) : oklch(color))
     current.set({
-      l: round2(value.l),
+      l: round1(value.l),
       c: roundC(value.c),
       h: round2(value.h),
       a: round2(value.a)

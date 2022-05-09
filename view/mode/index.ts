@@ -4,7 +4,8 @@ import {
   colorToValue,
   current,
   round2,
-  round3
+  round3,
+  round1
 } from '../../stores/current.js'
 import { oklch, lch } from '../../lib/colors.js'
 
@@ -21,5 +22,5 @@ current.subscribe(value => {
     l *= 100
   }
   let roundC = !LCH ? round2 : round3
-  link.href = `${domain}#${round2(l)},${roundC(c)},${round2(h)},${round2(a)}`
+  link.href = `${domain}#${round1(l)},${roundC(c)},${round2(h)},${round2(a)}`
 })
