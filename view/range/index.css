@@ -54,6 +54,14 @@ body {
     0 1px 6px 0 oklch(18% 0.03 310 / 12%),
     0 0 1px 0.5px oklch(18% 0.03 310 / 12%);
   transform: rotate(45deg) translate(14px, 14px);
+
+  @nest .range.is-invisible & {
+    background: var(--current-surface);
+    box-shadow:
+      inset 0 0 3px 0 oklch(18% 0.03 310 / 12%),
+      0 1px 6px 0 oklch(18% 0.03 310 / 12%),
+      0 0 1px 0.5px oklch(18% 0.03 310 / 12%);
+  }
 }
 
 .range_input {
@@ -68,12 +76,12 @@ body {
   border-radius: var(--radius);
   appearance: none;
   outline-offset: 3px -10px;
+}
 
-  &::-moz-range-thumb {
-    @mixin range-thumb;
-  }
+.range_input::-moz-range-thumb {
+  @mixin range-thumb;
+}
 
-  &::-webkit-slider-thumb {
-    @mixin range-thumb;
-  }
+.range_input::-webkit-slider-thumb {
+  @mixin range-thumb;
 }

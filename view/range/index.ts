@@ -131,15 +131,37 @@ onPaint({
   }
 })
 
-visible.subscribe(({ real, fallback }) => {
-  let color = real || fallback
-  document.body.style.setProperty('--range-color', real || fallback)
+function setRangeColor(): void {
+  let { real, fallback, space } = visible.get()
+  let { p3, rec2020 } = settings.get()
+  let isVisible = false
+  if (space === 'srgb') {
+    isVisible = true
+  } else if (space === 'p3' && p3 === 'show') {
+    isVisible = true
+  } else if (space === 'rec2020' && rec2020 === 'show') {
+    isVisible = true
+  }
+  if (isVisible) {
+    rangeL.classList.remove('is-invisible')
+    rangeC.classList.remove('is-invisible')
+    rangeH.classList.remove('is-invisible')
+    document.body.style.setProperty('--range-color', real || fallback)
+  } else {
+    rangeL.classList.add('is-invisible')
+    rangeC.classList.add('is-invisible')
+    rangeH.classList.add('is-invisible')
+  }
+}
 
-  let parsed = parse(color)
+visible.subscribe(({ real, fallback }) => {
+  setRangeColor()
+  let parsed = parse(real || fallback)
   rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
   rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
 })
 
 settings.subscribe(({ rec2020 }) => {
+  setRangeColor()
   inputC.max = String(rec2020 === 'show' ? C_MAX_REC2020 : C_MAX)
 })
