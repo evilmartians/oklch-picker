@@ -142,11 +142,11 @@ function setRangeColor(): void {
   } else if (space === 'rec2020' && rec2020 === 'show') {
     isVisible = true
   }
+  document.body.style.setProperty('--range-color', real || fallback)
   if (isVisible) {
     rangeL.classList.remove('is-invisible')
     rangeC.classList.remove('is-invisible')
     rangeH.classList.remove('is-invisible')
-    document.body.style.setProperty('--range-color', real || fallback)
   } else {
     rangeL.classList.add('is-invisible')
     rangeC.classList.add('is-invisible')
