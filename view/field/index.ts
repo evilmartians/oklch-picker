@@ -26,8 +26,12 @@ function onFocus(e: FocusEvent): void {
   input.select()
 }
 
+function isSpecial(e: KeyboardEvent): boolean {
+  return e.ctrlKey || e.shiftKey || e.altKey || e.metaKey
+}
+
 function onKeyDown(e: KeyboardEvent): void {
-  if (hotkeys[e.key]) {
+  if (hotkeys[e.key] && !isSpecial(e)) {
     e.preventDefault()
     hotkeys[e.key]?.focus()
   }
@@ -52,6 +56,7 @@ function isInput(el: EventTarget | null): el is HTMLInputElement {
 }
 
 window.addEventListener('keyup', e => {
+  if (isSpecial(e)) return
   if (e.target === document.body) {
     hotkeys[e.key]?.focus()
   } else if (isInput(e.target) && e.key === 'Escape') {
