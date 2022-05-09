@@ -21,9 +21,20 @@ if (/iPhone/.test(navigator.userAgent)) {
   }
 }
 
+function onMouseUp(e: MouseEvent): void {
+  e.preventDefault()
+  let input = e.target as HTMLInputElement
+  input.removeEventListener('mouseup', onMouseUp)
+}
+
 function onFocus(e: FocusEvent): void {
   let input = e.target as HTMLInputElement
   input.select()
+
+  input.addEventListener('mouseup', onMouseUp)
+  setTimeout(() => {
+    input.addEventListener('mouseup', onMouseUp)
+  }, 500)
 }
 
 function isSpecial(e: KeyboardEvent): boolean {
