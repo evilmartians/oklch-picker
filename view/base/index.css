@@ -46,12 +46,16 @@
   }
 }
 
-body {
-  --current-surface: var(--surface-0);
-
+body,
+kbd {
   font-family: "Martian Mono", monospace;
   font-size: 15px;
   font-stretch: 112.5%;
+}
+
+body {
+  --current-surface: var(--surface-0);
+
   line-height: 16px;
   color: var(--text-primary);
   background: var(--current-surface);
