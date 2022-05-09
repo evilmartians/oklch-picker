@@ -1,5 +1,5 @@
 body {
-  --range-color: var(--default-color);
+  --range-color: var(--surface-1);
 }
 
 .range {

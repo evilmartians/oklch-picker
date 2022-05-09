@@ -10,7 +10,6 @@ mixin card(type)
           type: 'number',
           min: 0,
           max: 100,
-          value: 70,
           step: L_STEP
         })
       .card_chart
@@ -25,8 +24,6 @@ mixin card(type)
         +field('C', 'c', {
           type: 'number',
           min: 0,
-          max: C_MAX,
-          value: LCH ? 39 : 0.1,
           step: C_STEP
         })
       .card_chart
@@ -42,7 +39,6 @@ mixin card(type)
           type: 'number',
           min: 0,
           max: H_MAX,
-          value: 286,
           step: H_STEP
         })
       .card_chart
@@ -57,6 +53,7 @@ mixin card(type)
         +field('Alpha', 'a', {
           type: 'number',
           min: 0,
+          value: ALPHA_MAX,
           max: ALPHA_MAX,
           step: ALPHA_STEP,
         })

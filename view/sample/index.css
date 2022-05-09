@@ -1,5 +1,5 @@
 .sample {
-  --sample-real: var(--default-color);
+  --sample-real: var(--surface-1);
 }
 
 .sample_unavailable {
