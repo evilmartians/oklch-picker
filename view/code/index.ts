@@ -55,7 +55,6 @@ function listenChanges(input: HTMLInputElement): void {
 
     if (newValue === prevValues.get(input)) return
     prevValues.set(input, newValue)
-    console.log('convert')
 
     let parsed = parse(newValue)
     if (parsed) {
