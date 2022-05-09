@@ -140,15 +140,15 @@ export function onPaint(callbacks: LchCallbacks): void {
   paintListeners.push(callbacks)
 }
 
-export function round1(value: number): number {
+function round1(value: number): number {
+  return parseFloat(value.toFixed(1))
+}
+
+function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
-export function round2(value: number): number {
-  return parseFloat(value.toFixed(2))
-}
-
-export function round3(value: number): number {
+function round3(value: number): number {
   return parseFloat(value.toFixed(3))
 }
 
@@ -178,6 +178,22 @@ export function colorToValue(color: LchColor): LchValue {
     c: color.c,
     h: color.h ?? 0,
     a: (color.alpha ?? 1) * 100
+  }
+}
+
+export function toOtherValue(value: LchValue): LchValue {
+  let color = valueToColor(value)
+  let { l, c, h, a } = colorToValue(LCH ? oklch(color) : lch(color))
+  if (!LCH) {
+    l /= 100
+  } else {
+    l *= 100
+  }
+  return {
+    l: round1(l),
+    c: LCH ? round3(c) : round2(c),
+    h: round2(h),
+    a
   }
 }
 
