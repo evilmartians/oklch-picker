@@ -3,8 +3,8 @@ import {
   valueToColor,
   colorToValue,
   current,
-  round2,
   round3,
+  round2,
   round1
 } from '../../stores/current.js'
 import { oklch, lch } from '../../lib/colors.js'
