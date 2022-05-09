@@ -3,7 +3,7 @@
     "public": "dist",
     "headers": [
       {
-        "source": "**/*.@(js|css|woff2)",
+        "source": "**/*.@(js|css|woff2|svg)",
         "headers": [
           {
             "key": "Cache-Control",

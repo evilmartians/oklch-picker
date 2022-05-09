@@ -1,7 +1,12 @@
 [
   {
     "name": "Files to download",
-    "path": "dist/**/*",
+    "path": [
+      "dist/**/*",
+      "!dist/favicon.ico",
+      "!dist/*.webmanifest",
+      "!dist/*.png"
+    ],
     "limit": "60 KB"
   },
   {
