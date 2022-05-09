@@ -85,11 +85,10 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: rm -Rf ./dist/
       - name: Build LCH
-        run: pnpm build
+        run: pnpm build:lch
         if: github.ref == 'refs/heads/main'
         env:
           FORCE_COLOR: 2
-          LCH: 1
       - name: Deploy LCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         if: github.ref == 'refs/heads/main'

@@ -5,7 +5,7 @@
   "display": "standalone",
   "background_color": "#f2f1f4",
   "icons": [
-    { "src": "/192.png", "type": "image/png", "sizes": "192x192" },
-    { "src": "/512.png", "type": "image/png", "sizes": "512x512" }
+    { "src": "/oklch-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/oklch-512.png", "type": "image/png", "sizes": "512x512" }
   ]
 }

@@ -8,6 +8,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build -m production",
+    "build:lch": "LCH=1 vite build -m production && ./lch.sh",
     "lint": "tsc --noEmit && eslint . && stylelint **/*.css",
     "test": "pnpm audit --prod && pnpm lint && pnpm build && size-limit && LCH=1 pnpm build"
   },
