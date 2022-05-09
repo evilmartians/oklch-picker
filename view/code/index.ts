@@ -27,12 +27,17 @@ function toggle(input: HTMLInputElement, invalid: boolean): void {
   }
 }
 
+let prevValues = new Map<HTMLInputElement, string>()
+
 current.subscribe(value => {
-  lchInput.value = formatLch(valueToColor(value))
+  let text = formatLch(valueToColor(value))
+  prevValues.set(lchInput, text)
+  lchInput.value = text
   toggle(lchInput, false)
 })
 
 visible.subscribe(({ fallback, space }) => {
+  prevValues.set(rgbInput, fallback)
   rgbInput.value = fallback
   if (space === 'srgb') {
     notePaste.classList.remove('is-hidden')
@@ -45,13 +50,12 @@ visible.subscribe(({ fallback, space }) => {
 })
 
 function listenChanges(input: HTMLInputElement): void {
-  let prevValue = input.value.trim()
-
   function processChange(): void {
     let newValue = input.value.trim()
 
-    if (newValue === prevValue) return
-    prevValue = newValue
+    if (newValue === prevValues.get(input)) return
+    prevValues.set(input, newValue)
+    console.log('convert')
 
     let parsed = parse(newValue)
     if (parsed) {
