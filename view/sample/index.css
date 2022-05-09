@@ -9,6 +9,7 @@
   justify-content: center;
   width: 50%;
   height: 84px;
+  padding: 0 8px;
   font-size: 10px;
   line-height: 16px;
   color: var(--text-secondary);
