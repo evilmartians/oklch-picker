@@ -11,6 +11,10 @@
   background: var(--surface-1);
   border-radius: var(--radius);
 
+  &:hover {
+    color: var(--accent);
+  }
+
   @media (width < 830px) {
     width: calc(100% - 64px);
     margin: 0 32px;
@@ -32,6 +36,10 @@
 
   & > path {
     fill: var(--text-primary);
+  }
+
+  @nest .source:hover & > path {
+    fill: var(--accent);
   }
 }
 
