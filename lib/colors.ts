@@ -162,3 +162,17 @@ export function generateIsVisible(
     return inRGB
   }
 }
+
+export type Space = 'srgb' | 'p3' | 'rec2020' | 'out'
+
+export function getSpace(color: Color): Space {
+  if (inRGB(color)) {
+    return 'srgb'
+  } else if (inP3(color)) {
+    return 'p3'
+  } else if (inRec2020(color)) {
+    return 'rec2020'
+  } else {
+    return 'out'
+  }
+}

@@ -17,7 +17,7 @@ declare module '*?worker' {
   export default ViteWorker
 }
 
-declare const COLOR_FN: string
+declare const COLOR_FN: 'oklch' | 'lch'
 declare const LCH: boolean
 declare const L_MAX: number
 declare const L_STEP: number

@@ -1,7 +1,15 @@
 import { map, onSet } from 'nanostores'
 
+import {
+  clampChroma,
+  LchColor,
+  getSpace,
+  Color,
+  build,
+  oklch,
+  lch
+} from '../lib/colors.js'
 import { reportFreeze, benchmarking } from './benchmark.js'
-import { LchColor, Color, build, oklch, lch } from '../lib/colors.js'
 import { settings } from './settings.js'
 import { support } from './support.js'
 
@@ -140,10 +148,6 @@ export function onPaint(callbacks: LchCallbacks): void {
   paintListeners.push(callbacks)
 }
 
-function round1(value: number): number {
-  return parseFloat(value.toFixed(1))
-}
-
 function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
@@ -152,19 +156,41 @@ function round3(value: number): number {
   return parseFloat(value.toFixed(3))
 }
 
-let roundC = LCH ? round2 : round3
+function roundValue<V extends Partial<LchValue>>(
+  value: V,
+  type: 'oklch' | 'lch'
+): V {
+  let rounded = { ...value }
+  if (typeof rounded.l !== 'undefined') {
+    rounded.l = round2(rounded.l)
+  }
+  if (typeof rounded.c !== 'undefined') {
+    rounded.c = type === 'oklch' ? round3(rounded.c) : round2(rounded.c)
+  }
+  if (typeof rounded.h !== 'undefined') {
+    rounded.h = round2(rounded.h)
+  }
+  if (typeof rounded.a !== 'undefined') {
+    rounded.a = round2(rounded.a)
+  }
+  return rounded
+}
 
-export function setCurrentFromColor(color: Color): void {
-  if (color.mode === COLOR_FN) {
-    current.set(colorToValue(color as LchColor))
+export function setCurrentFromColor(origin: Color): void {
+  if (origin.mode === COLOR_FN) {
+    current.set(colorToValue(origin as LchColor))
   } else {
-    let value = colorToValue(LCH ? lch(color) : oklch(color))
-    current.set({
-      l: round1(value.l),
-      c: roundC(value.c),
-      h: round2(value.h),
-      a: round2(value.a)
-    })
+    let originSpace = getSpace(origin)
+    let accurate = LCH ? lch(origin) : oklch(origin)
+    if (originSpace === 'srgb' && getSpace(accurate) !== 'srgb') {
+      accurate = clampChroma(accurate, COLOR_FN) as LchColor
+    }
+    let rounded = roundValue(colorToValue(accurate), COLOR_FN)
+    if (getSpace(valueToColor(rounded)) === originSpace) {
+      current.set(rounded)
+    } else {
+      current.set(colorToValue(accurate))
+    }
   }
 }
 
@@ -181,28 +207,24 @@ export function colorToValue(color: LchColor): LchValue {
   }
 }
 
-export function toOtherValue(value: LchValue): LchValue {
-  let color = valueToColor(value)
-  let { l, c, h, a } = colorToValue(LCH ? oklch(color) : lch(color))
+export function toOtherValue(from: LchValue): LchValue {
+  let color = valueToColor(from)
+  let to = colorToValue(LCH ? oklch(color) : lch(color))
   if (!LCH) {
-    l /= 100
+    to.l /= 100
   } else {
-    l *= 100
+    to.l *= 100
   }
-  return {
-    l: round1(l),
-    c: LCH ? round3(c) : round2(c),
-    h: round2(h),
-    a
-  }
+  return roundValue(to, LCH ? 'oklch' : 'lch')
 }
 
 export function setCurrentComponents(parts: Partial<LchValue>): void {
   let value = current.get()
+  let rounded = roundValue(parts, COLOR_FN)
   current.set({
-    l: typeof parts.l === 'undefined' ? value.l : round2(parts.l),
-    c: typeof parts.c === 'undefined' ? value.c : roundC(parts.c),
-    h: typeof parts.h === 'undefined' ? value.h : round2(parts.h),
+    l: typeof rounded.l === 'undefined' ? value.l : rounded.l,
+    c: typeof rounded.c === 'undefined' ? value.c : rounded.c,
+    h: typeof rounded.h === 'undefined' ? value.h : rounded.h,
     a: value.a
   })
 }

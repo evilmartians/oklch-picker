@@ -4,6 +4,7 @@ import {
   inRec2020,
   formatRgb,
   format,
+  Space,
   inRGB,
   toRgb,
   inP3,
@@ -13,7 +14,7 @@ import { current, valueToColor } from './current.js'
 import { support } from './support.js'
 
 interface VisibleValue {
-  space: 'srgb' | 'p3' | 'rec2020' | 'out'
+  space: Space
   fallback: string
   real: string | false
 }
