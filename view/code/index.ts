@@ -28,15 +28,18 @@ function toggle(input: HTMLInputElement, invalid: boolean): void {
 }
 
 let prevValues = new Map<HTMLInputElement, string>()
+let locked = new Map<HTMLInputElement, boolean>()
 
-current.subscribe(value => {
+function setLch(): void {
+  let value = current.get()
   let text = formatLch(valueToColor(value))
   prevValues.set(lchInput, text)
   lchInput.value = text
   toggle(lchInput, false)
-})
+}
 
-visible.subscribe(({ fallback, space }) => {
+function setRgb(): void {
+  let { fallback, space } = visible.get()
   prevValues.set(rgbInput, fallback)
   rgbInput.value = fallback
   if (space === 'srgb') {
@@ -47,6 +50,18 @@ visible.subscribe(({ fallback, space }) => {
     noteFallback.classList.remove('is-hidden')
   }
   toggle(rgbInput, false)
+}
+
+current.subscribe(() => {
+  if (!locked.get(lchInput)) {
+    setLch()
+  }
+})
+
+visible.subscribe(() => {
+  if (!locked.get(rgbInput)) {
+    setRgb()
+  }
 })
 
 function listenChanges(input: HTMLInputElement): void {
@@ -67,6 +82,17 @@ function listenChanges(input: HTMLInputElement): void {
 
   input.addEventListener('change', processChange)
   input.addEventListener('keyup', processChange)
+  input.addEventListener('focus', () => {
+    locked.set(input, true)
+  })
+  input.addEventListener('blur', () => {
+    locked.set(input, false)
+    if (input === lchInput) {
+      setLch()
+    } else {
+      setRgb()
+    }
+  })
 }
 
 listenChanges(lchInput)
