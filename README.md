@@ -1,6 +1,6 @@
 # OKLCH & LCH Color Picker
 
-Color picker and converter for OKLab and Lab color space.
+Color picker and converter for Oklab and Lab color space.
 
 * [`oklch.evilmartians.io`](https://oklch.evilmartians.io/)
 * [`lch.evilmartians.io`](https://lch.evilmartians.io/)
@@ -14,9 +14,9 @@ OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 - In contrast [with LCH and Lab], no [hue shift] on chroma changes.
 - Provides great a11y on palette generation.
 
-Additional links about OKLab:
+Additional links about Oklab:
 
-* [The article by OKLab creator](https://bottosson.github.io/posts/oklab/)
+* [The article by Oklab creator](https://bottosson.github.io/posts/oklab/)
 * [Slides about OKCH in CSS](https://slides.com/ai/oklch-css)
 
 [Unlike HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
