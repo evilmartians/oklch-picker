@@ -81,7 +81,13 @@ function listenChanges(input: HTMLInputElement): void {
   }
 
   input.addEventListener('change', processChange)
-  input.addEventListener('keyup', processChange)
+  input.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      input.blur()
+    } else {
+      processChange()
+    }
+  })
   input.addEventListener('focus', () => {
     locked.set(input, true)
   })
