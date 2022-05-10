@@ -1,13 +1,11 @@
 .code.is-lch
   +field(LCH ? 'LCH CSS code' : 'OKLCH CSS code', 'i', {
-    type: 'text',
-    value: LCH ? 'lch(70% 39 286)' : 'oklch(70% 0.1 286)'
+    type: 'text'
   })
 
 .code.is-rgb
   +field('RGB CSS code', 'o', {
-    type: 'text',
-    value: LCH ? 'rgb(161.39, 166.51, 239.43)' : 'rgb(152.91, 149.15, 218.03)'
+    type: 'text'
   })
   .code_note.is-paste
     = `Paste HEX, RGBA, or HSL to convert to ${LCH ? 'LCH' : 'OKLCH'}`
