@@ -40,6 +40,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     needs:
       - test
     steps:
@@ -65,33 +66,21 @@ jobs:
         run: pnpm build
         env:
           FORCE_COLOR: 2
-      - name: Deploy preview
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        if: github.ref != 'refs/heads/main'
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
-          projectId: ai-oklch
-          expires: 7d
       - name: Deploy OKLCH
         uses: FirebaseExtended/action-hosting-deploy@v0
-        if: github.ref == 'refs/heads/main'
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
           projectId: ai-oklch
           channelId: live
       - name: Clean build dir
-        if: github.ref == 'refs/heads/main'
         run: rm -Rf ./dist/
       - name: Build LCH
         run: pnpm build:lch
-        if: github.ref == 'refs/heads/main'
         env:
           FORCE_COLOR: 2
       - name: Deploy LCH
         uses: FirebaseExtended/action-hosting-deploy@v0
-        if: github.ref == 'refs/heads/main'
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_LCH_ACCOUNT }}"
