@@ -13,7 +13,7 @@ let config = {
   H_STEP: 0.45,
 
   ALPHA_MAX: 100,
-  ALPHA_STEP: 10
+  ALPHA_STEP: 5
 }
 
 if (process.env.LCH) {
