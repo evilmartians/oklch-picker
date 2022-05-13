@@ -20,7 +20,9 @@ import {
 
 import { support } from '../stores/support.js'
 
-export { Color, formatHex, formatCss, clampChroma } from 'culori/fn'
+export type { Color } from 'culori'
+
+export { formatHex, formatCss, clampChroma } from 'culori/fn'
 
 export interface RgbColor extends Rgb {} // eslint-disable-line @typescript-eslint/no-empty-interface
 
