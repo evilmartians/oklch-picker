@@ -202,7 +202,7 @@ export function colorToValue(color: LchColor): LchValue {
   return {
     l: (100 * color.l) / L_MAX,
     c: color.c,
-    h: color.h ?? 0,
+    h: color.h ?? 0, // eslint-disable-line @typescript-eslint/no-unnecessary-condition
     a: (color.alpha ?? 1) * 100
   }
 }

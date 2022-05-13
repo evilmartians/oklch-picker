@@ -1,10 +1,11 @@
+import { Oklch } from 'culori/fn'
 import { computed } from 'nanostores'
 
-import { toRgb, formatRgb, LchColor } from '../lib/colors.js'
+import { toRgb, formatRgb } from '../lib/colors.js'
 import { current } from './current.js'
 
 function clamp(l: number, c: number, h: number, alpha = 1): string {
-  let lch = { mode: 'oklch', l, c, h, alpha } as LchColor
+  let lch: Oklch = { mode: 'oklch', l, c, h, alpha }
   return formatRgb(toRgb(lch))
 }
 

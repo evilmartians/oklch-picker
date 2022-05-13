@@ -1,6 +1,7 @@
+import { Oklch } from 'culori/fn'
 import { atom, map } from 'nanostores'
 
-import { formatHex, LchColor } from '../lib/colors.js'
+import { formatHex } from '../lib/colors.js'
 
 export let benchmarking = atom(false)
 
@@ -73,6 +74,6 @@ export function getLastBenchmarkColor(): string {
   let { freeze } = lastBenchmark.get()
   let hue = BEST - ((BEST - WORST) * freeze) / MAX_TIME
   if (hue < WORST) hue = WORST
-  let oklch: LchColor = { mode: 'oklch', l: 0.57, c: 0.11, h: hue }
+  let oklch: Oklch = { mode: 'oklch', l: 0.57, c: 0.11, h: hue }
   return formatHex(oklch)
 }

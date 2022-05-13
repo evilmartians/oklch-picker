@@ -1,5 +1,7 @@
 import './index.css'
 
+import { Color } from 'culori/fn'
+
 import {
   onCurrentChange,
   valueToColor,
@@ -12,8 +14,9 @@ import {
   format,
   build,
   inRGB,
-  Color,
-  parse
+  parse,
+  RgbColor,
+  LchColor
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { settings } from '../../stores/settings.js'
@@ -48,7 +51,7 @@ function paint(
   hasGaps: boolean,
   showP3: boolean,
   showRec2020: boolean,
-  getColor: (x: number) => Color
+  getColor: (x: number) => RgbColor | LchColor
 ): void {
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
@@ -104,7 +107,7 @@ onPaint({
   ch(value, showP3, showRec2020) {
     let color = valueToColor(value)
     let c = color.c
-    let h = color.h ?? 0
+    let h = color.h ?? 0 // eslint-disable-line @typescript-eslint/no-unnecessary-condition
     let [width, height] = initCanvasSize(canvasL)
     let factor = L_MAX / width
     paint(canvasL, width, height, true, showP3, showRec2020, x => {
@@ -114,7 +117,7 @@ onPaint({
   lh(value, showP3, showRec2020) {
     let color = valueToColor(value)
     let l = color.l
-    let h = color.h ?? 0
+    let h = color.h ?? 0 // eslint-disable-line @typescript-eslint/no-unnecessary-condition
     let [width, height] = initCanvasSize(canvasC)
     let factor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / width
     paint(canvasC, width, height, false, showP3, showRec2020, x => {
@@ -156,7 +159,7 @@ function setRangeColor(): void {
 
 visible.subscribe(({ real, fallback }) => {
   setRangeColor()
-  let parsed = parse(real || fallback)
+  let parsed = parse(real || fallback) as Color // WARN: source of potential issues 'parse' function might return an 'undefined'
   rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
   rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
 })
