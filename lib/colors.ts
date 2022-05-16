@@ -12,11 +12,9 @@ import {
   modeLch,
   modeLab,
   modeP3,
-  parse as originParse,
-  Color,
-  Rgb as RgbColor,
-  Lch
+  parse as originParse
 } from 'culori/fn'
+import type { Color, Rgb as RgbColor, Lch } from 'culori/fn'
 
 import { support } from '../stores/support.js'
 
