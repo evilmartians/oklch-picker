@@ -12,7 +12,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.23.0
   '@typescript-eslint/parser': ^5.23.0
   autoprefixer: ^10.4.7
-  culori: github:bijela-gora/culori#e99076c1
+  culori: github:bijela-gora/culori#2770175
   eslint: ^8.15.0
   eslint-config-standard: ^17.0.0
   eslint-plugin-import: ^2.26.0
@@ -40,7 +40,7 @@ dependencies:
   '@csstools/postcss-oklab-function': 1.1.0_postcss@8.4.13
   '@nanostores/persistent': 0.5.2_nanostores@0.5.12
   autoprefixer: 10.4.7_postcss@8.4.13
-  culori: github.com/bijela-gora/culori/e99076c1
+  culori: github.com/bijela-gora/culori/2770175
   firebase-tools: 10.9.0
   jstransformer-markdown-it: 2.1.0
   nanostores: 0.5.12
@@ -6794,8 +6794,8 @@ packages:
       readable-stream: 3.6.0
     dev: false
 
-  github.com/bijela-gora/culori/e99076c1:
-    resolution: {tarball: https://codeload.github.com/bijela-gora/culori/tar.gz/e99076c1}
+  github.com/bijela-gora/culori/2770175:
+    resolution: {tarball: https://codeload.github.com/bijela-gora/culori/tar.gz/2770175}
     name: culori
     version: 2.0.3
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}

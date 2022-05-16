@@ -107,7 +107,7 @@ onPaint({
   ch(value, showP3, showRec2020) {
     let color = valueToColor(value)
     let c = color.c
-    let h = color.h ?? 0 // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+    let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasL)
     let factor = L_MAX / width
     paint(canvasL, width, height, true, showP3, showRec2020, x => {
@@ -117,7 +117,7 @@ onPaint({
   lh(value, showP3, showRec2020) {
     let color = valueToColor(value)
     let l = color.l
-    let h = color.h ?? 0 // eslint-disable-line @typescript-eslint/no-unnecessary-condition
+    let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasC)
     let factor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / width
     paint(canvasC, width, height, false, showP3, showRec2020, x => {
