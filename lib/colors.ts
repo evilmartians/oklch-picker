@@ -18,9 +18,11 @@ import type { Color, Rgb as RgbColor, Lch } from 'culori/fn'
 
 import { support } from '../stores/support.js'
 
-export { Color, formatHex, formatCss, clampChroma } from 'culori/fn'
+export { formatHex, formatCss, clampChroma } from 'culori/fn'
 
 export { RgbColor }
+
+export type { Color }
 
 export interface LchColor extends Omit<Lch, 'mode'> {
   mode: 'lch' | 'oklch'
