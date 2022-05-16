@@ -14,17 +14,15 @@ import {
   modeP3,
   parse as originParse,
   Color,
-  Rgb,
+  Rgb as RgbColor,
   Lch
 } from 'culori/fn'
 
 import { support } from '../stores/support.js'
 
-export type { Color } from 'culori'
+export { Color, formatHex, formatCss, clampChroma } from 'culori/fn'
 
-export { formatHex, formatCss, clampChroma } from 'culori/fn'
-
-export interface RgbColor extends Rgb {} // eslint-disable-line @typescript-eslint/no-empty-interface
+export { RgbColor }
 
 export interface LchColor extends Omit<Lch, 'mode'> {
   mode: 'lch' | 'oklch'
