@@ -1,15 +1,11 @@
-import type {
-  Color,
-  Rgb as RgbColor,
-  Lch as LchColor,
-  Oklch as OklchColor
-} from 'culori/fn'
+import type { Color, Oklch, Rgb, Lch } from 'culori/fn'
 import {
-  clampChroma,
   formatRgb as fastFormatRgb,
-  formatCss,
+  parse as originParse,
+  clampChroma,
   displayable,
   modeRec2020,
+  formatCss,
   modeOklch,
   modeOklab,
   useMode,
@@ -17,15 +13,10 @@ import {
   modeHsl,
   modeLch,
   modeLab,
-  modeP3,
-  parse as originParse
+  modeP3
 } from 'culori/fn'
 
 import { support } from '../stores/support.js'
-
-export type { Color, RgbColor, LchColor, OklchColor }
-
-export { formatHex, formatCss, clampChroma } from 'culori/fn'
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
@@ -48,28 +39,24 @@ export function inRec2020(color: Color): boolean {
   return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
 }
 
-export function build(
-  l: number,
-  c: number,
-  h: number,
-  alpha = 1
-): LchColor | OklchColor {
+export function build(l: number, c: number, h: number, alpha = 1): Lch | Oklch {
   return { mode: COLOR_FN, l, c, h, alpha }
 }
 
-export let format = fastFormatRgb
+interface Format {
+  (c: Color): string
+  (c: undefined): undefined
+}
 
-function formatP3Css(c: undefined): undefined
-function formatP3Css(c: Color): string
-function formatP3Css(c: undefined | string | Color): string | undefined
-function formatP3Css(c: undefined | string | Color): string | undefined {
-  let r = p3(c)
-  return formatCss(r)
+export let format: Format = fastFormatRgb
+
+function formatP3Css(c: Color): string {
+  return formatCss(p3(c))
 }
 
 support.subscribe(hasP3 => {
   if (hasP3) {
-    format = formatP3Css
+    format = formatP3Css as Format
   } else {
     format = fastFormatRgb
   }
@@ -86,11 +73,11 @@ export function parse(value: string): Color | undefined {
   return originParse(value)
 }
 
-export function toRgb(color: Color): RgbColor {
+export function toRgb(color: Color): Rgb {
   return rgb(clampChroma(color, COLOR_FN))
 }
 
-export function formatRgb(color: RgbColor): string {
+export function formatRgb(color: Rgb): string {
   let r = Math.round(25500 * color.r) / 100
   let g = Math.round(25500 * color.g) / 100
   let b = Math.round(25500 * color.b) / 100
@@ -101,7 +88,7 @@ export function formatRgb(color: RgbColor): string {
   }
 }
 
-export function formatLch(color: LchColor | OklchColor): string {
+export function formatLch(color: Lch | Oklch): string {
   let { l, c, h, alpha } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {

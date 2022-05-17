@@ -1,7 +1,5 @@
-import { Oklch } from 'culori/fn'
+import { Oklch, formatHex } from 'culori/fn'
 import { atom, map } from 'nanostores'
-
-import { formatHex } from '../lib/colors.js'
 
 export let benchmarking = atom(false)
 

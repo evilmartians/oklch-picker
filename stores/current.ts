@@ -1,15 +1,7 @@
+import { clampChroma, Color, Lch, Oklch } from 'culori/fn'
 import { map, onSet } from 'nanostores'
 
-import {
-  clampChroma,
-  LchColor,
-  OklchColor,
-  getSpace,
-  Color,
-  build,
-  oklch,
-  lch
-} from '../lib/colors.js'
+import { getSpace, build, oklch, lch } from '../lib/colors.js'
 import { reportFreeze, benchmarking } from './benchmark.js'
 import { settings } from './settings.js'
 import { support } from './support.js'
@@ -179,12 +171,12 @@ function roundValue<V extends Partial<LchValue>>(
 
 export function setCurrentFromColor(origin: Color): void {
   if (origin.mode === COLOR_FN) {
-    current.set(colorToValue(origin as LchColor))
+    current.set(colorToValue(origin as Lch))
   } else {
     let originSpace = getSpace(origin)
     let accurate = LCH ? lch(origin) : oklch(origin)
     if (originSpace === 'srgb' && getSpace(accurate) !== 'srgb') {
-      accurate = clampChroma(accurate, COLOR_FN) as LchColor
+      accurate = clampChroma(accurate, COLOR_FN) as Lch
     }
     let rounded = roundValue(colorToValue(accurate), COLOR_FN)
     if (getSpace(valueToColor(rounded)) === originSpace) {
@@ -195,11 +187,11 @@ export function setCurrentFromColor(origin: Color): void {
   }
 }
 
-export function valueToColor(value: LchValue): LchColor | OklchColor {
+export function valueToColor(value: LchValue): Lch | Oklch {
   return build((L_MAX * value.l) / 100, value.c, value.h, value.a / 100)
 }
 
-export function colorToValue(color: LchColor | OklchColor): LchValue {
+export function colorToValue(color: Lch | Oklch): LchValue {
   return {
     l: (100 * color.l) / L_MAX,
     c: color.c,

@@ -1,3 +1,5 @@
+import { Color } from 'culori/fn'
+
 import {
   generateIsVisible,
   generateGetAlpha,
@@ -6,17 +8,13 @@ import {
   GetAlpha,
   format,
   inRGB,
-  Color,
   build,
-  inP3,
-  RgbColor,
-  LchColor,
-  OklchColor
+  inP3
 } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 interface GetColor {
-  (x: number, y: number): RgbColor | LchColor | OklchColor
+  (x: number, y: number): Color
 }
 
 let DEBUG = false
@@ -51,7 +49,7 @@ function paintFast(
   stepX: number,
   stepY: number,
   getAlpha: GetAlpha,
-  getColor: (x: number, y: number) => RgbColor | LchColor | OklchColor
+  getColor: GetColor
 ): void {
   let flipY = height - stepY + 1
   for (let x = fromX; x < fromX + BLOCK; x += stepX) {
