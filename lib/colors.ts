@@ -14,19 +14,18 @@ import {
   modeP3,
   parse as originParse
 } from 'culori/fn'
-import type { Color, Rgb as RgbColor, Lch } from 'culori/fn'
+import type {
+  Color,
+  Rgb as RgbColor,
+  Lch as LchColor,
+  Oklch as OklchColor
+} from 'culori/fn'
 
 import { support } from '../stores/support.js'
 
 export { formatHex, formatCss, clampChroma } from 'culori/fn'
 
-export { RgbColor }
-
-export type { Color }
-
-export interface LchColor extends Omit<Lch, 'mode'> {
-  mode: 'lch' | 'oklch'
-}
+export type { Color, RgbColor, LchColor, OklchColor }
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
@@ -49,7 +48,12 @@ export function inRec2020(color: Color): boolean {
   return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
 }
 
-export function build(l: number, c: number, h: number, alpha = 1): LchColor {
+export function build(
+  l: number,
+  c: number,
+  h: number,
+  alpha = 1
+): LchColor | OklchColor {
   return { mode: COLOR_FN, l, c, h, alpha }
 }
 
@@ -97,7 +101,7 @@ export function formatRgb(color: RgbColor): string {
   }
 }
 
-export function formatLch(color: LchColor): string {
+export function formatLch(color: LchColor | OklchColor): string {
   let { l, c, h, alpha } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {

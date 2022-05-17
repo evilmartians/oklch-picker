@@ -1,7 +1,5 @@
 import './index.css'
 
-import { Color } from 'culori/fn'
-
 import {
   onCurrentChange,
   valueToColor,
@@ -15,8 +13,10 @@ import {
   build,
   inRGB,
   parse,
+  Color,
   RgbColor,
-  LchColor
+  LchColor,
+  OklchColor
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { settings } from '../../stores/settings.js'
@@ -51,7 +51,7 @@ function paint(
   hasGaps: boolean,
   showP3: boolean,
   showRec2020: boolean,
-  getColor: (x: number) => RgbColor | LchColor
+  getColor: (x: number) => RgbColor | LchColor | OklchColor
 ): void {
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)

@@ -3,6 +3,7 @@ import { map, onSet } from 'nanostores'
 import {
   clampChroma,
   LchColor,
+  OklchColor,
   getSpace,
   Color,
   build,
@@ -194,11 +195,11 @@ export function setCurrentFromColor(origin: Color): void {
   }
 }
 
-export function valueToColor(value: LchValue): LchColor {
+export function valueToColor(value: LchValue): LchColor | OklchColor {
   return build((L_MAX * value.l) / 100, value.c, value.h, value.a / 100)
 }
 
-export function colorToValue(color: LchColor): LchValue {
+export function colorToValue(color: LchColor | OklchColor): LchValue {
   return {
     l: (100 * color.l) / L_MAX,
     c: color.c,
