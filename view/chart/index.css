@@ -19,37 +19,47 @@ body {
 }
 
 .chart_line {
-  position: absolute;
-  z-index: 2;
-  background: var(--surface-badge);
-  opacity: 50%;
+  &::after {
+    position: absolute;
+    z-index: 2;
+    content: "";
+    background: var(--surface-1);
+    mix-blend-mode: difference;
+    opacity: 40%;
+  }
 
   &.is-x {
-    right: 0;
-    left: 0;
-    height: 1px;
+    &::after {
+      right: 0;
+      bottom: var(--chart-line-position);
+      left: 0;
+      height: 1px;
+    }
   }
 
   &.is-y {
-    top: 0;
-    bottom: 0;
-    width: 1px;
+    &::after {
+      top: 0;
+      bottom: 0;
+      left: var(--chart-line-position);
+      width: 1px;
+    }
   }
 
   &.is-l.is-x {
-    bottom: var(--chart-l);
+    --chart-line-position: var(--chart-l);
   }
 
   &.is-l.is-y {
-    left: var(--chart-l);
+    --chart-line-position: var(--chart-l);
   }
 
   &.is-c.is-x {
-    bottom: var(--chart-c);
+    --chart-line-position: var(--chart-c);
   }
 
   &.is-h.is-y {
-    left: var(--chart-h);
+    --chart-line-position: var(--chart-h);
   }
 }
 
@@ -60,15 +70,16 @@ body {
   font-size: 12px;
   text-align: center;
   text-transform: uppercase;
+  opacity: 50%;
 
   @nest .chart_line.is-x & {
-    top: -7px;
+    bottom: calc(var(--chart-line-position) - 7px);
     left: -15px;
   }
 
   @nest .chart_line.is-y & {
     top: 100%;
-    left: -7px;
+    left: calc(var(--chart-line-position) - 7px);
   }
 }
 
