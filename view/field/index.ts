@@ -5,7 +5,10 @@ let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
 let originViewport = meta.content
 
+let onFocus: (e: FocusEvent) => void
+
 if (/iPhone/.test(navigator.userAgent)) {
+  // The hack to prevent zoom on field focus
   function onMouseOver(): void {
     meta.content = originViewport + ',maximum-scale=1,user-scalable=0'
   }
@@ -19,22 +22,28 @@ if (/iPhone/.test(navigator.userAgent)) {
     input.addEventListener('mouseover', onMouseOver)
     input.addEventListener('blur', onBlur)
   }
-}
 
-function onMouseUp(e: MouseEvent): void {
-  e.preventDefault()
-  let input = e.target as HTMLInputElement
-  input.removeEventListener('mouseup', onMouseUp)
-}
+  // The hack to prevent loosing selected text on click
+  function onMouseUp(e: MouseEvent): void {
+    e.preventDefault()
+    let input = e.target as HTMLInputElement
+    input.removeEventListener('mouseup', onMouseUp)
+  }
 
-function onFocus(e: FocusEvent): void {
-  let input = e.target as HTMLInputElement
-  input.select()
+  onFocus = e => {
+    let input = e.target as HTMLInputElement
+    input.select()
 
-  input.addEventListener('mouseup', onMouseUp)
-  setTimeout(() => {
     input.addEventListener('mouseup', onMouseUp)
-  }, 500)
+    setTimeout(() => {
+      input.addEventListener('mouseup', onMouseUp)
+    }, 500)
+  }
+} else {
+  onFocus = e => {
+    let input = e.target as HTMLInputElement
+    input.select()
+  }
 }
 
 function isSpecial(e: KeyboardEvent): boolean {
