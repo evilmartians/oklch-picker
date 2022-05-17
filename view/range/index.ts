@@ -1,6 +1,6 @@
 import './index.css'
 
-import { Color } from 'culori/fn'
+import { Color, blend } from 'culori/fn'
 
 import {
   onCurrentChange,
@@ -59,6 +59,7 @@ function paint(
   let background = window
     .getComputedStyle(canvas)
     .getPropertyValue('--current-surface')
+    .trim()
 
   for (let x = 0; x <= width; x++) {
     let color = getColor(x)
@@ -73,10 +74,9 @@ function paint(
       ctx.fillStyle = format(color)
       ctx.fillRect(x, halfHeight, 1, height)
 
-      ctx.fillStyle = background
-      ctx.fillRect(x, 0, 1, halfHeight)
-
       color.alpha = getAlpha(color)
+      color = blend([format(color), background], 'multiply')
+
       ctx.fillStyle = format(color)
       ctx.fillRect(x, 0, 1, halfHeight)
     } else {

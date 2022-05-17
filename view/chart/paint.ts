@@ -1,11 +1,9 @@
-import { Color } from 'culori/fn'
+import { Color, blend, parseRgb } from 'culori/fn'
 
 import {
   generateIsVisible,
-  generateGetAlpha,
   inRec2020,
   IsVisible,
-  GetAlpha,
   format,
   inRGB,
   build,
@@ -28,14 +26,20 @@ function paintDot(
   width: number,
   height: number,
   background: string,
-  color: Color,
-  alpha: number
+  color: Color
 ): void {
-  if (alpha < 1) {
-    ctx.fillStyle = background
-    ctx.fillRect(x, y, width, height)
-    color.alpha = alpha
+  let bgColor = parseRgb(background)
+
+  if (!inRGB(color) && inP3(color)) {
+    color.alpha = 0.6
+    bgColor.alpha = 1 - color.alpha
+    color = blend([format(color), format(bgColor)], 'screen')
+  } else if (!inRGB(color)) {
+    color.alpha = 0.4
+    bgColor.alpha = 1 - color.alpha
+    color = blend([format(color), format(bgColor)], 'screen')
   }
+
   ctx.fillStyle = format(color)
   ctx.fillRect(x, y, width, height)
 }
@@ -48,7 +52,6 @@ function paintFast(
   fromY: number,
   stepX: number,
   stepY: number,
-  getAlpha: GetAlpha,
   getColor: GetColor
 ): void {
   let flipY = height - stepY + 1
@@ -61,7 +64,7 @@ function paintFast(
         ctx.fillRect(x, flipY - y, stepX, 1)
         ctx.fillStyle = 'rgba(0 200 0 / 0.3)'
       }
-      paintDot(ctx, x, flipY - y, stepX, stepY, bg, color, getAlpha(color))
+      paintDot(ctx, x, flipY - y, stepX, stepY, bg, color)
     }
   }
 }
@@ -73,7 +76,6 @@ function paintSlow(
   fromX: number,
   fromY: number,
   isVisible: IsVisible,
-  getAlpha: GetAlpha,
   getColor: GetColor
 ): void {
   for (let x = fromX; x < fromX + BLOCK; x += 1) {
@@ -83,7 +85,7 @@ function paintSlow(
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 100 0 / 0.3)'
         }
-        paintDot(ctx, x, height - y, 1, 1, bg, color, getAlpha(color))
+        paintDot(ctx, x, height - y, 1, 1, bg, color)
       }
     }
   }
@@ -106,7 +108,6 @@ function paint(
   showRec2020: boolean,
   getColor: GetColor
 ): void {
-  let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
 
   let getMode: (x: number, y: number) => PaintMode
@@ -233,9 +234,9 @@ function paint(
     for (let y = 0; y <= height; y += BLOCK) {
       let pos = getMode(x, y)
       if (pos === PaintMode.Inside) {
-        paintFast(ctx, height, bg, x, y, BLOCK, fastBlock, getAlpha, getColor)
+        paintFast(ctx, height, bg, x, y, BLOCK, fastBlock, getColor)
       } else if (pos === PaintMode.Between) {
-        paintSlow(ctx, height, bg, x, y, isVisible, getAlpha, getColor)
+        paintSlow(ctx, height, bg, x, y, isVisible, getColor)
       } else if (!hasGaps) {
         if (DEBUG) {
           ctx.fillStyle = 'rgba(200 0 0 / 0.3)'

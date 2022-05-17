@@ -16,7 +16,10 @@ import { support } from '../../stores/support.js'
 import PaintWorker from './worker?worker'
 
 function getBackground(canvas: HTMLCanvasElement): string {
-  return window.getComputedStyle(canvas).getPropertyValue('--current-surface')
+  return window
+    .getComputedStyle(canvas)
+    .getPropertyValue('--current-surface')
+    .trim()
 }
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
