@@ -33,12 +33,11 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
     } else {
       let fallback = formatRgb(toRgb(color))
       if (inP3(color)) {
-        let result: VisibleValue = {
+        return {
           space: 'p3',
           fallback,
           real: hasP3 ? format(color) : false
         }
-        return result
       } else {
         return {
           space: inRec2020(color) ? 'rec2020' : 'out',
