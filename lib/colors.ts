@@ -1,3 +1,9 @@
+import type {
+  Color,
+  Rgb as RgbColor,
+  Lch as LchColor,
+  Oklch as OklchColor
+} from 'culori/fn'
 import {
   clampChroma,
   formatRgb as fastFormatRgb,
@@ -14,18 +20,12 @@ import {
   modeP3,
   parse as originParse
 } from 'culori/fn'
-import type {
-  Color,
-  Rgb as RgbColor,
-  Lch as LchColor,
-  Oklch as OklchColor
-} from 'culori/fn'
 
 import { support } from '../stores/support.js'
 
-export { formatHex, formatCss, clampChroma } from 'culori/fn'
-
 export type { Color, RgbColor, LchColor, OklchColor }
+
+export { formatHex, formatCss, clampChroma } from 'culori/fn'
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
