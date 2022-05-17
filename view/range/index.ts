@@ -12,8 +12,10 @@ import {
   format,
   build,
   inRGB,
-  Color,
-  parse
+  parse,
+  RgbColor,
+  LchColor,
+  OklchColor
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { settings } from '../../stores/settings.js'
@@ -48,7 +50,7 @@ function paint(
   hasGaps: boolean,
   showP3: boolean,
   showRec2020: boolean,
-  getColor: (x: number) => Color
+  getColor: (x: number) => RgbColor | LchColor | OklchColor
 ): void {
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
@@ -157,8 +159,10 @@ function setRangeColor(): void {
 visible.subscribe(({ real, fallback }) => {
   setRangeColor()
   let parsed = parse(real || fallback)
-  rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
-  rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
+  if (parsed) {
+    rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
+    rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
+  }
 })
 
 settings.subscribe(({ rec2020 }) => {

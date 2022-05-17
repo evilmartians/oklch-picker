@@ -8,12 +8,15 @@ import {
   inRGB,
   Color,
   build,
-  inP3
+  inP3,
+  RgbColor,
+  LchColor,
+  OklchColor
 } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 interface GetColor {
-  (x: number, y: number): Color
+  (x: number, y: number): RgbColor | LchColor | OklchColor
 }
 
 let DEBUG = false
@@ -48,7 +51,7 @@ function paintFast(
   stepX: number,
   stepY: number,
   getAlpha: GetAlpha,
-  getColor: (x: number, y: number) => Color
+  getColor: (x: number, y: number) => RgbColor | LchColor | OklchColor
 ): void {
   let flipY = height - stepY + 1
   for (let x = fromX; x < fromX + BLOCK; x += stepX) {

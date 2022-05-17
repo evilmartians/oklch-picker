@@ -16,7 +16,7 @@
     "@csstools/postcss-oklab-function": "^1.1.0",
     "@nanostores/persistent": "^0.5.2",
     "autoprefixer": "^10.4.7",
-    "culori": "^2.0.3",
+    "culori": "github:bijela-gora/culori#2770175",
     "firebase-tools": "^10.9.0",
     "jstransformer-markdown-it": "^2.1.0",
     "nanostores": "^0.5.12",

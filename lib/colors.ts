@@ -1,8 +1,13 @@
+import type {
+  Color,
+  Rgb as RgbColor,
+  Lch as LchColor,
+  Oklch as OklchColor
+} from 'culori/fn'
 import {
-  clampChroma as originClampChroma,
+  clampChroma,
   formatRgb as fastFormatRgb,
-  formatHex as originFormatHex,
-  formatCss as originFormatCss,
+  formatCss,
   displayable,
   modeRec2020,
   modeOklch,
@@ -14,41 +19,19 @@ import {
   modeLab,
   modeP3,
   parse as originParse
-  // @ts-expect-error
 } from 'culori/fn'
 
 import { support } from '../stores/support.js'
 
-export interface Color {
-  mode: string
-  alpha?: number
-}
+export type { Color, RgbColor, LchColor, OklchColor }
 
-export interface RgbColor extends Color {
-  r: number
-  g: number
-  b: number
-}
+export { formatHex, formatCss, clampChroma } from 'culori/fn'
 
-export interface LchColor extends Color {
-  l: number
-  c: number
-  h?: number
-}
-
-export let clampChroma = originClampChroma as (
-  color: Color,
-  mode: string
-) => Color
-
-export let formatHex = originFormatHex as (color: Color) => string
-export let formatCss = originFormatCss as (color: Color) => string
-
-export let rec2020 = useMode(modeRec2020) as (color: Color) => RgbColor
-export let oklch = useMode(modeOklch) as (color: Color) => LchColor
-export let rgb = useMode(modeRgb) as (color: Color) => RgbColor
-export let lch = useMode(modeLch) as (color: Color) => LchColor
-export let p3 = useMode(modeP3) as (color: Color) => RgbColor
+export let rec2020 = useMode(modeRec2020)
+export let oklch = useMode(modeOklch)
+export let rgb = useMode(modeRgb)
+export let lch = useMode(modeLch)
+export let p3 = useMode(modeP3)
 useMode(modeOklab)
 useMode(modeHsl)
 useMode(modeLab)
@@ -65,15 +48,28 @@ export function inRec2020(color: Color): boolean {
   return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
 }
 
-export function build(l: number, c: number, h: number, alpha = 1): LchColor {
+export function build(
+  l: number,
+  c: number,
+  h: number,
+  alpha = 1
+): LchColor | OklchColor {
   return { mode: COLOR_FN, l, c, h, alpha }
 }
 
 export let format = fastFormatRgb
 
+function formatP3Css(c: undefined): undefined
+function formatP3Css(c: Color): string
+function formatP3Css(c: undefined | string | Color): string | undefined
+function formatP3Css(c: undefined | string | Color): string | undefined {
+  let r = p3(c)
+  return formatCss(r)
+}
+
 support.subscribe(hasP3 => {
   if (hasP3) {
-    format = (color: Color) => formatCss(p3(color))
+    format = formatP3Css
   } else {
     format = fastFormatRgb
   }
@@ -105,7 +101,7 @@ export function formatRgb(color: RgbColor): string {
   }
 }
 
-export function formatLch(color: LchColor): string {
+export function formatLch(color: LchColor | OklchColor): string {
   let { l, c, h, alpha } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {
