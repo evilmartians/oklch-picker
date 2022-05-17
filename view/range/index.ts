@@ -13,7 +13,6 @@ import {
   build,
   inRGB,
   parse,
-  Color,
   RgbColor,
   LchColor,
   OklchColor
@@ -159,9 +158,11 @@ function setRangeColor(): void {
 
 visible.subscribe(({ real, fallback }) => {
   setRangeColor()
-  let parsed = parse(real || fallback) as Color // WARN: source of potential issues 'parse' function might return an 'undefined'
-  rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
-  rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
+  let parsed = parse(real || fallback)
+  if (parsed) {
+    rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
+    rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
+  }
 })
 
 settings.subscribe(({ rec2020 }) => {
