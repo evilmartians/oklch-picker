@@ -1,7 +1,9 @@
 {
   "name": "oklch-picker",
   "private": true,
+  "homepage": "https://oklch.evilmartians.io/",
   "type": "module",
+  "license": "MIT",
   "engines": {
     "node": ">=16"
   },
