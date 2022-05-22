@@ -18,6 +18,8 @@ import {
 
 import { support } from '../stores/support.js'
 
+export type AnyLch = Lch | Oklch
+
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
 export let rgb = useMode(modeRgb)
@@ -39,7 +41,7 @@ export function inRec2020(color: Color): boolean {
   return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
 }
 
-export function build(l: number, c: number, h: number, alpha = 1): Lch | Oklch {
+export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
   return { mode: COLOR_FN, l, c, h, alpha }
 }
 
@@ -88,7 +90,7 @@ export function formatRgb(color: Rgb): string {
   }
 }
 
-export function formatLch(color: Lch | Oklch): string {
+export function formatLch(color: AnyLch): string {
   let { l, c, h, alpha } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {
