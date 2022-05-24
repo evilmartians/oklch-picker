@@ -2,6 +2,10 @@
   --sample-real: var(--surface-1);
 }
 
+.sample_reader {
+  @mixin visual-hidden;
+}
+
 .sample_unavailable {
   box-sizing: border-box;
   display: none;
