@@ -6,7 +6,9 @@
       }
     },
     "postcss-opacity-percentage": {},
-    "postcss-mixins": {},
+    "postcss-mixins": {
+      "mixinsFiles": "view/**/mixins.pcss"
+    },
     "postcss-nesting": {},
     "postcss-media-minmax": {},
     "autoprefixer": {}
