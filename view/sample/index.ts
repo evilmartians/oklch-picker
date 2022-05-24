@@ -11,7 +11,7 @@ visible.subscribe(({ space, real, fallback }) => {
   sample.classList.toggle('is-out', space === 'out')
   sample.classList.toggle('is-supported', !!real)
 
-  type.innerText = `Color space ${space}`
+  type.innerText = `${space} space`
 
   sample.style.setProperty('--sample-real', real || 'transparent')
   sample.style.setProperty('--sample-fallback', fallback)
