@@ -63,8 +63,7 @@ body {
 
 a,
 input,
-button,
-label[tabindex="0"] {
+button {
   &:focus {
     outline: var(--accent) solid 3px;
   }

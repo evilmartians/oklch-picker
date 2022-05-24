@@ -1,23 +1,37 @@
 .checkbox {
   position: relative;
   display: block;
-  padding: 12px 48px 12px 12px;
   margin-bottom: 12px;
   margin-left: -12px;
-  cursor: pointer;
 
   &:last-child {
     margin-bottom: 0;
   }
-
-  &:focus {
-    border-radius: 20px;
-    outline-offset: 3px;
-  }
 }
 
 .checkbox_input {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  border: 0;
+}
+
+.checkbox_control {
+  padding: 12px 48px 12px 12px;
+  cursor: pointer;
+
+  @nest .checkbox_input:focus + & {
+    border-radius: 20px;
+    outline: var(--accent) solid 3px;
+    outline-offset: 3px;
+  }
+
+  @nest .checkbox_input:not(:focus-visible):focus + & {
+    outline: none;
+  }
 }
 
 .checkbox_icon {
@@ -40,7 +54,7 @@
   opacity: 0%;
   transition: opacity 150ms;
 
-  @nest :checked + & {
+  @nest .checkbox_input:checked + .checkbox_control > & {
     opacity: 100%;
   }
 }
@@ -57,7 +71,7 @@
   transition: transform 150ms;
   transform: translateX(0);
 
-  @nest :checked + & {
+  @nest .checkbox_input:checked + .checkbox_control > & {
     transform: translateX(24px);
   }
 }
