@@ -49,9 +49,9 @@ function isSpecial(e: KeyboardEvent): boolean {
 }
 
 function onKeyDown(e: KeyboardEvent): void {
-  if (hotkeys[e.key] && !isSpecial(e)) {
+  if (hotkeys[e.code] && !isSpecial(e)) {
     e.preventDefault()
-    hotkeys[e.key]?.focus()
+    hotkeys[e.code]?.focus()
   }
 }
 
@@ -66,7 +66,7 @@ for (let field of fields) {
     input.addEventListener('input', onInput)
   }
 
-  let hotkey = field.querySelector('kbd')!.innerText.trim().toLowerCase()
+  let hotkey = `Key${field.querySelector('kbd')!.innerText.trim().toUpperCase()}`
   hotkeys[hotkey] = input
 }
 
@@ -77,8 +77,8 @@ function isInput(el: EventTarget | null): el is HTMLInputElement {
 window.addEventListener('keyup', e => {
   if (isSpecial(e)) return
   if (e.target === document.body) {
-    hotkeys[e.key]?.focus()
-  } else if (isInput(e.target) && e.key === 'Escape') {
+    hotkeys[e.code]?.focus()
+  } else if (isInput(e.target) && e.code === 'Escape') {
     e.target.blur()
   }
 })
