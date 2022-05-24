@@ -1,7 +1,11 @@
 nav.mode
-  if LCH
-    a.mode_link( href="https://oklch.evilmartians.io" ) OKLCH
-    a.mode_link.is-current LCH
-  else
-    a.mode_link.is-current OKLCH
-    a.mode_link( href="https://lch.evilmartians.io" ) LCH
+  a.mode_link(
+    class=!LCH ? 'is-current' : ''
+    aria-current=!LCH ? 'page' : false
+    href="https://oklch.evilmartians.io"
+  ) OKLCH
+  a.mode_link(
+    class=LCH ? 'is-current' : ''
+    aria-current=LCH ? 'is-current' : false
+    href="https://lch.evilmartians.io"
+  ) LCH
