@@ -18,6 +18,7 @@
   --surface-badge: oklch(32% 0 0 / 85%);
   --text-primary: oklch(0% 0 0);
   --text-secondary: oklch(54% 0 0);
+  --text-note: oklch(85% 0 0);
   --text-badge: oklch(100% 0 0);
   --chess: oklch(94% 0 0);
   --ui-bg: oklch(70% 0.05 310 / 18%);
@@ -40,6 +41,7 @@
     --surface-2: oklch(29% 0 0 / 85%);
     --surface-2-shadow: oklch(0% 0 0 / 40%);
     --text-primary: oklch(100% 0 0);
+    --text-note: oklch(45% 0 0);
     --chess: oklch(38% 0.01 297);
     --ui-border: oklch(70% 0 0 / 50%);
   }
