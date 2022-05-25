@@ -1,11 +1,13 @@
 import './index.css'
 import { toOtherValue, current } from '../../stores/current.js'
 
-let link = document.querySelector<HTMLAnchorElement>('.mode a[href]')!
+let other = document.querySelector<HTMLAnchorElement>(
+  '.mode a:not(.is-current)'
+)!
 
-let domain = link.href
+let domain = other.href
 
 current.subscribe(value => {
   let { l, c, h, a } = toOtherValue(value)
-  link.href = `${domain}#${l},${c},${h},${a}`
+  other.href = `${domain}#${l},${c},${h},${a}`
 })
