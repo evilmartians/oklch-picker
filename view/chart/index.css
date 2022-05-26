@@ -19,46 +19,48 @@ body {
 }
 
 .chart_line {
-  &::after {
-    position: absolute;
-    z-index: 2;
-    content: "";
-    background: var(--surface-1);
-    mix-blend-mode: difference;
-    opacity: 40%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 1px);
+}
+
+.chart_line::after {
+  position: absolute;
+  z-index: 2;
+  content: "";
+  background: var(--surface-1);
+  mix-blend-mode: difference;
+  opacity: 40%;
+
+  @nest .is-x& {
+    right: 0;
+    bottom: var(--chart-line-position);
+    left: 0;
+    height: 1px;
   }
 
-  &.is-x {
-    &::after {
-      right: 0;
-      bottom: var(--chart-line-position);
-      left: 0;
-      height: 1px;
-    }
+  @nest .is-y& {
+    top: 0;
+    bottom: 0;
+    left: var(--chart-line-position);
+    width: 1px;
   }
 
-  &.is-y {
-    &::after {
-      top: 0;
-      bottom: 0;
-      left: var(--chart-line-position);
-      width: 1px;
-    }
-  }
-
-  &.is-l.is-x {
+  @nest .is-l.is-x& {
     --chart-line-position: var(--chart-l);
   }
 
-  &.is-l.is-y {
+  @nest .is-l.is-y& {
     --chart-line-position: var(--chart-l);
   }
 
-  &.is-c.is-x {
+  @nest .is-c.is-x& {
     --chart-line-position: var(--chart-c);
   }
 
-  &.is-h.is-y {
+  @nest .is-h.is-y& {
     --chart-line-position: var(--chart-h);
   }
 }
