@@ -24,6 +24,22 @@ body {
   left: 0;
   width: 100%;
   height: calc(100% + 1px);
+
+  &.is-l.is-x {
+    --chart-line-position: var(--chart-l);
+  }
+
+  &.is-l.is-y {
+    --chart-line-position: var(--chart-l);
+  }
+
+  &.is-c.is-x {
+    --chart-line-position: var(--chart-c);
+  }
+
+  &.is-h.is-y {
+    --chart-line-position: var(--chart-h);
+  }
 }
 
 .chart_line::after {
@@ -46,22 +62,6 @@ body {
     bottom: 0;
     left: var(--chart-line-position);
     width: 1px;
-  }
-
-  @nest .is-l.is-x& {
-    --chart-line-position: var(--chart-l);
-  }
-
-  @nest .is-l.is-y& {
-    --chart-line-position: var(--chart-l);
-  }
-
-  @nest .is-c.is-x& {
-    --chart-line-position: var(--chart-c);
-  }
-
-  @nest .is-h.is-y& {
-    --chart-line-position: var(--chart-h);
   }
 }
 
