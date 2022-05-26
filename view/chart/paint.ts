@@ -60,8 +60,9 @@ function paintFast(
         ctx.fillRect(x, flipY - y, 1, stepY)
         ctx.fillRect(x, flipY - y, stepX, 1)
         ctx.fillStyle = 'rgba(0 200 0 / 0.3)'
+      } else {
+        paintDot(ctx, x, flipY - y, stepX, stepY, bg, color, getAlpha(color))
       }
-      paintDot(ctx, x, flipY - y, stepX, stepY, bg, color, getAlpha(color))
     }
   }
 }
