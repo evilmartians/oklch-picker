@@ -1,5 +1,5 @@
 import { clampChroma, Color } from 'culori/fn'
-import { map, onSet } from 'nanostores'
+import { atom, map, onSet } from 'nanostores'
 
 import { getSpace, build, oklch, lch, AnyLch } from '../lib/colors.js'
 import { reportFreeze, benchmarking } from './benchmark.js'
@@ -14,6 +14,7 @@ export interface LchValue {
 }
 
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
+type RenderStatus = Record<keyof LchValue | string, boolean>
 
 function randomColor(): LchValue {
   return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
@@ -35,9 +36,30 @@ function parseHash(): LchValue | undefined {
 }
 
 export let current = map<LchValue>(parseHash() || randomColor())
+export let postponed = atom<LchValue | null>(null)
 
-onSet(current, ({ newValue }) => {
-  let { l, c, h, a } = newValue
+export let isRendering = map<RenderStatus>({
+  l: false,
+  c: false,
+  h: false,
+  a: false
+})
+export let isFullRendered = map<RenderStatus>({
+  l: false,
+  c: false,
+  h: false,
+  // should be always true
+  a: true
+})
+
+// update hash only when all graphs settled
+onSet(isFullRendered, ({ newValue }) => {
+  let fullRendered = Object.keys(newValue).every(key => newValue[key])
+  if (!fullRendered) {
+    return
+  }
+
+  let { l, c, h, a } = current.get()
   let hash = `#${l},${c},${h},${a}`
   if (location.hash !== hash) {
     history.pushState(null, '', `#${l},${c},${h},${a}`)
@@ -54,7 +76,8 @@ interface ComponentCallback {
     value: number,
     showP3: boolean,
     showRec2020: boolean,
-    showCharts: boolean
+    showCharts: boolean,
+    isFull: boolean
   ): void
 }
 
@@ -78,10 +101,46 @@ interface LchCallbacks {
   lch?: LchCallback
 }
 
+let frame = 0
+
+isRendering.subscribe(value => {
+  let showCharts = settings.get().charts === 'show'
+  if (!showCharts) {
+    return
+  }
+
+  let postponedValue = postponed.get()
+
+  let renderingType = Object.keys(value).find(key => value[key])
+  let fullRendered = Object.keys(isFullRendered.get()).every(key => value[key])
+
+  // no rendering happening and there is new postponed value
+  if (
+    !renderingType &&
+    postponedValue &&
+    Object.entries(postponedValue).sort().toString() !==
+      Object.entries(current.get()).sort().toString()
+  ) {
+    cancelAnimationFrame(frame)
+    current.set(postponedValue)
+  } else if (!renderingType && !fullRendered) {
+    // no rendering happening and there are graphs that need to fully render
+    cancelAnimationFrame(frame)
+    frame = requestAnimationFrame(() => {
+      postponed.set(null)
+      current.set(current.get())
+    })
+  }
+})
+
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
-function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
+function runListeners(
+  list: LchCallbacks[],
+  prev: PrevCurrentValue,
+  isFull: boolean = false
+): void {
   let value = current.get()
   let lChanged = prev.l !== value.l
   let cChanged = prev.c !== value.c
@@ -92,18 +151,29 @@ function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let showRec2020 = settings.get().rec2020 === 'show'
   let showCharts = settings.get().charts === 'show'
 
+  let fullRenderedValue = isFullRendered.get()
+
   for (let i of list) {
-    if (i.l && lChanged) {
-      i.l(value.l, showP3, showRec2020, showCharts)
+    if (i.l && (lChanged || (!fullRenderedValue.l && isFull))) {
+      isRendering.setKey('l', true)
+      isFullRendered.setKey('l', isFull)
+
+      i.l(value.l, showP3, showRec2020, showCharts, isFull)
     }
-    if (i.c && cChanged) {
-      i.c(value.c, showP3, showRec2020, showCharts)
+    if (i.c && (cChanged || (!fullRenderedValue.c && isFull))) {
+      isRendering.setKey('c', true)
+      isFullRendered.setKey('c', isFull)
+
+      i.c(value.c, showP3, showRec2020, showCharts, isFull)
     }
-    if (i.h && hChanged) {
-      i.h(value.h, showP3, showRec2020, showCharts)
+    if (i.h && (hChanged || (!fullRenderedValue.h && isFull))) {
+      isRendering.setKey('h', true)
+      isFullRendered.setKey('h', isFull)
+
+      i.h(value.h, showP3, showRec2020, showCharts, isFull)
     }
     if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a, showP3, showRec2020, showCharts)
+      i.alpha(value.a, showP3, showRec2020, showCharts, isFull)
     }
 
     if (i.lc && (lChanged || cChanged)) {
@@ -128,7 +198,11 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
   if (changeListeners.length === 1) {
     let prev: PrevCurrentValue = {}
     current.listen(value => {
-      runListeners(changeListeners, prev)
+      let postponedValue = postponed.get()
+      // if there is no postponed frames we can render full scale
+      let isFull = postponedValue === null
+
+      runListeners(changeListeners, prev, isFull)
       prev = value
     })
   }

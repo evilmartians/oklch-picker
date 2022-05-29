@@ -6,7 +6,9 @@ import {
   onCurrentChange,
   valueToColor,
   current,
-  onPaint
+  onPaint,
+  isRendering,
+  postponed
 } from '../../stores/current.js'
 import {
   generateIsVisible,
@@ -27,8 +29,14 @@ function initRange(
   let div = document.querySelector<HTMLDivElement>(`.range.is-${type}`)!
   let range = div.querySelector<HTMLInputElement>('.range_input')!
 
-  range.addEventListener('change', () => {
-    current.setKey(type, parseFloat(range.value))
+  range.addEventListener('input', () => {
+    let renderingValue = isRendering.get()
+
+    postponed.set({ ...current.get(), [type]: parseFloat(range.value) })
+
+    if (!renderingValue[type]) {
+      current.setKey(type, parseFloat(range.value))
+    }
   })
 
   return [div, range]
