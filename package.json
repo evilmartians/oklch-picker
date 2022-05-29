@@ -43,7 +43,7 @@
     "eslint-plugin-prefer-let": "^3.0.1",
     "eslint-plugin-promise": "^6.0.0",
     "nano-staged": "^0.8.0",
-    "simple-git-hooks": "^2.7.0",
+    "simple-git-hooks": "^2.8.0",
     "size-limit": "^7.0.8",
     "stylelint": "^14.8.5",
     "svgo": "^2.8.0",
