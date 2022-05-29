@@ -1,7 +1,8 @@
 export function getCleanCtx(
-  canvas: HTMLCanvasElement
+  canvas: HTMLCanvasElement,
+  p3: boolean
 ): CanvasRenderingContext2D {
-  let ctx = canvas.getContext('2d', { colorSpace: 'display-p3' })!
+  let ctx = canvas.getContext('2d', { colorSpace: p3 ? 'display-p3' : 'srgb' })!
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   return ctx
 }

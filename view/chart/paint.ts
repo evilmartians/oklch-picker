@@ -12,6 +12,7 @@ import {
   inP3
 } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
+import { support } from '../../stores/support.js'
 
 interface GetColor {
   (x: number, y: number): Color
@@ -261,7 +262,7 @@ export function paintL(
   showRec2020: boolean,
   l: number
 ): void {
-  let ctx = getCleanCtx(canvas)
+  let ctx = getCleanCtx(canvas, support.get())
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
   paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
@@ -278,7 +279,7 @@ export function paintC(
   showRec2020: boolean,
   c: number
 ): void {
-  let ctx = getCleanCtx(canvas)
+  let ctx = getCleanCtx(canvas, support.get())
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
   paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
@@ -295,7 +296,7 @@ export function paintH(
   showRec2020: boolean,
   h: number
 ): void {
-  let ctx = getCleanCtx(canvas)
+  let ctx = getCleanCtx(canvas, support.get())
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
   paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
