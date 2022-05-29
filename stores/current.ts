@@ -127,14 +127,16 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
   changeListeners.push(callbacks)
   if (changeListeners.length === 1) {
     let prev: PrevCurrentValue = {}
-    current.subscribe(value => {
+    current.listen(value => {
       runListeners(changeListeners, prev)
       prev = value
     })
-  } else {
-    runListeners([callbacks], {})
   }
 }
+
+setTimeout(() => {
+  runListeners(changeListeners, {})
+}, 1)
 
 export function onPaint(callbacks: LchCallbacks): void {
   onCurrentChange(callbacks)
