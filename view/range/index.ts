@@ -5,10 +5,8 @@ import { Color } from 'culori/fn'
 import {
   onCurrentChange,
   valueToColor,
-  current,
   onPaint,
-  isRendering,
-  postponed
+  current
 } from '../../stores/current.js'
 import {
   generateIsVisible,
@@ -30,13 +28,7 @@ function initRange(
   let range = div.querySelector<HTMLInputElement>('.range_input')!
 
   range.addEventListener('input', () => {
-    let renderingValue = isRendering.get()
-
-    postponed.set({ ...current.get(), [type]: parseFloat(range.value) })
-
-    if (!renderingValue[type]) {
-      current.setKey(type, parseFloat(range.value))
-    }
+    current.setKey(type, parseFloat(range.value))
   })
 
   return [div, range]

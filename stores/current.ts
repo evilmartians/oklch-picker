@@ -38,6 +38,22 @@ function parseHash(): LchValue | undefined {
 export let current = map<LchValue>(parseHash() || randomColor())
 export let postponed = atom<LchValue | null>(null)
 
+onSet(current, ({ changed, newValue, abort }) => {
+  if (!changed) {
+    return
+  }
+
+  postponed.set({
+    ...current.get(),
+    [changed]: newValue[changed]
+  })
+
+  let renderingValue = isRendering.get()
+  if (renderingValue[changed]) {
+    abort()
+  }
+})
+
 export let isRendering = map<RenderStatus>({
   l: false,
   c: false,
