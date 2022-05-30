@@ -66,8 +66,7 @@ export let isFullRendered = map<RenderStatus>({
   l: false,
   c: false,
   h: false,
-  // should be always true
-  a: true
+  a: false
 })
 
 // update hash only when all graphs settled
@@ -191,7 +190,12 @@ function runListeners(
       i.h(value.h, showP3, showRec2020, showCharts, isFull)
     }
     if (i.alpha && prev.a !== value.a) {
+      // in order to update hash in the URL we need to toggle this
+      isFullRendered.setKey('a', false)
+
       i.alpha(value.a, showP3, showRec2020, showCharts, isFull)
+
+      isFullRendered.setKey('a', true)
     }
 
     if (i.lc && (lChanged || cChanged)) {
