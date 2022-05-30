@@ -16,6 +16,8 @@ export interface LchValue {
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 type RenderStatus = Record<keyof LchValue | string, boolean>
 
+const DELAY_BEFORE_FULL_RENDER = 50
+
 function randomColor(): LchValue {
   return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
 }
@@ -117,7 +119,7 @@ interface LchCallbacks {
   lch?: LchCallback
 }
 
-let frame = 0
+let timeout = 0
 
 isRendering.subscribe(value => {
   let showCharts = settings.get().charts === 'show'
@@ -137,15 +139,15 @@ isRendering.subscribe(value => {
     Object.entries(postponedValue).sort().toString() !==
       Object.entries(current.get()).sort().toString()
   ) {
-    cancelAnimationFrame(frame)
+    clearTimeout(timeout)
     current.set(postponedValue)
   } else if (!renderingType && !fullRendered) {
     // no rendering happening and there are graphs that need to fully render
-    cancelAnimationFrame(frame)
-    frame = requestAnimationFrame(() => {
+    clearTimeout(timeout)
+    timeout = window.setTimeout(() => {
       postponed.set(null)
       current.set(current.get())
-    })
+    }, DELAY_BEFORE_FULL_RENDER)
   }
 })
 
