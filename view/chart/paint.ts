@@ -13,6 +13,12 @@ import {
 } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
+import { LchValue } from '../../stores/current.js'
+
+type RenderData = Record<
+  keyof LchValue | string,
+  { totalTime: number; renders: number }
+>
 
 interface GetColor {
   (x: number, y: number): Color
@@ -21,6 +27,53 @@ interface GetColor {
 let DEBUG = false
 
 const BLOCK = 4
+const DEFAULT_SCALE = 2
+
+// less value => worse quality for intermediate renders, but better performance
+const DESIRE_RENDER_TIME = 16
+
+let renderData: RenderData = {
+  l: {
+    totalTime: 0,
+    renders: 0
+  },
+  c: {
+    totalTime: 0,
+    renders: 0
+  },
+  h: {
+    totalTime: 0,
+    renders: 0
+  }
+}
+
+function setScale(
+  type: string,
+  ctx: CanvasRenderingContext2D,
+  originalWidth: number,
+  originalHeight: number,
+  isFull: boolean
+): number[] {
+  let scale = DEFAULT_SCALE
+  let { totalTime, renders } = renderData[type]
+
+  if (isFull) {
+    scale = 1
+  } else if (renders) {
+    scale = Math.ceil(totalTime / renderData[type].renders / DESIRE_RENDER_TIME)
+  }
+
+  // uncomment if need to render always full size
+  // scale = 1
+
+  ctx.scale(scale, scale)
+  return [originalWidth / scale, originalHeight / scale]
+}
+
+function setRenderTime(type: string, time: number): void {
+  renderData[type].renders++
+  renderData[type].totalTime += time
+}
 
 function paintDot(
   ctx: CanvasRenderingContext2D,
@@ -106,6 +159,7 @@ function paint(
   bg: string,
   showP3: boolean,
   showRec2020: boolean,
+  type: string,
   getColor: GetColor
 ): void {
   let getAlpha = generateGetAlpha(showP3, showRec2020)
@@ -231,6 +285,8 @@ function paint(
     }
   }
 
+  let start = Date.now()
+
   for (let x = 0; x <= width; x += BLOCK) {
     for (let y = 0; y <= height; y += BLOCK) {
       let pos = getMode(x, y)
@@ -251,55 +307,112 @@ function paint(
       }
     }
   }
+
+  setRenderTime(type, Date.now() - start)
 }
 
 export function paintL(
   canvas: HTMLCanvasElement,
-  width: number,
-  height: number,
+  originalWidth: number,
+  originalHeight: number,
   bg: string,
   showP3: boolean,
   showRec2020: boolean,
-  l: number
+  l: number,
+  isFull: boolean
 ): void {
   let ctx = getCleanCtx(canvas, support.get())
+  let type = 'l'
+
+  let [width, height] = setScale(
+    type,
+    ctx,
+    originalWidth,
+    originalHeight,
+    isFull
+  )
+
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
-  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
-    return build(l, y * cFactor, x * hFactor)
-  })
+  paint(
+    ctx,
+    width,
+    height,
+    false,
+    BLOCK,
+    bg,
+    showP3,
+    showRec2020,
+    type,
+    (x, y) => {
+      return build(l, y * cFactor, x * hFactor)
+    }
+  )
 }
 
 export function paintC(
   canvas: HTMLCanvasElement,
-  width: number,
-  height: number,
+  originalWidth: number,
+  originalHeight: number,
   bg: string,
   showP3: boolean,
   showRec2020: boolean,
-  c: number
+  c: number,
+  isFull: boolean
 ): void {
   let ctx = getCleanCtx(canvas, support.get())
+  let type = 'c'
+
+  let [width, height] = setScale(
+    type,
+    ctx,
+    originalWidth,
+    originalHeight,
+    isFull
+  )
+
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
-  paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, true, 2, bg, showP3, showRec2020, type, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
   })
 }
 
 export function paintH(
   canvas: HTMLCanvasElement,
-  width: number,
-  height: number,
+  originalWidth: number,
+  originalHeight: number,
   bg: string,
   showP3: boolean,
   showRec2020: boolean,
-  h: number
+  h: number,
+  isFull: boolean
 ): void {
   let ctx = getCleanCtx(canvas, support.get())
+  let type = 'h'
+
+  let [width, height] = setScale(
+    type,
+    ctx,
+    originalWidth,
+    originalHeight,
+    isFull
+  )
+
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
-  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
-    return build(x * lFactor, y * cFactor, h)
-  })
+  paint(
+    ctx,
+    width,
+    height,
+    false,
+    BLOCK,
+    bg,
+    showP3,
+    showRec2020,
+    type,
+    (x, y) => {
+      return build(x * lFactor, y * cFactor, h)
+    }
+  )
 }

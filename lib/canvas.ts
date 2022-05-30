@@ -3,6 +3,8 @@ export function getCleanCtx(
   p3: boolean
 ): CanvasRenderingContext2D {
   let ctx = canvas.getContext('2d', { colorSpace: p3 ? 'display-p3' : 'srgb' })!
+  // reset scale value before new frame
+  ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   return ctx
 }

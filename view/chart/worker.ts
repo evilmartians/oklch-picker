@@ -15,6 +15,7 @@ export type MessageData =
       showRec2020: boolean
       width: number
       height: number
+      isFull: boolean
     }
   | {
       type: 'c'
@@ -25,6 +26,7 @@ export type MessageData =
       showRec2020: boolean
       width: number
       height: number
+      isFull: boolean
     }
   | {
       type: 'h'
@@ -35,6 +37,7 @@ export type MessageData =
       showRec2020: boolean
       width: number
       height: number
+      isFull: boolean
     }
 
 let canvas: HTMLCanvasElement | undefined
@@ -56,7 +59,8 @@ onmessage = (e: MessageEvent<MessageData>) => {
         e.data.bg,
         e.data.showP3,
         e.data.showRec2020,
-        e.data.l
+        e.data.l,
+        e.data.isFull
       )
     } else if (e.data.type === 'c') {
       paintC(
@@ -66,7 +70,8 @@ onmessage = (e: MessageEvent<MessageData>) => {
         e.data.bg,
         e.data.showP3,
         e.data.showRec2020,
-        e.data.c
+        e.data.c,
+        e.data.isFull
       )
     } else {
       paintH(
@@ -76,7 +81,8 @@ onmessage = (e: MessageEvent<MessageData>) => {
         e.data.bg,
         e.data.showP3,
         e.data.showRec2020,
-        e.data.h
+        e.data.h,
+        e.data.isFull
       )
     }
     postMessage(Date.now() - start)

@@ -6,7 +6,8 @@ import './index.css'
 import {
   setCurrentComponents,
   onCurrentChange,
-  onPaint
+  onPaint,
+  isRendering
 } from '../../stores/current.js'
 import { bindFreezeToPaint, reportPaint } from '../../stores/benchmark.js'
 import { paintL, paintC, paintH } from './paint.js'
@@ -82,24 +83,25 @@ function initCharts(): void {
       }
     }
 
-    function init(canvas: HTMLCanvasElement): Worker {
+    function init(type: string, canvas: HTMLCanvasElement): Worker {
       let worker = new PaintWorker()
       send(worker, {
         type: 'init',
         canvas: canvas.transferControlToOffscreen!()
       })
       worker.onmessage = (e: MessageEvent<number>) => {
+        isRendering.setKey(type, false)
         reportPaint(e.data)
       }
       return worker
     }
 
-    let workerL = init(canvasL)
-    let workerC = init(canvasC)
-    let workerH = init(canvasH)
+    let workerL = init('l', canvasL)
+    let workerC = init('c', canvasC)
+    let workerH = init('h', canvasH)
 
     onPaint({
-      l(l, showP3, showRec2020, showCharts) {
+      l(l, showP3, showRec2020, showCharts, isFull) {
         if (!showCharts) return
         let bg = getBackground(canvasL)
         send(workerL, {
@@ -110,10 +112,11 @@ function initCharts(): void {
           showRec2020,
           hasP3: support.get(),
           width,
-          height
+          height,
+          isFull
         })
       },
-      c(c, showP3, showRec2020, showCharts) {
+      c(c, showP3, showRec2020, showCharts, isFull) {
         if (!showCharts) return
         let bg = getBackground(canvasC)
         send(workerC, {
@@ -124,10 +127,11 @@ function initCharts(): void {
           showRec2020,
           hasP3: support.get(),
           width,
-          height
+          height,
+          isFull
         })
       },
-      h(h, showP3, showRec2020, showCharts) {
+      h(h, showP3, showRec2020, showCharts, isFull) {
         if (!showCharts) return
         let bg = getBackground(canvasH)
         send(workerH, {
@@ -138,14 +142,15 @@ function initCharts(): void {
           showRec2020,
           hasP3: support.get(),
           width,
-          height
+          height,
+          isFull
         })
       }
     })
   } else {
     bindFreezeToPaint()
     onPaint({
-      l(l, showP3, showRec2020, showCharts) {
+      l(l, showP3, showRec2020, showCharts, isFull) {
         if (!showCharts) return
         let bg = getBackground(canvasL)
         paintL(
@@ -155,18 +160,25 @@ function initCharts(): void {
           bg,
           showP3,
           showRec2020,
-          (L_MAX * l) / 100
+          (L_MAX * l) / 100,
+          isFull
         )
+
+        isRendering.setKey('l', false)
       },
-      c(c, showP3, showRec2020, showCharts) {
+      c(c, showP3, showRec2020, showCharts, isFull) {
         if (!showCharts) return
         let bg = getBackground(canvasC)
-        paintC(canvasC, width, height, bg, showP3, showRec2020, c)
+        paintC(canvasC, width, height, bg, showP3, showRec2020, c, isFull)
+
+        isRendering.setKey('c', false)
       },
-      h(h, showP3, showRec2020, showCharts) {
+      h(h, showP3, showRec2020, showCharts, isFull) {
         if (!showCharts) return
         let bg = getBackground(canvasH)
-        paintH(canvasH, width, height, bg, showP3, showRec2020, h)
+        paintH(canvasH, width, height, bg, showP3, showRec2020, h, isFull)
+
+        isRendering.setKey('h', false)
       }
     })
   }
