@@ -1,4 +1,3 @@
-import './index.css'
 import { visible } from '../../stores/visible.js'
 
 let sample = document.querySelector<HTMLDivElement>('.sample')!

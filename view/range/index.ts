@@ -1,5 +1,3 @@
-import './index.css'
-
 import { Color } from 'culori/fn'
 
 import {

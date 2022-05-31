@@ -1,8 +1,6 @@
 /* eslint-disable import/extensions */
 import type { MessageData } from './worker.js'
 
-import './index.css'
-
 import {
   setCurrentComponents,
   onCurrentChange,

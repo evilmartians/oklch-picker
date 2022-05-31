@@ -1,4 +1,3 @@
-import './index.css'
 import {
   getLastBenchmarkColor,
   lastBenchmark,

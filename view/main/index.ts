@@ -1,5 +1,3 @@
-import './index.css'
-
 let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
 
 let emText = document.querySelector<HTMLLinkElement>('.main_link.is-em')!

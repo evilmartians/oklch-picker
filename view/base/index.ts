@@ -1,5 +1,3 @@
-import './reset.css'
-import './index.css'
 import { accent } from '../../stores/accent.js'
 
 accent.subscribe(({ main, surface }) => {

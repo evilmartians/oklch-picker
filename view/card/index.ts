@@ -1,4 +1,3 @@
-import './index.css'
 import { current, onCurrentChange } from '../../stores/current.js'
 import { settings } from '../../stores/settings.js'
 

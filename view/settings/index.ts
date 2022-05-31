@@ -1,4 +1,3 @@
-import './index.css'
 import { getCheckbox, onChange } from '../checkbox/index.js'
 import { settings } from '../../stores/settings.js'
 

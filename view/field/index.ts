@@ -1,5 +1,3 @@
-import './index.css'
-
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
@@ -66,7 +64,10 @@ for (let field of fields) {
     input.addEventListener('input', onInput)
   }
 
-  let hotkey = `Key${field.querySelector('kbd')!.innerText.trim().toUpperCase()}`
+  let hotkey = `Key${field
+    .querySelector('kbd')!
+    .innerText.trim()
+    .toUpperCase()}`
   hotkeys[hotkey] = input
 }
 

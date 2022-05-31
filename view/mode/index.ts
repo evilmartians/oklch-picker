@@ -1,4 +1,3 @@
-import './index.css'
 import { toOtherValue, current } from '../../stores/current.js'
 
 let other = document.querySelector<HTMLAnchorElement>(
