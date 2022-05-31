@@ -12,6 +12,7 @@ import {
 } from '../../lib/colors.js'
 import { RenderType, getQuickScale } from '../../stores/benchmark.js'
 import { getCleanCtx } from '../../lib/canvas.js'
+import { settings } from '../../stores/settings.js'
 
 interface GetColor {
   (x: number, y: number): AnyLch
@@ -115,10 +116,10 @@ function paint(
   hasGaps: boolean,
   fastBlock: number,
   bg: string,
-  showP3: boolean,
-  showRec2020: boolean,
   getColor: GetColor
 ): void {
+  let showP3 = settings.get().p3
+  let showRec2020 = settings.get().rec2020
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
 
@@ -269,8 +270,6 @@ export function paintL(
   originalWidth: number,
   originalHeight: number,
   bg: string,
-  showP3: boolean,
-  showRec2020: boolean,
   l: number,
   isFull: boolean
 ): void {
@@ -284,9 +283,9 @@ export function paintL(
   )
 
   let hFactor = H_MAX / width
-  let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
+  let cFactor = (settings.get().rec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, false, BLOCK, bg, (x, y) => {
     return build(l, y * cFactor, x * hFactor)
   })
 }
@@ -296,8 +295,6 @@ export function paintC(
   originalWidth: number,
   originalHeight: number,
   bg: string,
-  showP3: boolean,
-  showRec2020: boolean,
   c: number,
   isFull: boolean
 ): void {
@@ -313,7 +310,7 @@ export function paintC(
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, true, 2, bg, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
   })
 }
@@ -323,8 +320,6 @@ export function paintH(
   originalWidth: number,
   originalHeight: number,
   bg: string,
-  showP3: boolean,
-  showRec2020: boolean,
   h: number,
   isFull: boolean
 ): void {
@@ -338,9 +333,9 @@ export function paintH(
   )
 
   let lFactor = L_MAX / width
-  let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
+  let cFactor = (settings.get().rec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
+  paint(ctx, width, height, false, BLOCK, bg, (x, y) => {
     return build(x * lFactor, y * cFactor, h)
   })
 }

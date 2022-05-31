@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.1.0",
-    "@nanostores/persistent": "^0.5.2",
+    "@nanostores/persistent": "^0.5.3",
     "autoprefixer": "^10.4.7",
     "culori": "github:bijela-gora/culori#2770175",
     "firebase-tools": "^11.0.1",

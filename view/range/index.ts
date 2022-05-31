@@ -44,10 +44,10 @@ function paint(
   width: number,
   height: number,
   hasGaps: boolean,
-  showP3: boolean,
-  showRec2020: boolean,
   getColor: (x: number) => AnyLch
 ): void {
+  let showP3 = settings.get().p3
+  let showRec2020 = settings.get().rec2020
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
 
@@ -99,33 +99,27 @@ onCurrentChange({
 })
 
 onPaint({
-  ch(value, showP3, showRec2020) {
+  ch(value) {
     let color = valueToColor(value)
     let c = color.c
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasL)
     let factor = L_MAX / width
-    paint(canvasL, width, height, true, showP3, showRec2020, x => {
-      return build(x * factor, c, h)
-    })
+    paint(canvasL, width, height, true, x => build(x * factor, c, h))
   },
-  lh(value, showP3, showRec2020) {
+  lh(value) {
     let color = valueToColor(value)
     let l = color.l
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasC)
-    let factor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / width
-    paint(canvasC, width, height, false, showP3, showRec2020, x => {
-      return build(l, x * factor, h)
-    })
+    let factor = (settings.get().rec2020 ? C_MAX_REC2020 : C_MAX) / width
+    paint(canvasC, width, height, false, x => build(l, x * factor, h))
   },
-  lc(value, showP3, showRec2020) {
+  lc(value) {
     let { l, c } = valueToColor(value)
     let [width, height] = initCanvasSize(canvasH)
     let factor = H_MAX / width
-    paint(canvasH, width, height, true, showP3, showRec2020, x => {
-      return build(l, c, x * factor)
-    })
+    paint(canvasH, width, height, true, x => build(l, c, x * factor))
   }
 })
 
@@ -135,9 +129,9 @@ function setRangeColor(): void {
   let isVisible = false
   if (space === 'srgb') {
     isVisible = true
-  } else if (space === 'p3' && p3 === 'show') {
+  } else if (space === 'p3' && p3) {
     isVisible = true
-  } else if (space === 'rec2020' && rec2020 === 'show') {
+  } else if (space === 'rec2020' && rec2020) {
     isVisible = true
   }
   document.body.style.setProperty('--range-color', real || fallback)
@@ -160,5 +154,5 @@ visible.subscribe(({ color }) => {
 
 settings.subscribe(({ rec2020 }) => {
   setRangeColor()
-  inputC.max = String(rec2020 === 'show' ? C_MAX_REC2020 : C_MAX)
+  inputC.max = String(rec2020 ? C_MAX_REC2020 : C_MAX)
 })

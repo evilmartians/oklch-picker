@@ -7,7 +7,7 @@ specifiers:
   '@csstools/postcss-oklab-function': ^1.1.0
   '@logux/eslint-config': ^47.2.0
   '@logux/stylelint-config': ^0.10.0
-  '@nanostores/persistent': ^0.5.2
+  '@nanostores/persistent': ^0.5.3
   '@size-limit/file': ^7.0.8
   '@typescript-eslint/eslint-plugin': ^5.27.0
   '@typescript-eslint/parser': ^5.27.0
@@ -38,7 +38,7 @@ specifiers:
 
 dependencies:
   '@csstools/postcss-oklab-function': 1.1.0_postcss@8.4.14
-  '@nanostores/persistent': 0.5.2_nanostores@0.5.12
+  '@nanostores/persistent': 0.5.3_nanostores@0.5.12
   autoprefixer: 10.4.7_postcss@8.4.14
   culori: github.com/bijela-gora/culori/2770175
   firebase-tools: 11.0.1
@@ -301,8 +301,8 @@ packages:
       stylelint-order: 5.0.0_stylelint@14.8.5
     dev: true
 
-  /@nanostores/persistent/0.5.2_nanostores@0.5.12:
-    resolution: {integrity: sha512-0q+tk9Jza66sIZiuDKq/MAFylqWCRPAjkXuwIpyhz6FD9ht35jTXIp1Idh/f1qDSdpyn4shiXsQVgdN4r/VMfQ==}
+  /@nanostores/persistent/0.5.3_nanostores@0.5.12:
+    resolution: {integrity: sha512-WhMef3q382OUZnNYAoQzbAXN2Q3ECFYAJoWDDn+EgJS5wB/2cPduaUd77v2Yy04RnSwgKMr3SZydTNLXHFAffw==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     peerDependencies:
       nanostores: ^0.5.0

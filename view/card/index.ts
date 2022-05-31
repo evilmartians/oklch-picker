@@ -1,9 +1,7 @@
 import { current, onCurrentChange } from '../../stores/current.js'
 import { settings } from '../../stores/settings.js'
 
-function initInput(
-  type: 'l' | 'c' | 'h' | 'a'
-): [HTMLInputElement, HTMLDivElement] {
+function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
   let text = card.querySelector<HTMLInputElement>('[type=number]')!
 
@@ -11,13 +9,13 @@ function initInput(
     current.setKey(type, parseFloat(text.value))
   })
 
-  return [text, card]
+  return text
 }
 
-let [textL, cardL] = initInput('l')
-let [textC, cardC] = initInput('c')
-let [textH, carsH] = initInput('h')
-let [textA] = initInput('a')
+let textL = initInput('l')
+let textC = initInput('c')
+let textH = initInput('h')
+let textA = initInput('a')
 
 onCurrentChange({
   l(value) {
@@ -35,8 +33,6 @@ onCurrentChange({
 })
 
 settings.subscribe(({ charts, rec2020 }) => {
-  cardL.classList.toggle('is-chart-hidden', charts === 'hide')
-  cardC.classList.toggle('is-chart-hidden', charts === 'hide')
-  carsH.classList.toggle('is-chart-hidden', charts === 'hide')
-  textC.max = String(rec2020 === 'show' ? C_MAX_REC2020 : C_MAX)
+  document.body.classList.toggle('is-chart-hidden', !charts)
+  textC.max = String(rec2020 ? C_MAX_REC2020 : C_MAX)
 })

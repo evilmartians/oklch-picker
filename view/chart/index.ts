@@ -20,7 +20,7 @@ let canvasC = chartC.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
 
 function getMaxC(): number {
-  return settings.get().rec2020 === 'show' ? C_MAX_REC2020 : C_MAX
+  return settings.get().rec2020 ? C_MAX_REC2020 : C_MAX
 }
 
 onCurrentChange({
@@ -67,44 +67,35 @@ function initCharts(): void {
   initCanvasSize(canvasC)
   initCanvasSize(canvasH)
   onPaint({
-    l(l, showP3, showRec2020, showCharts, isFull) {
-      if (!showCharts) return
+    l(l, isFull) {
+      if (!settings.get().charts) return
       trackPaint('l', isFull, () => {
         let bg = getBackground(canvasL)
-        paintL(
-          canvasL,
-          width,
-          height,
-          bg,
-          showP3,
-          showRec2020,
-          (L_MAX * l) / 100,
-          isFull
-        )
+        paintL(canvasL, width, height, bg, (L_MAX * l) / 100, isFull)
       })
     },
-    c(c, showP3, showRec2020, showCharts, isFull) {
-      if (!showCharts) return
+    c(c, isFull) {
+      if (!settings.get().charts) return
       trackPaint('c', isFull, () => {
         let bg = getBackground(canvasC)
-        paintC(canvasC, width, height, bg, showP3, showRec2020, c, isFull)
+        paintC(canvasC, width, height, bg, c, isFull)
       })
     },
-    h(h, showP3, showRec2020, showCharts, isFull) {
-      if (!showCharts) return
+    h(h, isFull) {
+      if (!settings.get().charts) return
       trackPaint('h', isFull, () => {
         let bg = getBackground(canvasH)
-        paintH(canvasH, width, height, bg, showP3, showRec2020, h, isFull)
+        paintH(canvasH, width, height, bg, h, isFull)
       })
     }
   })
 }
 
-if (settings.get().charts === 'show') {
+if (settings.get().charts) {
   initCharts()
 } else {
   let unbindSettings = settings.listen(({ charts }) => {
-    if (charts === 'show') {
+    if (charts) {
       unbindSettings()
       initCharts()
     }

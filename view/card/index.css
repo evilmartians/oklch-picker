@@ -43,7 +43,7 @@ body {
     transition: height 400ms;
   }
 
-  @nest .card.is-chart-hidden & {
+  @nest body.is-chart-hidden & {
     height: 0;
   }
 }

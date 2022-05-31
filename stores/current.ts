@@ -55,22 +55,11 @@ window.addEventListener('hashchange', () => {
 })
 
 interface ComponentCallback {
-  (
-    value: number,
-    showP3: boolean,
-    showRec2020: boolean,
-    showCharts: boolean,
-    isFull: boolean
-  ): void
+  (value: number, isFull: boolean): void
 }
 
 interface LchCallback {
-  (
-    value: LchValue,
-    showP3: boolean,
-    showRec2020: boolean,
-    showCharts: boolean
-  ): void
+  (value: LchValue, isFull: boolean): void
 }
 
 interface LchCallbacks {
@@ -105,10 +94,6 @@ function runListeners(
   let cChanged = prev.c !== value.c
   let hChanged = prev.h !== value.h
 
-  let showP3 = settings.get().p3 === 'show'
-  let showRec2020 = settings.get().rec2020 === 'show'
-  let showCharts = settings.get().charts === 'show'
-
   if (isFull) {
     if (!full.l) lChanged = true
     if (!full.c) cChanged = true
@@ -122,29 +107,29 @@ function runListeners(
 
   for (let i of list) {
     if (i.l && lChanged) {
-      i.l(value.l, showP3, showRec2020, showCharts, isFull)
+      i.l(value.l, isFull)
     }
     if (i.c && cChanged) {
-      i.c(value.c, showP3, showRec2020, showCharts, isFull)
+      i.c(value.c, isFull)
     }
     if (i.h && hChanged) {
-      i.h(value.h, showP3, showRec2020, showCharts, isFull)
+      i.h(value.h, isFull)
     }
     if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a, showP3, showRec2020, showCharts, isFull)
+      i.alpha(value.a, isFull)
     }
 
     if (i.lc && (lChanged || cChanged)) {
-      i.lc(value, showP3, showRec2020, showCharts)
+      i.lc(value, isFull)
     }
     if (i.ch && (cChanged || hChanged)) {
-      i.ch(value, showP3, showRec2020, showCharts)
+      i.ch(value, isFull)
     }
     if (i.lh && (lChanged || hChanged)) {
-      i.lh(value, showP3, showRec2020, showCharts)
+      i.lh(value, isFull)
     }
     if (i.lch && (lChanged || cChanged || hChanged)) {
-      i.lch(value, showP3, showRec2020, showCharts)
+      i.lch(value, isFull)
     }
   }
 
