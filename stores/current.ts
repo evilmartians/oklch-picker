@@ -86,6 +86,8 @@ interface LchCallbacks {
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
+let fullRepaint: number
+
 function runListeners(
   list: LchCallbacks[],
   prev: PrevCurrentValue,
@@ -142,6 +144,15 @@ function runListeners(
   }
 
   reportFreeze(Date.now() - start)
+
+  if (!isFull) {
+    clearTimeout(fullRepaint)
+    fullRepaint = setTimeout(() => {
+      if (!full.l || !full.c || !full.h) {
+        runListeners(changeListeners, prev)
+      }
+    }, DELAY_BEFORE_FULL_RENDER)
+  }
 }
 
 export function onCurrentChange(callbacks: LchCallbacks): void {
@@ -154,18 +165,10 @@ setTimeout(() => {
   runListeners(changeListeners, {})
   prev = current.get()
 
-  let fullRepaint: number
   current.listen(value => {
     resetCollecting()
     runListeners(changeListeners, prev, false)
     prev = value
-
-    clearTimeout(fullRepaint)
-    fullRepaint = setTimeout(() => {
-      if (!full.l || !full.c || !full.h) {
-        runListeners(changeListeners, prev)
-      }
-    }, DELAY_BEFORE_FULL_RENDER)
   })
 }, 1)
 
