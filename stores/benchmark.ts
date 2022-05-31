@@ -25,7 +25,6 @@ export let lastBenchmark = map({ freeze: 0, quick: 0, full: 0 })
 
 let collectingTimeout: number
 let collecting = false
-let totalFreeze = 0
 let totalQuick = 0
 let totalFull = 0
 
@@ -33,11 +32,8 @@ function startCollecting(): void {
   if (!collecting) {
     collecting = true
     collectingTimeout = setTimeout(() => {
-      lastBenchmark.set({
-        freeze: totalFreeze,
-        quick: totalQuick,
-        full: totalFull
-      })
+      lastBenchmark.setKey('quick', totalQuick)
+      lastBenchmark.setKey('full', totalFull)
       resetCollecting()
     }, 100)
   }
@@ -47,7 +43,6 @@ export function resetCollecting(): void {
   if (collecting) {
     collecting = false
     clearTimeout(collectingTimeout)
-    totalFreeze = 0
     totalQuick = 0
     totalFull = 0
   }
@@ -55,8 +50,7 @@ export function resetCollecting(): void {
 
 export function reportFreeze(ms: number): void {
   if (benchmarking.get()) {
-    startCollecting()
-    totalFreeze += ms
+    lastBenchmark.setKey('freeze', ms)
   }
 }
 
