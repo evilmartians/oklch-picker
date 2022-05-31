@@ -56,8 +56,8 @@ function formatP3Css(c: Color): string {
   return formatCss(p3(c))
 }
 
-support.subscribe(hasP3 => {
-  if (hasP3) {
+support.subscribe(value => {
+  if (value.p3) {
     format = formatP3Css as Format
   } else {
     format = fastFormatRgb

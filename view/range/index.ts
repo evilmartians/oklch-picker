@@ -16,7 +16,6 @@ import {
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { settings } from '../../stores/settings.js'
-import { support } from '../../stores/support.js'
 import { visible } from '../../stores/visible.js'
 
 function initRange(
@@ -53,7 +52,7 @@ function paint(
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
 
-  let ctx = getCleanCtx(canvas, support.get())
+  let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
   let background = window
     .getComputedStyle(canvas)

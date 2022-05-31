@@ -12,7 +12,6 @@ import {
   inP3
 } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
-import { support } from '../../stores/support.js'
 
 interface GetColor {
   (x: number, y: number): Color
@@ -319,7 +318,7 @@ export function paintL(
   l: number,
   isFull: boolean
 ): void {
-  let ctx = getCleanCtx(canvas, support.get())
+  let ctx = getCleanCtx(canvas)
   let [width, height] = setScale(
     ctx,
     'l',
@@ -348,7 +347,7 @@ export function paintC(
   c: number,
   isFull: boolean
 ): void {
-  let ctx = getCleanCtx(canvas, support.get())
+  let ctx = getCleanCtx(canvas)
   let [width, height] = setScale(
     ctx,
     'c',
@@ -377,7 +376,7 @@ export function paintH(
   h: number,
   isFull: boolean
 ): void {
-  let ctx = getCleanCtx(canvas, support.get())
+  let ctx = getCleanCtx(canvas)
   let [width, height] = setScale(
     ctx,
     'h',

@@ -21,7 +21,7 @@ interface VisibleValue {
 
 export let visible = computed<VisibleValue, [typeof current, typeof support]>(
   [current, support],
-  (value, hasP3) => {
+  (value, { p3 }) => {
     let color = valueToColor(value)
     if (inRGB(color)) {
       let rgbCss = formatRgb(rgb(color))
@@ -36,7 +36,7 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
         return {
           space: 'p3',
           fallback,
-          real: hasP3 ? format(color) : false
+          real: p3 ? format(color) : false
         }
       } else {
         return {
