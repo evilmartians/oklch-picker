@@ -1,11 +1,10 @@
 import type { Color, Oklch, Rgb, Lch } from 'culori/fn'
 import {
-  formatRgb as fastFormatRgb,
+  formatRgb as formatRgbFast,
   parse as originParse,
   clampChroma,
   displayable,
   modeRec2020,
-  formatCss,
   modeOklch,
   modeOklab,
   useMode,
@@ -45,22 +44,27 @@ export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
   return { mode: COLOR_FN, l, c, h, alpha }
 }
 
-interface Format {
-  (c: Color): string
-  (c: undefined): undefined
+export let fastLchFormat: (c: AnyLch) => string = formatRgbFast
+
+export function fastFormat(color: Color): string {
+  if (color.mode === COLOR_FN) {
+    return fastLchFormat(color)
+  } else {
+    return formatRgbFast(color)
+  }
 }
 
-export let format: Format = fastFormatRgb
-
-function formatP3Css(c: Color): string {
-  return formatCss(p3(c))
+function fastFormatToLch(color: AnyLch): string {
+  let { l, c, h, alpha } = color
+  let a = alpha ?? 1
+  return `${COLOR_FN}(${(100 * l) / L_MAX} ${c} ${h} / ${100 * a})`
 }
 
 support.subscribe(value => {
-  if (value.p3) {
-    format = formatP3Css as Format
+  if (value.oklch) {
+    fastLchFormat = fastFormatToLch
   } else {
-    format = fastFormatRgb
+    fastLchFormat = formatRgbFast
   }
 })
 

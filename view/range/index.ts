@@ -1,5 +1,3 @@
-import { Color } from 'culori/fn'
-
 import {
   onCurrentChange,
   valueToColor,
@@ -9,10 +7,10 @@ import {
 import {
   generateIsVisible,
   generateGetAlpha,
-  format,
+  fastFormat,
+  AnyLch,
   build,
-  inRGB,
-  parse
+  inRGB
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { settings } from '../../stores/settings.js'
@@ -47,7 +45,7 @@ function paint(
   hasGaps: boolean,
   showP3: boolean,
   showRec2020: boolean,
-  getColor: (x: number) => Color
+  getColor: (x: number) => AnyLch
 ): void {
   let getAlpha = generateGetAlpha(showP3, showRec2020)
   let isVisible = generateIsVisible(showP3, showRec2020)
@@ -68,17 +66,17 @@ function paint(
       }
     }
     if (!inRGB(color)) {
-      ctx.fillStyle = format(color)
+      ctx.fillStyle = fastFormat(color)
       ctx.fillRect(x, halfHeight, 1, height)
 
       ctx.fillStyle = background
       ctx.fillRect(x, 0, 1, halfHeight)
 
       color.alpha = getAlpha(color)
-      ctx.fillStyle = format(color)
+      ctx.fillStyle = fastFormat(color)
       ctx.fillRect(x, 0, 1, halfHeight)
     } else {
-      ctx.fillStyle = format(color)
+      ctx.fillStyle = fastFormat(color)
       ctx.fillRect(x, 0, 1, height)
     }
   }
@@ -153,13 +151,10 @@ function setRangeColor(): void {
   }
 }
 
-visible.subscribe(({ real, fallback }) => {
+visible.subscribe(({ color }) => {
   setRangeColor()
-  let parsed = parse(real || fallback)
-  if (parsed) {
-    rangeA.style.setProperty('--range-a-from', format({ ...parsed, alpha: 0 }))
-    rangeA.style.setProperty('--range-a-to', format({ ...parsed, alpha: 1 }))
-  }
+  rangeA.style.setProperty('--range-a-from', fastFormat({ ...color, alpha: 0 }))
+  rangeA.style.setProperty('--range-a-to', fastFormat({ ...color, alpha: 1 }))
 })
 
 settings.subscribe(({ rec2020 }) => {

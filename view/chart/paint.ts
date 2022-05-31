@@ -1,12 +1,11 @@
-import { Color } from 'culori/fn'
-
 import {
   generateIsVisible,
   generateGetAlpha,
+  fastFormat,
   inRec2020,
   IsVisible,
   GetAlpha,
-  format,
+  AnyLch,
   inRGB,
   build,
   inP3
@@ -14,7 +13,7 @@ import {
 import { getCleanCtx } from '../../lib/canvas.js'
 
 interface GetColor {
-  (x: number, y: number): Color
+  (x: number, y: number): AnyLch
 }
 
 let DEBUG = false
@@ -84,7 +83,7 @@ function paintDot(
   width: number,
   height: number,
   background: string,
-  color: Color,
+  color: AnyLch,
   alpha: number
 ): void {
   if (alpha < 1) {
@@ -92,7 +91,7 @@ function paintDot(
     ctx.fillRect(x, y, width, height)
     color.alpha = alpha
   }
-  ctx.fillStyle = format(color)
+  ctx.fillStyle = fastFormat(color)
   ctx.fillRect(x, y, width, height)
 }
 
