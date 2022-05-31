@@ -1,18 +1,12 @@
-/* eslint-disable import/extensions */
-import type { MessageData } from './worker.js'
-
 import {
   setCurrentComponents,
   onCurrentChange,
-  onPaint,
-  isRendering
+  onPaint
 } from '../../stores/current.js'
-import { bindFreezeToPaint, reportPaint } from '../../stores/benchmark.js'
 import { paintL, paintC, paintH } from './paint.js'
 import { initCanvasSize } from '../../lib/canvas.js'
+import { trackPaint } from '../../stores/benchmark.js'
 import { settings } from '../../stores/settings.js'
-import { support } from '../../stores/support.js'
-import PaintWorker from './worker?worker'
 
 function getBackground(canvas: HTMLCanvasElement): string {
   return window.getComputedStyle(canvas).getPropertyValue('--current-surface')
@@ -72,84 +66,10 @@ function initCharts(): void {
   let [width, height] = initCanvasSize(canvasL)
   initCanvasSize(canvasC)
   initCanvasSize(canvasH)
-  if (canvasL.transferControlToOffscreen) {
-    function send(worker: Worker, message: MessageData): void {
-      if (message.type === 'init') {
-        worker.postMessage(message, [message.canvas])
-      } else {
-        worker.postMessage(message)
-      }
-    }
-
-    function init(type: string, canvas: HTMLCanvasElement): Worker {
-      let worker = new PaintWorker()
-      send(worker, {
-        type: 'init',
-        canvas: canvas.transferControlToOffscreen!()
-      })
-      worker.onmessage = (e: MessageEvent<number>) => {
-        isRendering.setKey(type, false)
-        reportPaint(e.data)
-      }
-      return worker
-    }
-
-    let workerL = init('l', canvasL)
-    let workerC = init('c', canvasC)
-    let workerH = init('h', canvasH)
-
-    onPaint({
-      l(l, showP3, showRec2020, showCharts, isFull) {
-        if (!showCharts) return
-        let bg = getBackground(canvasL)
-        send(workerL, {
-          type: 'l',
-          l: (L_MAX * l) / 100,
-          bg,
-          showP3,
-          showRec2020,
-          hasP3: support.get(),
-          width,
-          height,
-          isFull
-        })
-      },
-      c(c, showP3, showRec2020, showCharts, isFull) {
-        if (!showCharts) return
-        let bg = getBackground(canvasC)
-        send(workerC, {
-          type: 'c',
-          c,
-          bg,
-          showP3,
-          showRec2020,
-          hasP3: support.get(),
-          width,
-          height,
-          isFull
-        })
-      },
-      h(h, showP3, showRec2020, showCharts, isFull) {
-        if (!showCharts) return
-        let bg = getBackground(canvasH)
-        send(workerH, {
-          type: 'h',
-          h,
-          bg,
-          showP3,
-          showRec2020,
-          hasP3: support.get(),
-          width,
-          height,
-          isFull
-        })
-      }
-    })
-  } else {
-    bindFreezeToPaint()
-    onPaint({
-      l(l, showP3, showRec2020, showCharts, isFull) {
-        if (!showCharts) return
+  onPaint({
+    l(l, showP3, showRec2020, showCharts, isFull) {
+      if (!showCharts) return
+      trackPaint(isFull, () => {
         let bg = getBackground(canvasL)
         paintL(
           canvasL,
@@ -161,25 +81,23 @@ function initCharts(): void {
           (L_MAX * l) / 100,
           isFull
         )
-
-        isRendering.setKey('l', false)
-      },
-      c(c, showP3, showRec2020, showCharts, isFull) {
-        if (!showCharts) return
+      })
+    },
+    c(c, showP3, showRec2020, showCharts, isFull) {
+      if (!showCharts) return
+      trackPaint(isFull, () => {
         let bg = getBackground(canvasC)
         paintC(canvasC, width, height, bg, showP3, showRec2020, c, isFull)
-
-        isRendering.setKey('c', false)
-      },
-      h(h, showP3, showRec2020, showCharts, isFull) {
-        if (!showCharts) return
+      })
+    },
+    h(h, showP3, showRec2020, showCharts, isFull) {
+      if (!showCharts) return
+      trackPaint(isFull, () => {
         let bg = getBackground(canvasH)
         paintH(canvasH, width, height, bg, showP3, showRec2020, h, isFull)
-
-        isRendering.setKey('h', false)
-      }
-    })
-  }
+      })
+    }
+  })
 }
 
 if (settings.get().charts === 'show') {

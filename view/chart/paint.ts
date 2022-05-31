@@ -13,12 +13,6 @@ import {
 } from '../../lib/colors.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
-import { LchValue } from '../../stores/current.js'
-
-type RenderData = Record<
-  keyof LchValue | string,
-  { totalTime: number; renders: number }
->
 
 interface GetColor {
   (x: number, y: number): Color
@@ -28,51 +22,60 @@ let DEBUG = false
 
 const BLOCK = 4
 const DEFAULT_SCALE = 2
-
-// less value => worse quality for intermediate renders, but better performance
 const DESIRE_RENDER_TIME = 16
 
-let renderData: RenderData = {
+let quick = {
   l: {
-    totalTime: 0,
-    renders: 0
+    count: 0,
+    total: 0,
+    prevScale: 1
   },
   c: {
-    totalTime: 0,
-    renders: 0
+    count: 0,
+    total: 0,
+    prevScale: 1
   },
   h: {
-    totalTime: 0,
-    renders: 0
+    count: 0,
+    total: 0,
+    prevScale: 1
   }
 }
 
 function setScale(
-  type: string,
   ctx: CanvasRenderingContext2D,
+  type: 'l' | 'c' | 'h',
   originalWidth: number,
   originalHeight: number,
   isFull: boolean
-): number[] {
+): [number, number] {
   let scale = DEFAULT_SCALE
-  let { totalTime, renders } = renderData[type]
 
   if (isFull) {
     scale = 1
-  } else if (renders) {
-    scale = Math.ceil(totalTime / renderData[type].renders / DESIRE_RENDER_TIME)
+  } else if (quick[type].total > 0) {
+    let time = quick[type].total / quick[type].count
+    scale = Math.ceil((quick[type].prevScale * time) / DESIRE_RENDER_TIME)
+    quick[type].prevScale = scale
   }
-
-  // uncomment if need to render always full size
-  // scale = 1
 
   ctx.scale(scale, scale)
   return [originalWidth / scale, originalHeight / scale]
 }
 
-function setRenderTime(type: string, time: number): void {
-  renderData[type].renders++
-  renderData[type].totalTime += time
+function trackTime(
+  isFull: boolean,
+  type: 'l' | 'c' | 'h',
+  cb: () => void
+): void {
+  if (isFull) {
+    cb()
+  } else {
+    let start = Date.now()
+    cb()
+    quick[type].count += 1
+    quick[type].total += Date.now() - start
+  }
 }
 
 function paintDot(
@@ -159,7 +162,6 @@ function paint(
   bg: string,
   showP3: boolean,
   showRec2020: boolean,
-  type: string,
   getColor: GetColor
 ): void {
   let getAlpha = generateGetAlpha(showP3, showRec2020)
@@ -285,8 +287,6 @@ function paint(
     }
   }
 
-  let start = Date.now()
-
   for (let x = 0; x <= width; x += BLOCK) {
     for (let y = 0; y <= height; y += BLOCK) {
       let pos = getMode(x, y)
@@ -307,8 +307,6 @@ function paint(
       }
     }
   }
-
-  setRenderTime(type, Date.now() - start)
 }
 
 export function paintL(
@@ -322,11 +320,9 @@ export function paintL(
   isFull: boolean
 ): void {
   let ctx = getCleanCtx(canvas, support.get())
-  let type = 'l'
-
   let [width, height] = setScale(
-    type,
     ctx,
+    'l',
     originalWidth,
     originalHeight,
     isFull
@@ -334,20 +330,12 @@ export function paintL(
 
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
-  paint(
-    ctx,
-    width,
-    height,
-    false,
-    BLOCK,
-    bg,
-    showP3,
-    showRec2020,
-    type,
-    (x, y) => {
+
+  trackTime(isFull, 'l', () => {
+    paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
       return build(l, y * cFactor, x * hFactor)
-    }
-  )
+    })
+  })
 }
 
 export function paintC(
@@ -361,11 +349,9 @@ export function paintC(
   isFull: boolean
 ): void {
   let ctx = getCleanCtx(canvas, support.get())
-  let type = 'c'
-
   let [width, height] = setScale(
-    type,
     ctx,
+    'c',
     originalWidth,
     originalHeight,
     isFull
@@ -373,8 +359,11 @@ export function paintC(
 
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
-  paint(ctx, width, height, true, 2, bg, showP3, showRec2020, type, (x, y) => {
-    return build(y * lFactor, c, x * hFactor)
+
+  trackTime(isFull, 'c', () => {
+    paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
+      return build(y * lFactor, c, x * hFactor)
+    })
   })
 }
 
@@ -389,11 +378,9 @@ export function paintH(
   isFull: boolean
 ): void {
   let ctx = getCleanCtx(canvas, support.get())
-  let type = 'h'
-
   let [width, height] = setScale(
-    type,
     ctx,
+    'h',
     originalWidth,
     originalHeight,
     isFull
@@ -401,18 +388,10 @@ export function paintH(
 
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
-  paint(
-    ctx,
-    width,
-    height,
-    false,
-    BLOCK,
-    bg,
-    showP3,
-    showRec2020,
-    type,
-    (x, y) => {
+
+  trackTime(isFull, 'h', () => {
+    paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
       return build(x * lFactor, y * cFactor, h)
-    }
-  )
+    })
+  })
 }

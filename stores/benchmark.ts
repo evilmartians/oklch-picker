@@ -21,57 +21,79 @@ function keyUp(e: KeyboardEvent): void {
 }
 document.body.addEventListener('keyup', keyUp)
 
-export let lastBenchmark = map({ freeze: 0, paint: 0 })
+export let lastBenchmark = map({ freeze: 0, quick: 0, full: 0 })
 
-let bound = false
-export function bindFreezeToPaint(): void {
-  bound = true
+let collectingTimeout: number
+let collecting = false
+let totalFreeze = 0
+let totalQuick = 0
+let totalFull = 0
+
+function startCollecting(): void {
+  if (!collecting) {
+    collecting = true
+    collectingTimeout = setTimeout(() => {
+      lastBenchmark.set({
+        freeze: totalFreeze,
+        quick: totalQuick,
+        full: totalFull
+      })
+      resetCollecting()
+    }, 100)
+  }
 }
 
-let initializing = true
-let initFreeze = 0
-let initPaint = 0
+export function resetCollecting(): void {
+  if (collecting) {
+    collecting = false
+    clearTimeout(collectingTimeout)
+    totalFreeze = 0
+    totalQuick = 0
+    totalFull = 0
+  }
+}
+
 export function reportFreeze(ms: number): void {
   if (benchmarking.get()) {
-    if (initializing) {
-      initFreeze += ms
-    } else if (bound) {
-      lastBenchmark.set({ freeze: ms, paint: ms })
-    } else {
-      lastBenchmark.setKey('freeze', ms)
-    }
+    startCollecting()
+    totalFreeze += ms
   }
 }
 
-export function reportPaint(ms: number): void {
+export function reportQuick(ms: number): void {
   if (benchmarking.get()) {
-    if (initializing) {
-      initPaint += ms
-    } else {
-      lastBenchmark.setKey('paint', ms)
-    }
+    startCollecting()
+    totalQuick += ms
   }
 }
 
-setTimeout(() => {
-  initializing = false
-  if (initPaint + initFreeze > 0) {
-    if (bound) {
-      lastBenchmark.set({ freeze: initFreeze, paint: initFreeze })
-    } else {
-      lastBenchmark.set({ freeze: initFreeze, paint: initPaint })
-    }
+export function reportFull(ms: number): void {
+  if (benchmarking.get()) {
+    startCollecting()
+    totalFull += ms
   }
-}, 1)
+}
 
-const BEST = 150
-const WORST = 40
+const BEST_HUE = 150
+const WORST_HUE = 40
 const MAX_TIME = 300
 
 export function getLastBenchmarkColor(): string {
   let { freeze } = lastBenchmark.get()
-  let hue = BEST - ((BEST - WORST) * freeze) / MAX_TIME
-  if (hue < WORST) hue = WORST
+  let hue = BEST_HUE - ((BEST_HUE - WORST_HUE) * freeze) / MAX_TIME
+  if (hue < WORST_HUE) hue = WORST_HUE
   let oklch: Oklch = { mode: 'oklch', l: 0.57, c: 0.11, h: hue }
   return formatHex(oklch)
+}
+
+export function trackPaint(isFull: boolean, cb: () => void): void {
+  let start = Date.now()
+  cb()
+  let ms = Date.now() - start
+  reportFreeze(ms)
+  if (isFull) {
+    reportFull(ms)
+  } else {
+    reportQuick(ms)
+  }
 }

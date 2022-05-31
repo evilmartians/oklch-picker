@@ -19,7 +19,8 @@
 }
 
 .benchmark_freeze,
-.benchmark_paint {
+.benchmark_quick,
+.benchmark_full {
   display: inline-block;
   min-width: 25px;
   font-weight: 400;

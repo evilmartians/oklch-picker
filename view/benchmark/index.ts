@@ -6,7 +6,8 @@ import {
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
 let freeze = block.querySelector<HTMLSpanElement>('.benchmark_freeze')!
-let paint = block.querySelector<HTMLSpanElement>('.benchmark_paint')!
+let quick = block.querySelector<HTMLSpanElement>('.benchmark_quick')!
+let full = block.querySelector<HTMLSpanElement>('.benchmark_full')!
 
 let unbind: undefined | (() => void)
 benchmarking.subscribe(enabled => {
@@ -16,7 +17,8 @@ benchmarking.subscribe(enabled => {
     unbind = lastBenchmark.subscribe(result => {
       block.style.setProperty('--benchmark-color', getLastBenchmarkColor())
       freeze.innerText = `${result.freeze}`
-      paint.innerText = `${result.paint}`
+      quick.innerText = `${result.quick}`
+      full.innerText = `${result.full}`
     })
   } else {
     block.classList.remove('is-enabled')
