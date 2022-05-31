@@ -69,7 +69,7 @@ function initCharts(): void {
   onPaint({
     l(l, showP3, showRec2020, showCharts, isFull) {
       if (!showCharts) return
-      trackPaint(isFull, () => {
+      trackPaint('l', isFull, () => {
         let bg = getBackground(canvasL)
         paintL(
           canvasL,
@@ -85,14 +85,14 @@ function initCharts(): void {
     },
     c(c, showP3, showRec2020, showCharts, isFull) {
       if (!showCharts) return
-      trackPaint(isFull, () => {
+      trackPaint('c', isFull, () => {
         let bg = getBackground(canvasC)
         paintC(canvasC, width, height, bg, showP3, showRec2020, c, isFull)
       })
     },
     h(h, showP3, showRec2020, showCharts, isFull) {
       if (!showCharts) return
-      trackPaint(isFull, () => {
+      trackPaint('h', isFull, () => {
         let bg = getBackground(canvasH)
         paintH(canvasH, width, height, bg, showP3, showRec2020, h, isFull)
       })

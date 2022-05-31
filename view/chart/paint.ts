@@ -10,6 +10,7 @@ import {
   build,
   inP3
 } from '../../lib/colors.js'
+import { RenderType, getQuickScale } from '../../stores/benchmark.js'
 import { getCleanCtx } from '../../lib/canvas.js'
 
 interface GetColor {
@@ -19,61 +20,17 @@ interface GetColor {
 let DEBUG = false
 
 const BLOCK = 4
-const DEFAULT_SCALE = 2
-const DESIRE_RENDER_TIME = 16
-
-let quick = {
-  l: {
-    count: 0,
-    total: 0,
-    prevScale: 1
-  },
-  c: {
-    count: 0,
-    total: 0,
-    prevScale: 1
-  },
-  h: {
-    count: 0,
-    total: 0,
-    prevScale: 1
-  }
-}
 
 function setScale(
   ctx: CanvasRenderingContext2D,
-  type: 'l' | 'c' | 'h',
+  type: RenderType,
   originalWidth: number,
   originalHeight: number,
   isFull: boolean
 ): [number, number] {
-  let scale = DEFAULT_SCALE
-
-  if (isFull) {
-    scale = 1
-  } else if (quick[type].total > 0) {
-    let time = quick[type].total / quick[type].count
-    scale = Math.ceil((quick[type].prevScale * time) / DESIRE_RENDER_TIME)
-    quick[type].prevScale = scale
-  }
-
+  let scale = isFull ? 1 : getQuickScale(type)
   ctx.scale(scale, scale)
   return [originalWidth / scale, originalHeight / scale]
-}
-
-function trackTime(
-  isFull: boolean,
-  type: 'l' | 'c' | 'h',
-  cb: () => void
-): void {
-  if (isFull) {
-    cb()
-  } else {
-    let start = Date.now()
-    cb()
-    quick[type].count += 1
-    quick[type].total += Date.now() - start
-  }
 }
 
 function paintDot(
@@ -329,10 +286,8 @@ export function paintL(
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  trackTime(isFull, 'l', () => {
-    paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
-      return build(l, y * cFactor, x * hFactor)
-    })
+  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
+    return build(l, y * cFactor, x * hFactor)
   })
 }
 
@@ -358,10 +313,8 @@ export function paintC(
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  trackTime(isFull, 'c', () => {
-    paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
-      return build(y * lFactor, c, x * hFactor)
-    })
+  paint(ctx, width, height, true, 2, bg, showP3, showRec2020, (x, y) => {
+    return build(y * lFactor, c, x * hFactor)
   })
 }
 
@@ -387,9 +340,7 @@ export function paintH(
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  trackTime(isFull, 'h', () => {
-    paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
-      return build(x * lFactor, y * cFactor, h)
-    })
+  paint(ctx, width, height, false, BLOCK, bg, showP3, showRec2020, (x, y) => {
+    return build(x * lFactor, y * cFactor, h)
   })
 }

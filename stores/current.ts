@@ -3,6 +3,7 @@ import { map } from 'nanostores'
 
 import { reportFreeze, benchmarking, resetCollecting } from './benchmark.js'
 import { getSpace, build, oklch, lch, AnyLch } from '../lib/colors.js'
+import { debounce } from '../lib/time.js'
 import { settings } from './settings.js'
 import { support } from './support.js'
 
@@ -14,8 +15,6 @@ export interface LchValue {
 }
 
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
-
-const DELAY_BEFORE_FULL_RENDER = 50
 
 function randomColor(): LchValue {
   return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
@@ -40,13 +39,15 @@ export let current = map<LchValue>(parseHash() || randomColor())
 
 let full = { l: false, c: false, h: false }
 
-current.subscribe(() => {
-  let { l, c, h, a } = current.get()
-  let hash = `#${l},${c},${h},${a}`
-  if (location.hash !== hash) {
-    history.pushState(null, '', `#${l},${c},${h},${a}`)
-  }
-})
+current.subscribe(
+  debounce(100, () => {
+    let { l, c, h, a } = current.get()
+    let hash = `#${l},${c},${h},${a}`
+    if (location.hash !== hash) {
+      history.pushState(null, '', `#${l},${c},${h},${a}`)
+    }
+  })
+)
 
 window.addEventListener('hashchange', () => {
   let color = parseHash()
@@ -86,7 +87,11 @@ interface LchCallbacks {
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
-let fullRepaint: number
+let delayFullRepaint = debounce(100, (prev: PrevCurrentValue) => {
+  if (!full.l || !full.c || !full.h) {
+    runListeners(changeListeners, prev)
+  }
+})
 
 function runListeners(
   list: LchCallbacks[],
@@ -143,16 +148,9 @@ function runListeners(
     }
   }
 
-  reportFreeze(Date.now() - start)
+  if (!isFull) delayFullRepaint(prev)
 
-  if (!isFull) {
-    clearTimeout(fullRepaint)
-    fullRepaint = setTimeout(() => {
-      if (!full.l || !full.c || !full.h) {
-        runListeners(changeListeners, prev)
-      }
-    }, DELAY_BEFORE_FULL_RENDER)
-  }
+  reportFreeze(Date.now() - start)
 }
 
 export function onCurrentChange(callbacks: LchCallbacks): void {

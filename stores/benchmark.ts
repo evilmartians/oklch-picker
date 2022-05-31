@@ -1,6 +1,8 @@
 import { Oklch, formatHex } from 'culori/fn'
 import { atom, map } from 'nanostores'
 
+export type RenderType = 'l' | 'c' | 'h'
+
 export let benchmarking = atom(false)
 
 if (/^\?bench(=|&|$)/.test(location.search)) {
@@ -25,15 +27,15 @@ export let lastBenchmark = map({ freeze: 0, quick: 0, full: 0 })
 
 let collectingTimeout: number
 let collecting = false
-let totalQuick = 0
-let totalFull = 0
+let totalQuick = -1
+let totalFull = -1
 
 function startCollecting(): void {
   if (!collecting) {
     collecting = true
     collectingTimeout = setTimeout(() => {
-      lastBenchmark.setKey('quick', totalQuick)
-      lastBenchmark.setKey('full', totalFull)
+      if (totalQuick >= 0) lastBenchmark.setKey('quick', totalQuick)
+      if (totalFull >= 0) lastBenchmark.setKey('full', totalFull)
       resetCollecting()
     }, 100)
   }
@@ -43,8 +45,8 @@ export function resetCollecting(): void {
   if (collecting) {
     collecting = false
     clearTimeout(collectingTimeout)
-    totalQuick = 0
-    totalFull = 0
+    totalQuick = -1
+    totalFull = -1
   }
 }
 
@@ -54,11 +56,46 @@ export function reportFreeze(ms: number): void {
   }
 }
 
-export function reportQuick(ms: number): void {
+let quick = {
+  l: {
+    count: 0,
+    total: 0,
+    prevScale: 1
+  },
+  c: {
+    count: 0,
+    total: 0,
+    prevScale: 1
+  },
+  h: {
+    count: 0,
+    total: 0,
+    prevScale: 1
+  }
+}
+
+const DESIRE_RENDER_TIME = 16
+const DEFAULT_SCALE = 2
+
+export function reportQuick(type: RenderType, ms: number): void {
+  quick[type].count += 1
+  quick[type].total += ms
+
   if (benchmarking.get()) {
     startCollecting()
     totalQuick += ms
   }
+}
+
+export function getQuickScale(type: RenderType): number {
+  if (quick[type].count === 0) {
+    return DEFAULT_SCALE
+  }
+
+  let time = quick[type].total / quick[type].count
+  let scale = Math.ceil((quick[type].prevScale * time) / DESIRE_RENDER_TIME)
+  quick[type].prevScale = scale
+  return scale
 }
 
 export function reportFull(ms: number): void {
@@ -80,7 +117,11 @@ export function getLastBenchmarkColor(): string {
   return formatHex(oklch)
 }
 
-export function trackPaint(isFull: boolean, cb: () => void): void {
+export function trackPaint(
+  type: RenderType,
+  isFull: boolean,
+  cb: () => void
+): void {
   let start = Date.now()
   cb()
   let ms = Date.now() - start
@@ -88,6 +129,6 @@ export function trackPaint(isFull: boolean, cb: () => void): void {
   if (isFull) {
     reportFull(ms)
   } else {
-    reportQuick(ms)
+    reportQuick(type, ms)
   }
 }
