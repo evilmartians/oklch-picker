@@ -1,7 +1,7 @@
 import {
   generateIsVisible,
   generateGetAlpha,
-  fastFormat,
+  canvasFormat,
   inRec2020,
   IsVisible,
   GetAlpha,
@@ -91,7 +91,7 @@ function paintDot(
     ctx.fillRect(x, y, width, height)
     color.alpha = alpha
   }
-  ctx.fillStyle = fastFormat(color)
+  ctx.fillStyle = canvasFormat(color)
   ctx.fillRect(x, y, width, height)
 }
 

@@ -7,6 +7,7 @@ import {
   modeRec2020,
   modeOklch,
   modeOklab,
+  formatCss,
   useMode,
   modeRgb,
   modeHsl,
@@ -46,6 +47,8 @@ export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
 
 export let fastLchFormat: (c: AnyLch) => string = formatRgbFast
 
+export let canvasFormat: (c: AnyLch) => string = formatRgbFast
+
 export function fastFormat(color: Color): string {
   if (color.mode === COLOR_FN) {
     return fastLchFormat(color)
@@ -53,19 +56,19 @@ export function fastFormat(color: Color): string {
     return formatRgbFast(color)
   }
 }
+function formatP3Css(c: Color): string {
+  return formatCss(p3(c))
+}
 
 function fastFormatToLch(color: AnyLch): string {
   let { l, c, h, alpha } = color
   let a = alpha ?? 1
-  return `${COLOR_FN}(${(100 * l) / L_MAX} ${c} ${h} / ${100 * a})`
+  return `${COLOR_FN}(${(100 * l) / L_MAX}% ${c} ${h} / ${100 * a})`
 }
 
 support.subscribe(value => {
-  if (value.oklch) {
-    fastLchFormat = fastFormatToLch
-  } else {
-    fastLchFormat = formatRgbFast
-  }
+  fastLchFormat = value.oklch ? fastFormatToLch : formatRgbFast
+  canvasFormat = value.p3 ? formatP3Css : formatRgbFast
 })
 
 export function parse(value: string): Color | undefined {

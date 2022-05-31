@@ -7,6 +7,7 @@ import {
 import {
   generateIsVisible,
   generateGetAlpha,
+  canvasFormat,
   fastFormat,
   AnyLch,
   build,
@@ -66,17 +67,17 @@ function paint(
       }
     }
     if (!inRGB(color)) {
-      ctx.fillStyle = fastFormat(color)
+      ctx.fillStyle = canvasFormat(color)
       ctx.fillRect(x, halfHeight, 1, height)
 
       ctx.fillStyle = background
       ctx.fillRect(x, 0, 1, halfHeight)
 
       color.alpha = getAlpha(color)
-      ctx.fillStyle = fastFormat(color)
+      ctx.fillStyle = canvasFormat(color)
       ctx.fillRect(x, 0, 1, halfHeight)
     } else {
-      ctx.fillStyle = fastFormat(color)
+      ctx.fillStyle = canvasFormat(color)
       ctx.fillRect(x, 0, 1, height)
     }
   }
