@@ -14,7 +14,7 @@ import {
   inRGB
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
-import { settings } from '../../stores/settings.js'
+import { showRec2020, showP3 } from '../../stores/settings.js'
 import { visible } from '../../stores/visible.js'
 
 function initRange(
@@ -46,10 +46,8 @@ function paint(
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
 ): void {
-  let showP3 = settings.get().p3
-  let showRec2020 = settings.get().rec2020
-  let getAlpha = generateGetAlpha(showP3, showRec2020)
-  let isVisible = generateIsVisible(showP3, showRec2020)
+  let getAlpha = generateGetAlpha(showP3.get(), showRec2020.get())
+  let isVisible = generateIsVisible(showP3.get(), showRec2020.get())
 
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
@@ -112,7 +110,7 @@ onPaint({
     let l = color.l
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasC)
-    let factor = (settings.get().rec2020 ? C_MAX_REC2020 : C_MAX) / width
+    let factor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / width
     paint(canvasC, width, height, false, x => build(l, x * factor, h))
   },
   lc(value) {
@@ -125,13 +123,12 @@ onPaint({
 
 function setRangeColor(): void {
   let { real, fallback, space } = visible.get()
-  let { p3, rec2020 } = settings.get()
   let isVisible = false
   if (space === 'srgb') {
     isVisible = true
-  } else if (space === 'p3' && p3) {
+  } else if (space === 'p3' && showP3.get()) {
     isVisible = true
-  } else if (space === 'rec2020' && rec2020) {
+  } else if (space === 'rec2020' && showRec2020.get()) {
     isVisible = true
   }
   document.body.style.setProperty('--range-color', real || fallback)
@@ -152,7 +149,7 @@ visible.subscribe(({ color }) => {
   rangeA.style.setProperty('--range-a-to', fastFormat({ ...color, alpha: 1 }))
 })
 
-settings.subscribe(({ rec2020 }) => {
+showRec2020.subscribe(show => {
   setRangeColor()
-  inputC.max = String(rec2020 ? C_MAX_REC2020 : C_MAX)
+  inputC.max = String(show ? C_MAX_REC2020 : C_MAX)
 })

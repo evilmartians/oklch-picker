@@ -3,10 +3,10 @@ import {
   onCurrentChange,
   onPaint
 } from '../../stores/current.js'
+import { showCharts, showRec2020 } from '../../stores/settings.js'
 import { paintL, paintC, paintH } from './paint.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { trackPaint } from '../../stores/benchmark.js'
-import { settings } from '../../stores/settings.js'
 
 function getBackground(canvas: HTMLCanvasElement): string {
   return window.getComputedStyle(canvas).getPropertyValue('--current-surface')
@@ -20,7 +20,7 @@ let canvasC = chartC.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
 
 function getMaxC(): number {
-  return settings.get().rec2020 ? C_MAX_REC2020 : C_MAX
+  return showRec2020.get() ? C_MAX_REC2020 : C_MAX
 }
 
 onCurrentChange({
@@ -68,21 +68,21 @@ function initCharts(): void {
   initCanvasSize(canvasH)
   onPaint({
     l(l, isFull) {
-      if (!settings.get().charts) return
+      if (!showCharts.get()) return
       trackPaint('l', isFull, () => {
         let bg = getBackground(canvasL)
         paintL(canvasL, width, height, bg, (L_MAX * l) / 100, isFull)
       })
     },
     c(c, isFull) {
-      if (!settings.get().charts) return
+      if (!showCharts.get()) return
       trackPaint('c', isFull, () => {
         let bg = getBackground(canvasC)
         paintC(canvasC, width, height, bg, c, isFull)
       })
     },
     h(h, isFull) {
-      if (!settings.get().charts) return
+      if (!showCharts.get()) return
       trackPaint('h', isFull, () => {
         let bg = getBackground(canvasH)
         paintH(canvasH, width, height, bg, h, isFull)
@@ -91,12 +91,12 @@ function initCharts(): void {
   })
 }
 
-if (settings.get().charts) {
+if (showCharts.get()) {
   initCharts()
 } else {
-  let unbindSettings = settings.listen(({ charts }) => {
-    if (charts) {
-      unbindSettings()
+  let unbindCharts = showCharts.listen(show => {
+    if (show) {
+      unbindCharts()
       initCharts()
     }
   })

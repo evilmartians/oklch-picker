@@ -3,8 +3,8 @@ import { map } from 'nanostores'
 
 import { reportFreeze, benchmarking, resetCollecting } from './benchmark.js'
 import { getSpace, build, oklch, lch, AnyLch } from '../lib/colors.js'
+import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
-import { settings } from './settings.js'
 import { support } from './support.js'
 
 export interface LchValue {
@@ -142,9 +142,8 @@ export function onCurrentChange(callbacks: LchCallbacks): void {
   changeListeners.push(callbacks)
 }
 
+let prev: PrevCurrentValue = {}
 setTimeout(() => {
-  let prev: PrevCurrentValue = {}
-
   runListeners(changeListeners, {})
   prev = current.get()
 
@@ -251,8 +250,20 @@ support.listen(() => {
   runListeners(paintListeners, {})
 })
 
-settings.listen(() => {
-  runListeners(changeListeners, {})
+showRec2020.listen(() => {
+  runListeners(paintListeners, {})
+})
+
+showP3.listen(() => {
+  runListeners(paintListeners, {})
+})
+
+showCharts.listen(show => {
+  if (show) {
+    setTimeout(() => {
+      runListeners(paintListeners, {})
+    }, 400)
+  }
 })
 
 let media = window.matchMedia('(prefers-color-scheme: dark)')

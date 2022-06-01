@@ -1,24 +1,14 @@
-import { persistentMap } from '@nanostores/persistent'
+import { persistentAtom } from '@nanostores/persistent'
 
-export type SettingsValue = {
-  p3: boolean
-  rec2020: boolean
-  charts: boolean
+let encoder = {
+  encode(value: boolean): string {
+    return value ? 'show' : 'hide'
+  },
+  decode(str: string): boolean {
+    return str === 'show'
+  }
 }
 
-export let settings = persistentMap<SettingsValue>(
-  'settings:',
-  {
-    p3: true,
-    rec2020: false,
-    charts: true
-  },
-  {
-    encode(value) {
-      return value ? 'show' : 'hide'
-    },
-    decode(str) {
-      return str === 'show'
-    }
-  }
-)
+export let showCharts = persistentAtom('settings:charts', true, encoder)
+export let showP3 = persistentAtom('settings:p3', true, encoder)
+export let showRec2020 = persistentAtom('settings:rec2020', false, encoder)
