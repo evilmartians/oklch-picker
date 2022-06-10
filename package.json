@@ -25,29 +25,29 @@
     "postcss": "^8.4.14",
     "postcss-media-minmax": "^5.0.0",
     "postcss-mixins": "^9.0.2",
-    "postcss-nesting": "^10.1.7",
+    "postcss-nesting": "^10.1.8",
     "postcss-opacity-percentage": "^1.1.2",
-    "vite": "^2.9.9",
+    "vite": "^2.9.11",
     "vite-plugin-pug-transformer": "^1.0.1"
   },
   "devDependencies": {
     "@logux/eslint-config": "^47.2.0",
-    "@logux/stylelint-config": "^0.10.0",
+    "@logux/stylelint-config": "^0.10.1",
     "@size-limit/file": "^7.0.8",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.27.0",
-    "eslint": "^8.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "eslint": "^8.17.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-n": "^15.2.2",
     "eslint-plugin-prefer-let": "^3.0.1",
     "eslint-plugin-promise": "^6.0.0",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.8.0",
     "size-limit": "^7.0.8",
-    "stylelint": "^14.8.5",
+    "stylelint": "^14.9.0",
     "svgo": "^2.8.0",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.3"
   },
   "pnpm": {
     "overrides": {
