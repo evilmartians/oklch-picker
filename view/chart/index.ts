@@ -1,8 +1,4 @@
-import {
-  setCurrentComponents,
-  onCurrentChange,
-  onPaint
-} from '../../stores/current.js'
+import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { showCharts, showRec2020 } from '../../stores/settings.js'
 import { paintL, paintC, paintH } from './paint.js'
 import { initCanvasSize } from '../../lib/canvas.js'
