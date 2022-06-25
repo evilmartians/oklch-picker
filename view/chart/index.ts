@@ -23,7 +23,7 @@ function getMaxC(): number {
   return showRec2020.get() ? C_MAX_REC2020 : C_MAX
 }
 
-onCurrentChange({
+onPaint({
   l(l) {
     document.body.style.setProperty('--chart-l', `${l}%`)
   },
