@@ -5,7 +5,7 @@ let config = {
   L_STEP: 1,
 
   C_MAX: 0.37,
-  C_MAX_REC2020: 0.5,
+  C_MAX_REC2020: 0.47,
   C_STEP: 0.01,
   C_RANDOM: 0.1,
 
