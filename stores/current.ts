@@ -2,7 +2,7 @@ import { clampChroma, Color } from 'culori/fn'
 import { map } from 'nanostores'
 
 import { reportFreeze, benchmarking, resetCollecting } from './benchmark.js'
-import { getSpace, build, oklch, lch, AnyLch } from '../lib/colors.js'
+import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
@@ -193,7 +193,7 @@ export function setCurrentFromColor(origin: Color): void {
   } else {
     let originSpace = getSpace(origin)
     let accurate = LCH ? lch(origin) : oklch(origin)
-    if (originSpace === 'srgb' && getSpace(accurate) !== 'srgb') {
+    if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
       accurate = clampChroma(accurate, COLOR_FN) as AnyLch
     }
     let rounded = roundValue(colorToValue(accurate), COLOR_FN)

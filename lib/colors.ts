@@ -115,31 +115,6 @@ function toPercent(value: number): string {
   return `${clean(100 * value)}%`
 }
 
-export type GetAlpha = (color: Color) => number
-
-export function generateGetAlpha(
-  showP3: boolean,
-  showRec2020: boolean
-): GetAlpha {
-  if (showRec2020 && showP3) {
-    return color => {
-      if (inRGB(color)) {
-        return 1
-      } else if (inP3(color)) {
-        return 0.6
-      } else {
-        return 0.4
-      }
-    }
-  } else if (showRec2020 && !showP3) {
-    return color => (inRGB(color) ? 1 : 0.4)
-  } else if (!showRec2020 && showP3) {
-    return color => (inRGB(color) ? 1 : 0.6)
-  } else {
-    return () => 1
-  }
-}
-
 export type IsVisible = (color: Color) => boolean
 
 export function generateIsVisible(
@@ -155,16 +130,21 @@ export function generateIsVisible(
   }
 }
 
-export type Space = 'srgb' | 'p3' | 'rec2020' | 'out'
+export enum Space {
+  sRGB,
+  P3,
+  Rec2020,
+  Out
+}
 
 export function getSpace(color: Color): Space {
   if (inRGB(color)) {
-    return 'srgb'
+    return Space.sRGB
   } else if (inP3(color)) {
-    return 'p3'
+    return Space.P3
   } else if (inRec2020(color)) {
-    return 'rec2020'
+    return Space.Rec2020
   } else {
-    return 'out'
+    return Space.Out
   }
 }

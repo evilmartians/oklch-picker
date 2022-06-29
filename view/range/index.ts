@@ -1,3 +1,5 @@
+import { Color } from 'culori'
+
 import {
   onCurrentChange,
   valueToColor,
@@ -6,12 +8,12 @@ import {
 } from '../../stores/current.js'
 import {
   generateIsVisible,
-  generateGetAlpha,
   canvasFormat,
   fastFormat,
   AnyLch,
   build,
-  inRGB
+  inRGB,
+  inP3
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { showRec2020, showP3 } from '../../stores/settings.js'
@@ -46,8 +48,26 @@ function paint(
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
 ): void {
-  let getAlpha = generateGetAlpha(showP3.get(), showRec2020.get())
   let isVisible = generateIsVisible(showP3.get(), showRec2020.get())
+
+  let getAlpha: (color: Color) => number
+  if (showRec2020.get() && showP3.get()) {
+    getAlpha = color => {
+      if (inRGB(color)) {
+        return 1
+      } else if (inP3(color)) {
+        return 0.6
+      } else {
+        return 0.4
+      }
+    }
+  } else if (showRec2020.get() && !showP3.get()) {
+    getAlpha = color => (inRGB(color) ? 1 : 0.4)
+  } else if (!showRec2020.get() && showP3.get()) {
+    getAlpha = color => (inRGB(color) ? 1 : 0.6)
+  } else {
+    getAlpha = () => 1
+  }
 
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)

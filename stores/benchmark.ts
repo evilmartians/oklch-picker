@@ -87,7 +87,8 @@ export function reportQuick(type: RenderType, ms: number): void {
   }
 }
 
-export function getQuickScale(type: RenderType): number {
+export function getQuickScale(type: RenderType, isFull: boolean): number {
+  if (isFull) return 1
   if (quick[type].count === 0) {
     return DEFAULT_SCALE
   }
