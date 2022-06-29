@@ -7,12 +7,13 @@ import {
   current
 } from '../../stores/current.js'
 import {
-  generateIsVisible,
+  generateFastGetSpace,
   canvasFormat,
   fastFormat,
   AnyLch,
   build,
   inRGB,
+  Space,
   inP3
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
@@ -48,7 +49,7 @@ function paint(
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
 ): void {
-  let isVisible = generateIsVisible(showP3.get(), showRec2020.get())
+  let getSpace = generateFastGetSpace(showP3.get(), showRec2020.get())
 
   let getAlpha: (color: Color) => number
   if (showRec2020.get() && showP3.get()) {
@@ -77,14 +78,14 @@ function paint(
 
   for (let x = 0; x <= width; x++) {
     let color = getColor(x)
-    if (!isVisible(color)) {
+    let space = getSpace(color)
+    if (space === Space.Out) {
       if (hasGaps) {
         continue
       } else {
         return
       }
-    }
-    if (!inRGB(color)) {
+    } else if (space !== Space.sRGB) {
       ctx.fillStyle = canvasFormat(color)
       ctx.fillRect(x, halfHeight, 1, height)
 

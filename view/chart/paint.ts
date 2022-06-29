@@ -1,8 +1,7 @@
 import { Rgb, Color } from 'culori'
 
 import {
-  generateIsVisible,
-  getSpace,
+  generateFastGetSpace,
   AnyLch,
   Space,
   build,
@@ -77,10 +76,9 @@ function paint(
   isFull: boolean,
   getColor: GetColor
 ): void {
-  let isVisible = generateIsVisible(showP3.get(), showRec2020.get())
+  let getSpace = generateFastGetSpace(showP3.get(), showRec2020.get())
 
   let separators: Separators = {}
-
   let pixels = ctx.createImageData(width, height)
   let toPixel = (support.get().p3 ? p3 : rgb) as (color: Color) => Rgb
 
@@ -88,8 +86,8 @@ function paint(
     let prevSpace = getSpace(getColor(x, 0))
     for (let y = 0; y <= height; y += 1) {
       let color = getColor(x, y)
-      if (isVisible(color)) {
-        let space = getSpace(color)
+      let space = getSpace(color)
+      if (space !== Space.Out) {
         if (prevSpace !== space) {
           getLine(separators, prevSpace, space).push([x, height - y])
           prevSpace = space

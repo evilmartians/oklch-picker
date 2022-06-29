@@ -115,26 +115,62 @@ function toPercent(value: number): string {
   return `${clean(100 * value)}%`
 }
 
-export type IsVisible = (color: Color) => boolean
-
-export function generateIsVisible(
-  showP3: boolean,
-  showRec2020: boolean
-): IsVisible {
-  if (showRec2020) {
-    return inRec2020
-  } else if (showP3) {
-    return inP3
-  } else {
-    return inRGB
-  }
-}
-
 export enum Space {
   sRGB,
   P3,
   Rec2020,
   Out
+}
+
+export interface GetSpace {
+  (color: Color): Space
+}
+
+export function generateFastGetSpace(
+  showP3: boolean,
+  showRec2020: boolean
+): GetSpace {
+  if (showP3 && showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inP3(color)) {
+        return Space.P3
+      } else if (inRec2020(color)) {
+        return Space.Rec2020
+      } else {
+        return Space.Out
+      }
+    }
+  } else if (showP3 && !showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inP3(color)) {
+        return Space.P3
+      } else {
+        return Space.Out
+      }
+    }
+  } else if (!showP3 && showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inRec2020(color)) {
+        return Space.Rec2020
+      } else {
+        return Space.Out
+      }
+    }
+  } else {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else {
+        return Space.Out
+      }
+    }
+  }
 }
 
 export function getSpace(color: Color): Space {
