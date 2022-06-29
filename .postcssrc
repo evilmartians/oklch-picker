@@ -9,7 +9,9 @@
     "postcss-mixins": {
       "mixinsFiles": "view/**/mixins.pcss"
     },
-    "postcss-nesting": {},
+    "postcss-nesting": {
+      "noIsPseudoSelector": true
+    },
     "postcss-media-minmax": {},
     "autoprefixer": {}
   }
