@@ -60,6 +60,14 @@ function paintSeparator(
   ctx.stroke()
 }
 
+function paintPixel(pixels: ImageData, x: number, y: number, rgba: Rgb): void {
+  let pos = 4 * ((pixels.height - y) * pixels.width + x)
+  pixels.data[pos] = Math.floor(255 * rgba.r)
+  pixels.data[pos + 1] = Math.floor(255 * rgba.g)
+  pixels.data[pos + 2] = Math.floor(255 * rgba.b)
+  pixels.data[pos + 3] = 255
+}
+
 function paint(
   ctx: CanvasRenderingContext2D,
   width: number,
@@ -86,12 +94,7 @@ function paint(
           getLine(separators, prevSpace, space).push([x, height - y])
           prevSpace = space
         }
-        let pos = 4 * ((height - y) * width + x)
-        let rgba: Rgb = toPixel(color)
-        pixels.data[pos] = Math.floor(255 * rgba.r)
-        pixels.data[pos + 1] = Math.floor(255 * rgba.g)
-        pixels.data[pos + 2] = Math.floor(255 * rgba.b)
-        pixels.data[pos + 3] = 255
+        paintPixel(pixels, x, y, toPixel(color))
       } else if (!hasGaps) {
         break
       }
