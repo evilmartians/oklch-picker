@@ -59,7 +59,7 @@ chartC.addEventListener('click', onSelect)
 chartH.addEventListener('click', onSelect)
 
 function initCharts(): void {
-  let [width, height] = initCanvasSize(canvasL)
+  initCanvasSize(canvasL)
   initCanvasSize(canvasC)
   initCanvasSize(canvasH)
   onPaint({
@@ -67,21 +67,21 @@ function initCharts(): void {
       if (!showCharts.get()) return
       trackPaint('l', isFull, () => {
         let bg = getBackground(canvasL)
-        paintL(canvasL, width, height, bg, (L_MAX * l) / 100, isFull)
+        paintL(canvasL, bg, (L_MAX * l) / 100, isFull)
       })
     },
     c(c, isFull) {
       if (!showCharts.get()) return
       trackPaint('c', isFull, () => {
         let bg = getBackground(canvasC)
-        paintC(canvasC, width, height, bg, c, isFull)
+        paintC(canvasC, bg, c, isFull)
       })
     },
     h(h, isFull) {
       if (!showCharts.get()) return
       trackPaint('h', isFull, () => {
         let bg = getBackground(canvasH)
-        paintH(canvasH, width, height, bg, h, isFull)
+        paintH(canvasH, bg, h, isFull)
       })
     }
   })

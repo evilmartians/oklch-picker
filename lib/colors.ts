@@ -115,56 +115,72 @@ function toPercent(value: number): string {
   return `${clean(100 * value)}%`
 }
 
-export type GetAlpha = (color: Color) => number
+export enum Space {
+  sRGB,
+  P3,
+  Rec2020,
+  Out
+}
 
-export function generateGetAlpha(
+export interface GetSpace {
+  (color: Color): Space
+}
+
+export function generateFastGetSpace(
   showP3: boolean,
   showRec2020: boolean
-): GetAlpha {
-  if (showRec2020 && showP3) {
+): GetSpace {
+  if (showP3 && showRec2020) {
     return color => {
       if (inRGB(color)) {
-        return 1
+        return Space.sRGB
       } else if (inP3(color)) {
-        return 0.6
+        return Space.P3
+      } else if (inRec2020(color)) {
+        return Space.Rec2020
       } else {
-        return 0.4
+        return Space.Out
       }
     }
-  } else if (showRec2020 && !showP3) {
-    return color => (inRGB(color) ? 1 : 0.4)
-  } else if (!showRec2020 && showP3) {
-    return color => (inRGB(color) ? 1 : 0.6)
+  } else if (showP3 && !showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inP3(color)) {
+        return Space.P3
+      } else {
+        return Space.Out
+      }
+    }
+  } else if (!showP3 && showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inRec2020(color)) {
+        return Space.Rec2020
+      } else {
+        return Space.Out
+      }
+    }
   } else {
-    return () => 1
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else {
+        return Space.Out
+      }
+    }
   }
 }
-
-export type IsVisible = (color: Color) => boolean
-
-export function generateIsVisible(
-  showP3: boolean,
-  showRec2020: boolean
-): IsVisible {
-  if (showRec2020) {
-    return inRec2020
-  } else if (showP3) {
-    return inP3
-  } else {
-    return inRGB
-  }
-}
-
-export type Space = 'srgb' | 'p3' | 'rec2020' | 'out'
 
 export function getSpace(color: Color): Space {
   if (inRGB(color)) {
-    return 'srgb'
+    return Space.sRGB
   } else if (inP3(color)) {
-    return 'p3'
+    return Space.P3
   } else if (inRec2020(color)) {
-    return 'rec2020'
+    return Space.Rec2020
   } else {
-    return 'out'
+    return Space.Out
   }
 }

@@ -1,3 +1,5 @@
+import { Color } from 'culori'
+
 import {
   onCurrentChange,
   valueToColor,
@@ -5,13 +7,14 @@ import {
   current
 } from '../../stores/current.js'
 import {
-  generateIsVisible,
-  generateGetAlpha,
+  generateFastGetSpace,
   canvasFormat,
   fastFormat,
   AnyLch,
   build,
-  inRGB
+  inRGB,
+  Space,
+  inP3
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { showRec2020, showP3 } from '../../stores/settings.js'
@@ -46,8 +49,26 @@ function paint(
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
 ): void {
-  let getAlpha = generateGetAlpha(showP3.get(), showRec2020.get())
-  let isVisible = generateIsVisible(showP3.get(), showRec2020.get())
+  let getSpace = generateFastGetSpace(showP3.get(), showRec2020.get())
+
+  let getAlpha: (color: Color) => number
+  if (showRec2020.get() && showP3.get()) {
+    getAlpha = color => {
+      if (inRGB(color)) {
+        return 1
+      } else if (inP3(color)) {
+        return 0.6
+      } else {
+        return 0.4
+      }
+    }
+  } else if (showRec2020.get() && !showP3.get()) {
+    getAlpha = color => (inRGB(color) ? 1 : 0.4)
+  } else if (!showRec2020.get() && showP3.get()) {
+    getAlpha = color => (inRGB(color) ? 1 : 0.6)
+  } else {
+    getAlpha = () => 1
+  }
 
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
@@ -57,14 +78,14 @@ function paint(
 
   for (let x = 0; x <= width; x++) {
     let color = getColor(x)
-    if (!isVisible(color)) {
+    let space = getSpace(color)
+    if (space === Space.Out) {
       if (hasGaps) {
         continue
       } else {
         return
       }
-    }
-    if (!inRGB(color)) {
+    } else if (space !== Space.sRGB) {
       ctx.fillStyle = canvasFormat(color)
       ctx.fillRect(x, halfHeight, 1, height)
 
