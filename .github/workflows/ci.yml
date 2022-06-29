@@ -88,7 +88,7 @@ jobs:
           channelId: live
 
   preview:
-    name: Deploy
+    name: Preview
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main'
     needs:
