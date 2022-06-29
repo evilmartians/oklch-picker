@@ -82,6 +82,8 @@ function paint(
   let pixels = ctx.createImageData(width, height)
   let toPixel = (support.get().p3 ? p3 : rgb) as (color: Color) => Rgb
 
+  let maxGap = 0.3 * height
+
   for (let x = 0; x <= width; x += 1) {
     let prevSpace = getSpace(getColor(x, 0))
     for (let y = 0; y <= height; y += 1) {
@@ -93,7 +95,11 @@ function paint(
           prevSpace = space
         }
         paintPixel(pixels, x, y, toPixel(color))
-      } else if (!hasGaps) {
+      } else if (hasGaps) {
+        if (prevSpace !== Space.Out && y > maxGap) {
+          break
+        }
+      } else {
         break
       }
     }
