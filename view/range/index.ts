@@ -7,9 +7,9 @@ import {
   current
 } from '../../stores/current.js'
 import {
-  generateFastGetSpace,
   canvasFormat,
   fastFormat,
+  getSpace,
   AnyLch,
   build,
   inRGB,
@@ -49,8 +49,6 @@ function paint(
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
 ): void {
-  let getSpace = generateFastGetSpace(showP3.get(), showRec2020.get())
-
   let getAlpha: (color: Color) => number
   if (showRec2020.get() && showP3.get()) {
     getAlpha = color => {
@@ -70,6 +68,9 @@ function paint(
     getAlpha = () => 1
   }
 
+  let renderP3 = showP3.get()
+  let renderRec2020 = showRec2020.get()
+
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
   let background = window
@@ -79,7 +80,11 @@ function paint(
   for (let x = 0; x <= width; x++) {
     let color = getColor(x)
     let space = getSpace(color)
-    if (space === Space.Out) {
+    if (
+      space === Space.Out ||
+      (space === Space.Rec2020 && !renderRec2020) ||
+      (space === Space.P3 && !renderP3)
+    ) {
       if (hasGaps) {
         continue
       } else {

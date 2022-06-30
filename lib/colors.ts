@@ -122,57 +122,6 @@ export enum Space {
   Out
 }
 
-export interface GetSpace {
-  (color: Color): Space
-}
-
-export function generateFastGetSpace(
-  showP3: boolean,
-  showRec2020: boolean
-): GetSpace {
-  if (showP3 && showRec2020) {
-    return color => {
-      if (inRGB(color)) {
-        return Space.sRGB
-      } else if (inP3(color)) {
-        return Space.P3
-      } else if (inRec2020(color)) {
-        return Space.Rec2020
-      } else {
-        return Space.Out
-      }
-    }
-  } else if (showP3 && !showRec2020) {
-    return color => {
-      if (inRGB(color)) {
-        return Space.sRGB
-      } else if (inP3(color)) {
-        return Space.P3
-      } else {
-        return Space.Out
-      }
-    }
-  } else if (!showP3 && showRec2020) {
-    return color => {
-      if (inRGB(color)) {
-        return Space.sRGB
-      } else if (inRec2020(color)) {
-        return Space.Rec2020
-      } else {
-        return Space.Out
-      }
-    }
-  } else {
-    return color => {
-      if (inRGB(color)) {
-        return Space.sRGB
-      } else {
-        return Space.Out
-      }
-    }
-  }
-}
-
 export function getSpace(color: Color): Space {
   if (inRGB(color)) {
     return Space.sRGB
@@ -182,5 +131,208 @@ export function getSpace(color: Color): Space {
     return Space.Rec2020
   } else {
     return Space.Out
+  }
+}
+
+export type Pixel = [Space, number, number, number]
+
+export interface GetPixel {
+  (x: number, y: number): Pixel
+}
+
+export interface GetColor {
+  (x: number, y: number): AnyLch
+}
+
+export function generateGetPixel(
+  getColor: GetColor,
+  showP3: boolean,
+  showRec2020: boolean,
+  p3Support: boolean
+): GetPixel {
+  if (showP3 && showRec2020) {
+    if (p3Support) {
+      return (x, y) => {
+        let color = getColor(x, y)
+        let colorP3 = p3(color)
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * colorP3.r),
+          Math.floor(255 * colorP3.g),
+          Math.floor(255 * colorP3.b)
+        ]
+        if (inRGB(color)) {
+          pixel[0] = Space.sRGB
+        } else if (
+          colorP3.r >= 0 &&
+          colorP3.r <= 1 &&
+          colorP3.g >= 0 &&
+          colorP3.g <= 1 &&
+          colorP3.b >= 0 &&
+          colorP3.b <= 1
+        ) {
+          pixel[0] = Space.P3
+        } else if (inRec2020(color)) {
+          pixel[0] = Space.Rec2020
+        }
+        return pixel
+      }
+    } else {
+      return (x, y) => {
+        let color = getColor(x, y)
+        let colorSRGB = rgb(color)
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * colorSRGB.r),
+          Math.floor(255 * colorSRGB.g),
+          Math.floor(255 * colorSRGB.b)
+        ]
+        if (
+          colorSRGB.r >= 0 &&
+          colorSRGB.r <= 1 &&
+          colorSRGB.g >= 0 &&
+          colorSRGB.g <= 1 &&
+          colorSRGB.b >= 0 &&
+          colorSRGB.b <= 1
+        ) {
+          pixel[0] = Space.sRGB
+        } else if (inP3(color)) {
+          pixel[0] = Space.P3
+        } else if (inRec2020(color)) {
+          pixel[0] = Space.Rec2020
+        }
+        return pixel
+      }
+    }
+  } else if (showP3 && !showRec2020) {
+    if (p3Support) {
+      return (x, y) => {
+        let color = getColor(x, y)
+        let colorP3 = p3(color)
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * colorP3.r),
+          Math.floor(255 * colorP3.g),
+          Math.floor(255 * colorP3.b)
+        ]
+        if (inRGB(color)) {
+          pixel[0] = Space.sRGB
+        } else if (
+          colorP3.r >= 0 &&
+          colorP3.r <= 1 &&
+          colorP3.g >= 0 &&
+          colorP3.g <= 1 &&
+          colorP3.b >= 0 &&
+          colorP3.b <= 1
+        ) {
+          pixel[0] = Space.P3
+        }
+        return pixel
+      }
+    } else {
+      return (x, y) => {
+        let color = getColor(x, y)
+        let colorSRGB = rgb(color)
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * colorSRGB.r),
+          Math.floor(255 * colorSRGB.g),
+          Math.floor(255 * colorSRGB.b)
+        ]
+        if (
+          colorSRGB.r >= 0 &&
+          colorSRGB.r <= 1 &&
+          colorSRGB.g >= 0 &&
+          colorSRGB.g <= 1 &&
+          colorSRGB.b >= 0 &&
+          colorSRGB.b <= 1
+        ) {
+          pixel[0] = Space.sRGB
+        } else if (inP3(color)) {
+          pixel[0] = Space.P3
+        }
+        return pixel
+      }
+    }
+  } else if (!showP3 && showRec2020) {
+    if (p3Support) {
+      return (x, y) => {
+        let color = getColor(x, y)
+        let colorP3 = p3(color)
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * colorP3.r),
+          Math.floor(255 * colorP3.g),
+          Math.floor(255 * colorP3.b)
+        ]
+        if (inRGB(color)) {
+          pixel[0] = Space.sRGB
+        } else if (inRec2020(color)) {
+          pixel[0] = Space.Rec2020
+        }
+        return pixel
+      }
+    } else {
+      return (x, y) => {
+        let color = getColor(x, y)
+        let colorSRGB = rgb(color)
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * colorSRGB.r),
+          Math.floor(255 * colorSRGB.g),
+          Math.floor(255 * colorSRGB.b)
+        ]
+        if (
+          colorSRGB.r >= 0 &&
+          colorSRGB.r <= 1 &&
+          colorSRGB.g >= 0 &&
+          colorSRGB.g <= 1 &&
+          colorSRGB.b >= 0 &&
+          colorSRGB.b <= 1
+        ) {
+          pixel[0] = Space.sRGB
+        } else if (inRec2020(color)) {
+          pixel[0] = Space.Rec2020
+        }
+        return pixel
+      }
+    }
+  } else if (p3Support) {
+    return (x, y) => {
+      let color = getColor(x, y)
+      let colorP3 = p3(color)
+      let pixel: Pixel = [
+        Space.Out,
+        Math.floor(255 * colorP3.r),
+        Math.floor(255 * colorP3.g),
+        Math.floor(255 * colorP3.b)
+      ]
+      if (inRGB(color)) {
+        pixel[0] = Space.sRGB
+      }
+      return pixel
+    }
+  } else {
+    return (x, y) => {
+      let color = getColor(x, y)
+      let colorSRGB = rgb(color)
+      let pixel: Pixel = [
+        Space.Out,
+        Math.floor(255 * colorSRGB.r),
+        Math.floor(255 * colorSRGB.g),
+        Math.floor(255 * colorSRGB.b)
+      ]
+      if (
+        colorSRGB.r >= 0 &&
+        colorSRGB.r <= 1 &&
+        colorSRGB.g >= 0 &&
+        colorSRGB.g <= 1 &&
+        colorSRGB.b >= 0 &&
+        colorSRGB.b <= 1
+      ) {
+        pixel[0] = Space.sRGB
+      }
+      return pixel
+    }
   }
 }

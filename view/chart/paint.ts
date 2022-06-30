@@ -1,21 +1,14 @@
-import { Color } from 'culori'
-
 import {
-  generateFastGetSpace,
-  AnyLch,
+  generateGetPixel,
+  GetColor,
+  Pixel,
   Space,
-  build,
-  rgb,
-  p3
+  build
 } from '../../lib/colors.js'
 import { getCleanCtx, setScale } from '../../lib/canvas.js'
 import { showRec2020, showP3 } from '../../stores/settings.js'
 import { getQuickScale } from '../../stores/benchmark.js'
 import { support } from '../../stores/support.js'
-
-interface GetColor {
-  (x: number, y: number): AnyLch
-}
 
 type Separators = Partial<Record<`${Space}${Space}`, [number, number][]>>
 
@@ -59,36 +52,16 @@ function paintSeparator(
   ctx.stroke()
 }
 
-type ColorBytes = [number, number, number]
-
-function toRgbPixel(color: Color): ColorBytes {
-  let rgba = rgb(color)
-  return [
-    Math.floor(255 * rgba.r),
-    Math.floor(255 * rgba.g),
-    Math.floor(255 * rgba.b)
-  ]
-}
-
-function toP3Pixel(color: Color): ColorBytes {
-  let rgba = p3(color)
-  return [
-    Math.floor(255 * rgba.r),
-    Math.floor(255 * rgba.g),
-    Math.floor(255 * rgba.b)
-  ]
-}
-
 function paintPixel(
   pixels: ImageData,
   x: number,
   y: number,
-  bytes: ColorBytes
+  pixel: Pixel
 ): void {
   let pos = 4 * ((pixels.height - y) * pixels.width + x)
-  pixels.data[pos] = bytes[0]
-  pixels.data[pos + 1] = bytes[1]
-  pixels.data[pos + 2] = bytes[2]
+  pixels.data[pos] = pixel[1]
+  pixels.data[pos + 1] = pixel[2]
+  pixels.data[pos + 2] = pixel[3]
   pixels.data[pos + 3] = 255
 }
 
@@ -102,69 +75,74 @@ function paint(
   isFull: boolean,
   getColor: GetColor
 ): void {
-  let getSpace = generateFastGetSpace(showP3.get(), showRec2020.get())
+  let getPixel = generateGetPixel(
+    getColor,
+    showP3.get(),
+    showRec2020.get(),
+    support.get().p3
+  )
 
   let separators: Separators = {}
   let pixels = ctx.createImageData(width, height)
-  let toPixel = support.get().p3 ? toP3Pixel : toRgbPixel
 
   let maxGap = 0.3 * height
 
   for (let x = 0; x <= width; x += 1) {
-    let prevSpace: Space | undefined
-    let nextColor: AnyLch
-    let nextSpace: Space
-    let color = getColor(x, 0)
-    let space = getSpace(color)
+    let nextPixel: Pixel
+    let pixel = getPixel(x, 0)
+    let prevPixel = pixel
     for (let y = 0; y <= height; y += block) {
-      nextColor = getColor(x, y + block)
-      nextSpace = getSpace(nextColor)
+      nextPixel = getPixel(x, y + block)
 
-      if (nextSpace !== space) {
-        if (space !== Space.Out) {
-          paintPixel(pixels, x, y, toPixel(color))
+      if (nextPixel[0] !== pixel[0]) {
+        if (pixel[0] !== Space.Out) {
+          paintPixel(pixels, x, y, pixel)
         }
 
-        let prevISpace: Space = space
+        let prevIPixel = pixel
         for (let i = 1; i <= block; i++) {
-          let iColor = getColor(x, y + i)
-          let iSpace = getSpace(iColor)
-          if (iSpace !== prevISpace) {
-            getLine(separators, prevISpace, iSpace).push([x, height - y - i])
+          let iPixel = getPixel(x, y + i)
+          if (iPixel[0] !== prevIPixel[0]) {
+            getLine(separators, prevIPixel[0], iPixel[0]).push([
+              x,
+              height - y - i
+            ])
           }
-          if (iSpace !== Space.Out) {
-            paintPixel(pixels, x, y + i, toPixel(iColor))
+          if (iPixel[0] !== Space.Out) {
+            paintPixel(pixels, x, y + i, iPixel)
           }
-          prevISpace = iSpace
+          prevIPixel = iPixel
         }
-      } else if (space !== Space.Out) {
-        let bytes = toPixel(color)
+      } else if (pixel[0] !== Space.Out) {
         for (let i = 0; i < block; i++) {
-          paintPixel(pixels, x, y + i, bytes)
+          paintPixel(pixels, x, y + i, pixel)
         }
       } else if (hasGaps) {
-        if (prevSpace !== Space.Out && y > maxGap) {
+        if (prevPixel[0] !== Space.Out && y > maxGap) {
           break
         }
       } else {
         break
       }
 
-      prevSpace = space
-      color = nextColor
-      space = nextSpace
+      prevPixel = pixel
+      pixel = nextPixel
     }
   }
   ctx.putImageData(pixels, 0, 0)
 
   if (isFull) {
-    if (showP3.get() || (showRec2020.get() && !showP3.get())) {
+    if (showP3.get() && showRec2020.get()) {
       paintSeparator(ctx, bg, getLine(separators, Space.sRGB, Space.P3))
       paintSeparator(ctx, bg, getLine(separators, Space.P3, Space.sRGB))
-    }
-    if (showRec2020.get() && showP3.get()) {
       paintSeparator(ctx, bg, getLine(separators, Space.P3, Space.Rec2020))
       paintSeparator(ctx, bg, getLine(separators, Space.Rec2020, Space.P3))
+    } else if (!showRec2020.get() && showP3.get()) {
+      paintSeparator(ctx, bg, getLine(separators, Space.sRGB, Space.P3))
+      paintSeparator(ctx, bg, getLine(separators, Space.P3, Space.sRGB))
+    } else if (showRec2020.get() && !showP3.get()) {
+      paintSeparator(ctx, bg, getLine(separators, Space.sRGB, Space.Rec2020))
+      paintSeparator(ctx, bg, getLine(separators, Space.Rec2020, Space.sRGB))
     }
   }
 }
