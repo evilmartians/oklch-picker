@@ -1,4 +1,4 @@
-import { Rgb, Color } from 'culori'
+import { Color } from 'culori'
 
 import {
   generateFastGetSpace,
@@ -59,11 +59,36 @@ function paintSeparator(
   ctx.stroke()
 }
 
-function paintPixel(pixels: ImageData, x: number, y: number, rgba: Rgb): void {
+type ColorBytes = [number, number, number]
+
+function toRgbPixel(color: Color): ColorBytes {
+  let rgba = rgb(color)
+  return [
+    Math.floor(255 * rgba.r),
+    Math.floor(255 * rgba.g),
+    Math.floor(255 * rgba.b)
+  ]
+}
+
+function toP3Pixel(color: Color): ColorBytes {
+  let rgba = p3(color)
+  return [
+    Math.floor(255 * rgba.r),
+    Math.floor(255 * rgba.g),
+    Math.floor(255 * rgba.b)
+  ]
+}
+
+function paintPixel(
+  pixels: ImageData,
+  x: number,
+  y: number,
+  bytes: ColorBytes
+): void {
   let pos = 4 * ((pixels.height - y) * pixels.width + x)
-  pixels.data[pos] = Math.floor(255 * rgba.r)
-  pixels.data[pos + 1] = Math.floor(255 * rgba.g)
-  pixels.data[pos + 2] = Math.floor(255 * rgba.b)
+  pixels.data[pos] = bytes[0]
+  pixels.data[pos + 1] = bytes[1]
+  pixels.data[pos + 2] = bytes[2]
   pixels.data[pos + 3] = 255
 }
 
@@ -73,6 +98,7 @@ function paint(
   height: number,
   hasGaps: boolean,
   bg: string,
+  block: number,
   isFull: boolean,
   getColor: GetColor
 ): void {
@@ -80,21 +106,42 @@ function paint(
 
   let separators: Separators = {}
   let pixels = ctx.createImageData(width, height)
-  let toPixel = (support.get().p3 ? p3 : rgb) as (color: Color) => Rgb
+  let toPixel = support.get().p3 ? toP3Pixel : toRgbPixel
 
   let maxGap = 0.3 * height
 
   for (let x = 0; x <= width; x += 1) {
-    let prevSpace = getSpace(getColor(x, 0))
-    for (let y = 0; y <= height; y += 1) {
-      let color = getColor(x, y)
-      let space = getSpace(color)
-      if (space !== Space.Out) {
-        if (prevSpace !== space) {
-          getLine(separators, prevSpace, space).push([x, height - y])
-          prevSpace = space
+    let prevSpace: Space | undefined
+    let nextColor: AnyLch
+    let nextSpace: Space
+    let color = getColor(x, 0)
+    let space = getSpace(color)
+    for (let y = 0; y <= height; y += block) {
+      nextColor = getColor(x, y + block)
+      nextSpace = getSpace(nextColor)
+
+      if (nextSpace !== space) {
+        if (space !== Space.Out) {
+          paintPixel(pixels, x, y, toPixel(color))
         }
-        paintPixel(pixels, x, y, toPixel(color))
+
+        let prevISpace: Space = space
+        for (let i = 1; i <= block; i++) {
+          let iColor = getColor(x, y + i)
+          let iSpace = getSpace(iColor)
+          if (iSpace !== prevISpace) {
+            getLine(separators, prevISpace, iSpace).push([x, height - y - i])
+          }
+          if (iSpace !== Space.Out) {
+            paintPixel(pixels, x, y + i, toPixel(iColor))
+          }
+          prevISpace = iSpace
+        }
+      } else if (space !== Space.Out) {
+        let bytes = toPixel(color)
+        for (let i = 0; i < block; i++) {
+          paintPixel(pixels, x, y + i, bytes)
+        }
       } else if (hasGaps) {
         if (prevSpace !== Space.Out && y > maxGap) {
           break
@@ -102,6 +149,10 @@ function paint(
       } else {
         break
       }
+
+      prevSpace = space
+      color = nextColor
+      space = nextSpace
     }
   }
   ctx.putImageData(pixels, 0, 0)
@@ -130,7 +181,7 @@ export function paintL(
   let hFactor = H_MAX / width
   let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, bg, isFull, (x, y) => {
+  paint(ctx, width, height, false, bg, 6, isFull, (x, y) => {
     return build(l, y * cFactor, x * hFactor)
   })
 }
@@ -147,7 +198,7 @@ export function paintC(
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  paint(ctx, width, height, true, bg, isFull, (x, y) => {
+  paint(ctx, width, height, true, bg, 2, isFull, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
   })
 }
@@ -164,7 +215,7 @@ export function paintH(
   let lFactor = L_MAX / width
   let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, bg, isFull, (x, y) => {
+  paint(ctx, width, height, false, bg, 6, isFull, (x, y) => {
     return build(x * lFactor, y * cFactor, h)
   })
 }
