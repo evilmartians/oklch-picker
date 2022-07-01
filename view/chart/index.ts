@@ -1,6 +1,6 @@
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { showCharts, showRec2020 } from '../../stores/settings.js'
-import { paintL, paintC, paintH } from './paint.js'
+import { paintCL, paintCH, paintLH } from './paint.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { trackPaint } from '../../stores/benchmark.js'
 
@@ -67,21 +67,21 @@ function initCharts(): void {
       if (!showCharts.get()) return
       trackPaint('l', isFull, () => {
         let bg = getBackground(canvasL)
-        paintL(canvasL, bg, (L_MAX * l) / 100, isFull)
+        paintCH(canvasL, bg, (L_MAX * l) / 100, isFull)
       })
     },
     c(c, isFull) {
       if (!showCharts.get()) return
       trackPaint('c', isFull, () => {
         let bg = getBackground(canvasC)
-        paintC(canvasC, bg, c, isFull)
+        paintLH(canvasC, bg, c, isFull)
       })
     },
     h(h, isFull) {
       if (!showCharts.get()) return
       trackPaint('h', isFull, () => {
         let bg = getBackground(canvasH)
-        paintH(canvasH, bg, h, isFull)
+        paintCL(canvasH, bg, h, isFull)
       })
     }
   })

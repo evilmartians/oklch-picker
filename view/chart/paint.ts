@@ -147,7 +147,24 @@ function paint(
   }
 }
 
-export function paintL(
+export function paintCL(
+  canvas: HTMLCanvasElement,
+  bg: string,
+  h: number,
+  isFull: boolean
+): void {
+  let [width, height] = setScale(canvas, getQuickScale('h', isFull))
+  let ctx = getCleanCtx(canvas)
+
+  let lFactor = L_MAX / width
+  let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
+
+  paint(ctx, width, height, false, bg, 6, isFull, (x, y) => {
+    return build(x * lFactor, y * cFactor, h)
+  })
+}
+
+export function paintCH(
   canvas: HTMLCanvasElement,
   bg: string,
   l: number,
@@ -164,7 +181,7 @@ export function paintL(
   })
 }
 
-export function paintC(
+export function paintLH(
   canvas: HTMLCanvasElement,
   bg: string,
   c: number,
@@ -178,22 +195,5 @@ export function paintC(
 
   paint(ctx, width, height, true, bg, 2, isFull, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
-  })
-}
-
-export function paintH(
-  canvas: HTMLCanvasElement,
-  bg: string,
-  h: number,
-  isFull: boolean
-): void {
-  let [width, height] = setScale(canvas, getQuickScale('h', isFull))
-  let ctx = getCleanCtx(canvas)
-
-  let lFactor = L_MAX / width
-  let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
-
-  paint(ctx, width, height, false, bg, 6, isFull, (x, y) => {
-    return build(x * lFactor, y * cFactor, h)
   })
 }
