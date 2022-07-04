@@ -27,6 +27,7 @@
   --ui-border: oklch(70% 0 0 / 20%);
   --accent: oklch(57% 0.18 286);
   --danger: oklch(59% 0.23 7);
+  --separator: oklch(100% 0 0 / 50%);
 
   /* Tokens */
   --radius: 12px;
@@ -46,6 +47,7 @@
     --text-note: oklch(45% 0 0);
     --chess: oklch(38% 0.01 297);
     --ui-border: oklch(70% 0 0 / 50%);
+    --separator: oklch(0 0 0 / 30%);
   }
 }
 

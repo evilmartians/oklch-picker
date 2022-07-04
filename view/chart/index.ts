@@ -4,10 +4,6 @@ import { paintCL, paintCH, paintLH } from './paint.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { trackPaint } from '../../stores/benchmark.js'
 
-function getBackground(canvas: HTMLCanvasElement): string {
-  return window.getComputedStyle(canvas).getPropertyValue('--current-surface')
-}
-
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
 let chartH = document.querySelector<HTMLDivElement>('.chart.is-h')!
@@ -66,22 +62,19 @@ function initCharts(): void {
     l(l, isFull) {
       if (!showCharts.get()) return
       trackPaint('l', isFull, () => {
-        let bg = getBackground(canvasL)
-        paintCH(canvasL, bg, (L_MAX * l) / 100, isFull)
+        paintCH(canvasL, (L_MAX * l) / 100, isFull)
       })
     },
     c(c, isFull) {
       if (!showCharts.get()) return
       trackPaint('c', isFull, () => {
-        let bg = getBackground(canvasC)
-        paintLH(canvasC, bg, c, isFull)
+        paintLH(canvasC, c, isFull)
       })
     },
     h(h, isFull) {
       if (!showCharts.get()) return
       trackPaint('h', isFull, () => {
-        let bg = getBackground(canvasH)
-        paintCL(canvasH, bg, h, isFull)
+        paintCL(canvasH, h, isFull)
       })
     }
   })
