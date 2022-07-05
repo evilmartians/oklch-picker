@@ -63,15 +63,18 @@ function paint(
         ctx.fillRect(x, halfHeight, 1, 1)
       }
       if (prevSpace !== space) {
-        if (
-          (space === Space.P3 && prevSpace !== Space.Rec2020) ||
-          (space === Space.sRGB && prevSpace === Space.P3)
-        ) {
+        if (space === Space.P3 && prevSpace !== Space.Rec2020) {
           ctx.fillStyle = borderP3
           ctx.fillRect(x, 0, 1, halfHeight)
-        } else if (space === Space.Rec2020 || prevSpace === Space.Rec2020) {
+        } else if (space === Space.sRGB && prevSpace === Space.P3) {
+          ctx.fillStyle = borderP3
+          ctx.fillRect(x - 1, 0, 1, halfHeight)
+        } else if (space === Space.Rec2020) {
           ctx.fillStyle = borderRec2020
           ctx.fillRect(x, 0, 1, halfHeight)
+        } else if (prevSpace === Space.Rec2020) {
+          ctx.fillStyle = borderRec2020
+          ctx.fillRect(x - 1, 0, 1, halfHeight)
         }
       }
     } else if (hasGaps) {
