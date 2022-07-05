@@ -76,7 +76,7 @@ function paint(
         let prevIPixel = pixel
         for (let i = 1; i <= block; i++) {
           let iPixel = getPixel(x, y + i)
-          if (isFull && iPixel[0] !== prevIPixel[0]) {
+          if (iPixel[0] !== prevIPixel[0]) {
             getSeparator(prevIPixel[0], iPixel[0]).push([x, height - y - i])
           }
           if (iPixel[0] !== Space.Out) {
@@ -102,20 +102,18 @@ function paint(
   }
   ctx.putImageData(pixels, 0, 0)
 
-  if (isFull) {
-    let [p3, rec2020] = getBorders()
-    if (showP3.get() && showRec2020.get()) {
-      paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
-      paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
-      paintSeparator(ctx, rec2020, getSeparator(Space.P3, Space.Rec2020))
-      paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.P3))
-    } else if (!showRec2020.get() && showP3.get()) {
-      paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
-      paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
-    } else if (showRec2020.get() && !showP3.get()) {
-      paintSeparator(ctx, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
-      paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
-    }
+  let [p3, rec2020] = getBorders()
+  if (showP3.get() && showRec2020.get()) {
+    paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
+    paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
+    paintSeparator(ctx, rec2020, getSeparator(Space.P3, Space.Rec2020))
+    paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.P3))
+  } else if (!showRec2020.get() && showP3.get()) {
+    paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
+    paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
+  } else if (showRec2020.get() && !showP3.get()) {
+    paintSeparator(ctx, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
+    paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
   }
 }
 
