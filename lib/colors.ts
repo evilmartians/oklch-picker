@@ -134,6 +134,49 @@ export function getSpace(color: Color): Space {
   }
 }
 
+export type GetSpace = typeof getSpace
+
+export function generateGetSpace(
+  showP3: boolean,
+  showRec2020: boolean
+): GetSpace {
+  if (showP3 && showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inP3(color)) {
+        return Space.P3
+      } else if (inRec2020(color)) {
+        return Space.Rec2020
+      } else {
+        return Space.Out
+      }
+    }
+  } else if (showP3 && !showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inP3(color)) {
+        return Space.P3
+      } else {
+        return Space.Out
+      }
+    }
+  } else if (!showP3 && showRec2020) {
+    return color => {
+      if (inRGB(color)) {
+        return Space.sRGB
+      } else if (inRec2020(color)) {
+        return Space.P3
+      } else {
+        return Space.Out
+      }
+    }
+  } else {
+    return color => (inRGB(color) ? Space.sRGB : Space.Out)
+  }
+}
+
 export type Pixel = [Space, number, number, number]
 
 export interface GetPixel {

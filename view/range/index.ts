@@ -1,5 +1,3 @@
-import { Color } from 'culori'
-
 import {
   onCurrentChange,
   valueToColor,
@@ -7,17 +5,16 @@ import {
   current
 } from '../../stores/current.js'
 import {
+  generateGetSpace,
   canvasFormat,
   fastFormat,
-  getSpace,
   AnyLch,
   build,
-  inRGB,
-  Space,
-  inP3
+  Space
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { showRec2020, showP3 } from '../../stores/settings.js'
+import { getBorders } from '../../lib/paint.js'
 import { visible } from '../../stores/visible.js'
 
 function initRange(
@@ -49,61 +46,40 @@ function paint(
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
 ): void {
-  let getAlpha: (color: Color) => number
-  if (showRec2020.get() && showP3.get()) {
-    getAlpha = color => {
-      if (inRGB(color)) {
-        return 1
-      } else if (inP3(color)) {
-        return 0.6
-      } else {
-        return 0.4
-      }
-    }
-  } else if (showRec2020.get() && !showP3.get()) {
-    getAlpha = color => (inRGB(color) ? 1 : 0.4)
-  } else if (!showRec2020.get() && showP3.get()) {
-    getAlpha = color => (inRGB(color) ? 1 : 0.6)
-  } else {
-    getAlpha = () => 1
-  }
-
-  let renderP3 = showP3.get()
-  let renderRec2020 = showRec2020.get()
-
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
-  let background = window
-    .getComputedStyle(canvas)
-    .getPropertyValue('--current-surface')
+  let [borderP3, borderRec2020] = getBorders()
+  let getSpace = generateGetSpace(showP3.get(), showRec2020.get())
 
+  let prevSpace = getSpace(getColor(0))
   for (let x = 0; x <= width; x++) {
     let color = getColor(x)
     let space = getSpace(color)
-    if (
-      space === Space.Out ||
-      (space === Space.Rec2020 && !renderRec2020) ||
-      (space === Space.P3 && !renderP3)
-    ) {
-      if (hasGaps) {
-        continue
-      } else {
-        return
-      }
-    } else if (space !== Space.sRGB) {
-      ctx.fillStyle = canvasFormat(color)
-      ctx.fillRect(x, halfHeight, 1, height)
-
-      ctx.fillStyle = background
-      ctx.fillRect(x, 0, 1, halfHeight)
-
-      color.alpha = getAlpha(color)
-      ctx.fillStyle = canvasFormat(color)
-      ctx.fillRect(x, 0, 1, halfHeight)
-    } else {
+    if (space !== Space.Out) {
       ctx.fillStyle = canvasFormat(color)
       ctx.fillRect(x, 0, 1, height)
+      if (space !== Space.sRGB) {
+        ctx.fillStyle = space === Space.P3 ? borderP3 : borderRec2020
+        ctx.fillRect(x, halfHeight, 1, 1)
+      }
+      if (prevSpace !== space) {
+        if (
+          (space === Space.P3 && prevSpace !== Space.Rec2020) ||
+          (space === Space.sRGB && prevSpace === Space.P3)
+        ) {
+          ctx.fillStyle = borderP3
+          ctx.fillRect(x, 0, 1, halfHeight)
+        } else if (space === Space.Rec2020 || prevSpace === Space.Rec2020) {
+          ctx.fillStyle = borderRec2020
+          ctx.fillRect(x, 0, 1, halfHeight)
+        }
+      }
+    } else if (hasGaps) {
+      continue
+    } else {
+      return
     }
+    prevSpace = space
   }
 }
 
