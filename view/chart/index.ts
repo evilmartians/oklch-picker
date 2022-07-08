@@ -50,9 +50,19 @@ function onSelect(e: MouseEvent): void {
   }
 }
 
-chartL.addEventListener('click', onSelect)
-chartC.addEventListener('click', onSelect)
-chartH.addEventListener('click', onSelect)
+function initEvents(chart: HTMLDivElement): void {
+  chart.addEventListener('mousedown', () => {
+    chart.addEventListener('mousemove', onSelect)
+  })
+  chart.addEventListener('mouseup', e => {
+    chart.removeEventListener('mousemove', onSelect)
+    onSelect(e)
+  })
+}
+
+initEvents(chartL)
+initEvents(chartC)
+initEvents(chartH)
 
 function initCharts(): void {
   initCanvasSize(canvasL)
