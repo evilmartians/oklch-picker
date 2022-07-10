@@ -12,7 +12,6 @@ import {
 } from '../../lib/paint.js'
 import { getCleanCtx, setScale } from '../../lib/canvas.js'
 import { showRec2020, showP3 } from '../../stores/settings.js'
-import { getQuickScale } from '../../stores/benchmark.js'
 import { support } from '../../stores/support.js'
 
 function paintSeparator(
@@ -48,7 +47,6 @@ function paint(
   height: number,
   hasGaps: boolean,
   block: number,
-  isFull: boolean,
   getColor: GetColor
 ): void {
   let getPixel = generateGetPixel(
@@ -117,34 +115,26 @@ function paint(
   }
 }
 
-export function paintCL(
-  canvas: HTMLCanvasElement,
-  h: number,
-  isFull: boolean
-): void {
-  let [width, height] = setScale(canvas, getQuickScale('h', isFull))
+export function paintCL(canvas: HTMLCanvasElement, h: number, scale: number): void {
+  let [width, height] = setScale(canvas, scale)
   let ctx = getCleanCtx(canvas)
 
   let lFactor = L_MAX / width
   let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, 6, isFull, (x, y) => {
+  paint(ctx, width, height, false, 6, (x, y) => {
     return build(x * lFactor, y * cFactor, h)
   })
 }
 
-export function paintCH(
-  canvas: HTMLCanvasElement,
-  l: number,
-  isFull: boolean
-): void {
-  let [width, height] = setScale(canvas, getQuickScale('l', isFull))
+export function paintCH(canvas: HTMLCanvasElement, l: number, scale: number): void {
+  let [width, height] = setScale(canvas, scale)
   let ctx = getCleanCtx(canvas)
 
   let hFactor = H_MAX / width
   let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, 6, isFull, (x, y) => {
+  paint(ctx, width, height, false, 6, (x, y) => {
     return build(l, y * cFactor, x * hFactor)
   })
 }
@@ -152,15 +142,15 @@ export function paintCH(
 export function paintLH(
   canvas: HTMLCanvasElement,
   c: number,
-  isFull: boolean
+  scale: number
 ): void {
-  let [width, height] = setScale(canvas, getQuickScale('c', isFull))
+  let [width, height] = setScale(canvas, scale)
   let ctx = getCleanCtx(canvas)
 
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  paint(ctx, width, height, true, 2, isFull, (x, y) => {
+  paint(ctx, width, height, true, 2, (x, y) => {
     return build(y * lFactor, c, x * hFactor)
   })
 }

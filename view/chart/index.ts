@@ -1,8 +1,10 @@
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { showCharts, showRec2020 } from '../../stores/settings.js'
+import { trackPaint, getQuickScale } from '../../stores/benchmark.js'
 import { paintCL, paintCH, paintLH } from './paint.js'
+import { showCharts, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
-import { trackPaint } from '../../stores/benchmark.js'
+
+const MAX_SCALE = 4
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -71,20 +73,26 @@ function initCharts(): void {
   onPaint({
     l(l, isFull) {
       if (!showCharts.get()) return
+      let scale = getQuickScale('l', isFull)
+      if (scale > MAX_SCALE) return
       trackPaint('l', isFull, () => {
-        paintCH(canvasL, (L_MAX * l) / 100, isFull)
+        paintCH(canvasL, (L_MAX * l) / 100, scale)
       })
     },
     c(c, isFull) {
       if (!showCharts.get()) return
+      let scale = getQuickScale('c', isFull)
+      if (scale > MAX_SCALE) return
       trackPaint('c', isFull, () => {
-        paintLH(canvasC, c, isFull)
+        paintLH(canvasC, c, scale)
       })
     },
     h(h, isFull) {
       if (!showCharts.get()) return
+      let scale = getQuickScale('h', isFull)
+      if (scale > MAX_SCALE) return
       trackPaint('h', isFull, () => {
-        paintCL(canvasH, h, isFull)
+        paintCL(canvasH, h, scale)
       })
     }
   })
