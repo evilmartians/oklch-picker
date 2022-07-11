@@ -27,21 +27,19 @@ Additional links about Oklab:
 ## Development
 
 To run a local copy for development:
+1. Install correct versions of `Node.js` and `pnpm`. There are two ways:
+	1. With `asdf` version manager:
+		1. Install [`asdf`](https://github.com/asdf-vm/asdf) and asdf plugins for `Node.js` and `pnpm`
+		2. Run `asdf install`
+	2. Manually (check needed versions in `.tool-versions`)
 
-1. Install [`asdf`](https://github.com/asdf-vm/asdf).
-2. Install Node.js and pnpm by `asdf` or manually:
-
-   ```sh
-   asdf install
-   ```
-
-3. Install dependencies:
+2. Install dependencies:
 
    ```sh
    pnpm install
    ```
 
-4. Run local server:
+3. Run local server:
 
    ```sh
    pnpm start
