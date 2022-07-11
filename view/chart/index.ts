@@ -4,7 +4,7 @@ import { paintCL, paintCH, paintLH } from './paint.js'
 import { showCharts, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 
-const MAX_SCALE = 4
+const MAX_SCALE = 8
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
