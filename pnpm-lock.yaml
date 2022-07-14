@@ -36,7 +36,7 @@ specifiers:
   svgo: ^2.8.0
   typescript: ^4.7.4
   vite: ^3.0.0
-  vite-plugin-pug-transformer: ^1.0.1
+  vite-plugin-pug-transformer: ^1.0.2
 
 dependencies:
   '@csstools/postcss-oklab-function': 1.1.1_postcss@8.4.14
@@ -52,7 +52,7 @@ dependencies:
   postcss-nesting: 10.1.10_postcss@8.4.14
   postcss-opacity-percentage: 1.1.2
   vite: 3.0.0
-  vite-plugin-pug-transformer: 1.0.1_vite@3.0.0
+  vite-plugin-pug-transformer: 1.0.2_vite@3.0.0
 
 devDependencies:
   '@logux/eslint-config': 47.2.0_tqihzqmyb75kf2julhmubxluta
@@ -1095,7 +1095,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001366
-      electron-to-chromium: 1.4.188
+      electron-to-chromium: 1.4.190
       node-releases: 2.0.6
       update-browserslist-db: 1.0.4_browserslist@4.21.2
     dev: false
@@ -1954,8 +1954,8 @@ packages:
     resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
     dev: false
 
-  /electron-to-chromium/1.4.188:
-    resolution: {integrity: sha512-Zpa1+E+BVmD/orkyz1Z2dAT1XNUuVAHB3GrogfyY66dXN0ZWSsygI8+u6QTDai1ZayLcATDJpcv2Z2AZjEcr1A==}
+  /electron-to-chromium/1.4.190:
+    resolution: {integrity: sha512-dDW9D5xT+ODGh9rlK2sQeJR0xgV1nrNn3/K4IV8k74QbmKN61dm5GKMSwerdpTpazrrkK6wwcgjGBoQ/Nx6L5A==}
     dev: false
 
   /emoji-regex/8.0.0:
@@ -4703,8 +4703,8 @@ packages:
     engines: {node: '>= 6.13.0'}
     dev: false
 
-  /node-gyp/9.0.0:
-    resolution: {integrity: sha512-Ma6p4s+XCTPxCuAMrOA/IJRmVy16R8Sdhtwl4PrCr7IBlj4cPawF0vg/l7nOT1jPbuNS7lIRJpBSvVsXwEZuzw==}
+  /node-gyp/9.1.0:
+    resolution: {integrity: sha512-HkmN0ZpQJU7FLbJauJTHkHlSVAXlNGDAzH/VYFZGDOnFyn/Na3GlNJfkudmufOdS6/jNFhy88ObzL7ERz9es1g==}
     engines: {node: ^12.22 || ^14.13 || >=16}
     hasBin: true
     dependencies:
@@ -5482,7 +5482,7 @@ packages:
     dependencies:
       install-artifact-from-github: 1.3.1
       nan: 2.16.0
-      node-gyp: 9.0.0
+      node-gyp: 9.1.0
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -6721,11 +6721,11 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /vite-plugin-pug-transformer/1.0.1_vite@3.0.0:
-    resolution: {integrity: sha512-N62fXAqRNY2O35dUf0ioe/wDBX60UTg58IgcYSpXb/406jH7XB2ZuOll1WJ+qOxc/GfTOfME/TKvwnK4u0c6wQ==}
+  /vite-plugin-pug-transformer/1.0.2_vite@3.0.0:
+    resolution: {integrity: sha512-RtXEYaEgQoy5ttNjuuNMWRzZwfJz+cjePSdQzmNJTteIzUamVb8xvAlwNouMt189V2mk6HxyfTGfAGKUQ6KGig==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
-      vite: ^2.5.10
+      vite: ^2.5.10 || ^3.0.0
     dependencies:
       picocolors: 1.0.0
       pug: 3.0.2
