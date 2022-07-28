@@ -83,7 +83,7 @@
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
     @nest body.is-main-collapsed & {
-      transform: translateY(287px);
+      transform: translateY(calc(287px + env(safe-area-inset-bottom, 0)));
     }
   }
 }
