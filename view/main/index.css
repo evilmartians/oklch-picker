@@ -9,7 +9,7 @@ body {
 .main {
   position: relative;
   width: var(--card-width);
-  padding: 24px var(--main-padding) 0 var(--main-padding);
+  padding: 24px var(--main-padding) env(safe-area-inset-bottom, 0) var(--main-padding);
   background: var(--surface-1);
   border-radius: 36px;
 
@@ -61,6 +61,12 @@ body {
   margin-bottom: 24px;
 }
 
+.main_row--sample {
+  @nest body.is-main-collapsed & {
+    margin-bottom: calc(24px + env(safe-area-inset-bottom, 0));
+  }
+}
+
 .main_footer {
   padding-bottom: 46px;
   font-size: 10px;
@@ -89,7 +95,7 @@ body {
 
 .main_logo {
   position: absolute;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom, 0);
   left: 50%;
   width: 96px;
   height: 38px;
