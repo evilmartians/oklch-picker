@@ -28,7 +28,7 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          path: ~/.pnpm-store
+          path: ~/.local/share/pnpm/
           key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
@@ -58,7 +58,7 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          path: ~/.pnpm-store
+          path: ~/.local/share/pnpm/
           key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --production --ignore-scripts
@@ -108,7 +108,7 @@ jobs:
         env:
           cache-name: cache-pnpm-modules
         with:
-          path: ~/.pnpm-store
+          path: ~/.local/share/pnpm/
           key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --production --ignore-scripts
