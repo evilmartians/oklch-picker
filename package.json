@@ -17,17 +17,17 @@
   "dependencies": {
     "@csstools/postcss-oklab-function": "^1.1.1",
     "@nanostores/persistent": "^0.5.3",
-    "autoprefixer": "^10.4.7",
+    "autoprefixer": "^10.4.8",
     "culori": "github:bijela-gora/culori#2770175",
     "firebase-tools": "^11.4.0",
     "jstransformer-markdown-it": "^3.0.0",
-    "nanostores": "^0.5.12",
+    "nanostores": "^0.5.13",
     "postcss": "^8.4.14",
     "postcss-media-minmax": "^5.0.0",
     "postcss-mixins": "^9.0.3",
     "postcss-nesting": "^10.1.10",
     "postcss-opacity-percentage": "^1.1.2",
-    "vite": "^3.0.3",
+    "vite": "^3.0.4",
     "vite-plugin-pug-transformer": "^1.0.2"
   },
   "devDependencies": {
