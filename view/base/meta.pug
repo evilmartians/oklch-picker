@@ -7,7 +7,7 @@ meta( name="theme-color" content="rgb(242,241,245)" media="(prefers-color-scheme
 meta( name="theme-color" content="#000" media="(prefers-color-scheme: dark)" )
 link( rel="icon" href="/favicon.ico" sizes="any" )
 link( rel="icon" href=LCH ? './view/base/lch.svg' : './view/base/oklch.svg' type="image/svg+xml" )
-link( rel="apple-touch-icon" href="/apple-touch-icon.png" )
+link( rel="apple-touch-icon" href=LCH ? './view/base/apple-touch-icon-lch.png' : './view/base/apple-touch-icon-oklch.png' )
 meta( property="og:image" content=LCH ? '/og-lch.png' : '/og-oklch.png' )
 meta( name="description" content=`${LCH ? 'LCH' : 'OKLCH'} is a new way to encode colors (like hex, RGBA, or HSL)` )
 link( rel="manifest" href=LCH ? '/lch.webmanifest' : '/oklch.webmanifest' )
