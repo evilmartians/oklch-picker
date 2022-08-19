@@ -2,6 +2,7 @@
   "extends": "@logux/stylelint-config",
   "ignoreFiles": ["dist/**/*"],
   "rules": {
+    "gamut/color-no-out-gamut-range": null,
     "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla"],
     "alpha-value-notation": "percentage",
     "color-named": "never"
