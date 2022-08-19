@@ -48,8 +48,8 @@
     --text-note: oklch(45% 0 0);
     --chess: oklch(38% 0.01 297);
     --ui-border: oklch(70% 0 0 / 50%);
-    --border-p3: oklch(0 0 0 / 30%);
-    --border-rec2020: oklch(0 0 0 / 50%);
+    --border-p3: oklch(0% 0 0 / 30%);
+    --border-rec2020: oklch(0% 0 0 / 50%);
   }
 }
 

@@ -238,7 +238,7 @@ packages:
       '@types/long': 4.0.2
       arrify: 2.0.1
       extend: 3.0.2
-      google-auth-library: 8.2.0
+      google-auth-library: 8.3.0
       google-gax: 3.2.0
       is-stream-ended: 0.1.4
       lodash.snakecase: 4.1.1
@@ -318,7 +318,7 @@ packages:
       stylelint: 14.10.0
       stylelint-config-recess-order: 3.0.0_stylelint@14.10.0
       stylelint-config-standard: 27.0.0_stylelint@14.10.0
-      stylelint-gamut: 1.1.6_stylelint@14.10.0
+      stylelint-gamut: 1.2.0_stylelint@14.10.0
       stylelint-order: 5.0.0_stylelint@14.10.0
     dev: true
 
@@ -2927,8 +2927,8 @@ packages:
     resolution: {integrity: sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==}
     dev: false
 
-  /form-data-encoder/2.0.1:
-    resolution: {integrity: sha512-Oy+P9w5mnO4TWXVgUiQvggNKPI9/ummcSt5usuIV6HkaLKigwzPpoenhEqmGmx3zHqm6ZLJ+CR/99N8JLinaEw==}
+  /form-data-encoder/2.1.0:
+    resolution: {integrity: sha512-njK60LnfhfDWy+AEUIf9ZQNRAcmXCdDfiNOm2emuPtzwh7U9k/mo9F3S54aPiaZ3vhqUjikVLfcPg2KuBddskQ==}
     engines: {node: '>= 14.17'}
     dev: false
 
@@ -3275,8 +3275,8 @@ packages:
       - supports-color
     dev: false
 
-  /google-auth-library/8.2.0:
-    resolution: {integrity: sha512-wCWs44jLT3cbzONVk2NKK1sfWaKCqzR21cudG3r9tV53/DC/wImxEr7HK5OBlEU5Q1iepZsrdFOxvzmC0M/YRQ==}
+  /google-auth-library/8.3.0:
+    resolution: {integrity: sha512-rXasaUScggvyD5ELpQC7SIOUOdqyOIifCK9TRDOLFEcuw1JxuyewKAwDs2QiKzMf8uLa0L360W0bVlV+sJDc8g==}
     engines: {node: '>=12'}
     dependencies:
       arrify: 2.0.1
@@ -3304,7 +3304,7 @@ packages:
       abort-controller: 3.0.0
       duplexify: 4.1.2
       fast-text-encoding: 1.0.4
-      google-auth-library: 8.2.0
+      google-auth-library: 8.3.0
       is-stream-ended: 0.1.4
       node-fetch: 2.6.7
       object-hash: 3.0.0
@@ -3339,7 +3339,7 @@ packages:
     dependencies:
       extend: 3.0.2
       gaxios: 5.0.1
-      google-auth-library: 8.2.0
+      google-auth-library: 8.3.0
       qs: 6.11.0
       url-template: 2.0.8
       uuid: 8.3.2
@@ -3352,7 +3352,7 @@ packages:
     resolution: {integrity: sha512-wH/jU/6QpqwsjTKj4vfKZz97ne7xT7BBbKwzQEwnbsG8iH9Seyw19P+AuLJcxNNrmgblwLqfr3LORg4Okat1BQ==}
     engines: {node: '>=12.0.0'}
     dependencies:
-      google-auth-library: 8.2.0
+      google-auth-library: 8.3.0
       googleapis-common: 6.0.1
     transitivePeerDependencies:
       - encoding
@@ -3370,7 +3370,7 @@ packages:
       cacheable-lookup: 6.1.0
       cacheable-request: 7.0.2
       decompress-response: 6.0.0
-      form-data-encoder: 2.0.1
+      form-data-encoder: 2.1.0
       get-stream: 6.0.1
       http2-wrapper: 2.1.11
       lowercase-keys: 3.0.0
@@ -6220,8 +6220,8 @@ packages:
       stylelint-config-recommended: 9.0.0_stylelint@14.10.0
     dev: true
 
-  /stylelint-gamut/1.1.6_stylelint@14.10.0:
-    resolution: {integrity: sha512-Q1WZK4hdToBgjbSET/nq/UieQhzNBu3w5+xyBY3aVIW2F8QZdm2badxFP8KCDYuVcjYMSshgeVlPNvQcDgv42w==}
+  /stylelint-gamut/1.2.0_stylelint@14.10.0:
+    resolution: {integrity: sha512-MZOiFgbsZ0N4YuPs7LPwGM+sbUjXLRyI6V1yrpAV64r64Q4Jt7WpwRiByEhjD2HupV/tr6ZvRpdJ+7SoFv5Nzw==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       stylelint: ^14.0.0
