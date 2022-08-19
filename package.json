@@ -27,7 +27,7 @@
     "postcss-mixins": "^9.0.3",
     "postcss-nesting": "^10.1.10",
     "postcss-opacity-percentage": "^1.1.2",
-    "vite": "^3.0.8",
+    "vite": "^3.0.9",
     "vite-plugin-pug-transformer": "^1.0.2"
   },
   "devDependencies": {
