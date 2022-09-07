@@ -4,6 +4,9 @@ on:
     branches:
       - main
   pull_request:
+permissions:
+  contents: read
+  deployments: write
 jobs:
 
   test:
@@ -12,30 +15,12 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
-      - name: Install asdf
-        uses: asdf-vm/actions/setup@v1
-      - name: Cache asdf
-        id: asdf-cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.asdf
-          key: asdf-${{ hashFiles('**/.tool-versions') }}
-      - name: Install asdf tools
-        if: steps.asdf-cache.outputs.cache-hit != 'true'
-        uses: asdf-vm/actions/install@v1
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.local/share/pnpm/
-          key: pnpm-${{ hashFiles('pnpm-lock.yaml') }}
+      - name: Install tools from asdf config
+        uses: ai/asdf-cache-action@v1
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
       - name: Run tests
         run: pnpm test
-        env:
-          FORCE_COLOR: 2
 
   deploy:
     name: Deploy
@@ -46,26 +31,14 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
-      - name: Install asdf
-        uses: asdf-vm/actions/setup@v1
-      - name: Cache asdf
-        uses: actions/cache@v3
+      - name: Install tools from asdf config
+        uses: ai/asdf-cache-action@v1
         with:
-          path: ~/.asdf
-          key: asdf-${{ hashFiles('**/.tool-versions') }}
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.local/share/pnpm/
-          key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
+          dependencies-cache: production
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --production --ignore-scripts
       - name: Build OKLCH
         run: pnpm build
-        env:
-          FORCE_COLOR: 2
       - name: Deploy OKLCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -77,8 +50,6 @@ jobs:
         run: rm -Rf ./dist/
       - name: Build LCH
         run: pnpm build:lch
-        env:
-          FORCE_COLOR: 2
       - name: Deploy LCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -96,26 +67,14 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
-      - name: Install asdf
-        uses: asdf-vm/actions/setup@v1
-      - name: Cache asdf
-        uses: actions/cache@v3
+      - name: Install tools from asdf config
+        uses: ai/asdf-cache-action@v1
         with:
-          path: ~/.asdf
-          key: asdf-${{ hashFiles('**/.tool-versions') }}
-      - name: Cache pnpm modules
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.local/share/pnpm/
-          key: pnpm-production-${{ hashFiles('pnpm-lock.yaml') }}
+          dependencies-cache: production
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --production --ignore-scripts
       - name: Build OKLCH
         run: pnpm build
-        env:
-          FORCE_COLOR: 2
       - name: Deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
