@@ -62,8 +62,6 @@ jobs:
     name: Preview
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main'
-    needs:
-      - test
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
