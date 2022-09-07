@@ -27,15 +27,15 @@
     "postcss-mixins": "^9.0.4",
     "postcss-nesting": "^10.1.10",
     "postcss-opacity-percentage": "^1.1.2",
-    "vite": "^3.0.9",
+    "vite": "^3.1.0",
     "vite-plugin-pug-transformer": "^1.0.2"
   },
   "devDependencies": {
     "@logux/eslint-config": "^47.2.0",
     "@logux/stylelint-config": "^0.12.0",
-    "@size-limit/file": "^8.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.36.1",
+    "@size-limit/file": "^8.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.36.2",
+    "@typescript-eslint/parser": "^5.36.2",
     "eslint": "^8.23.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -44,7 +44,7 @@
     "eslint-plugin-promise": "^6.0.1",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.8.0",
-    "size-limit": "^8.0.1",
+    "size-limit": "^8.1.0",
     "stylelint": "^14.11.0",
     "svgo": "^2.8.0",
     "typescript": "^4.8.2"
