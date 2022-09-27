@@ -19,7 +19,7 @@
     "@nanostores/persistent": "^0.7.0",
     "autoprefixer": "^10.4.12",
     "culori": "github:bijela-gora/culori#2770175",
-    "firebase-tools": "^11.10.0",
+    "firebase-tools": "^11.11.0",
     "jstransformer-markdown-it": "^3.0.0",
     "nanostores": "^0.7.0",
     "postcss": "^8.4.16",
@@ -34,8 +34,8 @@
     "@logux/eslint-config": "^47.2.0",
     "@logux/stylelint-config": "^0.12.0",
     "@size-limit/file": "^8.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.38.0",
-    "@typescript-eslint/parser": "^5.38.0",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
     "eslint": "^8.24.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -47,7 +47,7 @@
     "size-limit": "^8.1.0",
     "stylelint": "^14.12.1",
     "svgo": "^2.8.0",
-    "typescript": "^4.8.3"
+    "typescript": "^4.8.4"
   },
   "pnpm": {
     "overrides": {
