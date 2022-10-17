@@ -6,12 +6,13 @@ on:
   pull_request:
 permissions:
   contents: read
-  deployments: write
 jobs:
 
   test:
     name: Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
