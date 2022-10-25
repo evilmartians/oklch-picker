@@ -34,8 +34,8 @@
     "@logux/eslint-config": "^47.2.0",
     "@logux/stylelint-config": "^0.12.0",
     "@size-limit/file": "^8.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.40.1",
-    "@typescript-eslint/parser": "^5.40.1",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
     "eslint": "^8.26.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
@@ -46,7 +46,7 @@
     "simple-git-hooks": "^2.8.1",
     "size-limit": "^8.1.0",
     "stylelint": "^14.14.0",
-    "svgo": "^2.8.0",
+    "svgo": "^3.0.0",
     "typescript": "^4.8.4"
   },
   "pnpm": {
