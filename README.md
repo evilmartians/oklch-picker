@@ -14,10 +14,10 @@ OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 - In contrast [with LCH and Lab], no [hue shift] on chroma changes.
 - Provides great a11y on palette generation.
 
-Additional links about Oklab:
+Additional links about Oklab and OKLCH:
 
+* [OKLCH in CSS: why we moved from RGB and HSL](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl)
 * [The article by Oklab creator](https://bottosson.github.io/posts/oklab/)
-* [Slides about OKCH in CSS](https://slides.com/ai/oklch-css)
 
 [Unlike HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
 [with LCH and Lab]: https://bottosson.github.io/posts/oklab/#blending-colors
