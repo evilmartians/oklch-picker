@@ -1,5 +1,6 @@
 interface HTMLCanvasElement {
-  transferControlToOffscreen?: () => HTMLCanvasElement
+  // @ts-expect-error Some browsers doesn’t have OffscreenCanvas support
+  transferControlToOffscreen?: () => OffscreenCanvas
 }
 
 interface Worker extends EventTarget, AbstractWorker {
