@@ -1,5 +1,5 @@
-@import "./reset.css";
-@import "./colors.css";
+@import url("./reset.css");
+@import url("./colors.css");
 
 @font-face {
   font-family: "Martian Mono";
