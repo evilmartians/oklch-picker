@@ -19,7 +19,7 @@
     "@nanostores/persistent": "^0.7.0",
     "autoprefixer": "^10.4.13",
     "culori": "github:bijela-gora/culori#2770175",
-    "firebase-tools": "^11.16.1",
+    "firebase-tools": "^11.17.0",
     "jstransformer-markdown-it": "^3.0.0",
     "nanostores": "^0.7.1",
     "postcss": "^8.4.19",
@@ -27,19 +27,19 @@
     "postcss-mixins": "^9.0.4",
     "postcss-nesting": "^10.2.0",
     "postcss-opacity-percentage": "^1.1.2",
-    "vite": "^3.2.4",
+    "vite": "^4.0.0",
     "vite-plugin-pug-transformer": "^1.0.2"
   },
   "devDependencies": {
     "@logux/eslint-config": "^48.0.0",
     "@logux/stylelint-config": "^0.13.0",
     "@size-limit/file": "^8.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
-    "@typescript-eslint/parser": "^5.45.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
     "eslint": "^8.29.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.5.1",
+    "eslint-plugin-n": "^15.6.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "eslint-plugin-promise": "^6.1.1",
     "nano-staged": "^0.8.0",
@@ -47,7 +47,7 @@
     "size-limit": "^8.1.0",
     "stylelint": "^14.16.0",
     "svgo": "^3.0.2",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.4"
   },
   "pnpm": {
     "overrides": {
