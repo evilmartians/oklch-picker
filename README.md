@@ -2,8 +2,8 @@
 
 Color picker and converter for Oklab and Lab color space.
 
-* [`oklch.evilmartians.io`](https://oklch.evilmartians.io/)
-* [`lch.evilmartians.io`](https://lch.evilmartians.io/)
+* [`oklch.com`](https://oklch.com)
+* [`lch.oklch.com`](https://lch.oklch.com)
 
 OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 
@@ -21,7 +21,7 @@ Additional links about Oklab and OKLCH:
 
 [Unlike HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
 [with LCH and Lab]: https://bottosson.github.io/posts/oklab/#blending-colors
-[hue shift]: https://lch.evilmartians.io/#35,55,297,100
+[hue shift]: https://lch.oklch.com/#35,55,297,100
 
 
 ## Development
