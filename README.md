@@ -1,6 +1,6 @@
 # OKLCH & LCH Color Picker
 
-Color picker and converter for Oklab and Lab color space.
+Color picker and converter for OKLCH and LCH color space.
 
 * [`oklch.com`](https://oklch.com)
 * [`lch.oklch.com`](https://lch.oklch.com)
