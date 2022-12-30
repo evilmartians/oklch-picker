@@ -8,7 +8,6 @@ body {
   position: relative;
   box-sizing: border-box;
   height: 100%;
-  cursor: pointer;
   border: var(--unavailable-border);
   border-width: 1px 0;
 
@@ -72,6 +71,7 @@ body {
   font-size: 12px;
   text-align: center;
   text-transform: uppercase;
+  user-select: none;
   opacity: 50%;
 
   @nest .chart_line.is-x & {
@@ -91,5 +91,6 @@ body {
   left: 0;
   width: 100%;
   height: calc(100% + 2px);
+  cursor: pointer;
   image-rendering: crisp-edges;
 }

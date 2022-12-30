@@ -3,6 +3,7 @@ import { trackPaint, getQuickScale } from '../../stores/benchmark.js'
 import { paintCL, paintCH, paintLH } from './paint.js'
 import { showCharts, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
+import { clamp } from '../../lib/math.js'
 
 const MAX_SCALE = 8
 
@@ -29,22 +30,25 @@ onPaint({
   }
 })
 
-function onSelect(e: MouseEvent): void {
-  let space = e.currentTarget as HTMLDivElement
+function setComponentsFromSpace(
+  space: HTMLCanvasElement,
+  mouseX: number,
+  mouseY: number
+): void {
   let rect = space.getBoundingClientRect()
-  let x = e.clientX - rect.left
-  let y = rect.height - (e.clientY - rect.top)
-  if (space.classList.contains('is-l')) {
+  let x = clamp(mouseX - rect.left, 0, rect.width)
+  let y = clamp(rect.height - (mouseY - rect.top), 0, rect.height)
+  if (space.parentElement!.classList.contains('is-l')) {
     setCurrentComponents({
       h: (H_MAX * x) / rect.width,
       c: (getMaxC() * y) / rect.height
     })
-  } else if (space.classList.contains('is-c')) {
+  } else if (space.parentElement!.classList.contains('is-c')) {
     setCurrentComponents({
       l: (100 * y) / rect.height,
       h: (H_MAX * x) / rect.width
     })
-  } else if (space.classList.contains('is-h')) {
+  } else if (space.parentElement!.classList.contains('is-h')) {
     setCurrentComponents({
       l: (100 * x) / rect.width,
       c: (getMaxC() * y) / rect.height
@@ -52,19 +56,28 @@ function onSelect(e: MouseEvent): void {
   }
 }
 
-function initEvents(chart: HTMLDivElement): void {
+function initEvents(chart: HTMLCanvasElement): void {
+  function onSelect(e: MouseEvent) {
+    e.preventDefault()
+    setComponentsFromSpace(chart, e.clientX, e.clientY)
+    return false
+  }
+
+  function onMouseUp(e: MouseEvent) {
+    document.removeEventListener('mousemove', onSelect)
+    document.removeEventListener('mouseup', onMouseUp)
+    setComponentsFromSpace(chart, e.clientX, e.clientY)
+  }
+
   chart.addEventListener('mousedown', () => {
-    chart.addEventListener('mousemove', onSelect)
-  })
-  chart.addEventListener('mouseup', e => {
-    chart.removeEventListener('mousemove', onSelect)
-    onSelect(e)
+    document.addEventListener('mouseup', onMouseUp)
+    document.addEventListener('mousemove', onSelect)
   })
 }
 
-initEvents(chartL)
-initEvents(chartC)
-initEvents(chartH)
+initEvents(canvasL)
+initEvents(canvasC)
+initEvents(canvasH)
 
 function initCharts(): void {
   initCanvasSize(canvasL)
