@@ -3,7 +3,6 @@ import { trackPaint, getQuickScale } from '../../stores/benchmark.js'
 import { paintCL, paintCH, paintLH } from './paint.js'
 import { showCharts, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
-import { clamp } from '../../lib/math.js'
 
 const MAX_SCALE = 8
 
@@ -16,6 +15,10 @@ let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
 
 function getMaxC(): number {
   return showRec2020.get() ? C_MAX_REC2020 : C_MAX
+}
+
+function clamp(val: number, min: number, max: number): number {
+  return Math.min(Math.max(min, val), max)
 }
 
 onPaint({
@@ -57,13 +60,12 @@ function setComponentsFromSpace(
 }
 
 function initEvents(chart: HTMLCanvasElement): void {
-  function onSelect(e: MouseEvent) {
+  function onSelect(e: MouseEvent): void {
     e.preventDefault()
     setComponentsFromSpace(chart, e.clientX, e.clientY)
-    return false
   }
 
-  function onMouseUp(e: MouseEvent) {
+  function onMouseUp(e: MouseEvent): void {
     document.removeEventListener('mousemove', onSelect)
     document.removeEventListener('mouseup', onMouseUp)
     setComponentsFromSpace(chart, e.clientX, e.clientY)
