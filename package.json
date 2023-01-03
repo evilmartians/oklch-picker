@@ -27,15 +27,15 @@
     "postcss-mixins": "^9.0.4",
     "postcss-nesting": "^10.2.0",
     "postcss-opacity-percentage": "^1.1.3",
-    "vite": "^4.0.3",
+    "vite": "^4.0.4",
     "vite-plugin-pug-transformer": "^1.0.3"
   },
   "devDependencies": {
     "@logux/eslint-config": "^48.0.0",
     "@logux/stylelint-config": "^0.13.0",
     "@size-limit/file": "^8.1.0",
-    "@typescript-eslint/eslint-plugin": "^5.47.1",
-    "@typescript-eslint/parser": "^5.47.1",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
     "eslint": "^8.31.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
