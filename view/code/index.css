@@ -1,3 +1,7 @@
+.code {
+  position: relative;
+}
+
 .code + .code {
   margin-top: 4px;
 }
@@ -12,4 +16,14 @@
   &.is-hidden {
     display: none;
   }
+}
+
+.code_format {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: min(calc(var(--main-padding) - 4px), 40px);
+  height: 40px;
+  margin-left: 4px;
+  border-radius: var(--radius);
 }

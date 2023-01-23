@@ -1,4 +1,5 @@
 import {
+  formatHex8,
   formatHex,
   formatRgb,
   formatCss,
@@ -18,9 +19,11 @@ import { OutputFormats } from './settings.js'
 
 function formatOklab(color: Oklab): string {
   let { l, a, b, alpha } = color
-  return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)} / ${
-    100 * (alpha ?? 1)
-  })`
+  if (typeof alpha !== 'undefined' && alpha < 1) {
+    return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)} / ${toPercent(alpha)}`
+  } else {
+    return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)})`
+  }
 }
 
 function cleanComponents<Obj extends {}>(color: Obj): Obj {
@@ -39,6 +42,8 @@ function cleanComponents<Obj extends {}>(color: Obj): Obj {
 
 export type FormatsValue = Record<OutputFormats, string>
 
+export const srgbFormats = new Set(['auto', 'hex', 'rgb', 'hsl'])
+
 export const formats = computed<FormatsValue, typeof current>(
   current,
   value => {
@@ -46,9 +51,10 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgbColor: Color = inRGB(color) ? color : toRgb(color)
     let hex = formatHex(rgbColor)
     let rgba = formatRgb(rgbColor)
+    let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
-      auto: color.alpha && color.alpha < 1 ? rgba : hex,
-      hex,
+      auto: hasAlpha ? rgba : hex,
+      hex: hasAlpha ? formatHex8(rgbColor) : hex,
       rgb: rgba,
       hsl: formatCss(cleanComponents(hsl(rgbColor))),
       p3: formatCss(cleanComponents(p3(color))),

@@ -3,9 +3,10 @@ import {
   valueToColor,
   current
 } from '../../stores/current.js'
+import { formats, FormatsValue, srgbFormats } from '../../stores/formats.js'
+import { outputFormat, OutputFormats } from '../../stores/settings.js'
 import { parse, formatLch } from '../../lib/colors.js'
 import { visible } from '../../stores/visible.js'
-import { formats } from '../../stores/formats.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
 let lchInput = lch.querySelector<HTMLInputElement>('input')!
@@ -17,6 +18,8 @@ let notePaste = document.querySelector<HTMLDivElement>('.code_note.is-paste')!
 let noteFallback = document.querySelector<HTMLDivElement>(
   '.code_note.is-fallback'
 )!
+
+let format = document.querySelector<HTMLSelectElement>('.code select')!
 
 function toggle(input: HTMLInputElement, invalid: boolean): void {
   if (invalid) {
@@ -39,15 +42,16 @@ function setLch(): void {
 
 function setRgb(): void {
   let { space } = visible.get()
-  let { auto } = formats.get()
-  prevValues.set(rgbInput, auto)
-  rgbInput.value = auto
-  if (space === 'srgb') {
-    notePaste.classList.remove('is-hidden')
-    noteFallback.classList.add('is-hidden')
-  } else {
+  let type = outputFormat.get()
+  let output = formats.get()[type]
+  prevValues.set(rgbInput, output)
+  rgbInput.value = output
+  if (space !== 'srgb' && srgbFormats.has(type)) {
     notePaste.classList.add('is-hidden')
     noteFallback.classList.remove('is-hidden')
+  } else {
+    notePaste.classList.remove('is-hidden')
+    noteFallback.classList.add('is-hidden')
   }
   toggle(rgbInput, false)
 }
@@ -103,3 +107,22 @@ function listenChanges(input: HTMLInputElement): void {
 
 listenChanges(lchInput)
 listenChanges(rgbInput)
+
+format.value = outputFormat.get()
+outputFormat.listen(value => {
+  format.value = value
+  setRgb()
+})
+format.addEventListener('change', () => {
+  outputFormat.set(format.value as OutputFormats)
+})
+
+formats.subscribe(value => {
+  for (let key in value) {
+    let type = key as keyof FormatsValue
+    if (type !== 'auto') {
+      let option = format.querySelector<HTMLOptionElement>(`[value=${type}]`)!
+      option.text = value[type]
+    }
+  }
+})

@@ -11,3 +11,12 @@
     = `Paste HEX, RGBA, or HSL to convert to ${LCH ? 'LCH' : 'OKLCH'}`
   .code_note.is-fallback.is-hidden
     = `Closest fallback (by chroma) in sRGB`
+  select.code_format
+    option( value="auto" ) Auto hex/rgba
+    option( value="hex" )
+    option( value="rgb" )
+    option( value="hsl" )
+    option( value="p3" )
+    option( value="lch" )
+    option( value="lab" )
+    option( value="oklab" )
