@@ -42,7 +42,12 @@ function cleanComponents<Obj extends {}>(color: Obj): Obj {
 
 export type FormatsValue = Record<OutputFormats, string>
 
-export const srgbFormats = new Set(['auto', 'hex', 'rgb', 'hsl'])
+export const srgbFormats = new Set<OutputFormats>([
+  'hex/rgba',
+  'hex',
+  'rgb',
+  'hsl'
+])
 
 export const formats = computed<FormatsValue, typeof current>(
   current,
@@ -53,14 +58,14 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgba = formatRgb(rgbColor)
     let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
-      auto: hasAlpha ? rgba : hex,
-      hex: hasAlpha ? formatHex8(rgbColor) : hex,
-      rgb: rgba,
-      hsl: formatCss(cleanComponents(hsl(rgbColor))),
-      p3: formatCss(cleanComponents(p3(color))),
-      lch: formatCss(cleanComponents(lch(color))),
-      lab: formatCss(cleanComponents(lab(color))),
-      oklab: formatOklab(oklab(color))
+      'hex/rgba': hasAlpha ? rgba : hex,
+      'hex': hasAlpha ? formatHex8(rgbColor) : hex,
+      'rgb': rgba,
+      'hsl': formatCss(cleanComponents(hsl(rgbColor))),
+      'p3': formatCss(cleanComponents(p3(color))),
+      'lch': formatCss(cleanComponents(lch(color))),
+      'lab': formatCss(cleanComponents(lab(color))),
+      'oklab': formatOklab(oklab(color))
     }
   }
 )

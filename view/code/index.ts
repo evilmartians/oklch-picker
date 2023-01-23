@@ -111,6 +111,7 @@ listenChanges(rgbInput)
 format.value = outputFormat.get()
 outputFormat.listen(value => {
   format.value = value
+  rgb.ariaLabel = `${value} CSS code`
   setRgb()
 })
 format.addEventListener('change', () => {
@@ -120,7 +121,7 @@ format.addEventListener('change', () => {
 formats.subscribe(value => {
   for (let key in value) {
     let type = key as keyof FormatsValue
-    if (type !== 'auto') {
+    if (type !== 'hex/rgba') {
       let option = format.querySelector<HTMLOptionElement>(`[value=${type}]`)!
       option.text = value[type]
     }

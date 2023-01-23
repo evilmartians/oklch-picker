@@ -14,7 +14,7 @@ export let showP3 = persistentAtom('settings:p3', true, encoder)
 export let showRec2020 = persistentAtom('settings:rec2020', false, encoder)
 
 export type OutputFormats =
-  | 'auto'
+  | 'hex/rgba'
   | 'hex'
   | 'rgb'
   | 'hsl'
@@ -25,5 +25,5 @@ export type OutputFormats =
 
 export let outputFormat = persistentAtom<OutputFormats>(
   'settings:output',
-  'auto'
+  'hex/rgba'
 )

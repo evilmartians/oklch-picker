@@ -4,7 +4,7 @@
   })
 
 .code.is-rgb
-  +field('RGB CSS code', 'r', {
+  +field('hex/rgba CSS code', 'r', {
     type: 'text'
   })
   .code_note.is-paste
@@ -12,7 +12,7 @@
   .code_note.is-fallback.is-hidden
     = `Closest fallback (by chroma) in sRGB`
   select.code_format
-    option( value="auto" ) Auto hex/rgba
+    option( value="hex/rgba" ) Auto hex/rgba
     option( value="hex" )
     option( value="rgb" )
     option( value="hsl" )
