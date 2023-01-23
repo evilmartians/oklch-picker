@@ -5,6 +5,7 @@ import {
 } from '../../stores/current.js'
 import { parse, formatLch } from '../../lib/colors.js'
 import { visible } from '../../stores/visible.js'
+import { formats } from '../../stores/formats.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
 let lchInput = lch.querySelector<HTMLInputElement>('input')!
@@ -37,9 +38,10 @@ function setLch(): void {
 }
 
 function setRgb(): void {
-  let { fallback, space } = visible.get()
-  prevValues.set(rgbInput, fallback)
-  rgbInput.value = fallback
+  let { space } = visible.get()
+  let { auto } = formats.get()
+  prevValues.set(rgbInput, auto)
+  rgbInput.value = auto
   if (space === 'srgb') {
     notePaste.classList.remove('is-hidden')
     noteFallback.classList.add('is-hidden')
