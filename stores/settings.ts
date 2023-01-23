@@ -12,3 +12,18 @@ let encoder = {
 export let showCharts = persistentAtom('settings:charts', true, encoder)
 export let showP3 = persistentAtom('settings:p3', true, encoder)
 export let showRec2020 = persistentAtom('settings:rec2020', false, encoder)
+
+export type OutputFormats =
+  | 'auto'
+  | 'hex'
+  | 'rgb'
+  | 'hsl'
+  | 'p3'
+  | 'lch'
+  | 'lab'
+  | 'oklab'
+
+export let outputFormat = persistentAtom<OutputFormats>(
+  'settings:output',
+  'auto'
+)

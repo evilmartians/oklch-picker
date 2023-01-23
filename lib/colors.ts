@@ -107,11 +107,11 @@ export function formatLch(color: AnyLch): string {
 }
 
 // Hack to avoid ,999999 because of float bug implementation
-function clean(value: number): number {
+export function clean(value: number): number {
   return Math.round(parseFloat((value * 10 ** 2).toFixed(2))) / 10 ** 2
 }
 
-function toPercent(value: number): string {
+export function toPercent(value: number): string {
   return `${clean(100 * value)}%`
 }
 
