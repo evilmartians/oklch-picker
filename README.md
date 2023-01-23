@@ -12,7 +12,7 @@ OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 - [Unlike HSL], OKLCH always has predictable contrast
   after color transformation.
 - In contrast [with LCH and Lab], no [hue shift] on chroma changes.
-- Provides great a11y on palette generation.
+- Provides great accessibility on palette generation.
 
 Additional links about Oklab and OKLCH:
 
