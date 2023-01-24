@@ -9,7 +9,6 @@ function clamp(l: number, c: number, h: number, alpha = 1): string {
 
 export let accent = computed(current, value => {
   let { h } = value
-  if (h === 0) h = 286
   if (COLOR_FN === 'oklch') {
     return {
       main: clamp(0.57, 0.18, h),
