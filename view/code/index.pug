@@ -5,18 +5,21 @@
 
 .code.is-rgb
   +field('hex/rgba CSS code', 'r', {
-    type: 'text'
+    type: 'text',
+    options: {
+      'hex/rgba': 'Auto hex/rgba',
+      'hex': '',
+      'rgb': '',
+      'hsl': '',
+      'p3': '',
+      'lch': '',
+      'lab': '',
+      'oklab': '',
+    },
+    optionsLabel: 'Change format'
   })
   .code_note.is-paste
     = `Paste HEX, RGBA, or HSL to convert to ${LCH ? 'LCH' : 'OKLCH'}`
   .code_note.is-fallback.is-hidden
     = `Closest fallback (by chroma) in sRGB`
-  select.code_format
-    option( value="hex/rgba" ) Auto hex/rgba
-    option( value="hex" )
-    option( value="rgb" )
-    option( value="hsl" )
-    option( value="p3" )
-    option( value="lch" )
-    option( value="lab" )
-    option( value="oklab" )
+  .code_format

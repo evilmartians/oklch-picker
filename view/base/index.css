@@ -35,7 +35,8 @@ body {
 
 a,
 input,
-button {
+button,
+select {
   &:focus {
     outline: var(--accent) solid 3px;
   }

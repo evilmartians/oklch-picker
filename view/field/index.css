@@ -1,5 +1,9 @@
 .field {
   position: relative;
+
+  &.is-options {
+    padding-right: 48px;
+  }
 }
 
 .field_input {
@@ -24,6 +28,11 @@
       outline-color: var(--danger);
     }
   }
+
+  @nest .field.is-options & {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 .field_hotkey {
@@ -44,5 +53,54 @@
 
   @media (width < 830px) {
     display: none;
+  }
+}
+
+.field_options {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 46px;
+  height: 100%;
+}
+
+.field_select {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  opacity: 0%;
+}
+
+.field_button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--surface-ui-accent);
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+
+  @nest .field_select:focus + & {
+    outline: var(--accent) solid 3px;
+  }
+
+  @nest .field_select:not(:focus-visible):focus + & {
+    outline: none;
+  }
+}
+
+.field_button > svg {
+  width: 16px;
+  height: 16px;
+
+  & > path {
+    fill: var(--accent);
   }
 }

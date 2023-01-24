@@ -1,4 +1,11 @@
 mixin field(label, hotkey, opts = {})
-  .field
+  .field( class=opts.options ? 'is-options' : '' )
     kbd.field_hotkey= hotkey
     input.field_input( aria-label=label )&attributes({ type: 'text', ...opts })
+    if opts.options
+      .field_options
+        select.field_select( aria-label=opts.optionsLabel )
+          for value, key in opts.options
+            option( value=key )= value
+        .field_button
+          include ./down.svg
