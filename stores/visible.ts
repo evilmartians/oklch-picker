@@ -13,7 +13,7 @@ import {
 import { current, valueToColor } from './current.js'
 import { support } from './support.js'
 
-interface VisibleValue {
+export interface VisibleValue {
   space: 'srgb' | 'p3' | 'rec2020' | 'out'
   color: Color
   real: string | false
@@ -23,10 +23,20 @@ interface VisibleValue {
 export let visible = computed<VisibleValue, [typeof current, typeof support]>(
   [current, support],
   (value, { p3, oklch }) => {
+
     let color: Color = valueToColor(value)
     if (inRGB(color)) {
       let rgbCss = formatRgb(rgb(color))
       if (!oklch) color = rgb(color)
+
+      console.log({
+        space: 'srgb',
+        color,
+        real: rgbCss,
+        fallback: rgbCss
+      });
+
+
       return {
         space: 'srgb',
         color,
@@ -37,6 +47,14 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
       let rgbColor = toRgb(color)
       let fallback = formatRgb(rgbColor)
       if (inP3(color)) {
+        console.log({
+          space: 'p3',
+          color: p3 && oklch ? color : rgbColor,
+          real: p3 ? fastFormat(color) : false,
+          fallback
+        });
+
+
         return {
           space: 'p3',
           color: p3 && oklch ? color : rgbColor,
@@ -44,6 +62,14 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
           fallback
         }
       } else {
+        console.log({
+          space: inRec2020(color) ? 'rec2020' : 'out',
+          color: rgbColor,
+          real: false,
+          fallback
+        });
+
+
         return {
           space: inRec2020(color) ? 'rec2020' : 'out',
           color: rgbColor,

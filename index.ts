@@ -10,3 +10,6 @@ import './view/code/index.js'
 import './view/checkbox/index.js'
 import './view/settings/index.js'
 import './view/benchmark/index.js'
+
+import './view/3d/index.js'
+import './lib/generate-color-space.js'

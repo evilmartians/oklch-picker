@@ -3,6 +3,7 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowJs": true,
+    "lib": ["ESNext", "DOM"],
     "target": "es2018",
     "module": "esnext",
     "strict": true,
@@ -10,5 +11,20 @@
   },
   "include": [
     "**/*.ts"
-  ]
+  ],
+
+  "ts-node": {
+    // "esModuleInterop": true,
+    // "experimentalResolver": true,
+
+    "esm": true,
+    "compilerOptions": {
+      "lib": ["DOM"]
+      // "module": "commonjs",
+      // "target": "ES6",
+      // "moduleResolution": "node",
+      // "allowJs": true,
+      // "esModuleInterop": true,
+    }
+  }
 }
