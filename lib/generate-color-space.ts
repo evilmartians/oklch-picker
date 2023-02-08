@@ -4,18 +4,17 @@
 // H 0-360
 // A 0-1
 
-import { LchValue } from "../stores/current"
-import { detectColorSpace } from "../tools/detectColorSpace"
-import { Cloud } from "./cloud"
-import { resolveOverlaps } from "./grid-3d"
-import { marchingCubes } from "./marching-cubes"
-import { collapseVertices } from "./merge"
-import { laplacianFilter } from "./smooth"
-import { scaleVec3 } from "./vec3"
+import { LchValue } from "../stores/current.js"
+import { detectColorSpace } from "../tools/detectColorSpace.js"
+import { Cloud } from "./cloud.js"
+import { toRgb } from "./colors.js"
+import { resolveOverlaps } from "./grid-3d.js"
+import { marchingCubes } from "./marching-cubes.js"
+import { collapseVertices } from "./merge.js"
+import { laplacianFilter } from "./smooth.js"
+import { scaleVec3 } from "./vec3.js"
 
 const L_MAX = 100
-const PRECISION = 60
-const HALF_PRECISION = PRECISION / 2
 
 function cylindricalToCartesian(p: number, fDeg: number, z: number) {
   let fRad = fDeg / 360 * Math.PI * 2
@@ -45,15 +44,17 @@ function avgLCH(lchs: LchValue[]) {
   }
 }
 
-export function generateColorSpaceVertices() {
+export function generateColorSpaceMesh(density: number) {
   let srgbCloud = new Cloud<LchValue>()
+  let halfDensity = density / 2
+  let inverseDensity = 1 / density
 
-  for (let x = 0; x < PRECISION; x++) {
-    for (let y = 0; y < PRECISION; y++) {
-      for (let z = 0; z < PRECISION; z++) {
-        let normL = x / PRECISION
-        let normC = y / PRECISION
-        let normH = z / PRECISION
+  for (let x = 0; x < density; x++) {
+    for (let y = 0; y < density; y++) {
+      for (let z = 0; z < density; z++) {
+        let normL = x / density
+        let normC = y / density
+        let normH = z / density
 
         let l = normL * L_MAX
         let c = normC * C_MAX
@@ -82,22 +83,50 @@ export function generateColorSpaceVertices() {
   srgbCloud.normalizeScale()
   srgbCloud.resetPosition()
 
-  let dirtyGrid3 = srgbCloud.toGrid3D(HALF_PRECISION)
+  let dirtyGrid = srgbCloud.toGrid3D(halfDensity, 1)
 
-  let grid3 = resolveOverlaps(
-    dirtyGrid3,
-    overlap => overlap.length ? avgLCH(overlap) : null
+  let grid = resolveOverlaps(
+    dirtyGrid,
+    overlap => overlap.length
+      ? overlap[0]
+      : null
   )
 
-  let grid3Bool = grid3.map(x => x.map(y => y.map(z => !!z)))
-  let surface = marchingCubes(grid3Bool)
+  let surfaceGrid = marchingCubes(
+    grid,
+    (a, b) => {
+      if (!a && !b) return null
+      if (a && b) return avgLCH([a,b])
+      return a || b
+    },
+    item => !!item
+  )
 
-  let mesh = collapseVertices(surface)
+  let mesh = collapseVertices(
+    surfaceGrid,
+    items => {
+      return items.length
+        ? avgLCH(items)
+        : null
+    }
+  )
 
   // Downscale mesh
-  mesh.vertices = mesh.vertices.map(p => scaleVec3(p, 1 / PRECISION))
+  mesh.vertices = mesh.vertices.map(p => scaleVec3(p, inverseDensity))
 
-  mesh.vertices = laplacianFilter(mesh.vertices, mesh.indices, 6)
+  mesh.vertices = laplacianFilter(mesh.vertices, mesh.indices, 4)
 
-  return mesh
+  let colors = mesh.data.map(color => toRgb({
+    mode: 'oklch',
+    l: (color?.l || 0) / L_MAX,
+    c: color?.c || 0,
+    h: color?.h || 0,
+    alpha: color?.a || 0
+  }))
+
+  return {
+    vertices: mesh.vertices,
+    indices: mesh.indices,
+    colors
+  }
 }

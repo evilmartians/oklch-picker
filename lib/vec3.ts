@@ -11,3 +11,17 @@ export function scaleVec3(vec: Vec3Like, scalar: number): Vec3Like {
     z: vec.z * scalar,
   }
 }
+
+function lerp(a: number, b: number, t: number): number {
+  let dif = b - a
+
+  return a + dif * t
+}
+
+export function lerpVec3(a: Vec3Like, b: Vec3Like, t: number): Vec3Like {
+  return {
+    x: lerp(a.x, b.x, t),
+    y: lerp(a.y, b.y, t),
+    z: lerp(a.z, b.z, t),
+  }
+}

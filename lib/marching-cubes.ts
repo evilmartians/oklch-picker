@@ -1,6 +1,7 @@
-import { scaleVec3, Vec3Like } from "./vec3";
+import { DataPoint } from "./data-point";
+import { Grid3D } from "./grid-3d";
+import { lerpVec3, scaleVec3, Vec3Like } from "./vec3";
 
-const PADDING = 1
 const TRIANG_LERP = 0.5
 const UPSCALE = 2
 
@@ -17,6 +18,10 @@ type IndexedCuboid = [
   v6: Vec3Like,
   v7: Vec3Like,
 ]
+
+type Boolify<T> = (cell: T | null) => boolean
+
+type Interpolate<T> = (a: T|null, b: T|null) => T | null
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 const triangulationCases: TriangIndices[] = [
@@ -295,83 +300,102 @@ const edges: EdgeIndices[] = [
   [3, 7], //11
 ];
 
-function lerp(a: number, b: number, t: number) {
-  let dif = b - a
 
-  return a + dif * t
-}
 
-function vec3Lerp(a: Vec3Like, b: Vec3Like, t: number) {
-  return {
-    x: lerp(a.x, b.x, t),
-    y: lerp(a.y, b.y, t),
-    z: lerp(a.z, b.z, t),
-  }
-}
 
-function getTriangCase(grid: boolean[][][], {x,y,z}: Vec3Like) {
+
+function getTriangCase<T>(
+  grid: Grid3D<T>,
+  v0Idx: Vec3Like,
+  boolify: Boolify<T>
+) {
+  let {x,y,z} = v0Idx
   let cubeIndex = 0;
 
-  x -= PADDING
-  y -= PADDING
-  z -= PADDING
+  if (boolify(grid[x]?.[y]?.[z])) cubeIndex |= 1
+  if (boolify(grid[x + 1]?.[y]?.[z])) cubeIndex |= 2
+  if (boolify(grid[x + 1]?.[y + 1]?.[z])) cubeIndex |= 4
+  if (boolify(grid[x]?.[y + 1]?.[z])) cubeIndex |= 8
 
-  if (grid[x]?.[y]?.[z]) cubeIndex |= 1
-  if (grid[x + 1]?.[y]?.[z]) cubeIndex |= 2
-  if (grid[x + 1]?.[y + 1]?.[z]) cubeIndex |= 4
-  if (grid[x]?.[y + 1]?.[z]) cubeIndex |= 8
-
-  if (grid[x]?.[y]?.[z + 1]) cubeIndex |= 16
-  if (grid[x + 1]?.[y]?.[z + 1]) cubeIndex |= 32
-  if (grid[x + 1]?.[y + 1]?.[z + 1]) cubeIndex |= 64
-  if (grid[x]?.[y + 1]?.[z + 1]) cubeIndex |= 128
+  if (boolify(grid[x]?.[y]?.[z + 1])) cubeIndex |= 16
+  if (boolify(grid[x + 1]?.[y]?.[z + 1])) cubeIndex |= 32
+  if (boolify(grid[x + 1]?.[y + 1]?.[z + 1])) cubeIndex |= 64
+  if (boolify(grid[x]?.[y + 1]?.[z + 1])) cubeIndex |= 128
 
   return triangulationCases[cubeIndex];
 }
 
-function triangulate(grid: boolean[][][], v0Idx: Vec3Like, scale = 1) {
-  let tris: Vec3Like[] = []
+function triangulate<T>(
+  grid: Grid3D<T>,
+  v0Idx: Vec3Like,
+  interpolate: Interpolate<T>,
+  boolify: Boolify<T>,
+  scale = 1
+) {
+  let triPoints: DataPoint<T | null>[] = []
+
+  let {x,y,z} = v0Idx
+
   let cube: IndexedCuboid = [
     v0Idx,
-    { x: v0Idx.x + 1, y: v0Idx.y, z: v0Idx.z },
-    { x: v0Idx.x + 1, y: v0Idx.y + 1, z: v0Idx.z },
-    { x: v0Idx.x, y: v0Idx.y + 1, z: v0Idx.z },
+    { x: x + 1, y, z },
+    { x: x + 1, y: y + 1, z },
+    { x, y: y + 1, z },
 
-    { ...v0Idx, z: v0Idx.z + 1 },
-    { x: v0Idx.x + 1, y: v0Idx.y, z: v0Idx.z + 1 },
-    { x: v0Idx.x + 1, y: v0Idx.y + 1, z: v0Idx.z + 1 },
-    { x: v0Idx.x, y: v0Idx.y + 1, z: v0Idx.z + 1 },
+    { ...v0Idx, z: z + 1 },
+    { x: x + 1, y, z: z + 1 },
+    { x: x + 1, y: y + 1, z: z + 1 },
+    { x, y: y + 1, z: z + 1 },
   ]
 
-  let triangCase = getTriangCase(grid, v0Idx)
+  let dataCube = cube.map(v => grid[v.x]?.[v.y]?.[v.z] || null)
+
+  let triangCase = getTriangCase(grid, v0Idx, boolify)
 
   for (let i = 0; i < triangCase.length; i++) {
     let edgeIndex = triangCase[i]
 
-    let [vAIdx, vBIdx] = edges[edgeIndex]
+    let [aIdx, bIdx] = edges[edgeIndex]
 
-    let vA = cube[vAIdx]
-    let vB = cube[vBIdx]
+    let vA = cube[aIdx]
+    let vB = cube[bIdx]
+
+    let dA = dataCube[aIdx]
+    let dB = dataCube[bIdx]
+    let dAB = interpolate(dA, dB)
 
     let vAB = scaleVec3(
-      vec3Lerp(vA, vB, TRIANG_LERP),
+      lerpVec3(vA, vB, TRIANG_LERP),
       scale
     )
 
-    tris.push(vAB)
+    triPoints.push({
+      pos: vAB,
+      data: dAB
+    })
   }
 
-  return tris
+  return triPoints
 }
 
-export function marchingCubes(grid: boolean[][][]) {
+export function marchingCubes<T>(
+  grid: Grid3D<T>,
+  interpolate: Interpolate<T>,
+  boolify: Boolify<T>,
+) {
   let gridSize = grid.length
-  let allTris: Vec3Like[] = []
+  let allTris: DataPoint<T | null>[] = []
 
-  for (let x = 0; x < gridSize + PADDING; x++) {
-    for (let y = 0; y < gridSize + PADDING; y++) {
-      for (let z = 0; z < gridSize + PADDING; z++) {
-        let tris = triangulate(grid, { x, y, z }, UPSCALE)
+  for (let x = 0; x < gridSize; x++) {
+    for (let y = 0; y < gridSize; y++) {
+      for (let z = 0; z < gridSize; z++) {
+        let tris = triangulate(
+          grid,
+          { x, y, z },
+          interpolate,
+          boolify,
+          UPSCALE
+        )
 
         if (tris.length) allTris.push(...tris)
       }

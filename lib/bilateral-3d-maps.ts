@@ -35,7 +35,7 @@ export class Bilateral3DMap<T> {
     return z in yLayer
   }
 
-  public set(x: number, y: number, z: number, value: T) {
+  public set(value: T, ...[x,y,z]: XYZTuple) {
     // set key - value
     let xLayer = this.keys_value[x] || {}
     let yLayer = xLayer[y] || {}

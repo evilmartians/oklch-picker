@@ -1,42 +1,61 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { BackSide, BoxGeometry, BufferAttribute, BufferGeometry, BufferGeometryUtils, DirectionalLight, DoubleSide, Int32BufferAttribute, Mesh, MeshBasicMaterial, MeshNormalMaterial, Object3D, OrthographicCamera, PerspectiveCamera, Scene, Uint32BufferAttribute, WebGLRenderer } from "three"
+import { AmbientLight, BufferAttribute, BufferGeometry, DoubleSide, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera, Scene, Uint32BufferAttribute, Vector3, WebGLRenderer } from "three"
 
-import { pixelRation } from "../../lib/screen"
-import { generateColorSpaceVertices } from "../../lib/generate-color-space"
+import { pixelRation } from "../../lib/screen.js"
+import { generateColorSpaceMesh } from "../../lib/generate-color-space.js"
 
 const plotCanvases = document.querySelectorAll<HTMLCanvasElement>('.plot-test')
 
 plotCanvases.forEach(initPlot)
 
 function makeCloud() {
-  let mesh = generateColorSpaceVertices()
+  let mesh = generateColorSpaceMesh(40)
   let origin = new Object3D()
 
-  console.log(mesh);
-
-  let floatTris = new Float32Array(
+  let vertices = new Float32Array(
     mesh.vertices
       .map(v => [v.x, v.y, v.z])
+      .flat()
+  )
+  let colors = new Uint8Array(
+    mesh.colors
+      .map(rgb => [
+        rgb.r * 255,
+        rgb.g * 255,
+        rgb.b * 255
+      ])
       .flat()
   )
 
   let geometry = new BufferGeometry()
   geometry.setAttribute(
     'position',
-    new BufferAttribute(floatTris, 3)
+    new BufferAttribute(vertices, 3)
+  )
+  geometry.setAttribute(
+    'color',
+    new BufferAttribute(colors, 3, true)
   )
   geometry.setIndex(new Uint32BufferAttribute(mesh.indices, 1))
   geometry.computeVertexNormals()
+  geometry.computeBoundingBox()
 
   let trisMesh = new Mesh(
     geometry,
-    new MeshNormalMaterial({side: BackSide, vertexColors: true})
+    new MeshBasicMaterial({
+      side: DoubleSide,
+      vertexColors: true,
+      fog: false,
+    })
   )
 
+  let size = new Vector3()
+  geometry.boundingBox?.getSize(size)
+
   origin.add(trisMesh)
-  trisMesh.position.x -= 1/2
-  trisMesh.position.y -= 1/2
-  trisMesh.position.z -= 1/2
+  trisMesh.position.sub(size.clone().multiplyScalar(1/2))
+
+  origin.scale.z *= 0.8
 
   return origin
 }
@@ -58,7 +77,7 @@ function initPlot(canvas: HTMLCanvasElement) {
   // Scene elements
   let scene = new Scene()
 
-  let light = new DirectionalLight('#fff', 1)
+  let light = new AmbientLight('#fff', 1)
   light.rotateX(45)
 
   let cam = new PerspectiveCamera()

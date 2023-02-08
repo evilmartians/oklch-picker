@@ -39,6 +39,15 @@ class AABB {
     this.r *= n
     this.t *= n
   }
+
+  public resetPosition() {
+    this.r -= this.l
+    this.t -= this.bottom
+    this.f -= this.back
+    this.l = 0
+    this.bottom = 0
+    this.back = 0
+  }
 }
 
 export class Cloud<D, DP extends DataPoint<D> = DataPoint<D>> {
@@ -59,13 +68,7 @@ export class Cloud<D, DP extends DataPoint<D> = DataPoint<D>> {
       p.pos.z -= this.aabb.back
     })
 
-    this.aabb.r -= this.aabb.l
-    this.aabb.t -= this.aabb.bottom
-    this.aabb.f -= this.aabb.back
-
-    this.aabb.l = 0
-    this.aabb.bottom = 0
-    this.aabb.back = 0
+    this.aabb.resetPosition()
   }
 
   public normalizeScale() {
@@ -82,33 +85,13 @@ export class Cloud<D, DP extends DataPoint<D> = DataPoint<D>> {
     this.aabb.scale(inverseScale)
   }
 
-  public scale(n: number) {
-    this.points.forEach(p => {
-      p.pos.x *= n
-      p.pos.y *= n
-      p.pos.z *= n
-    })
-
-    this.aabb.scale(n)
-  }
-
-  public align(density: number) {
-    let d = density
-
-    this.points.forEach(({ pos }) => {
-      pos.x = Math.floor(pos.x * d) / d
-      pos.y = Math.floor(pos.y * d) / d
-      pos.z = Math.floor(pos.z * d) / d
-    })
-  }
-
-  public toGrid3D(size: number) {
-    let grid = makeGrid3D<D[]>(size)
+  public toGrid3D(size: number, offset = 0) {
+    let grid = makeGrid3D<D[]>(size + offset)
 
     this.points.forEach(({ data, pos }) => {
-      let x = Math.floor(pos.x * size)
-      let y = Math.floor(pos.y * size)
-      let z = Math.floor(pos.z * size)
+      let x = Math.floor(pos.x * size) + offset
+      let y = Math.floor(pos.y * size) + offset
+      let z = Math.floor(pos.z * size) + offset
 
       let item = grid[x][y][z] || []
 
