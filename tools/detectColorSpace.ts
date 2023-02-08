@@ -1,38 +1,47 @@
-import { Color, formatRgb, rgb } from "culori";
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { Color, displayable, Oklch, p3, rec2020, Rgb, rgb } from "culori";
 
-import { fastFormat, inP3, inRec2020, inRGB, toRgb } from "../lib/colors.js";
-import { LchValue, valueToColor } from "../stores/current.js";
-import { VisibleValue } from "../stores/visible.js";
+import { LchValue } from "../lib/lch.js";
 
-export function detectColorSpace(value: LchValue): VisibleValue {
-  let color: Color = valueToColor(value)
+const isVisible = (color: Rgb): boolean => {
+  let { r, b, g } = color
+  return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
+}
+
+const inRGB = displayable
+
+const inP3 = (color: Color) => isVisible(
+  rgb(
+    p3(color)
+  )
+)
+
+const inRec2020 = (color: Color) => isVisible(
+  rgb(
+    rec2020(color)
+  )
+)
+
+export function valueToColor(value: LchValue): Oklch {
+  return {
+    mode: 'oklch',
+    l: (L_MAX * value.l) / 100,
+    c: value.c,
+    h: value.h,
+    alpha: value.a / 100
+  }
+}
+
+export function detectColorSpace(value: LchValue) {
+  let color = valueToColor(value)
 
   if (inRGB(color)) {
-    let rgbCss = formatRgb(rgb(color))
-
-    return {
-      space: 'srgb',
-      color,
-      real: rgbCss,
-      fallback: rgbCss
-    } as const
+    return 'srgb'
   }
 
-  let rgbColor = toRgb(color)
-  let fallback = formatRgb(rgbColor)
   if (inP3(color)) {
-    return {
-      space: 'p3',
-      color,
-      real: fastFormat(color),
-      fallback
-    } as const
+    return 'p3'
   }
 
-  return {
-    space: inRec2020(color) ? 'rec2020' : 'out',
-    color: rgbColor,
-    real: false,
-    fallback
-  } as const
+  return inRec2020(color) ? 'rec2020' : 'out'
 }

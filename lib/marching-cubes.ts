@@ -1,6 +1,6 @@
-import { DataPoint } from "./data-point";
-import { Grid3D } from "./grid-3d";
-import { lerpVec3, scaleVec3, Vec3Like } from "./vec3";
+import { DataPoint } from "./data-point.js";
+import { Grid3D } from "./grid-3d.js";
+import { lerpVec3, scaleVec3, Vec3Like } from "./vec3.js";
 
 const TRIANG_LERP = 0.5
 const UPSCALE = 2

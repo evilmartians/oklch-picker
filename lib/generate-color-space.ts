@@ -4,11 +4,11 @@
 // H 0-360
 // A 0-1
 
-import { LchValue } from "../stores/current.js"
 import { detectColorSpace } from "../tools/detectColorSpace.js"
 import { Cloud } from "./cloud.js"
 import { toRgb } from "./colors.js"
 import { resolveOverlaps } from "./grid-3d.js"
+import { LchValue } from "./lch.js"
 import { marchingCubes } from "./marching-cubes.js"
 import { collapseVertices } from "./merge.js"
 import { laplacianFilter } from "./smooth.js"
@@ -45,7 +45,7 @@ function avgLCH(lchs: LchValue[]) {
 }
 
 export function generateColorSpaceMesh(density: number) {
-  let srgbCloud = new Cloud<LchValue>()
+  let lchCloud = new Cloud<LchValue>()
   let halfDensity = density / 2
   let inverseDensity = 1 / density
 
@@ -61,15 +61,15 @@ export function generateColorSpaceMesh(density: number) {
         let h = normH * H_MAX
 
         let lchPos: LchValue = { l, c, h, a: 100 }
-        let spaceDot = detectColorSpace(lchPos)
+        let space = detectColorSpace(lchPos)
 
         let cartesianDot = cylindricalToCartesian(c, h, l / L_MAX)
 
-        if (spaceDot.space === 'srgb'
-        // || color.space === 'srgb'
-        // || color.space === 'rec2020'
+        if (space === 'srgb'
+        // || color === 'srgb'
+        // || color === 'rec2020'
         ) {
-          srgbCloud.addPoints({
+          lchCloud.addPoints({
             pos: cartesianDot,
             data: lchPos
           })
@@ -79,11 +79,11 @@ export function generateColorSpaceMesh(density: number) {
   }
 
   // Some how it cause gaps in grid
-  srgbCloud.resetPosition()
-  srgbCloud.normalizeScale()
-  srgbCloud.resetPosition()
+  lchCloud.resetPosition()
+  lchCloud.normalizeScale()
+  lchCloud.resetPosition()
 
-  let dirtyGrid = srgbCloud.toGrid3D(halfDensity, 1)
+  let dirtyGrid = lchCloud.toGrid3D(halfDensity, 1)
 
   let grid = resolveOverlaps(
     dirtyGrid,

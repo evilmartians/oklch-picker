@@ -6,13 +6,7 @@ import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
-
-export interface LchValue {
-  l: number
-  c: number
-  h: number
-  a: number
-}
+import { LchValue } from '../lib/lch.js'
 
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
