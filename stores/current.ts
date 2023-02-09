@@ -3,7 +3,7 @@ import { map } from 'nanostores'
 
 import { reportFreeze, benchmarking, resetCollecting } from './benchmark.js'
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
-import { showRec2020, showP3, showCharts } from './settings.js'
+import { showRec2020, showP3, showCharts, showModel } from './settings.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
 
@@ -21,7 +21,13 @@ function randomColor(): LchValue {
 }
 
 function parseHash(): LchValue | undefined {
-  let parts = location.hash.slice(1).split(',')
+  let parts
+  if (location.hash.includes('?3d')) {
+    showModel.set(true)
+    parts = location.hash.slice(1, location.hash.indexOf('?')).split(',')
+  } else {
+    parts = location.hash.slice(1).split(',')
+  }
   if (parts.length === 4) {
     if (parts.every(i => /^\d+(\.\d+)?$/.test(i))) {
       return {
@@ -43,8 +49,10 @@ current.subscribe(
   debounce(100, () => {
     let { l, c, h, a } = current.get()
     let hash = `#${l},${c},${h},${a}`
+    let model = ''
+    if (showModel.get()) model = '?3d'
     if (location.hash !== hash) {
-      history.pushState(null, '', `#${l},${c},${h},${a}`)
+      history.pushState(null, '', `#${l},${c},${h},${a}${model}`)
     }
   })
 )

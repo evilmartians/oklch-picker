@@ -1,7 +1,13 @@
 import { WritableAtom } from 'nanostores'
 
-import { showCharts, showP3, showRec2020, showModel } from '../../stores/settings.js'
+import {
+  showCharts,
+  showP3,
+  showRec2020,
+  showModel
+} from '../../stores/settings.js'
 import { getCheckbox, onChange } from '../checkbox/index.js'
+import { current } from '../../stores/current.js'
 
 function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
   store.subscribe(show => {
@@ -9,6 +15,12 @@ function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
   })
   onChange(checkbox, checked => {
     store.set(checked)
+    if (checkbox.name === 'model' && checked) {
+      history.pushState(null, '', `${location.hash}?3d`)
+    } else if (checkbox.name === 'model') {
+      let { l, c, h, a } = current.get()
+      history.pushState(null, '', `#${l},${c},${h},${a}`)
+    }
   })
 }
 
