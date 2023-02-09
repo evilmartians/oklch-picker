@@ -92,10 +92,11 @@ function animate(): void {
   renderer.render(scene, camera)
 }
 
-function generateModel():void {
+export function generateModel():void {
   init()
   addPoints()
   animate()
 }
 
 generateModel()
+

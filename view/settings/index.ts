@@ -13,9 +13,12 @@ function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
   store.subscribe(show => {
     checkbox.checked = show
   })
-  onChange(checkbox, checked => {
+  onChange(checkbox, async checked => {
     store.set(checked)
+    // save openend 3d model to url
     if (checkbox.name === 'model' && checked) {
+      // move to header
+      await import('../model/index.js')
       history.pushState(null, '', `${location.hash}?3d`)
     } else if (checkbox.name === 'model') {
       let { l, c, h, a } = current.get()
