@@ -10,6 +10,7 @@ let encoder = {
 }
 
 export let showCharts = persistentAtom('settings:charts', true, encoder)
+export let showPlot3d = persistentAtom('settings:plot3d', true, encoder)
 export let showP3 = persistentAtom('settings:p3', true, encoder)
 export let showRec2020 = persistentAtom('settings:rec2020', false, encoder)
 

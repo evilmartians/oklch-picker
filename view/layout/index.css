@@ -73,6 +73,12 @@
 
 .layout_plot3d {
   grid-area: plot3d;
+  overflow: hidden;
+  transition: height 400ms;
+
+  @nest body.is-plot3d-hidden & {
+    height: 0;
+  }
 }
 
 .layout_prefs {
