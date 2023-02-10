@@ -16,6 +16,8 @@ export interface LchValue {
 
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
+let generateModel: Function | undefined
+
 function randomColor(): LchValue {
   return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
 }
@@ -43,7 +45,9 @@ function parseHash(): LchValue | undefined {
 
 //TODO add loader
 export async function loadModel(): Promise<void> {
-  await import('../view/model/index.js')
+  await import('../view/model/index.js').then(bundle => {
+    generateModel = bundle.generateModel
+  })
 }
 
 export let current = map<LchValue>(parseHash() || randomColor())
@@ -267,10 +271,16 @@ support.listen(() => {
 })
 
 showRec2020.listen(() => {
+  if (showModel.get()) {
+    generateModel!()
+  }
   runListeners(paintListeners, {})
 })
 
 showP3.listen(() => {
+  if (showModel.get() && !showRec2020.get()) {
+    generateModel!()
+  }
   runListeners(paintListeners, {})
 })
 
@@ -279,6 +289,16 @@ showCharts.listen(show => {
     setTimeout(() => {
       runListeners(paintListeners, {})
     }, 400)
+  }
+})
+
+showModel.listen(show => {
+  if (show) {
+    !generateModel && loadModel()
+    history.pushState(null, '', `${location.hash}?3d`)
+  } else {
+    let { l, c, h, a } = current.get()
+    history.pushState(null, '', `#${l},${c},${h},${a}`)
   }
 })
 
