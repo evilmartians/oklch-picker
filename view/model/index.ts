@@ -25,17 +25,11 @@ let camera: Camera
 let renderer: WebGLRenderer
 let controls: TrackballControls
 
-//let modelCard = document.querySelector<HTMLDivElement>('.chart.is-model')!
 let canvas = document.querySelector<HTMLCanvasElement>('.model_canvas')!
 
 function init(): void {
   scene = new Scene()
-  camera = new PerspectiveCamera(
-    75,
-    3,
-    0.1,
-    1000
-  )
+  camera = new PerspectiveCamera(75, 3, 0.1, 1000)
   renderer = new WebGLRenderer({
     canvas
   })
@@ -45,8 +39,10 @@ function init(): void {
   renderer.setClearColor(0xffffff, 0)
   camera.position.setZ(1)
   camera.position.setX(2)
-  camera.position.setY(1)
+  camera.position.setY(0.5)
   controls = new TrackballControls(camera, renderer.domElement)
+  controls.minDistance = 1
+  controls.maxDistance = 2
 }
 
 function getModelData(): ModelData {
@@ -66,9 +62,10 @@ function getModelData(): ModelData {
         let rgb: Rgb | P3 | Rec2020 = { mode, r: x, g: y, b: z }
         let color
         LCH ? (color = lch(rgb)) : (color = oklch(rgb))
-        if (!color.h) color.h = 0
-        coordinates.push(new Vector3(color.l, color.c * 2, color.h / 360))
-        colors.push(rgb.r, rgb.g, rgb.b)
+        if (color.h) {
+          coordinates.push(new Vector3(color.l, color.c * 2, color.h / 360))
+          colors.push(rgb.r, rgb.g, rgb.b)
+        }
       }
     }
   }
@@ -92,11 +89,10 @@ function animate(): void {
   renderer.render(scene, camera)
 }
 
-export function generateModel():void {
+export function generateModel(): void {
   init()
   addPoints()
   animate()
 }
 
 generateModel()
-
