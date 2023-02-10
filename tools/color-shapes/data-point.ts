@@ -1,4 +1,4 @@
-import { Vec3Like } from "./vec3"
+import { Vec3Like } from "./vec3.js"
 
 export type DataPoint<T> = {
   data: T

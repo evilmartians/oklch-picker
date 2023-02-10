@@ -14,17 +14,10 @@
   ],
 
   "ts-node": {
-    // "esModuleInterop": true,
-    // "experimentalResolver": true,
-
     "esm": true,
     "compilerOptions": {
-      "lib": ["DOM"]
-      // "module": "commonjs",
-      // "target": "ES6",
-      // "moduleResolution": "node",
-      // "allowJs": true,
-      // "esModuleInterop": true,
+      "lib": ["DOM", "ESNext"],
+      "allowJs": true,
     }
   }
 }

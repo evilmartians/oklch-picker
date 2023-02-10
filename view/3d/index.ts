@@ -2,28 +2,23 @@
 import { AmbientLight, BufferAttribute, BufferGeometry, DoubleSide, Mesh, MeshBasicMaterial, Object3D, PerspectiveCamera, Scene, Uint32BufferAttribute, Vector3, WebGLRenderer } from "three"
 
 import { pixelRation } from "../../lib/screen.js"
-import { generateColorSpaceMesh } from "../../lib/generate-color-space.js"
+import { MeshData } from "../../tools/color-shapes/mesh.js"
+import { makeColorShapeFileName } from "../../tools/color-shapes/shape-name.js"
 
 const plotCanvases = document.querySelectorAll<HTMLCanvasElement>('.plot-test')
 
 plotCanvases.forEach(initPlot)
 
-function makeCloud() {
-  let mesh = generateColorSpaceMesh(40)
+async function makeCloud() {
+  let resp = await fetch(`/shapes/${makeColorShapeFileName('oklch', 'p3')}`)
+  let mesh = await resp.json() as MeshData
+
   let origin = new Object3D()
 
-  let vertices = new Float32Array(
-    mesh.vertices
-      .map(v => [v.x, v.y, v.z])
-      .flat()
-  )
+  let vertices = new Float32Array(mesh.vertices)
   let colors = new Uint8Array(
     mesh.colors
-      .map(rgb => [
-        rgb.r * 255,
-        rgb.g * 255,
-        rgb.b * 255
-      ])
+      .map(c => c * 255)
       .flat()
   )
 
@@ -55,12 +50,12 @@ function makeCloud() {
   origin.add(trisMesh)
   trisMesh.position.sub(size.clone().multiplyScalar(1/2))
 
-  origin.scale.z *= 0.8
+  origin.scale.z *= 1.5
 
   return origin
 }
 
-function initPlot(canvas: HTMLCanvasElement) {
+async function initPlot(canvas: HTMLCanvasElement) {
   canvas.width = 500
   canvas.height = 500
   canvas.style.backgroundColor = '#999999'
@@ -82,8 +77,7 @@ function initPlot(canvas: HTMLCanvasElement) {
 
   let cam = new PerspectiveCamera()
 
-  let cloud = makeCloud()
-  // let cloud = new Object3D()
+  let cloud = await makeCloud()
   cloud.position.setZ(-2)
 
   // Assemble scene
@@ -97,9 +91,6 @@ function initPlot(canvas: HTMLCanvasElement) {
   })
 
   renderer.setAnimationLoop(() => {
-    // cloud.rotation.y += 0.02
-    // cloud.rotation.y += 1 * (1 / 360) * Math.PI
-
     renderer.render(scene, cam)
   })
 }

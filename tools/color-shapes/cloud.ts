@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import { DataPoint } from "./data-point"
-import { makeGrid3D } from "./grid-3d"
-import { Vec3Like } from "./vec3"
+import { DataPoint } from "./data-point.js"
+import { makeGrid3D } from "./grid-3d.js"
+import { Vec3Like } from "./vec3.js"
+
+const GRID_PADDING = 1
 
 class AABB {
   public l = 0
@@ -86,7 +88,7 @@ export class Cloud<D, DP extends DataPoint<D> = DataPoint<D>> {
   }
 
   public toGrid3D(size: number, offset = 0) {
-    let grid = makeGrid3D<D[]>(size + offset)
+    let grid = makeGrid3D<D[]>(size + GRID_PADDING + offset)
 
     this.points.forEach(({ data, pos }) => {
       let x = Math.floor(pos.x * size) + offset

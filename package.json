@@ -12,7 +12,8 @@
     "build": "vite build -m production",
     "build:lch": "LCH=1 vite build -m production && ./lch.sh",
     "lint": "tsc --noEmit && eslint . && stylelint **/*.css",
-    "test": "pnpm audit --prod --audit-level high && pnpm lint && pnpm build && size-limit && LCH=1 pnpm build"
+    "test": "pnpm audit --prod --audit-level high && pnpm lint && pnpm build && size-limit && LCH=1 pnpm build",
+    "build:shapes": "LCH= npx ts-node tools/color-shapes/index.ts && LCH=1 npx ts-node tools/color-shapes/index.ts"
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^2.0.1",
@@ -37,6 +38,7 @@
     "@logux/eslint-config": "^48.0.0",
     "@logux/stylelint-config": "^0.13.0",
     "@size-limit/file": "^8.1.2",
+    "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "^8.33.0",

@@ -11,6 +11,7 @@ specifiers:
   '@logux/stylelint-config': ^0.13.0
   '@nanostores/persistent': ^0.7.0
   '@size-limit/file': ^8.1.2
+  '@types/node': ^18.13.0
   '@types/three': ^0.148.1
   '@typescript-eslint/eslint-plugin': ^5.49.0
   '@typescript-eslint/parser': ^5.49.0
@@ -58,15 +59,26 @@ dependencies:
   postcss-nesting: 11.1.0_postcss@8.4.21
   postcss-opacity-percentage: 1.1.3_postcss@8.4.21
   three: 0.149.0
+<<<<<<< HEAD
   vite: 4.1.1
   vite-plugin-pug-transformer: 1.0.3_vite@4.1.1
+=======
+  vite: 4.0.4_@types+node@18.13.0
+  vite-plugin-pug-transformer: 1.0.3_vite@4.0.4
+>>>>>>> 3983649 (move generation code into tools;)
 
 devDependencies:
   '@logux/eslint-config': 48.0.0_ehfvwmn2fnlyre3jg7jq6aoa3i
   '@logux/stylelint-config': 0.13.0_stylelint@14.16.1
   '@size-limit/file': 8.1.2_size-limit@8.1.2
+<<<<<<< HEAD
   '@typescript-eslint/eslint-plugin': 5.51.0_b635kmla6dsb4frxfihkw4m47e
   '@typescript-eslint/parser': 5.51.0_4vsywjlpuriuw3tl5oq6zy5a64
+=======
+  '@types/node': 18.13.0
+  '@typescript-eslint/eslint-plugin': 5.50.0_go4drrxstycfikanvu45pi4vgq
+  '@typescript-eslint/parser': 5.50.0_4vsywjlpuriuw3tl5oq6zy5a64
+>>>>>>> 3983649 (move generation code into tools;)
   eslint: 8.33.0
   eslint-config-standard: 17.0.0_xh3wrndcszbt2l7hdksdjqnjcq
   eslint-plugin-import: 2.27.5_yzj2n2b43wonjwaifya6xmk2zy
@@ -78,7 +90,7 @@ devDependencies:
   size-limit: 8.1.2
   stylelint: 14.16.1
   svgo: 3.0.2
-  ts-node: 10.9.1_typescript@4.9.5
+  ts-node: 10.9.1_4bewfcp2iebiwuold25d6rgcsy
   typescript: 4.9.5
 
 packages:
@@ -717,6 +729,7 @@ packages:
     resolution: {integrity: sha512-n0zoEj/fMdMOvqbHxmqnza/kXyoGgJmEpsXjpP+gEqE1Ye4yNqc7xWipKnUoMpWhMuzJQSfK2gMrwlElly7OGQ==}
     dependencies:
       '@types/node': 18.13.0
+<<<<<<< HEAD
     dev: false
 
   /@types/glob/8.0.1:
@@ -724,6 +737,8 @@ packages:
     dependencies:
       '@types/minimatch': 5.1.2
       '@types/node': 18.13.0
+=======
+>>>>>>> 3983649 (move generation code into tools;)
     dev: false
 
   /@types/json-schema/7.0.11:
@@ -762,7 +777,10 @@ packages:
 
   /@types/node/18.13.0:
     resolution: {integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==}
+<<<<<<< HEAD
     dev: false
+=======
+>>>>>>> 3983649 (move generation code into tools;)
 
   /@types/normalize-package-data/2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -6405,7 +6423,7 @@ packages:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
     dev: false
 
-  /ts-node/10.9.1_typescript@4.9.5:
+  /ts-node/10.9.1_4bewfcp2iebiwuold25d6rgcsy:
     resolution: {integrity: sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw==}
     hasBin: true
     peerDependencies:
@@ -6424,6 +6442,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.3
+      '@types/node': 18.13.0
       acorn: 8.8.2
       acorn-walk: 8.2.0
       arg: 4.1.3
@@ -6733,11 +6752,19 @@ packages:
     dependencies:
       picocolors: 1.0.0
       pug: 3.0.2
+<<<<<<< HEAD
       vite: 4.1.1
     dev: false
 
   /vite/4.1.1:
     resolution: {integrity: sha512-LM9WWea8vsxhr782r9ntg+bhSFS06FJgCvvB0+8hf8UWtvaiDagKYWXndjfX6kGl74keHJUcpzrQliDXZlF5yg==}
+=======
+      vite: 4.0.4_@types+node@18.13.0
+    dev: false
+
+  /vite/4.0.4_@types+node@18.13.0:
+    resolution: {integrity: sha512-xevPU7M8FU0i/80DMR+YhgrzR5KS2ORy1B4xcX/cXLsvnUWvfHuqMmVU6N0YiJ4JWGRJJsLCgjEzKjG9/GKoSw==}
+>>>>>>> 3983649 (move generation code into tools;)
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -6761,6 +6788,7 @@ packages:
       terser:
         optional: true
     dependencies:
+      '@types/node': 18.13.0
       esbuild: 0.16.17
       postcss: 8.4.21
       resolve: 1.22.1

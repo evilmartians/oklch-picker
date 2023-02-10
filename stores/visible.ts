@@ -29,14 +29,6 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
       let rgbCss = formatRgb(rgb(color))
       if (!oklch) color = rgb(color)
 
-      console.log({
-        space: 'srgb',
-        color,
-        real: rgbCss,
-        fallback: rgbCss
-      });
-
-
       return {
         space: 'srgb',
         color,
@@ -47,14 +39,6 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
       let rgbColor = toRgb(color)
       let fallback = formatRgb(rgbColor)
       if (inP3(color)) {
-        console.log({
-          space: 'p3',
-          color: p3 && oklch ? color : rgbColor,
-          real: p3 ? fastFormat(color) : false,
-          fallback
-        });
-
-
         return {
           space: 'p3',
           color: p3 && oklch ? color : rgbColor,
@@ -62,14 +46,6 @@ export let visible = computed<VisibleValue, [typeof current, typeof support]>(
           fallback
         }
       } else {
-        console.log({
-          space: inRec2020(color) ? 'rec2020' : 'out',
-          color: rgbColor,
-          real: false,
-          fallback
-        });
-
-
         return {
           space: inRec2020(color) ? 'rec2020' : 'out',
           color: rgbColor,

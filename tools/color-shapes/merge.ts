@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { Bilateral3DMap } from "./bilateral-3d-maps";
-import { DataPoint } from "./data-point";
-import { Vec3Like } from "./vec3";
+import { Bilateral3DMap } from "./bilateral-3d-maps.js"
+import { DataPoint } from "./data-point.js"
+import { Vec3Like } from "./vec3.js"
 
 export function collapseVertices<T>(
   intTriangles: DataPoint<T | null>[],

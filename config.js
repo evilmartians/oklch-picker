@@ -1,4 +1,6 @@
 let config = {
+  // Why quotes in quotes ?!
+  /** @type {'lch' | 'oklch'} */
   COLOR_FN: '"oklch"',
 
   L_MAX: 1,
