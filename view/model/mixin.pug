@@ -1,3 +1,5 @@
+include ../checkbox/mixin.pug
+
 mixin model(type)
-  .chart( class=`is-${type}` aria-hidden="true" )
-    canvas.chart_canvas
+  .chart( class=`model` aria-hidden="true" )
+    canvas.model_canvas

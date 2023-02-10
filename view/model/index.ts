@@ -25,8 +25,8 @@ let camera: Camera
 let renderer: WebGLRenderer
 let controls: TrackballControls
 
-let modelCard = document.querySelector<HTMLDivElement>('.chart.is-model')!
-let canvas = modelCard.querySelector<HTMLCanvasElement>('.chart_canvas')!
+//let modelCard = document.querySelector<HTMLDivElement>('.chart.is-model')!
+let canvas = document.querySelector<HTMLCanvasElement>('.model_canvas')!
 
 function init(): void {
   scene = new Scene()

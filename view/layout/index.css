@@ -108,3 +108,7 @@
     align-items: flex-end;
   }
 }
+
+.model_settings {
+  padding-top: 20px;
+}
