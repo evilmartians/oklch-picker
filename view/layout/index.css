@@ -77,7 +77,7 @@
 }
 
 .layout_model {
-  grid-area: S;
+  grid-area: O;
 }
 
 .layout_prefs {
@@ -110,5 +110,9 @@
 }
 
 .model_settings {
-  padding-top: 20px;
+  padding: 20px 32px;
+
+  @media (width < 1230px) {
+    grid-area: "Ms";
+  }
 }

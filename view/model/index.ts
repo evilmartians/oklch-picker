@@ -32,7 +32,7 @@ function init(): void {
   scene = new Scene()
   camera = new PerspectiveCamera(
     75,
-    window.innerWidth / window.innerHeight,
+    3,
     0.1,
     1000
   )
