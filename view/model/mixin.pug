@@ -1,5 +1,6 @@
 include ../checkbox/mixin.pug
 
 mixin model(type)
+  .model_loader( aria-hidden="true" )
   .chart( class=`model` aria-hidden="true" )
     canvas.model_canvas

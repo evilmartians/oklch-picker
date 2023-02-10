@@ -50,7 +50,7 @@ body {
 
 .card_model {
   position: relative;
-  height: calc(150px + 24px);
+  height: calc(100% + 2px);
   padding: 0 20px;
   padding-bottom: 39px;
   margin: 0 -20px;

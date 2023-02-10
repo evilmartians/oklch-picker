@@ -116,3 +116,20 @@
     grid-area: "Ms";
   }
 }
+
+.model_loader {
+  display: none;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 10px;
+  margin-left: 90px;
+  border: 16px solid var(--surface-ui-regular);
+  border-top: 16px solid var(--surface-ui-accent);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
