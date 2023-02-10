@@ -41,6 +41,11 @@ function parseHash(): LchValue | undefined {
   return undefined
 }
 
+//TODO add loader
+export async function loadModel(): Promise<void> {
+  await import('../view/model/index.js')
+}
+
 export let current = map<LchValue>(parseHash() || randomColor())
 
 let full = { l: false, c: false, h: false }
@@ -50,7 +55,10 @@ current.subscribe(
     let { l, c, h, a } = current.get()
     let hash = `#${l},${c},${h},${a}`
     let model = ''
-    if (showModel.get()) model = '?3d'
+    if (showModel.get()) {
+      loadModel()
+      model = '?3d'
+    }
     if (location.hash !== hash) {
       history.pushState(null, '', `#${l},${c},${h},${a}${model}`)
     }

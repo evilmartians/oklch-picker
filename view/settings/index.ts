@@ -7,7 +7,7 @@ import {
   showModel
 } from '../../stores/settings.js'
 import { getCheckbox, onChange } from '../checkbox/index.js'
-import { current } from '../../stores/current.js'
+import { current, loadModel } from '../../stores/current.js'
 
 function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
   store.subscribe(show => {
@@ -17,8 +17,7 @@ function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
     store.set(checked)
     // save openend 3d model to url
     if (checkbox.name === 'model' && checked) {
-      // move to header
-      await import('../model/index.js')
+      loadModel()
       history.pushState(null, '', `${location.hash}?3d`)
     } else if (checkbox.name === 'model') {
       let { l, c, h, a } = current.get()
