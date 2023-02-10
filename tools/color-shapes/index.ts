@@ -18,7 +18,7 @@ const SHAPES: Space[] = ['srgb', 'p3', 'rec2020']
 
 async function main() {
   SHAPES.forEach(shape => {
-    let mesh = generateColorSpaceMesh(shape, 80, 3)
+    let mesh = generateColorSpaceMesh(shape, 200, 3)
 
     let bin = JSON.stringify(mesh)
 

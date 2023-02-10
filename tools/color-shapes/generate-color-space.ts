@@ -108,9 +108,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
 
     let grid = resolveOverlaps(
       dirtyGrid,
-      overlap => overlap.length
-        ? overlap[0]
-        : null
+      overlap => overlap.length ? overlap[0] : null
     )
 
     let surfaceGrid = marchingCubes(
@@ -125,11 +123,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
 
     let mesh = collapseVertices(
       surfaceGrid,
-      items => {
-        return items.length
-          ? avgLCH(items)
-          : null
-      }
+      items => items.length ? avgLCH(items) : null
     )
 
     // Downscale mesh
