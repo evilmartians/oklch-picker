@@ -104,3 +104,7 @@ body {
   cursor: pointer;
   image-rendering: crisp-edges;
 }
+
+.is-model-hidden .model_canvas {
+  display: none;
+}
