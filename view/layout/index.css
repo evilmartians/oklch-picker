@@ -77,11 +77,7 @@
 }
 
 .layout_model {
-<<<<<<< HEAD
   grid-area: model;
-=======
-  grid-area: S;
->>>>>>> ef640c0 (Resolve merge conflict)
 }
 
 .layout_prefs {
