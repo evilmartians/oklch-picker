@@ -3,7 +3,8 @@ include ../field/mixin.pug
 include ../card/mixin.pug
 include ../plot-3d/mixin.pug
 
-+plot3d()
+//- +plot3d()
+
 
 .layout
   .layout_title
@@ -22,6 +23,8 @@ include ../plot-3d/mixin.pug
     +card('h')
   .layout_a
     +card('a')
+  .layout_plot3d
+    +card('3d')
 
   .layout_prefs
     include ../settings/index.pug

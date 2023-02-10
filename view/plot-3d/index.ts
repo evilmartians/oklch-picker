@@ -54,9 +54,6 @@ async function makeShape() {
 }
 
 async function initPlot(canvas: HTMLCanvasElement) {
-  canvas.width = 500
-  canvas.height = 500
-
   let glCtx = canvas.getContext('webgl')
   if (!glCtx) return
 

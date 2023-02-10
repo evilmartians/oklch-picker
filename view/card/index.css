@@ -48,6 +48,12 @@ body {
   }
 }
 
+.card_plot3d {
+  display: flex;
+  justify-content: center;
+  width: inherit;
+}
+
 .card_size {
   height: 150px;
 }

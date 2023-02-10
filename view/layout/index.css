@@ -12,6 +12,7 @@
       "C"
       "H"
       "A"
+      "plot3d"
       "M"
       "P"
       "S";
@@ -27,8 +28,8 @@
       "T T"
       "M M"
       "L C"
-      "A H"
-      "P H";
+      "H plot3d"
+      "A P";
   }
 
   @media (width >= 1230px) {
@@ -37,7 +38,8 @@
       "M L C"
       "M A H"
       "M P H"
-      "M . .";
+      "M P plot3d"
+      "M . plot3d";
   }
 }
 
@@ -67,6 +69,10 @@
 
 .layout_a {
   grid-area: A;
+}
+
+.layout_plot3d {
+  grid-area: plot3d;
 }
 
 .layout_prefs {
