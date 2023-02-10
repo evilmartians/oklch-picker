@@ -17,35 +17,34 @@ import { scaleVec3 } from "./vec3.js"
 import { MeshData } from "./mesh.js"
 import { GeneratorConfig } from "./generator-cfg.js"
 
+type RgbValue = {
+  r: number
+  g: number
+  b: number
+}
+
 const SHAPES: { [k in Space]: Space[] } = {
   srgb: ['srgb'],
   p3: ['srgb', 'p3'],
   rec2020: ['srgb', 'p3', 'rec2020']
 }
 
-function avgLCH(lchs: LchValue[]) {
-  let l = 0
-  let c = 0
-  let h = 0
-  let a = 0
+function avgRGB(colors: RgbValue[]) {
+  let r = 0
+  let g = 0
+  let b = 0
 
-  lchs.forEach(lch => {
-    l += lch.l
-    c += lch.c
-    h += lch.h
-    a += lch.a
+  colors.forEach(c => {
+    r += c.r
+    g += c.g
+    b += c.b
   })
 
   return {
-    l: l / lchs.length,
-    c: c / lchs.length,
-    h: h / lchs.length,
-    a: a / lchs.length,
+    r: r / colors.length,
+    g: g / colors.length,
+    b: b / colors.length,
   }
-}
-
-function toRgb(color: Color): Rgb {
-  return rgb(clampChroma(color, 'oklch'))
 }
 
 export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
@@ -55,6 +54,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
     L_MAX,
     H_MAX,
     ALPHA_MAX,
+    COLOR_FN
   } = cfg
 
   let detectColorSpace = makeSpaceDetector(cfg)
@@ -64,7 +64,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
     density: number,
     smooth: number,
   ): MeshData {
-    let lchCloud = new Cloud<LchValue>()
+    let lchCloud = new Cloud<RgbValue>()
     let halfDensity = density / 2
     let inverseDensity = 1 / density
 
@@ -73,6 +73,13 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
     let cMax = shape === 'rec2020'
       ? C_MAX_REC2020
       : C_MAX
+
+    // I dont know why
+    let hFixFactor = COLOR_FN === 'lch' ? 1 : 1.065
+
+    function toRgb(color: Color): Rgb {
+      return rgb(clampChroma(color, COLOR_FN))
+    }
 
     for (let x = 0; x < density; x++) {
       for (let y = 0; y < density; y++) {
@@ -85,15 +92,23 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
           let c = normC * cMax
           let h = normH * H_MAX
 
-          let lchPos: LchValue = { l, c, h, a: ALPHA_MAX }
-          let space = detectColorSpace(lchPos)
+          let lch: LchValue = { l, c, h, a: ALPHA_MAX }
+          let space = detectColorSpace(lch)
 
           if (!space) continue
           if (!shapes.includes(space)) continue
 
+          let rgbData = toRgb({
+            mode: COLOR_FN,
+            l,
+            c,
+            h: h * hFixFactor,
+            alpha: lch.a,
+          })
+
           lchCloud.addPoints({
             pos: { x,y,z },
-            data: lchPos
+            data: rgbData
           })
         }
       }
@@ -115,7 +130,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
       grid,
       (a, b) => {
         if (!a && !b) return null
-        if (a && b) return avgLCH([a, b])
+        if (a && b) return avgRGB([a, b])
         return a || b
       },
       item => !!item
@@ -123,7 +138,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
 
     let mesh = collapseVertices(
       surfaceGrid,
-      items => items.length ? avgLCH(items) : null
+      items =>  items.length ? avgRGB(items) : null
     )
 
     // Downscale mesh
@@ -133,14 +148,7 @@ export function makeColorSpaceGenerator(cfg: GeneratorConfig) {
 
     let colors = mesh.data
       .map(color => {
-        let {r,g,b} = toRgb({
-          mode: 'oklch',
-          l: (color?.l || 0) / L_MAX,
-          c: color?.c || 0,
-          h: color?.h || 0,
-          alpha: color?.a || 0
-        })
-
+        let {r = 0,g = 0,b = 0} = color || {}
         return [r,g,b]
       })
       .flat()

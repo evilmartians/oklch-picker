@@ -6,12 +6,8 @@ import { pixelRation } from "../../lib/screen.js"
 import { MeshData } from "../../tools/color-shapes/mesh.js"
 import { makeColorShapeFileName } from "../../tools/color-shapes/shape-name.js"
 
-const plotCanvases = document.querySelectorAll<HTMLCanvasElement>('.plot-3d')
-
-plotCanvases.forEach(initPlot)
-
 async function makeShape() {
-  let resp = await fetch(`/shapes/${makeColorShapeFileName('oklch', 'p3')}`)
+  let resp = await fetch(`/shapes/${makeColorShapeFileName('oklch', 'rec2020')}`)
   let meshData = await resp.json() as MeshData
 
   let origin = new Object3D()
@@ -105,3 +101,6 @@ async function initPlot(canvas: HTMLCanvasElement) {
   orbit.update()
   render()
 }
+
+const plotCanvases = document.querySelectorAll<HTMLCanvasElement>('.plot-3d')
+plotCanvases.forEach(initPlot)
