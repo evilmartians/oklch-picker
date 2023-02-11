@@ -46,10 +46,9 @@ function parseHash(): LchValue | undefined {
 export async function loadModel(): Promise<void> {
   let loader: HTMLDivElement = document.querySelector('.model_loader')!
   loader.style.display = 'block'
-  await import('../view/model/index.js').then(bundle => {
-    loader.style.display = 'none'
-    generateModel = bundle.generateModel
-  })
+  let bundle = await import('../view/model/index.js')
+  loader.style.display = 'none'
+  generateModel = bundle.generateModel
 }
 
 export let current = map<LchValue>(parseHash() || randomColor())
