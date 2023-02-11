@@ -44,7 +44,7 @@ function parseHash(): LchValue | undefined {
 }
 
 export async function loadModel(): Promise<void> {
-  let loader: HTMLDivElement = document.querySelector('.model_loader')!
+  let loader = document.querySelector<HTMLDivElement>('.model_loader')!
   loader.style.display = 'block'
   let bundle = await import('../view/model/index.js')
   loader.style.display = 'none'
