@@ -76,6 +76,10 @@
   grid-area: alpha;
 }
 
+.layout_model {
+  grid-area: S;
+}
+
 .layout_prefs {
   grid-area: prefs;
 }

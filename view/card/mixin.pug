@@ -59,3 +59,11 @@ mixin card(type)
         })
       .card_range
         +range('a', ALPHA_MAX, ALPHA_STEP, 100)
+
+    else if type === 'model'
+      h2.card_title 3d Space
+      .card_model
+        .card_size
+          +model('model')
+
+

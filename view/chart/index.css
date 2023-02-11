@@ -94,3 +94,13 @@ body {
   cursor: pointer;
   image-rendering: crisp-edges;
 }
+
+.model_canvas {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 2px);
+  cursor: pointer;
+  image-rendering: crisp-edges;
+}
