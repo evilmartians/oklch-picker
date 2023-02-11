@@ -39,7 +39,7 @@ function init(): void {
   renderer.setClearColor(0xffffff, 0)
   LCH ? camera.position.setZ(50) : camera.position.setZ(1)
   LCH ? camera.position.setX(300) : camera.position.setX(2)
-  LCH ? camera.position.setY(200) : camera.position.setY(200)
+  LCH ? camera.position.setY(200) : camera.position.setY(1)
   controls = new TrackballControls(camera, renderer.domElement)
   LCH ? (controls.minDistance = 400) : (controls.minDistance = 2)
   controls.maxDistance = controls.minDistance

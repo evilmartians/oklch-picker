@@ -8,6 +8,8 @@
   @media (width < 830px) {
     grid-template:
       "title"
+      "model"
+      "model-btn"
       "L"
       "C"
       "H"
@@ -25,20 +27,20 @@
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
       "title title"
-      "main  prefs"
-      "main  source"
-      "L     C"
-      "alpha H";
-      padding-bottom: 28px;
+      "main  main"
+      "model-btn ."
+      "model L"
+      "C     H"
+      "alpha prefs";
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "title title source"
-      "main  L     C"
-      "main  alpha H"
-      "main  prefs H"
-      "main  .     .";
+      "title model-btn ."
+      "main model L"
+      "main C H"
+      "main alpha H"
+      "main prefs .";
   }
 }
 
