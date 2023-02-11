@@ -7,14 +7,14 @@
 
   @media (width < 830px) {
     grid-template:
-      "Ti"
-      "Lc"
-      "CC"
-      "HC"
-      "AC"
-      "Ma"
-      "Pr"
-      "So";
+      "title"
+      "ltness"
+      "chroma"
+      "hue"
+      "alpha"
+      "main"
+      "prefs"
+      "source";
     padding-bottom: 450px;
 
     @nest body.is-main-collapsed & {
@@ -24,29 +24,29 @@
 
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
-      "Ti Ti"
-      "Ma Ma"
-      "LC CC"
-      "AC HC"
-      "Pr HC";
+      "title title"
+      "main main"
+      "ltness chroma"
+      "alpha hue"
+      "prefs hue";
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "Ti Ti Ti"
-      "Ma LC CC"
-      "Ma AC HC"
-      "Ma Pr HC"
-      "Ma . .";
+      "title title title"
+      "main ltness chroma"
+      "main alpha hue"
+      "main prefs hue"
+      "main . .";
   }
 }
 
 .layout_title {
-  grid-area: Ti;
+  grid-area: title;
 }
 
 .layout_main {
-  grid-area: Ma;
+  grid-area: main;
 
   @media (width >= 830px) and (width < 1230px) {
     display: flex;
@@ -54,23 +54,23 @@
 }
 
 .layout_l {
-  grid-area: LC;
+  grid-area: ltness;
 }
 
 .layout_c {
-  grid-area: CC;
+  grid-area: chroma;
 }
 
 .layout_h {
-  grid-area: HC;
+  grid-area: hue;
 }
 
 .layout_a {
-  grid-area: AC;
+  grid-area: alpha;
 }
 
 .layout_prefs {
-  grid-area: Pr;
+  grid-area: prefs;
 }
 
 .layout_panel {
@@ -96,6 +96,6 @@
   }
 
   @media (width < 830px) {
-    grid-area: "So";
+    grid-area: "source";
   }
 }
