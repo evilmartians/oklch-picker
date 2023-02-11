@@ -35,6 +35,7 @@
     "@logux/eslint-config": "^48.0.0",
     "@logux/stylelint-config": "^0.14.0",
     "@size-limit/file": "^8.2.4",
+    "@types/three": "^0.149.0",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "eslint": "^8.34.0",
