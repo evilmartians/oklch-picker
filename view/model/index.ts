@@ -41,7 +41,7 @@ function init(): void {
   camera.position.setX(2)
   camera.position.setY(0.5)
   controls = new TrackballControls(camera, renderer.domElement)
-  controls.minDistance = 1
+  controls.minDistance = 2
   controls.maxDistance = 2
 }
 
@@ -56,15 +56,21 @@ function getModelData(): ModelData {
     mode = 'p3'
   }
 
-  for (let x = 0; x <= 1; x += 0.01) {
-    for (let y = 0; y <= 1; y += 0.01) {
-      for (let z = 0; z <= 1; z += 0.01) {
+  for (let x = 0.01; x <= 1; x += 0.01) {
+    for (let y = 0.01; y <= 1; y += 0.01) {
+      for (let z = 0.01; z <= 1; z += 0.01) {
         let rgb: Rgb | P3 | Rec2020 = { mode, r: x, g: y, b: z }
         let color
         LCH ? (color = lch(rgb)) : (color = oklch(rgb))
         if (color.h) {
           coordinates.push(new Vector3(color.l, color.c * 2, color.h / 360))
           colors.push(rgb.r, rgb.g, rgb.b)
+          if (color.c < 0.05) {
+            coordinates.push(
+              new Vector3(color.l, +(color.c * Math.random()), color.h / 360)
+            )
+            colors.push(y, y, y)
+          }
         }
       }
     }
