@@ -8,9 +8,9 @@
   @media (width < 830px) {
     grid-template:
       "title"
-      "ltness"
-      "chroma"
-      "hue"
+      "L"
+      "C"
+      "H"
       "alpha"
       "main"
       "prefs"
@@ -25,19 +25,19 @@
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
       "title title"
-      "main main"
-      "ltness chroma"
-      "alpha hue"
-      "prefs hue";
+      "main  main"
+      "L     C"
+      "alpha H"
+      "prefs H";
   }
 
   @media (width >= 1230px) {
     grid-template:
       "title title title"
-      "main ltness chroma"
-      "main alpha hue"
-      "main prefs hue"
-      "main . .";
+      "main  L     C"
+      "main  alpha H"
+      "main  prefs H"
+      "main  .     .";
   }
 }
 
@@ -54,15 +54,15 @@
 }
 
 .layout_l {
-  grid-area: ltness;
+  grid-area: L;
 }
 
 .layout_c {
-  grid-area: chroma;
+  grid-area: C;
 }
 
 .layout_h {
-  grid-area: hue;
+  grid-area: H;
 }
 
 .layout_a {
