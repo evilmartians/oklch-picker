@@ -7,14 +7,14 @@
 
   @media (width < 830px) {
     grid-template:
-      "T"
-      "L"
-      "C"
-      "H"
-      "A"
-      "M"
-      "P"
-      "S";
+      "title"
+      "ltness"
+      "chroma"
+      "hue"
+      "alpha"
+      "main"
+      "prefs"
+      "source";
     padding-bottom: 450px;
 
     @nest body.is-main-collapsed & {
@@ -24,29 +24,29 @@
 
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
-      "T T"
-      "M M"
-      "L C"
-      "A H"
-      "P H";
+      "title title"
+      "main main"
+      "ltness chroma"
+      "alpha hue"
+      "prefs hue";
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "T T T"
-      "M L C"
-      "M A H"
-      "M P H"
-      "M . .";
+      "title title title"
+      "main ltness chroma"
+      "main alpha hue"
+      "main prefs hue"
+      "main . .";
   }
 }
 
 .layout_title {
-  grid-area: T;
+  grid-area: title;
 }
 
 .layout_main {
-  grid-area: M;
+  grid-area: main;
 
   @media (width >= 830px) and (width < 1230px) {
     display: flex;
@@ -54,23 +54,23 @@
 }
 
 .layout_l {
-  grid-area: L;
+  grid-area: ltness;
 }
 
 .layout_c {
-  grid-area: C;
+  grid-area: chroma;
 }
 
 .layout_h {
-  grid-area: H;
+  grid-area: hue;
 }
 
 .layout_a {
-  grid-area: A;
+  grid-area: alpha;
 }
 
 .layout_prefs {
-  grid-area: P;
+  grid-area: prefs;
 }
 
 .layout_panel {
@@ -96,6 +96,6 @@
   }
 
   @media (width < 830px) {
-    grid-area: "S";
+    grid-area: "source";
   }
 }
