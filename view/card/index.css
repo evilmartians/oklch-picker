@@ -52,11 +52,7 @@ body {
   position: relative;
   height: calc(100% + 2px);
   padding: 0 20px;
-<<<<<<< HEAD
-  padding-bottom: 63px;
-=======
   padding-bottom: 39px;
->>>>>>> 80554b3 (Move model to top)
   margin: 0 -20px;
   overflow: hidden;
 

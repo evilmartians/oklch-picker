@@ -8,7 +8,12 @@ config.LCH = config.COLOR_FN !== '"oklch"'
 export default defineConfig({
   define: config,
   build: {
-    assetsDir: '.'
+    assetsDir: '.',
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'model.js'
+      }
+    }
   },
   plugins: [
     vitePluginPug({
