@@ -37,12 +37,12 @@ function init(): void {
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(350, 210)
   renderer.setClearColor(0xffffff, 0)
-  camera.position.setZ(1)
-  camera.position.setX(2)
-  camera.position.setY(0.5)
+  LCH ? camera.position.setZ(50) : camera.position.setZ(1)
+  LCH ? camera.position.setX(300) : camera.position.setX(2)
+  LCH ? camera.position.setY(200) : camera.position.setY(200)
   controls = new TrackballControls(camera, renderer.domElement)
-  controls.minDistance = 2
-  controls.maxDistance = 2
+  LCH ? (controls.minDistance = 400) : (controls.minDistance = 2)
+  controls.maxDistance = controls.minDistance
 }
 
 function getModelData(): ModelData {
@@ -63,7 +63,9 @@ function getModelData(): ModelData {
         let color
         LCH ? (color = lch(rgb)) : (color = oklch(rgb))
         if (color.h) {
-          coordinates.push(new Vector3(color.l, color.c * 2, color.h / 360))
+          LCH
+            ? coordinates.push(new Vector3(color.l, color.c, color.h))
+            : coordinates.push(new Vector3(color.l, color.c * 2, color.h / 360))
           colors.push(rgb.r, rgb.g, rgb.b)
           if (color.c < 0.05) {
             coordinates.push(
