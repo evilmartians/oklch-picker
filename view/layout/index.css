@@ -37,10 +37,11 @@
   @media (width >= 1230px) {
     grid-template:
       "title model-btn ."
-      "main model L"
-      "main C H"
-      "main alpha H"
-      "main prefs .";
+      "main model model"
+      "main model model"
+      "main L C"
+      "main H alpha"
+      "main H prefs";
   }
 }
 

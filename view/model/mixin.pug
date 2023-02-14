@@ -1,10 +1,6 @@
 include ../checkbox/mixin.pug
 
 mixin model(type)
- section.card(class='model')
-   h2.card_title 3d Space
-   .card_model
-    .card_size
-      .model_loader( aria-hidden="true" )
-      .chart( class=`model` aria-hidden="true" )
-        canvas.model_canvas
+  h2.card_title 3d Space
+  .model_loader( aria-hidden="true" )
+  canvas.model_canvas

@@ -11,11 +11,13 @@ specifiers:
   '@logux/stylelint-config': ^0.14.0
   '@nanostores/persistent': ^0.7.0
   '@size-limit/file': ^8.2.4
+  '@types/delaunator': ^5.0.0
   '@types/three': ^0.149.0
   '@typescript-eslint/eslint-plugin': ^5.52.0
   '@typescript-eslint/parser': ^5.52.0
   autoprefixer: ^10.4.13
   culori: github:bijela-gora/culori#2770175
+  delaunator: ^5.0.0
   eslint: ^8.34.0
   eslint-config-standard: ^17.0.0
   eslint-plugin-import: ^2.27.5
@@ -45,7 +47,12 @@ dependencies:
   '@nanostores/persistent': 0.7.0_nanostores@0.7.3
   autoprefixer: 10.4.13_postcss@8.4.21
   culori: github.com/bijela-gora/culori/2770175
+<<<<<<< HEAD
   firebase-tools: 11.23.1
+=======
+  delaunator: 5.0.0
+  firebase-tools: 11.22.0
+>>>>>>> c56ed71 (Change model generation to make it solid)
   jstransformer-markdown-it: 3.0.0
   nanostores: 0.7.3
   postcss: 8.4.21
@@ -67,6 +74,7 @@ devDependencies:
 =======
   '@logux/stylelint-config': 0.13.0_stylelint@14.16.1
   '@size-limit/file': 8.1.2_size-limit@8.1.2
+  '@types/delaunator': 5.0.0
   '@types/three': 0.149.0
   '@typescript-eslint/eslint-plugin': 5.51.0_z4swst3wuuqk4hlme4ajzslgh4
   '@typescript-eslint/parser': 5.51.0_7kw3g6rralp5ps6mg3uyzz6azm
@@ -700,6 +708,10 @@ packages:
   /@trysound/sax/0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+    dev: true
+
+  /@types/delaunator/5.0.0:
+    resolution: {integrity: sha512-00nrXdKbhF9FQsq6MskmdUgEqd5MWzA+x8CoDt8OJqbS4QB528SgkOfEcnQMa2sIg2XTKowwwVQx8iGsAX6CAQ==}
     dev: true
 
   /@types/duplexify/3.6.1:
@@ -2059,6 +2071,12 @@ packages:
       escodegen: 1.14.3
       esprima: 4.0.1
       vm2: 3.9.14
+    dev: false
+
+  /delaunator/5.0.0:
+    resolution: {integrity: sha512-AyLvtyJdbv/U1GkiS6gUUzclRoAY4Gs75qkMygJJhU75LW4DNuSF2RMzpxs9jw9Oz1BobHjTdkG3zdP55VxAqw==}
+    dependencies:
+      robust-predicates: 3.0.1
     dev: false
 
   /delayed-stream/1.0.0:
@@ -5691,6 +5709,10 @@ packages:
     hasBin: true
     dependencies:
       glob: 7.2.3
+
+  /robust-predicates/3.0.1:
+    resolution: {integrity: sha512-ndEIpszUHiG4HtDsQLeIuMvRsDnn8c8rYStabochtUeCvfuvNptb5TUbVD68LRAILPX7p9nqQGh4xJgn3EHS/g==}
+    dev: false
 
   /rollup/3.15.0:
     resolution: {integrity: sha512-F9hrCAhnp5/zx/7HYmftvsNBkMfLfk/dXUh73hPSM2E3CRgap65orDNJbLetoiUFwSAk6iHPLvBrZ5iHYvzqsg==}
