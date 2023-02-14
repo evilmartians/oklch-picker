@@ -96,7 +96,6 @@ body {
 }
 
 .model_canvas {
-  position: absolute;
   top: -1px;
   left: 0;
   width: 100%;
