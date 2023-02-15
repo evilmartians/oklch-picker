@@ -101,6 +101,6 @@
 
   @media (width >= 830px) and (width < 1230px) {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
   }
 }
