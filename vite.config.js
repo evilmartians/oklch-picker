@@ -11,7 +11,7 @@ export default defineConfig({
     assetsDir: '.',
     rollupOptions: {
       output: {
-        chunkFileNames: 'model.js'
+        chunkFileNames: 'model-[hash].js'
       }
     }
   },

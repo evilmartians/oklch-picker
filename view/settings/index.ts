@@ -12,7 +12,7 @@ function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
   store.subscribe(show => {
     checkbox.checked = show
   })
-  onChange(checkbox, async checked => {
+  onChange(checkbox, checked => {
     store.set(checked)
   })
 }

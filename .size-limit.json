@@ -1,12 +1,12 @@
 [
   {
     "name": "Files to download",
-    "path": ["dist/**/*", "!dist/model.js", "!dist/*.ico", "!dist/*.webmanifest", "!dist/*.png"],
+    "path": ["dist/**/*", "!dist/model-*.js", "!dist/*.ico", "!dist/*.webmanifest", "!dist/*.png"],
     "limit": "60 KB"
   },
   {
     "name": "All scripts to execute",
-    "path": ["dist/*.js", "!dist/model.js"],
+    "path": ["dist/*.js", "!dist/model-*.js"],
     "gzip": false,
     "limit": "60 KB"
   }
