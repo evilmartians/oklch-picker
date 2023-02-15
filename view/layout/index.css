@@ -12,28 +12,29 @@
       "C"
       "H"
       "alpha"
-      "main"
       "prefs"
+      "main"
       "source";
     padding-bottom: 450px;
 
     @nest body.is-main-collapsed & {
-      padding-bottom: calc(450px - 287px);
+      padding-bottom: calc(450px - 333px);
     }
   }
 
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
       "title title"
-      "main  main"
+      "main  prefs"
+      "main  source"
       "L     C"
-      "alpha H"
-      "prefs H";
+      "alpha H";
+      padding-bottom: 28px;
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "title title title"
+      "title title source"
       "main  L     C"
       "main  alpha H"
       "main  prefs H"
@@ -46,10 +47,16 @@
 }
 
 .layout_main {
+  position: relative;
   grid-area: main;
+}
 
+.layout_desc {
   @media (width >= 830px) and (width < 1230px) {
-    display: flex;
+    position: absolute;
+    bottom: 74px;
+    left: calc(100% + 4px);
+    width: 100%;
   }
 }
 
@@ -89,13 +96,11 @@
 }
 
 .layout_source {
-  @media (width >= 830px) {
-    position: absolute;
-    top: 18px;
-    right: 0;
-  }
+  grid-area: source;
+  line-height: 0;
 
-  @media (width < 830px) {
-    grid-area: "source";
+  @media (width >= 830px) and (width < 1230px) {
+    display: flex;
+    align-items: end;
   }
 }

@@ -1,0 +1,51 @@
+.banner {
+  position: relative;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
+  max-width: 100vw;
+  height: 72px;
+  padding: 0 55px 0 72px;
+  margin-top: 4px;
+  overflow: hidden;
+  font-size: 10px;
+  line-height: 72px;
+  color: var(--text-primary);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  background: var(--surface-2);
+  border-radius: 36px;
+
+  &:hover {
+    background: var(--surface-ui-accent);
+  }
+}
+
+.banner_icon > svg {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 48px;
+  height: 48px;
+}
+
+.banner_icon.is-github > svg {
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
+  }
+}
+
+.banner_external {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  width: 16px;
+  height: 16px;
+  background: url(./external.svg);
+
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
+  }
+}
+
