@@ -47,12 +47,8 @@ dependencies:
   '@nanostores/persistent': 0.7.0_nanostores@0.7.3
   autoprefixer: 10.4.13_postcss@8.4.21
   culori: github.com/bijela-gora/culori/2770175
-<<<<<<< HEAD
-  firebase-tools: 11.23.1
-=======
   delaunator: 5.0.0
-  firebase-tools: 11.22.0
->>>>>>> c56ed71 (Change model generation to make it solid)
+  firebase-tools: 11.23.1
   jstransformer-markdown-it: 3.0.0
   nanostores: 0.7.3
   postcss: 8.4.21
@@ -66,19 +62,12 @@ dependencies:
 
 devDependencies:
   '@logux/eslint-config': 48.0.0_t5fygbfy4w6fbyigvnzgnbcdn4
-<<<<<<< HEAD
   '@logux/stylelint-config': 0.14.0_stylelint@15.1.0
   '@size-limit/file': 8.2.4_size-limit@8.2.4
-  '@typescript-eslint/eslint-plugin': 5.52.0_6cfvjsbua5ptj65675bqcn6oza
-  '@typescript-eslint/parser': 5.52.0_7kw3g6rralp5ps6mg3uyzz6azm
-=======
-  '@logux/stylelint-config': 0.13.0_stylelint@14.16.1
-  '@size-limit/file': 8.1.2_size-limit@8.1.2
   '@types/delaunator': 5.0.0
   '@types/three': 0.149.0
-  '@typescript-eslint/eslint-plugin': 5.51.0_z4swst3wuuqk4hlme4ajzslgh4
-  '@typescript-eslint/parser': 5.51.0_7kw3g6rralp5ps6mg3uyzz6azm
->>>>>>> 0cca2e1 (Resolve merge conflicts)
+  '@typescript-eslint/eslint-plugin': 5.52.0_6cfvjsbua5ptj65675bqcn6oza
+  '@typescript-eslint/parser': 5.52.0_7kw3g6rralp5ps6mg3uyzz6azm
   eslint: 8.34.0
   eslint-config-standard: 17.0.0_rwq7hzy2vtlwiajbw6pmw3rkzy
   eslint-plugin-import: 2.27.5_mcvs2y73sfmcxqzpjj5lr7a2m4
@@ -790,17 +779,12 @@ packages:
     resolution: {integrity: sha512-txGIh+0eDFzKGC25zORnswy+br1Ha7hj5cMVwKIU7+s0U2AxxJru/jZSMU6OC9MJWP6+pc/hc6ZjyZShpsyY2g==}
     dev: false
 
-<<<<<<< HEAD
-  /@typescript-eslint/eslint-plugin/5.52.0_6cfvjsbua5ptj65675bqcn6oza:
-    resolution: {integrity: sha512-lHazYdvYVsBokwCdKOppvYJKaJ4S41CgKBcPvyd0xjZNbvQdhn/pnJlGtQksQ/NhInzdaeaSarlBjDXHuclEbg==}
-=======
   /@types/webxr/0.5.1:
     resolution: {integrity: sha512-xlFXPfgJR5vIuDefhaHuUM9uUgvPaXB6GKdXy2gdEh8gBWQZ2ul24AJz3foUd8NNKlSTQuWYJpCb1/pL81m1KQ==}
     dev: true
 
-  /@typescript-eslint/eslint-plugin/5.51.0_z4swst3wuuqk4hlme4ajzslgh4:
-    resolution: {integrity: sha512-wcAwhEWm1RgNd7dxD/o+nnLW8oH+6RK1OGnmbmkj/GGoDPV1WWMVP0FXYQBivKHdwM1pwii3bt//RC62EriIUQ==}
->>>>>>> 0cca2e1 (Resolve merge conflicts)
+  /@typescript-eslint/eslint-plugin/5.52.0_6cfvjsbua5ptj65675bqcn6oza:
+    resolution: {integrity: sha512-lHazYdvYVsBokwCdKOppvYJKaJ4S41CgKBcPvyd0xjZNbvQdhn/pnJlGtQksQ/NhInzdaeaSarlBjDXHuclEbg==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     peerDependencies:
       '@typescript-eslint/parser': ^5.0.0
@@ -1398,7 +1382,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001452
-      electron-to-chromium: 1.4.295
+      electron-to-chromium: 1.4.296
       node-releases: 2.0.10
       update-browserslist-db: 1.0.10_browserslist@4.21.5
     dev: false
@@ -2196,8 +2180,8 @@ packages:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: false
 
-  /electron-to-chromium/1.4.295:
-    resolution: {integrity: sha512-lEO94zqf1bDA3aepxwnWoHUjA8sZ+2owgcSZjYQy0+uOSEclJX0VieZC+r+wLpSxUHRd6gG32znTWmr+5iGzFw==}
+  /electron-to-chromium/1.4.296:
+    resolution: {integrity: sha512-i/6Q+Y9bluDa2a0NbMvdtG5TuS/1Fr3TKK8L+7UUL9QjRS5iFJzCC3r70xjyOnLiYG8qGV4/mMpe6HuAbdJW4w==}
     dev: false
 
   /emoji-regex/8.0.0:

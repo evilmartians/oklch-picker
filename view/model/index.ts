@@ -44,8 +44,8 @@ function init(): void {
   LCH ? camera.position.setX(300) : camera.position.setX(2)
   LCH ? camera.position.setY(200) : camera.position.setY(1)
   controls = new TrackballControls(camera, renderer.domElement)
-  LCH ? (controls.minDistance = 400) : (controls.minDistance = 0)
-  LCH ? (controls.maxDistance = 400) : (controls.maxDistance = 8)
+  LCH ? (controls.minDistance = 400) : (controls.minDistance = 1.5)
+  LCH ? (controls.maxDistance = 400) : (controls.maxDistance = 4)
 }
 
 function getModelData(): ModelData {
@@ -58,48 +58,46 @@ function getModelData(): ModelData {
   } else if (showP3.get()) {
     mode = 'p3'
   }
-
   for (let x = 0; x <= 1; x += 0.01) {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
         let rgb: Rgb | P3 | Rec2020 = { mode, r: x, g: y, b: z }
         let color
-        LCH ? (color = lch(rgb)) : (color = oklch(rgb))
-        if (!color.h) {
-          color.h = 0
-        }
         if (
-          color.h &&
-          (rgb.r === 0 ||
-            rgb.g === 0 ||
-            rgb.b === 0 ||
-            rgb.r > 0.99 ||
-            rgb.g > 0.99 ||
-            rgb.b > 0.99)
+          rgb.r === 0 ||
+          rgb.g === 0 ||
+          rgb.b === 0 ||
+          rgb.r > 0.99 ||
+          rgb.g > 0.99 ||
+          rgb.b > 0.99
         ) {
-          LCH
-            ? coordinates.push(new Vector3(color.l, color.c, color.h))
-            : coordinates.push(new Vector3(color.l, color.c * 2, color.h / 360))
-          colors.push(rgb.r, rgb.g, rgb.b)
+          LCH ? (color = lch(rgb)) : (color = oklch(rgb))
+          if (color.h) {
+            LCH
+              ? coordinates.push(new Vector3(color.l, color.c, color.h))
+              : coordinates.push(
+                  new Vector3(color.l, color.c * 2, color.h / 360)
+                )
+            colors.push(rgb.r, rgb.g, rgb.b)
+          }
         }
       }
     }
   }
 
-  coordinates.push(new Vector3(0, 0, 0))
-  coordinates.push(new Vector3(0, 1, 0))
-  coordinates.push(new Vector3(0, 0, 1))
-  coordinates.push(new Vector3(1, 0, 0))
-  coordinates.push(new Vector3(1, 1, 0))
-  coordinates.push(new Vector3(1, 0, 1))
-  coordinates.push(new Vector3(1, 1, 1))
-
-  colors.push(0, 0, 0)
-  colors.push(0, 0, 0)
-  colors.push(0, 0, 0)
-  colors.push(1, 1, 1)
-  colors.push(1, 1, 1)
-  colors.push(1, 1, 1)
+  let bounds = [
+    [0, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1],
+    [1, 0, 0],
+    [1, 1, 0],
+    [1, 0, 1],
+    [1, 1, 1]
+  ]
+  for (let i of bounds) {
+    coordinates.push(new Vector3(...i))
+    colors.push(i[0], i[0], i[0])
+  }
 
   return { coordinates, colors }
 }
@@ -109,6 +107,7 @@ function generateMesh(): void {
   let geometry = new BufferGeometry().setFromPoints(modelData.coordinates)
   let color = new Float32Array(modelData.colors)
   geometry.setAttribute('color', new BufferAttribute(color, 3))
+  geometry.center()
 
   let indexDel = Delaunator.from(
     modelData.coordinates.map(c => {
@@ -128,24 +127,22 @@ function generateMesh(): void {
 
   let plane = new PlaneGeometry(1, 2)
   let planeColor = []
-  for (let i = 0; i < 12; i++) {
-    let col
-    i > 2 ? (col = 0.8) : (col = 0.1)
-    planeColor.push(col, col, col)
+  for (let i = 0; i < 2; i++) {
+    planeColor.push(0, 0, 0)
+    planeColor.push(1, 1, 1)
   }
   let planeColor32 = new Float32Array(planeColor)
   plane.setAttribute('color', new BufferAttribute(planeColor32, 3))
 
   if ('array' in plane.attributes.position) {
-    let position: number[] = []
-    for (let i in plane.attributes.position.array) {
-      position.push(plane.attributes.position.array[i])
+    let position: number[] = Array.from(plane.attributes.position.array)
+    for (let i = 0; i < 12; i++) {
+      if (i % 3 !== 0) {
+        position[i] -= 0.5
+      }
     }
-    for (let i = 0; i < 12; i += 3) {
-      position[i] += 0.5
-    }
-    position[1] = 0
-    position[4] = 0
+    position[10] = -0.5
+    position[7] = -0.5
     let position32 = new Float32Array(position)
     plane.setAttribute('position', new BufferAttribute(position32, 3))
   }
