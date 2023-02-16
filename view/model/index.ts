@@ -40,12 +40,12 @@ function init(): void {
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(950, 610)
   //renderer.setClearColor(0xffffff, 0)
-  LCH ? camera.position.setZ(50) : camera.position.setZ(1)
-  LCH ? camera.position.setX(300) : camera.position.setX(2)
-  LCH ? camera.position.setY(200) : camera.position.setY(1)
+  camera.position.setZ(1)
+  camera.position.setX(2)
+  camera.position.setY(1)
   controls = new TrackballControls(camera, renderer.domElement)
-  LCH ? (controls.minDistance = 400) : (controls.minDistance = 1.5)
-  LCH ? (controls.maxDistance = 400) : (controls.maxDistance = 4)
+  controls.minDistance = 1
+  controls.maxDistance = 3
 }
 
 function getModelData(): ModelData {
@@ -74,9 +74,11 @@ function getModelData(): ModelData {
           LCH ? (color = lch(rgb)) : (color = oklch(rgb))
           if (color.h) {
             LCH
-              ? coordinates.push(new Vector3(color.l, color.c, color.h))
+              ? coordinates.push(
+                  new Vector3(color.l / 100, color.c / 100, color.h / 100)
+                )
               : coordinates.push(
-                  new Vector3(color.l, color.c * 2, color.h / 360)
+                  new Vector3(color.l, color.c * 1.5, color.h / 360)
                 )
             colors.push(rgb.r, rgb.g, rgb.b)
           }
@@ -87,13 +89,14 @@ function getModelData(): ModelData {
 
   let bounds = [
     [0, 0, 0],
-    [0, 1, 0],
     [0, 0, 1],
     [1, 0, 0],
     [1, 1, 0],
-    [1, 0, 1],
-    [1, 1, 1]
+    [1, 0, 1]
   ]
+  LCH
+    ? bounds.push([0, 0, 3.7], [1, 0, 3.7])
+    : bounds.push([1, 0, 1], [1, 1, 1])
   for (let i of bounds) {
     coordinates.push(new Vector3(...i))
     colors.push(i[0], i[0], i[0])
@@ -136,17 +139,22 @@ function generateMesh(): void {
 
   if ('array' in plane.attributes.position) {
     let position: number[] = Array.from(plane.attributes.position.array)
-    for (let i = 0; i < 12; i++) {
-      if (i % 3 !== 0) {
-        position[i] -= 0.5
-      }
-    }
-    position[10] = -0.5
-    position[7] = -0.5
+    let boundary
+    LCH ? (boundary = 1.85) : (boundary = 0.5)
+    position[1] = boundary
+    position[4] = boundary
+    position[7] = -boundary
+    position[10] = -boundary
     let position32 = new Float32Array(position)
     plane.setAttribute('position', new BufferAttribute(position32, 3))
   }
-
+  if (!LCH) plane.translate(0, 0, -0.5)
+  else {
+    let translate = -0.65
+    if (showP3.get()) translate = -0.73
+    if (showRec2020.get()) translate = -0.96
+    plane.translate(0, 0, translate)
+  }
   let planeMat = new MeshBasicMaterial({
     vertexColors: true,
     side: DoubleSide
