@@ -24,9 +24,11 @@ interface ModelData {
 }
 
 let scene: Scene
-let camera: Camera
+let camera: Camera | undefined
 let renderer: WebGLRenderer
 let controls: TrackballControls
+
+let cameraPosition: Vector3 | undefined
 
 let canvas = document.querySelector<HTMLCanvasElement>('.model_canvas')!
 
@@ -167,13 +169,21 @@ function generateMesh(): void {
 function animate(): void {
   requestAnimationFrame(animate)
   controls.update()
-  renderer.render(scene, camera)
+  renderer.render(scene, camera!)
 }
 
 export function generateModel(): void {
+  if (camera) {
+    cameraPosition = camera.position
+  }
   init()
   generateMesh()
   animate()
+  if (cameraPosition) {
+    camera!.position.setZ(cameraPosition.z)
+    camera!.position.setX(cameraPosition.x)
+    camera!.position.setY(cameraPosition.y)
+  }
 }
 
 generateModel()
