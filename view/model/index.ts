@@ -9,10 +9,11 @@ import {
   Mesh,
   PlaneGeometry,
   DoubleSide,
-  Camera
+  Camera,
+  MOUSE
 } from 'three'
 import { Rgb, P3, Rec2020 } from 'culori'
-import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { oklch, lch } from '../../lib/colors.js'
@@ -26,7 +27,7 @@ interface ModelData {
 let scene: Scene
 let camera: Camera | undefined
 let renderer: WebGLRenderer
-let controls: TrackballControls
+let controls: OrbitControls
 
 let cameraPosition: Vector3 | undefined
 
@@ -34,18 +35,29 @@ let canvas = document.querySelector<HTMLCanvasElement>('.model_canvas')!
 
 function init(): void {
   scene = new Scene()
-  camera = new PerspectiveCamera(75, 3, 0.1, 1000)
+  camera = new PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  )
   renderer = new WebGLRenderer({
     canvas
   })
 
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(950, 610)
-  //renderer.setClearColor(0xffffff, 0)
   camera.position.setZ(1)
   camera.position.setX(2)
   camera.position.setY(1)
-  controls = new TrackballControls(camera, renderer.domElement)
+  camera.lookAt(new Vector3(0, 0, 0))
+
+  controls = new OrbitControls(camera, renderer.domElement)
+  controls.mouseButtons = {
+    LEFT: MOUSE.ROTATE,
+    MIDDLE: MOUSE.DOLLY,
+    RIGHT: MOUSE.PAN
+  }
   controls.minDistance = 1
   controls.maxDistance = 3
 }
@@ -80,7 +92,7 @@ function getModelData(): ModelData {
                   new Vector3(color.l / 100, color.c / 100, color.h / 100)
                 )
               : coordinates.push(
-                  new Vector3(color.l, color.c * 1.5, color.h / 360)
+                  new Vector3(color.l, color.c * 2, color.h / 360)
                 )
             colors.push(rgb.r, rgb.g, rgb.b)
           }
