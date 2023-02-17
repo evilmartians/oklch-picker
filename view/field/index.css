@@ -29,7 +29,7 @@
     }
   }
 
-  @nest .field.is-options & {
+  .field.is-options & {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -90,11 +90,11 @@
   border-top-right-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
 
-  @nest .field_select:focus + & {
+  .field_select:focus + & {
     outline: var(--accent) solid 3px;
   }
 
-  @nest .field_select:not(:focus-visible):focus + & {
+  .field_select:not(:focus-visible):focus + & {
     outline: none;
   }
 }

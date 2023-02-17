@@ -62,7 +62,7 @@ body {
 }
 
 .main_row--sample {
-  @nest body.is-main-collapsed & {
+  :is(body.is-main-collapsed) & {
     margin-bottom: calc(24px + env(safe-area-inset-bottom, 0));
   }
 }

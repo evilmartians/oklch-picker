@@ -17,7 +17,7 @@
       "source";
     padding-bottom: 450px;
 
-    @nest body.is-main-collapsed & {
+    :is(body.is-main-collapsed) & {
       padding-bottom: calc(450px - 296px);
     }
   }
@@ -89,7 +89,7 @@
     z-index: 10;
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
 
-    @nest body.is-main-collapsed & {
+    :is(body.is-main-collapsed) & {
       transform: translateY(calc(287px + env(safe-area-inset-bottom, 0)));
     }
   }
