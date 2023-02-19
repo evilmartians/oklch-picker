@@ -30,3 +30,4 @@ declare const H_MAX: number
 declare const H_STEP: number
 declare const ALPHA_MAX: number
 declare const ALPHA_STEP: number
+declare const GAMUT_EPSILON: number

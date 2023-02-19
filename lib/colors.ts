@@ -3,7 +3,6 @@ import {
   formatRgb as formatRgbFast,
   parse as originParse,
   clampChroma,
-  displayable,
   modeRec2020,
   modeOklch,
   modeOklab,
@@ -29,16 +28,27 @@ useMode(modeOklab)
 useMode(modeHsl)
 useMode(modeLab)
 
-export const inRGB = displayable
-
-export function inP3(color: Color): boolean {
-  let { r, b, g } = p3(color)
-  return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
+function inGamut(
+  convert: (color: Color) => Color,
+  color: Color,
+  epsilon: number
+): boolean {
+  let { r, g, b } = convert(color)
+  let min = 0 - epsilon
+  let max = 1 + epsilon
+  return r >= min && r <= max && g >= min && g <= max && b >= min && b <= max
 }
 
-export function inRec2020(color: Color): boolean {
-  let { r, b, g } = rec2020(color)
-  return r >= 0 && r <= 1 && g >= 0 && g <= 1 && b >= 0 && b <= 1
+export function inRGB(color: Color, epsilon: number = GAMUT_EPSILON): boolean {
+  return inGamut(rgb, color, epsilon)
+}
+
+export function inP3(color: Color, epsilon: number = GAMUT_EPSILON): boolean {
+  return inGamut(p3, color, epsilon)
+}
+
+export function inRec2020(color: Color, epsilon: number = GAMUT_EPSILON): boolean {
+  return inGamut(rec2020, color, epsilon)
 }
 
 export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
