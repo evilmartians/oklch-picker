@@ -23,6 +23,7 @@ body {
   left: 0;
   width: 100%;
   height: calc(100% + 1px);
+  pointer-events: none;
 
   &.is-l.is-x {
     --chart-line-position: var(--chart-l);
