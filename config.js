@@ -13,7 +13,9 @@ let config = {
   H_STEP: 0.45,
 
   ALPHA_MAX: 100,
-  ALPHA_STEP: 5
+  ALPHA_STEP: 5,
+
+  GAMUT_EPSILON: 1e-6
 }
 
 if (process.env.LCH) {
