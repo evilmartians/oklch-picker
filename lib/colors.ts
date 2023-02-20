@@ -21,12 +21,12 @@ export type AnyLch = Lch | Oklch
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
+export let oklab = useMode(modeOklab)
 export let rgb = useMode(modeRgb)
 export let lch = useMode(modeLch)
+export let hsl = useMode(modeHsl)
+export let lab = useMode(modeLab)
 export let p3 = useMode(modeP3)
-useMode(modeOklab)
-useMode(modeHsl)
-useMode(modeLab)
 
 const GAMUT_MIN = -GAMUT_EPSILON
 const GAMUT_MAX = 1 + GAMUT_EPSILON

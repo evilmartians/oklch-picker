@@ -4,16 +4,21 @@ import {
   formatRgb,
   formatCss,
   Color,
+  Oklab
+} from 'culori/fn'
+import { computed } from 'nanostores'
+
+import {
+  toPercent,
+  inRGB,
+  toRgb,
+  clean,
   oklab,
-  Oklab,
   lch,
   lab,
   hsl,
   p3
-} from 'culori'
-import { computed } from 'nanostores'
-
-import { inRGB, toRgb, clean, toPercent } from '../lib/colors.js'
+} from '../lib/colors.js'
 import { current, valueToColor } from './current.js'
 import { OutputFormats } from './settings.js'
 

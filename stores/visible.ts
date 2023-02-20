@@ -1,5 +1,5 @@
 import { computed } from 'nanostores'
-import { Color } from 'culori'
+import { Color } from 'culori/fn'
 
 import {
   fastFormat,

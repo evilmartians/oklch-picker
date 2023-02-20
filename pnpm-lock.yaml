@@ -14,7 +14,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.52.0
   '@typescript-eslint/parser': ^5.52.0
   autoprefixer: ^10.4.13
-  culori: github:bijela-gora/culori#2770175
+  culori: ^2.0.4
   eslint: ^8.34.0
   eslint-config-standard: ^17.0.0
   eslint-plugin-import: ^2.27.5
@@ -42,7 +42,7 @@ dependencies:
   '@csstools/postcss-oklab-function': 2.1.0_postcss@8.4.21
   '@nanostores/persistent': 0.7.0_nanostores@0.7.3
   autoprefixer: 10.4.13_postcss@8.4.21
-  culori: github.com/bijela-gora/culori/2770175
+  culori: 2.0.4
   firebase-tools: 11.23.1
   jstransformer-markdown-it: 3.0.0
   nanostores: 0.7.3
@@ -1928,6 +1928,11 @@ packages:
 
   /csv-parse/5.3.5:
     resolution: {integrity: sha512-8O5KTIRtwmtD3+EVfW6BCgbwZqJbhTYsQZry12F1TP5RUp0sD9tp1UnCWic3n0mLOhzeocYaCZNYxOGSg3dmmQ==}
+    dev: false
+
+  /culori/2.0.4:
+    resolution: {integrity: sha512-wYQcZOH8auJWxpGOyXxcftYOzsIlfphlohE9/Obo3nNoylyVYduzX+BZgsZXK/OPPAK/4cc5MKiCrIUITkF5ug==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
   /dashdash/1.14.1:
@@ -6928,11 +6933,4 @@ packages:
       archiver-utils: 2.1.0
       compress-commons: 4.1.1
       readable-stream: 3.6.0
-    dev: false
-
-  github.com/bijela-gora/culori/2770175:
-    resolution: {tarball: https://codeload.github.com/bijela-gora/culori/tar.gz/2770175}
-    name: culori
-    version: 2.0.3
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
