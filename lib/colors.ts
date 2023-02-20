@@ -28,27 +28,43 @@ useMode(modeOklab)
 useMode(modeHsl)
 useMode(modeLab)
 
-function inGamut(
-  convert: (color: Color) => Color,
-  color: Color,
-  epsilon: number
-): boolean {
-  let { r, g, b } = convert(color)
-  let min = 0 - epsilon
-  let max = 1 + epsilon
-  return r >= min && r <= max && g >= min && g <= max && b >= min && b <= max
+const GAMUT_MIN = -GAMUT_EPSILON
+const GAMUT_MAX = 1 + GAMUT_EPSILON
+
+export function inRGB(color: Color): boolean {
+  let { r, g, b } = rgb(color)
+  return (
+    r >= GAMUT_MIN &&
+    r <= GAMUT_MAX &&
+    g >= GAMUT_MIN &&
+    g <= GAMUT_MAX &&
+    b >= GAMUT_MIN &&
+    b <= GAMUT_MAX
+  )
 }
 
-export function inRGB(color: Color, epsilon: number = GAMUT_EPSILON): boolean {
-  return inGamut(rgb, color, epsilon)
+export function inP3(color: Color): boolean {
+  let { r, g, b } = p3(color)
+  return (
+    r >= GAMUT_MIN &&
+    r <= GAMUT_MAX &&
+    g >= GAMUT_MIN &&
+    g <= GAMUT_MAX &&
+    b >= GAMUT_MAX &&
+    b <= GAMUT_MAX
+  )
 }
 
-export function inP3(color: Color, epsilon: number = GAMUT_EPSILON): boolean {
-  return inGamut(p3, color, epsilon)
-}
-
-export function inRec2020(color: Color, epsilon: number = GAMUT_EPSILON): boolean {
-  return inGamut(rec2020, color, epsilon)
+export function inRec2020(color: Color): boolean {
+  let { r, g, b } = rec2020(color)
+  return (
+    r >= GAMUT_MIN &&
+    r <= GAMUT_MAX &&
+    g >= GAMUT_MIN &&
+    g <= GAMUT_MAX &&
+    b >= GAMUT_MIN &&
+    b <= GAMUT_MAX
+  )
 }
 
 export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
