@@ -50,7 +50,7 @@ export function inP3(color: Color): boolean {
     r <= GAMUT_MAX &&
     g >= GAMUT_MIN &&
     g <= GAMUT_MAX &&
-    b >= GAMUT_MAX &&
+    b >= GAMUT_MIN &&
     b <= GAMUT_MAX
   )
 }
