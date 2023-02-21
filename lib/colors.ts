@@ -232,14 +232,7 @@ export function generateGetPixel(
         ]
         if (inRGB(color)) {
           pixel[0] = Space.sRGB
-        } else if (
-          colorP3.r >= 0 &&
-          colorP3.r <= 1 &&
-          colorP3.g >= 0 &&
-          colorP3.g <= 1 &&
-          colorP3.b >= 0 &&
-          colorP3.b <= 1
-        ) {
+        } else if (inP3(colorP3)) {
           pixel[0] = Space.P3
         } else if (inRec2020(color)) {
           pixel[0] = Space.Rec2020
@@ -256,14 +249,7 @@ export function generateGetPixel(
           Math.floor(255 * colorSRGB.g),
           Math.floor(255 * colorSRGB.b)
         ]
-        if (
-          colorSRGB.r >= 0 &&
-          colorSRGB.r <= 1 &&
-          colorSRGB.g >= 0 &&
-          colorSRGB.g <= 1 &&
-          colorSRGB.b >= 0 &&
-          colorSRGB.b <= 1
-        ) {
+        if (inRGB(colorSRGB)) {
           pixel[0] = Space.sRGB
         } else if (inP3(color)) {
           pixel[0] = Space.P3
@@ -286,14 +272,7 @@ export function generateGetPixel(
         ]
         if (inRGB(color)) {
           pixel[0] = Space.sRGB
-        } else if (
-          colorP3.r >= 0 &&
-          colorP3.r <= 1 &&
-          colorP3.g >= 0 &&
-          colorP3.g <= 1 &&
-          colorP3.b >= 0 &&
-          colorP3.b <= 1
-        ) {
+        } else if (inP3(colorP3)) {
           pixel[0] = Space.P3
         }
         return pixel
@@ -308,14 +287,7 @@ export function generateGetPixel(
           Math.floor(255 * colorSRGB.g),
           Math.floor(255 * colorSRGB.b)
         ]
-        if (
-          colorSRGB.r >= 0 &&
-          colorSRGB.r <= 1 &&
-          colorSRGB.g >= 0 &&
-          colorSRGB.g <= 1 &&
-          colorSRGB.b >= 0 &&
-          colorSRGB.b <= 1
-        ) {
+        if (inRGB(colorSRGB)) {
           pixel[0] = Space.sRGB
         } else if (inP3(color)) {
           pixel[0] = Space.P3
@@ -351,14 +323,7 @@ export function generateGetPixel(
           Math.floor(255 * colorSRGB.g),
           Math.floor(255 * colorSRGB.b)
         ]
-        if (
-          colorSRGB.r >= 0 &&
-          colorSRGB.r <= 1 &&
-          colorSRGB.g >= 0 &&
-          colorSRGB.g <= 1 &&
-          colorSRGB.b >= 0 &&
-          colorSRGB.b <= 1
-        ) {
+        if (inRGB(colorSRGB)) {
           pixel[0] = Space.sRGB
         } else if (inRec2020(color)) {
           pixel[0] = Space.Rec2020
@@ -391,14 +356,7 @@ export function generateGetPixel(
         Math.floor(255 * colorSRGB.g),
         Math.floor(255 * colorSRGB.b)
       ]
-      if (
-        colorSRGB.r >= 0 &&
-        colorSRGB.r <= 1 &&
-        colorSRGB.g >= 0 &&
-        colorSRGB.g <= 1 &&
-        colorSRGB.b >= 0 &&
-        colorSRGB.b <= 1
-      ) {
+      if (inRGB(colorSRGB)) {
         pixel[0] = Space.sRGB
       }
       return pixel
