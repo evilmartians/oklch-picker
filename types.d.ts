@@ -73,6 +73,14 @@ declare module 'culori/fn' {
     alpha?: number
   }
 
+  export interface Xyz65 {
+    mode: 'xyz65'
+    x: number
+    y: number
+    z: number
+    alpha?: number
+  }
+
   export interface P3 {
     mode: 'p3'
     r: number
@@ -113,7 +121,7 @@ declare module 'culori/fn' {
   export function formatRgb(c: Color): string
   export function formatRgb(c: string): string | undefined
 
-  export type Color = Hsl | Lab | Lch | Oklab | Oklch | P3 | Rec2020 | Rgb
+  export type Color = Hsl | Lab | Lch | Oklab | Oklch | Xyz65 | P3 | Rec2020 | Rgb
   type Mode = Color['mode']
 
   export function clampChroma<C extends Color>(
@@ -143,6 +151,7 @@ declare module 'culori/fn' {
   export let modeLch: { mode: Lch['mode'] }
   export let modeOklab: { mode: Oklab['mode'] }
   export let modeOklch: { mode: Oklch['mode'] }
+  export let modeXyz65: { mode: Xyz65['mode'] }
   export let modeP3: { mode: P3['mode'] }
   export let modeRec2020: { mode: Rec2020['mode'] }
   export let modeRgb: { mode: Rgb['mode'] }
@@ -153,6 +162,7 @@ declare module 'culori/fn' {
     | typeof modeLch
     | typeof modeOklab
     | typeof modeOklch
+    | typeof modeXyz65
     | typeof modeP3
     | typeof modeRec2020
     | typeof modeRgb

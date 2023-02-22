@@ -6,6 +6,7 @@ import {
   modeRec2020,
   modeOklch,
   modeOklab,
+  modeXyz65,
   formatCss,
   useMode,
   modeRgb,
@@ -22,6 +23,7 @@ export type AnyLch = Lch | Oklch
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
 export let oklab = useMode(modeOklab)
+export let xyz65 = useMode(modeXyz65)
 export let rgb = useMode(modeRgb)
 export let lch = useMode(modeLch)
 export let hsl = useMode(modeHsl)
@@ -148,12 +150,20 @@ export enum Space {
   Out
 }
 
+let getProxyColor: (color: Color) => Color
+if (COLOR_FN === 'oklch') {
+  getProxyColor = rgb
+} else {
+  getProxyColor = xyz65
+}
+
 export function getSpace(color: Color): Space {
-  if (inRGB(color)) {
+  let proxyColor = getProxyColor(color)
+  if (inRGB(proxyColor)) {
     return Space.sRGB
-  } else if (inP3(color)) {
+  } else if (inP3(proxyColor)) {
     return Space.P3
-  } else if (inRec2020(color)) {
+  } else if (inRec2020(proxyColor)) {
     return Space.Rec2020
   } else {
     return Space.Out
@@ -168,11 +178,12 @@ export function generateGetSpace(
 ): GetSpace {
   if (showP3 && showRec2020) {
     return color => {
-      if (inRGB(color)) {
+      let proxyColor = getProxyColor(color)
+      if (inRGB(proxyColor)) {
         return Space.sRGB
-      } else if (inP3(color)) {
+      } else if (inP3(proxyColor)) {
         return Space.P3
-      } else if (inRec2020(color)) {
+      } else if (inRec2020(proxyColor)) {
         return Space.Rec2020
       } else {
         return Space.Out
@@ -180,9 +191,10 @@ export function generateGetSpace(
     }
   } else if (showP3 && !showRec2020) {
     return color => {
-      if (inRGB(color)) {
+      let proxyColor = getProxyColor(color)
+      if (inRGB(proxyColor)) {
         return Space.sRGB
-      } else if (inP3(color)) {
+      } else if (inP3(proxyColor)) {
         return Space.P3
       } else {
         return Space.Out
@@ -190,9 +202,10 @@ export function generateGetSpace(
     }
   } else if (!showP3 && showRec2020) {
     return color => {
-      if (inRGB(color)) {
+      let proxyColor = getProxyColor(color)
+      if (inRGB(proxyColor)) {
         return Space.sRGB
-      } else if (inRec2020(color)) {
+      } else if (inRec2020(proxyColor)) {
         return Space.P3
       } else {
         return Space.Out
@@ -223,18 +236,19 @@ export function generateGetPixel(
     if (p3Support) {
       return (x, y) => {
         let color = getColor(x, y)
-        let colorP3 = p3(color)
+        let proxyColor = getProxyColor(color)
+        let colorP3 = p3(proxyColor)
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * colorP3.r),
           Math.floor(255 * colorP3.g),
           Math.floor(255 * colorP3.b)
         ]
-        if (inRGB(color)) {
+        if (inRGB(proxyColor)) {
           pixel[0] = Space.sRGB
         } else if (inP3(colorP3)) {
           pixel[0] = Space.P3
-        } else if (inRec2020(color)) {
+        } else if (inRec2020(proxyColor)) {
           pixel[0] = Space.Rec2020
         }
         return pixel
@@ -242,7 +256,8 @@ export function generateGetPixel(
     } else {
       return (x, y) => {
         let color = getColor(x, y)
-        let colorSRGB = rgb(color)
+        let proxyColor = getProxyColor(color)
+        let colorSRGB = rgb(proxyColor)
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * colorSRGB.r),
@@ -251,9 +266,9 @@ export function generateGetPixel(
         ]
         if (inRGB(colorSRGB)) {
           pixel[0] = Space.sRGB
-        } else if (inP3(color)) {
+        } else if (inP3(proxyColor)) {
           pixel[0] = Space.P3
-        } else if (inRec2020(color)) {
+        } else if (inRec2020(proxyColor)) {
           pixel[0] = Space.Rec2020
         }
         return pixel
@@ -263,14 +278,15 @@ export function generateGetPixel(
     if (p3Support) {
       return (x, y) => {
         let color = getColor(x, y)
-        let colorP3 = p3(color)
+        let proxyColor = getProxyColor(color)
+        let colorP3 = p3(proxyColor)
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * colorP3.r),
           Math.floor(255 * colorP3.g),
           Math.floor(255 * colorP3.b)
         ]
-        if (inRGB(color)) {
+        if (inRGB(proxyColor)) {
           pixel[0] = Space.sRGB
         } else if (inP3(colorP3)) {
           pixel[0] = Space.P3
@@ -280,7 +296,8 @@ export function generateGetPixel(
     } else {
       return (x, y) => {
         let color = getColor(x, y)
-        let colorSRGB = rgb(color)
+        let proxyColor = getProxyColor(color)
+        let colorSRGB = rgb(proxyColor)
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * colorSRGB.r),
@@ -289,7 +306,7 @@ export function generateGetPixel(
         ]
         if (inRGB(colorSRGB)) {
           pixel[0] = Space.sRGB
-        } else if (inP3(color)) {
+        } else if (inP3(proxyColor)) {
           pixel[0] = Space.P3
         }
         return pixel
@@ -299,16 +316,17 @@ export function generateGetPixel(
     if (p3Support) {
       return (x, y) => {
         let color = getColor(x, y)
-        let colorP3 = p3(color)
+        let proxyColor = getProxyColor(color)
+        let colorP3 = p3(proxyColor)
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * colorP3.r),
           Math.floor(255 * colorP3.g),
           Math.floor(255 * colorP3.b)
         ]
-        if (inRGB(color)) {
+        if (inRGB(proxyColor)) {
           pixel[0] = Space.sRGB
-        } else if (inRec2020(color)) {
+        } else if (inRec2020(proxyColor)) {
           pixel[0] = Space.Rec2020
         }
         return pixel
@@ -316,7 +334,8 @@ export function generateGetPixel(
     } else {
       return (x, y) => {
         let color = getColor(x, y)
-        let colorSRGB = rgb(color)
+        let proxyColor = getProxyColor(color)
+        let colorSRGB = rgb(proxyColor)
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * colorSRGB.r),
@@ -325,7 +344,7 @@ export function generateGetPixel(
         ]
         if (inRGB(colorSRGB)) {
           pixel[0] = Space.sRGB
-        } else if (inRec2020(color)) {
+        } else if (inRec2020(proxyColor)) {
           pixel[0] = Space.Rec2020
         }
         return pixel
@@ -334,14 +353,15 @@ export function generateGetPixel(
   } else if (p3Support) {
     return (x, y) => {
       let color = getColor(x, y)
-      let colorP3 = p3(color)
+      let proxyColor = getProxyColor(color)
+      let colorP3 = p3(proxyColor)
       let pixel: Pixel = [
         Space.Out,
         Math.floor(255 * colorP3.r),
         Math.floor(255 * colorP3.g),
         Math.floor(255 * colorP3.b)
       ]
-      if (inRGB(color)) {
+      if (inRGB(proxyColor)) {
         pixel[0] = Space.sRGB
       }
       return pixel
