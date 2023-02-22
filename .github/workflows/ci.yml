@@ -58,26 +58,3 @@ jobs:
           firebaseServiceAccount: "${{ secrets.FIREBASE_LCH_ACCOUNT }}"
           projectId: ai-lch
           channelId: live
-
-  preview:
-    name: Preview
-    runs-on: ubuntu-latest
-    if: github.ref != 'refs/heads/main'
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v3
-      - name: Install tools from asdf config
-        uses: ai/asdf-cache-action@v1
-        with:
-          dependencies-cache: production
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile --production --ignore-scripts
-      - name: Build OKLCH
-        run: pnpm build
-      - name: Deploy
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
-          projectId: ai-oklch
-          expires: 30d
