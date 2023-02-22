@@ -150,8 +150,11 @@ export enum Space {
   Out
 }
 
-function getProxyColor(color: Color): Color {
-  return COLOR_FN === 'oklch' ? rgb(color) : xyz65(color)
+let getProxyColor: (color: Color) => Color
+if (COLOR_FN === 'oklch') {
+  getProxyColor = rgb
+} else {
+  getProxyColor = xyz65
 }
 
 export function getSpace(color: Color): Space {
