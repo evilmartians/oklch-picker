@@ -7,7 +7,7 @@ overrides:
 
 specifiers:
   '@csstools/postcss-oklab-function': ^2.1.0
-  '@logux/eslint-config': ^48.0.0
+  '@logux/eslint-config': ^49.0.0
   '@logux/stylelint-config': ^0.14.0
   '@nanostores/persistent': ^0.7.0
   '@size-limit/file': ^8.2.4
@@ -55,7 +55,7 @@ dependencies:
   vite-plugin-pug-transformer: 1.0.3_vite@4.1.4
 
 devDependencies:
-  '@logux/eslint-config': 48.0.0_444x2rvuomcugfh45frpv7ku2e
+  '@logux/eslint-config': 49.0.0_444x2rvuomcugfh45frpv7ku2e
   '@logux/stylelint-config': 0.14.0_stylelint@15.2.0
   '@size-limit/file': 8.2.4_size-limit@8.2.4
   '@typescript-eslint/eslint-plugin': 5.53.0_cjo54hduev4bqhpjw5znwiokqu
@@ -525,14 +525,14 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /@logux/eslint-config/48.0.0_444x2rvuomcugfh45frpv7ku2e:
-    resolution: {integrity: sha512-4Lwgy14TmEbrp0Xsm7YjiptitLkigOAdqrnkYaNIgeMEe54hO6I99KueeS0348CFWqVAaV9g0eJQaPF6vCJGJg==}
+  /@logux/eslint-config/49.0.0_444x2rvuomcugfh45frpv7ku2e:
+    resolution: {integrity: sha512-5Aj1wytb+1oej3wLH8G7D35Glx88Iuj07JcVL3YruRhl4v7WZnF3w3RR3IVSQAvllQch4eemvHnLenrZ3PimFg==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
-      eslint: ^8.27.0
+      eslint: ^8.35.0
       eslint-config-standard: ^17.0.0
-      eslint-plugin-import: ^2.26.0
-      eslint-plugin-n: ^15.5.0
+      eslint-plugin-import: ^2.27.5
+      eslint-plugin-n: ^15.6.1
       eslint-plugin-prefer-let: ^3.0.1
       eslint-plugin-promise: ^6.1.1
     dependencies:

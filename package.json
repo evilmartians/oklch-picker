@@ -31,7 +31,7 @@
     "vite-plugin-pug-transformer": "^1.0.3"
   },
   "devDependencies": {
-    "@logux/eslint-config": "^48.0.0",
+    "@logux/eslint-config": "^49.0.0",
     "@logux/stylelint-config": "^0.14.0",
     "@size-limit/file": "^8.2.4",
     "@typescript-eslint/eslint-plugin": "^5.53.0",

@@ -1,3 +1,5 @@
+import type { OutputFormats } from './settings.js'
+
 import {
   formatHex8,
   formatHex,
@@ -20,7 +22,6 @@ import {
   p3
 } from '../lib/colors.js'
 import { current, valueToColor } from './current.js'
-import { OutputFormats } from './settings.js'
 
 function formatOklab(color: Oklab): string {
   let { l, a, b, alpha } = color
