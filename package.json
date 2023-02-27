@@ -18,7 +18,7 @@
     "@csstools/postcss-oklab-function": "^2.1.0",
     "@nanostores/persistent": "^0.7.0",
     "autoprefixer": "^10.4.13",
-    "culori": "^2.1.1",
+    "culori": "^3.0.1",
     "firebase-tools": "^11.24.0",
     "jstransformer-markdown-it": "^3.0.0",
     "nanostores": "^0.7.4",

@@ -14,7 +14,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.53.0
   '@typescript-eslint/parser': ^5.53.0
   autoprefixer: ^10.4.13
-  culori: ^2.1.1
+  culori: ^3.0.1
   eslint: ^8.35.0
   eslint-config-standard: ^17.0.0
   eslint-plugin-import: ^2.27.5
@@ -42,7 +42,7 @@ dependencies:
   '@csstools/postcss-oklab-function': 2.1.0_postcss@8.4.21
   '@nanostores/persistent': 0.7.0_nanostores@0.7.4
   autoprefixer: 10.4.13_postcss@8.4.21
-  culori: 2.1.1
+  culori: 3.0.1
   firebase-tools: 11.24.0
   jstransformer-markdown-it: 3.0.0
   nanostores: 0.7.4
@@ -1955,8 +1955,8 @@ packages:
     resolution: {integrity: sha512-8O5KTIRtwmtD3+EVfW6BCgbwZqJbhTYsQZry12F1TP5RUp0sD9tp1UnCWic3n0mLOhzeocYaCZNYxOGSg3dmmQ==}
     dev: false
 
-  /culori/2.1.1:
-    resolution: {integrity: sha512-9klYvB1zTP+AFopf+VSQDzkyk3Wr/TfsiZvrBSybp/QFtS6YTWSwSYNLHcmM29D4iXZNXOON7ZivSYgI1sydow==}
+  /culori/3.0.1:
+    resolution: {integrity: sha512-XIGHoABtrJwxhzoTVA2BeyxFJ9jgiWkYHSBNp6NGAvtsl1QgQWN8a7nrp4LoxkRRWP0jxATeVTitD3kFroosZw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 

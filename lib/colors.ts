@@ -100,9 +100,6 @@ support.subscribe(value => {
 })
 
 export function parse(value: string): Color | undefined {
-  if (value.startsWith('oklch(')) {
-    value = value.replace(/^oklch\(/, 'color(--oklch ')
-  }
   value = value.replace(/\s*;$/, '')
   if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(value)) {
     value = value.replace(/^[\w-]+:\s*/, '')
