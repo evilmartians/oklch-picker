@@ -48,9 +48,9 @@ function paint(
   height: number,
   hasGaps: boolean,
   block: number,
-  showP3: boolean, 
-  showRec2020: boolean, 
-  p3: string, 
+  showP3: boolean,
+  showRec2020: boolean,
+  p3: string,
   rec2020: string,
   getColor: GetColor
 ): void {
@@ -134,9 +134,20 @@ export function paintCL(
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, 6, showP3, showRec2020, p3, rec2020, (x, y) => {
-    return build(x * lFactor, y * cFactor, h)
-  })
+  paint(
+    ctx,
+    width,
+    height,
+    false,
+    6,
+    showP3,
+    showRec2020,
+    p3,
+    rec2020,
+    (x, y) => {
+      return build(x * lFactor, y * cFactor, h)
+    }
+  )
 }
 
 export function paintCH(
@@ -147,16 +158,27 @@ export function paintCH(
   showRec2020: boolean,
   p3: string,
   rec2020: string
-): void{
+): void {
   let [width, height] = setScale(canvas, scale)
   let ctx = getCleanCtx(canvas)
 
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, 6, showP3, showRec2020, p3, rec2020, (x, y) => {
-    return build(l, y * cFactor, x * hFactor)
-  })
+  paint(
+    ctx,
+    width,
+    height,
+    false,
+    6,
+    showP3,
+    showRec2020,
+    p3,
+    rec2020,
+    (x, y) => {
+      return build(l, y * cFactor, x * hFactor)
+    }
+  )
 }
 
 export function paintLH(
@@ -167,14 +189,25 @@ export function paintLH(
   showRec2020: boolean,
   p3: string,
   rec2020: string
-): void{
+): void {
   let [width, height] = setScale(canvas, scale)
   let ctx = getCleanCtx(canvas)
 
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  paint(ctx, width, height, true, 2, showP3, showRec2020, p3, rec2020, (x, y) => {
-    return build(y * lFactor, c, x * hFactor)
-  })
+  paint(
+    ctx,
+    width,
+    height,
+    true,
+    2,
+    showP3,
+    showRec2020,
+    p3,
+    rec2020,
+    (x, y) => {
+      return build(y * lFactor, c, x * hFactor)
+    }
+  )
 }

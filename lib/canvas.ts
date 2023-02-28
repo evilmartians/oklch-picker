@@ -1,10 +1,10 @@
 import { support } from '../stores/support.js'
 
-type CanvasOrOffscreen<T extends OffscreenCanvas | HTMLCanvasElement> = 
-  T extends OffscreenCanvas 
-    ? OffscreenCanvasRenderingContext2D 
+type CanvasOrOffscreen<T extends OffscreenCanvas | HTMLCanvasElement> =
+  T extends OffscreenCanvas
+    ? OffscreenCanvasRenderingContext2D
     : CanvasRenderingContext2D
-  
+
 export function getCleanCtx<T extends OffscreenCanvas | HTMLCanvasElement>(
   canvas: T
 ): CanvasOrOffscreen<T> {
@@ -15,12 +15,15 @@ export function getCleanCtx<T extends OffscreenCanvas | HTMLCanvasElement>(
   return ctx as CanvasOrOffscreen<T>
 }
 
-let originSize = new Map<OffscreenCanvas | HTMLCanvasElement, [number, number]>()
+let originSize = new Map<
+  OffscreenCanvas | HTMLCanvasElement,
+  [number, number]
+>()
 
 export function initCanvasSize(
-  canvas: OffscreenCanvas | HTMLCanvasElement, 
-  pixelRation: number = window.devicePixelRatio, 
-  canvasSize: DOMRect = (canvas as HTMLCanvasElement).getBoundingClientRect() 
+  canvas: OffscreenCanvas | HTMLCanvasElement,
+  pixelRation: number = window.devicePixelRatio,
+  canvasSize: DOMRect = (canvas as HTMLCanvasElement).getBoundingClientRect()
 ): [number, number] {
   let width = canvasSize.width * pixelRation
   let height = canvasSize.height * pixelRation

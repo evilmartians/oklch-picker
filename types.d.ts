@@ -4,13 +4,13 @@ interface HTMLCanvasElement {
 }
 
 interface OffscreenCanvas extends EventTarget {
-  width: number;
-  height: number;
+  width: number
+  height: number
 
   getContext(
     contextId: '2d',
-    contextAttributes?: CanvasRenderingContext2DSettings,
-  ): OffscreenCanvasRenderingContext2D | null;
+    contextAttributes?: CanvasRenderingContext2DSettings
+  ): OffscreenCanvasRenderingContext2D | null
 }
 
 interface OffscreenCanvasRenderingContext2D
@@ -29,7 +29,7 @@ interface OffscreenCanvasRenderingContext2D
     CanvasPathDrawingStyles,
     CanvasTextDrawingStyles,
     CanvasPath {
-  readonly canvas: OffscreenCanvas;
+  readonly canvas: OffscreenCanvas
 }
 
 interface Worker extends EventTarget, AbstractWorker {
@@ -150,7 +150,16 @@ declare module 'culori/fn' {
   export function formatRgb(c: Color): string
   export function formatRgb(c: string): string | undefined
 
-  export type Color = Hsl | Lab | Lch | Oklab | Oklch | Xyz65 | P3 | Rec2020 | Rgb
+  export type Color =
+    | Hsl
+    | Lab
+    | Lch
+    | Oklab
+    | Oklch
+    | Xyz65
+    | P3
+    | Rec2020
+    | Rgb
   type Mode = Color['mode']
 
   export function clampChroma<C extends Color>(
@@ -167,7 +176,7 @@ declare module 'culori/fn' {
   export type FindColorByMode<
     M extends Mode,
     C extends Color = Color
-    > = C extends { mode: M } ? C : never
+  > = C extends { mode: M } ? C : never
 
   interface ConvertFn<M extends Mode = 'rgb'> {
     (color: undefined): undefined
