@@ -1,5 +1,4 @@
 import type { Color, Oklch, Rgb, Lch } from 'culori/fn'
-
 import {
   formatRgb as formatRgbFast,
   parse as originParse,

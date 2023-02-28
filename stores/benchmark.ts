@@ -117,7 +117,7 @@ export function getLastBenchmarkColor(): string {
   return formatHex(oklch)
 }
 
-export function reportPaint(type: RenderType, ms: number, isFull: boolean) {
+export function reportPaint(type: RenderType, ms: number, isFull: boolean): void {
   reportFreeze(ms)
   if (isFull) {
     reportFull(ms)

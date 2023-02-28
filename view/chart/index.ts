@@ -11,7 +11,7 @@ import { getBorders } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { paintCH, paintCL, paintLH } from './paint.js'
-import PaintWorker from './worker?worker'
+import PaintWorker from './worker.js?worker'
 
 const MAX_SCALE = 8
 

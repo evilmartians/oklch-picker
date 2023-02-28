@@ -1,5 +1,3 @@
-import { MessageData } from './worker.js'
-
 import {
   generateGetPixel,
   GetColor,
@@ -9,7 +7,6 @@ import {
 } from '../../lib/colors.js'
 import {
   generateGetSeparator,
-  getBorders,
   paintPixel
 } from '../../lib/paint.js'
 import { getCleanCtx, setScale } from '../../lib/canvas.js'
