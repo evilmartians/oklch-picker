@@ -34,7 +34,7 @@ export function initCanvasSize(
 }
 
 export function setScale(
-  canvas: OffscreenCanvas,
+  canvas: OffscreenCanvas | HTMLCanvasElement,
   scale: number
 ): [number, number] {
   let [originWidth, originalHeight] = originSize.get(canvas)!

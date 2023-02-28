@@ -1,5 +1,5 @@
 interface HTMLCanvasElement {
-  // Some browsers doesn’t have OffscreenCanvas support
+  // @ts-expect-error Some browsers doesn’t have OffscreenCanvas support
   transferControlToOffscreen?: () => OffscreenCanvas
 }
 

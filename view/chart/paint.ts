@@ -16,7 +16,7 @@ import { getCleanCtx, setScale } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 
 function paintSeparator(
-  ctx: OffscreenCanvasRenderingContext2D,
+  ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
   color: string,
   line: [number, number][] | undefined
 ): void {
@@ -43,7 +43,7 @@ function paintSeparator(
 }
 
 function paint(
-  ctx: OffscreenCanvasRenderingContext2D,
+  ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
   width: number,
   height: number,
   hasGaps: boolean,
