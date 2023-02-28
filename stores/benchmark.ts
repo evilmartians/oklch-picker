@@ -16,16 +16,15 @@ benchmarking.listen(value => {
   )
 })
 
-function keyUp(e: KeyboardEvent): void {
+export function keyUp(e: KeyboardEvent): void {
   if (e.key === 'b' && e.target === document.body) {
     benchmarking.set(!benchmarking.get())
   }
 }
-document.body.addEventListener('keyup', keyUp)
 
 export let lastBenchmark = map({ freeze: 0, quick: 0, full: 0 })
 
-let collectingTimeout: number
+let collectingTimeout: NodeJS.Timeout
 let collecting = false
 let totalQuick = -1
 let totalFull = -1
@@ -118,18 +117,21 @@ export function getLastBenchmarkColor(): string {
   return formatHex(oklch)
 }
 
-export function trackPaint(
-  type: RenderType,
-  isFull: boolean,
-  cb: () => void
-): void {
-  let start = Date.now()
-  cb()
-  let ms = Date.now() - start
+export function reportPaint(type: RenderType, ms: number, isFull: boolean) {
   reportFreeze(ms)
   if (isFull) {
     reportFull(ms)
   } else {
     reportQuick(type, ms)
   }
+}
+
+export function trackPaint(
+  type: RenderType,
+  isFull: boolean,
+  cb: () => void
+): number {
+  let start = Date.now()
+  cb()
+  return Date.now() - start
 }

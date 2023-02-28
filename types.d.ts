@@ -1,6 +1,35 @@
 interface HTMLCanvasElement {
-  // @ts-expect-error Some browsers doesn’t have OffscreenCanvas support
+  // Some browsers doesn’t have OffscreenCanvas support
   transferControlToOffscreen?: () => OffscreenCanvas
+}
+
+interface OffscreenCanvas extends EventTarget {
+  width: number;
+  height: number;
+
+  getContext(
+    contextId: '2d',
+    contextAttributes?: CanvasRenderingContext2DSettings,
+  ): OffscreenCanvasRenderingContext2D | null;
+}
+
+interface OffscreenCanvasRenderingContext2D
+  extends CanvasState,
+    CanvasTransform,
+    CanvasCompositing,
+    CanvasImageSmoothing,
+    CanvasFillStrokeStyles,
+    CanvasShadowStyles,
+    CanvasFilters,
+    CanvasRect,
+    CanvasDrawPath,
+    CanvasText,
+    CanvasDrawImage,
+    CanvasImageData,
+    CanvasPathDrawingStyles,
+    CanvasTextDrawingStyles,
+    CanvasPath {
+  readonly canvas: OffscreenCanvas;
 }
 
 interface Worker extends EventTarget, AbstractWorker {
@@ -130,7 +159,7 @@ declare module 'culori/fn' {
   export type FindColorByMode<
     M extends Mode,
     C extends Color = Color
-  > = C extends { mode: M } ? C : never
+    > = C extends { mode: M } ? C : never
 
   interface ConvertFn<M extends Mode = 'rgb'> {
     (color: undefined): undefined
