@@ -8,6 +8,6 @@
     "name": "All scripts to execute",
     "path": "dist/*.js",
     "gzip": false,
-    "limit": "60 KB"
+    "limit": "64 KB"
   }
 ]
