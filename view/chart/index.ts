@@ -96,7 +96,7 @@ function initCharts(): void {
   if (canvasL.transferControlToOffscreen) {
     function send(worker: Worker, message: MessageData): void {
       if (message.type === 'init') {
-        worker.postMessage(message, [message.canvas as unknown as Transferable])
+        worker.postMessage(message, [message.canvas as HTMLCanvasElement])
       } else {
         worker.postMessage(message)
       }
