@@ -1,6 +1,7 @@
+import type { RenderType } from '../../stores/benchmark'
 import { initCanvasSize } from '../../lib/canvas'
-import { RenderType, trackTime } from '../../stores/benchmark'
 import { paintCH, paintCL, paintLH } from './paint'
+import { trackTime } from '../../lib/paint'
 
 export type MessageData =
   | {

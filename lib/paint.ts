@@ -1,3 +1,4 @@
+import type { RenderType } from '../stores/benchmark.js'
 import type { Space, Pixel } from './colors.js'
 
 export type Separators = Partial<Record<`${Space}${Space}`, [number, number][]>>
@@ -38,4 +39,14 @@ export function paintPixel(
   pixels.data[pos + 1] = pixel[2]
   pixels.data[pos + 2] = pixel[3]
   pixels.data[pos + 3] = 255
+}
+
+export function trackTime(
+  type: RenderType,
+  isFull: boolean,
+  cb: () => void
+): number {
+  let start = Date.now()
+  cb()
+  return Date.now() - start
 }

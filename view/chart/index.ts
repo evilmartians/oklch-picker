@@ -1,13 +1,8 @@
 import type { MessageData } from './worker.js'
 
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import {
-  trackTime,
-  getQuickScale,
-  keyUp,
-  reportPaint
-} from '../../stores/benchmark.js'
-import { getBorders } from '../../lib/paint.js'
+import { getQuickScale, reportPaint } from '../../stores/benchmark.js'
+import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { paintCH, paintCL, paintLH } from './paint.js'
@@ -21,8 +16,6 @@ let chartH = document.querySelector<HTMLDivElement>('.chart.is-h')!
 let canvasL = chartL.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasC = chartC.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
-
-document.body.addEventListener('keyup', keyUp)
 
 function getMaxC(): number {
   return showRec2020.get() ? C_MAX_REC2020 : C_MAX
