@@ -3,7 +3,7 @@ export function debounce<Args extends any[]>(
   wait: number,
   callback: (...args: Args) => void
 ): (...args: Args) => void {
-  let timeoutId: Timeout
+  let timeoutId: number
   return (...args) => {
     clearTimeout(timeoutId)
     timeoutId = setTimeout(() => {

@@ -24,7 +24,7 @@ export function keyUp(e: KeyboardEvent): void {
 
 export let lastBenchmark = map({ freeze: 0, quick: 0, full: 0 })
 
-let collectingTimeout: Timeout
+let collectingTimeout: number
 let collecting = false
 let totalQuick = -1
 let totalFull = -1
