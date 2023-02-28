@@ -126,7 +126,7 @@ export function reportPaint(type: RenderType, ms: number, isFull: boolean): void
   }
 }
 
-export function trackPaint(
+export function trackTime(
   type: RenderType,
   isFull: boolean,
   cb: () => void

@@ -1,5 +1,5 @@
 import { initCanvasSize } from '../../lib/canvas'
-import { RenderType, trackPaint } from '../../stores/benchmark'
+import { RenderType, trackTime } from '../../stores/benchmark'
 import { paintCH, paintCL, paintLH } from './paint'
 
 export type MessageData =
@@ -62,7 +62,7 @@ onmessage = (e: MessageEvent<MessageData>) => {
 
   if (e.data.type === 'l') {
     let { type, isFull, l, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackPaint('l', isFull, () => {
+    let ms = trackTime('l', isFull, () => {
       paintCH(canvas, l, scale, showP3, showRec2020, p3, rec2020)
     })
 
@@ -76,7 +76,7 @@ onmessage = (e: MessageEvent<MessageData>) => {
   }
   if (e.data.type === 'c') {
     let { type, isFull, c, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackPaint('c', isFull, () => {
+    let ms = trackTime('c', isFull, () => {
       paintLH(canvas, c, scale, showP3, showRec2020, p3, rec2020)
     })
 
@@ -90,7 +90,7 @@ onmessage = (e: MessageEvent<MessageData>) => {
   }
   if (e.data.type === 'h') {
     let { type, isFull, h, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackPaint('h', isFull, () => {
+    let ms = trackTime('h', isFull, () => {
       paintCL(canvas, h, scale, showP3, showRec2020, p3, rec2020)
     })
 

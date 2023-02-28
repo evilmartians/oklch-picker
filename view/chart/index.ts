@@ -2,7 +2,7 @@ import type { MessageData } from './worker.js'
 
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import {
-  trackPaint,
+  trackTime,
   getQuickScale,
   keyUp,
   reportPaint
@@ -96,7 +96,7 @@ function initCharts(): void {
   if (canvasL.transferControlToOffscreen) {
     function send(worker: Worker, message: MessageData): void {
       if (message.type === 'init') {
-        worker.postMessage(message, [message.canvas as HTMLCanvasElement])
+        worker.postMessage(message, [message.canvas])
       } else {
         worker.postMessage(message)
       }
@@ -198,7 +198,7 @@ function initCharts(): void {
         let scale = getQuickScale('l', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        let ms = trackPaint('l', isFull, () => {
+        let ms = trackTime('l', isFull, () => {
           paintCH(
             canvasL,
             (L_MAX * l) / 100,
@@ -216,7 +216,7 @@ function initCharts(): void {
         let scale = getQuickScale('c', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        let ms = trackPaint('c', isFull, () => {
+        let ms = trackTime('c', isFull, () => {
           paintLH(
             canvasC,
             c,
@@ -234,7 +234,7 @@ function initCharts(): void {
         let scale = getQuickScale('h', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        let ms = trackPaint('h', isFull, () => {
+        let ms = trackTime('h', isFull, () => {
           paintCL(
             canvasH,
             h,
