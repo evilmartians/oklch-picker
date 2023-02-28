@@ -1,4 +1,4 @@
-import { WritableAtom } from 'nanostores'
+import type { WritableAtom } from 'nanostores'
 
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { getCheckbox, onChange } from '../checkbox/index.js'

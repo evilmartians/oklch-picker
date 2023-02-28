@@ -1,4 +1,4 @@
-import { MessageData } from './worker.js'
+import type { MessageData } from './worker.js'
 
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { trackPaint, getQuickScale, keyUp, reportPaint } from '../../stores/benchmark.js'

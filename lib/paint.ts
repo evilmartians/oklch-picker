@@ -1,4 +1,4 @@
-import { Space, Pixel } from './colors.js'
+import type { Space, Pixel } from './colors.js'
 
 export type Separators = Partial<Record<`${Space}${Space}`, [number, number][]>>
 
