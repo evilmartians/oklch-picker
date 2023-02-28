@@ -1,6 +1,6 @@
-import { initCanvasSize } from "../../lib/canvas"
-import { RenderType, trackPaint } from "../../stores/benchmark"
-import { paintCH, paintCL, paintLH } from "./paint"
+import { initCanvasSize } from '../../lib/canvas'
+import { RenderType, trackPaint } from '../../stores/benchmark'
+import { paintCH, paintCL, paintLH } from './paint'
 
 export type MessageData =
 	| {
