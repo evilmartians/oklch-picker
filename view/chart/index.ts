@@ -93,7 +93,7 @@ initEvents(canvasC)
 initEvents(canvasH)
 
 function initCharts(): void {
-  if (false) {
+  if (canvasL.transferControlToOffscreen) {
     function send(worker: Worker, message: MessageData): void {
       if (message.type === 'init') {
         worker.postMessage(message, [message.canvas])
