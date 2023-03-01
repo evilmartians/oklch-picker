@@ -1,7 +1,7 @@
 import type { MessageData } from './worker.js'
 
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { getQuickScale, reportFreeze, reportPaint } from '../../stores/benchmark.js'
+import { getQuickScale, reportFreeze, reportPaint, reportQuick } from '../../stores/benchmark.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
@@ -134,7 +134,10 @@ function initCharts(): void {
       l(l, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('l', isFull)
-        if (scale > MAX_SCALE) return
+        if (scale > MAX_SCALE) {
+          reportQuick('l', 1)
+          return
+        } 
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
           send(workerL, {
@@ -153,7 +156,10 @@ function initCharts(): void {
       c(c, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('c', isFull)
-        if (scale > MAX_SCALE) return
+        if (scale > MAX_SCALE) {
+          reportQuick('c', 1)
+          return
+        } 
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
           send(workerC, {
@@ -172,7 +178,10 @@ function initCharts(): void {
       h(h, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('h', isFull)
-        if (scale > MAX_SCALE) return
+        if (scale > MAX_SCALE) {
+          reportQuick('h', 1)
+          return
+        } 
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
           send(workerH, {
@@ -198,7 +207,10 @@ function initCharts(): void {
       l(l, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('l', isFull)
-        if (scale > MAX_SCALE) return
+        if (scale > MAX_SCALE) {
+          reportQuick('l', 1)
+          return
+        }
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
           paintCH(
@@ -216,7 +228,10 @@ function initCharts(): void {
       c(c, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('c', isFull)
-        if (scale > MAX_SCALE) return
+        if (scale > MAX_SCALE) {
+          reportQuick('c', 1)
+          return
+        }
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
           paintLH(
@@ -234,7 +249,10 @@ function initCharts(): void {
       h(h, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('h', isFull)
-        if (scale > MAX_SCALE) return
+        if (scale > MAX_SCALE) {
+          reportQuick('h', 1)
+          return
+        }
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
           paintCL(
