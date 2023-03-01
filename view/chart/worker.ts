@@ -64,7 +64,7 @@ onmessage = (e: MessageEvent<MessageData>) => {
 
   if (e.data.type === 'l') {
     let { type, isFull, l, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackTime('l', isFull, () => {
+    let ms = trackTime(() => {
       paintCH(canvas, l, scale, showP3, showRec2020, p3, rec2020)
     })
 
@@ -78,7 +78,7 @@ onmessage = (e: MessageEvent<MessageData>) => {
   }
   if (e.data.type === 'c') {
     let { type, isFull, c, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackTime('c', isFull, () => {
+    let ms = trackTime(() => {
       paintLH(canvas, c, scale, showP3, showRec2020, p3, rec2020)
     })
 
@@ -92,7 +92,7 @@ onmessage = (e: MessageEvent<MessageData>) => {
   }
   if (e.data.type === 'h') {
     let { type, isFull, h, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackTime('h', isFull, () => {
+    let ms = trackTime(() => {
       paintCL(canvas, h, scale, showP3, showRec2020, p3, rec2020)
     })
 

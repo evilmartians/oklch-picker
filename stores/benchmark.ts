@@ -121,9 +121,10 @@ export function getLastBenchmarkColor(): string {
 export function reportPaint(
   type: RenderType,
   ms: number,
-  isFull: boolean
+  isFull: boolean,
+  isWorker?: boolean
 ): void {
-  reportFreeze(ms)
+  if (!isWorker) reportFreeze(ms)
   if (isFull) {
     reportFull(ms)
   } else {

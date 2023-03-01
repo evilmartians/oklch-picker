@@ -41,11 +41,7 @@ export function paintPixel(
   pixels.data[pos + 3] = 255
 }
 
-export function trackTime(
-  type: RenderType,
-  isFull: boolean,
-  cb: () => void
-): number {
+export function trackTime(cb: () => void): number {
   let start = Date.now()
   cb()
   return Date.now() - start

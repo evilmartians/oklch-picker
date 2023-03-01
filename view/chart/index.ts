@@ -1,7 +1,7 @@
 import type { MessageData } from './worker.js'
 
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { getQuickScale, reportPaint } from '../../stores/benchmark.js'
+import { getQuickScale, reportFreeze, reportPaint } from '../../stores/benchmark.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
@@ -103,7 +103,7 @@ function initCharts(): void {
       })
       worker.onmessage = (e: MessageEvent<MessageData>) => {
         if (e.data.type === 'reportPaint') {
-          reportPaint(e.data.renderType, e.data.ms, e.data.isFull)
+          reportPaint(e.data.renderType, e.data.ms, e.data.isFull, true)
         }
       }
       return worker
@@ -136,48 +136,57 @@ function initCharts(): void {
         let scale = getQuickScale('l', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        send(workerL, {
-          type: 'l',
-          isFull,
-          l: (L_MAX * l) / 100,
-          scale,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          p3,
-          rec2020
+        let ms = trackTime(() => {
+          send(workerL, {
+            type: 'l',
+            isFull,
+            l: (L_MAX * l) / 100,
+            scale,
+            showP3: showP3.get(),
+            showRec2020: showRec2020.get(),
+            p3,
+            rec2020
+          })
         })
+        reportFreeze(ms)
       },
       c(c, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('c', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        send(workerC, {
-          type: 'c',
-          isFull,
-          c,
-          scale,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          p3,
-          rec2020
+        let ms = trackTime(() => {
+          send(workerC, {
+            type: 'c',
+            isFull,
+            c,
+            scale,
+            showP3: showP3.get(),
+            showRec2020: showRec2020.get(),
+            p3,
+            rec2020
+          })
         })
+        reportFreeze(ms)
       },
       h(h, isFull) {
         if (!showCharts.get()) return
         let scale = getQuickScale('h', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        send(workerH, {
-          type: 'h',
-          isFull,
-          h,
-          scale,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          p3,
-          rec2020
+        let ms = trackTime(() => {
+          send(workerH, {
+            type: 'h',
+            isFull,
+            h,
+            scale,
+            showP3: showP3.get(),
+            showRec2020: showRec2020.get(),
+            p3,
+            rec2020
+          })
         })
+        reportFreeze(ms)
       }
     })
   } else {
@@ -191,7 +200,7 @@ function initCharts(): void {
         let scale = getQuickScale('l', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        let ms = trackTime('l', isFull, () => {
+        let ms = trackTime(() => {
           paintCH(
             canvasL,
             (L_MAX * l) / 100,
@@ -209,7 +218,7 @@ function initCharts(): void {
         let scale = getQuickScale('c', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        let ms = trackTime('c', isFull, () => {
+        let ms = trackTime(() => {
           paintLH(
             canvasC,
             c,
@@ -227,7 +236,7 @@ function initCharts(): void {
         let scale = getQuickScale('h', isFull)
         if (scale > MAX_SCALE) return
         let [p3, rec2020] = getBorders()
-        let ms = trackTime('h', isFull, () => {
+        let ms = trackTime(() => {
           paintCL(
             canvasH,
             h,
