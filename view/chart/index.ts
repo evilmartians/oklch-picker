@@ -99,7 +99,9 @@ function initCharts(): void {
       let worker = new PaintWorker()
       send(worker, {
         type: 'init',
-        canvas: canvas.transferControlToOffscreen!()
+        canvas: canvas.transferControlToOffscreen!(),
+        pixelRation: Math.ceil(window.devicePixelRatio),
+        canvasSize: canvasL.getBoundingClientRect()
       })
       worker.onmessage = (e: MessageEvent<MessageData>) => {
         if (e.data.type === 'reportPaint') {
@@ -112,23 +114,6 @@ function initCharts(): void {
     let workerL = init(canvasL)
     let workerC = init(canvasC)
     let workerH = init(canvasH)
-
-    let pixelRation = Math.ceil(window.devicePixelRatio)
-    send(workerL, {
-      type: 'initCanvasSize',
-      pixelRation,
-      canvasSize: canvasL.getBoundingClientRect()
-    })
-    send(workerC, {
-      type: 'initCanvasSize',
-      pixelRation,
-      canvasSize: canvasC.getBoundingClientRect()
-    })
-    send(workerH, {
-      type: 'initCanvasSize',
-      pixelRation,
-      canvasSize: canvasH.getBoundingClientRect()
-    })
 
     onPaint({
       l(l, isFull) {

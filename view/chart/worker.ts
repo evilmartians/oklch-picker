@@ -8,9 +8,6 @@ export type MessageData =
   | {
       type: 'init'
       canvas: OffscreenCanvas
-    }
-  | {
-      type: 'initCanvasSize'
       pixelRation: number
       canvasSize: DOMRect
     }
@@ -56,52 +53,49 @@ let canvas: OffscreenCanvas
 onmessage = (e: MessageEvent<MessageData>) => {
   if (e.data.type === 'init') {
     canvas = e.data.canvas
-  }
-
-  if (e.data.type === 'initCanvasSize') {
     initCanvasSize(canvas, e.data.pixelRation, e.data.canvasSize)
-  }
-
-  if (e.data.type === 'l') {
-    let { type, isFull, l, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackTime(() => {
-      paintCH(canvas, l, scale, showP3, showRec2020, p3, rec2020)
-    })
-
-    let message: MessageData = {
-      renderType: type,
-      type: 'reportPaint',
-      ms,
-      isFull
+  } else {
+    if (e.data.type === 'l') {
+      let { type, isFull, l, scale, showP3, showRec2020, p3, rec2020 } = e.data
+      let ms = trackTime(() => {
+        paintCH(canvas, l, scale, showP3, showRec2020, p3, rec2020)
+      })
+  
+      let message: MessageData = {
+        renderType: type,
+        type: 'reportPaint',
+        ms,
+        isFull
+      }
+      postMessage(message)
     }
-    postMessage(message)
-  }
-  if (e.data.type === 'c') {
-    let { type, isFull, c, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackTime(() => {
-      paintLH(canvas, c, scale, showP3, showRec2020, p3, rec2020)
-    })
-
-    let message: MessageData = {
-      renderType: type,
-      type: 'reportPaint',
-      ms,
-      isFull
+    if (e.data.type === 'c') {
+      let { type, isFull, c, scale, showP3, showRec2020, p3, rec2020 } = e.data
+      let ms = trackTime(() => {
+        paintLH(canvas, c, scale, showP3, showRec2020, p3, rec2020)
+      })
+  
+      let message: MessageData = {
+        renderType: type,
+        type: 'reportPaint',
+        ms,
+        isFull
+      }
+      postMessage(message)
     }
-    postMessage(message)
-  }
-  if (e.data.type === 'h') {
-    let { type, isFull, h, scale, showP3, showRec2020, p3, rec2020 } = e.data
-    let ms = trackTime(() => {
-      paintCL(canvas, h, scale, showP3, showRec2020, p3, rec2020)
-    })
-
-    let message: MessageData = {
-      renderType: type,
-      type: 'reportPaint',
-      ms,
-      isFull
+    if (e.data.type === 'h') {
+      let { type, isFull, h, scale, showP3, showRec2020, p3, rec2020 } = e.data
+      let ms = trackTime(() => {
+        paintCL(canvas, h, scale, showP3, showRec2020, p3, rec2020)
+      })
+  
+      let message: MessageData = {
+        renderType: type,
+        type: 'reportPaint',
+        ms,
+        isFull
+      }
+      postMessage(message)
     }
-    postMessage(message)
   }
 }
