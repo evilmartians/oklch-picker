@@ -140,7 +140,11 @@ function initCharts(): void {
       worker.onmessage = (e: MessageEvent<MessageData>) => {
         if (e.data.type === 'reportPaint') {
           if (queue[e.data.renderType].length !== 0) {
-            send(worker, queue[e.data.renderType][0])
+            let ms = trackTime(() => {
+              send(worker, queue[e.data.renderType][0])
+            })
+            reportFreeze(ms)
+            // send(worker, queue[e.data.renderType][0])
             queue[e.data.renderType].shift()
           } else {
             isWorkerBusy[e.data.renderType] = false
