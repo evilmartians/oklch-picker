@@ -24,7 +24,9 @@ function initRange(
   let range = div.querySelector<HTMLInputElement>('.range_input')!
 
   range.addEventListener('input', () => {
-    current.setKey(type, parseFloat(range.value))
+    setTimeout(() => {
+      current.setKey(type, parseFloat(range.value))
+    }, 0)
   })
 
   return [div, range]

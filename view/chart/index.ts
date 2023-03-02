@@ -125,16 +125,18 @@ function initCharts(): void {
         } 
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
-          send(workerL, {
-            type: 'l',
-            isFull,
-            l: (L_MAX * l) / 100,
-            scale,
-            showP3: showP3.get(),
-            showRec2020: showRec2020.get(),
-            p3,
-            rec2020
-          })
+          setTimeout(() => {
+            send(workerL, {
+              type: 'l',
+              isFull,
+              l: (L_MAX * l) / 100,
+              scale,
+              showP3: showP3.get(),
+              showRec2020: showRec2020.get(),
+              p3,
+              rec2020
+            })
+          }, 0)
         })
         reportFreeze(ms)
       },
@@ -147,16 +149,18 @@ function initCharts(): void {
         } 
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
-          send(workerC, {
-            type: 'c',
-            isFull,
-            c,
-            scale,
-            showP3: showP3.get(),
-            showRec2020: showRec2020.get(),
-            p3,
-            rec2020
-          })
+          setTimeout(() => {
+            send(workerC, {
+              type: 'c',
+              isFull,
+              c,
+              scale,
+              showP3: showP3.get(),
+              showRec2020: showRec2020.get(),
+              p3,
+              rec2020
+            })
+          }, 0)
         })
         reportFreeze(ms)
       },
@@ -169,16 +173,18 @@ function initCharts(): void {
         } 
         let [p3, rec2020] = getBorders()
         let ms = trackTime(() => {
-          send(workerH, {
-            type: 'h',
-            isFull,
-            h,
-            scale,
-            showP3: showP3.get(),
-            showRec2020: showRec2020.get(),
-            p3,
-            rec2020
-          })
+          setTimeout(() => {
+            send(workerH, {
+              type: 'h',
+              isFull,
+              h,
+              scale,
+              showP3: showP3.get(),
+              showRec2020: showRec2020.get(),
+              p3,
+              rec2020
+            })
+          }, 0)
         })
         reportFreeze(ms)
       }
