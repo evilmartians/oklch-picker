@@ -1,4 +1,3 @@
-import type { RenderType } from '../stores/benchmark.js'
 import type { Space, Pixel } from './colors.js'
 
 export type Separators = Partial<Record<`${Space}${Space}`, [number, number][]>>
