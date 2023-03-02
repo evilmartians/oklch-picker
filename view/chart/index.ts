@@ -7,6 +7,7 @@ import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { paintCH, paintCL, paintLH } from './paint.js'
 import PaintWorker from './worker.js?worker'
+import { atom, map } from 'nanostores'
 
 const MAX_SCALE = 8
 
@@ -87,6 +88,39 @@ initEvents(canvasH)
 
 function initCharts(): void {
   if (canvasL.transferControlToOffscreen) {
+    interface IsWorkerBusy {
+      l: boolean
+      c: boolean
+      h: boolean
+    }
+    interface Queue {
+      l: MessageData[]
+      c: MessageData[]
+      h: MessageData[]
+    }
+
+    let isWorkerBusy: IsWorkerBusy = {
+      l: false,
+      c: false,
+      h: false
+    }
+    let queue: Queue = {
+      l: [],
+      c: [],
+      h: []
+    }
+
+    // let queue = atom<MessageData[] | null>(null)
+    // let isWorkerBusy = map<IsWorkerBusy>({
+    //   l: false,
+    //   c: false,
+    //   h: false
+    // })
+
+    // isWorkerBusy.listen((isWorkerBusy, key) => {
+    //   console.log(isWorkerBusy[key])
+    // })
+
     function send(worker: Worker, message: MessageData): void {
       if (message.type === 'init') {
         worker.postMessage(message, [message.canvas])
@@ -105,6 +139,13 @@ function initCharts(): void {
       })
       worker.onmessage = (e: MessageEvent<MessageData>) => {
         if (e.data.type === 'reportPaint') {
+          if (queue[e.data.renderType].length !== 0) {
+            send(worker, queue[e.data.renderType][0])
+            queue[e.data.renderType].shift()
+          } else {
+            isWorkerBusy[e.data.renderType] = false
+          }
+          // isWorkerBusy.setKey(e.data.renderType, false)
           reportPaint(e.data.renderType, e.data.ms, e.data.isFull, true)
         }
       }
@@ -123,22 +164,40 @@ function initCharts(): void {
           reportQuick('l', 1)
           return
         } 
+        
         let [p3, rec2020] = getBorders()
-        let ms = trackTime(() => {
-          setTimeout(() => {
-            send(workerL, {
-              type: 'l',
-              isFull,
-              l: (L_MAX * l) / 100,
-              scale,
-              showP3: showP3.get(),
-              showRec2020: showRec2020.get(),
-              p3,
-              rec2020
-            })
-          }, 0)
-        })
-        reportFreeze(ms)
+        let message: MessageData = {
+          type: 'l',
+          isFull,
+          l: (L_MAX * l) / 100,
+          scale,
+          showP3: showP3.get(),
+          showRec2020: showRec2020.get(),
+          p3,
+          rec2020
+        }
+
+        if (!isWorkerBusy.l) {
+          isWorkerBusy.l = true
+          let ms = trackTime(() => {
+            send(workerL, message)
+          })
+          reportFreeze(ms)
+        } else {
+          queue.l = [...queue.l, message]
+        }
+
+        // if (!isWorkerBusy.get().l) {
+        //   isWorkerBusy.setKey('l', true)
+        //   let ms = trackTime(() => {
+        //     send(workerL, message)
+        //   })
+        //   reportFreeze(ms)
+        // } else if (queue.get()) {
+        //   queue.set([...queue.get()!, message])
+        // } else {
+        //   queue.set([message])
+        // }
       },
       c(c, isFull) {
         if (!showCharts.get()) return
@@ -147,22 +206,28 @@ function initCharts(): void {
           reportQuick('c', 1)
           return
         } 
+
         let [p3, rec2020] = getBorders()
-        let ms = trackTime(() => {
-          setTimeout(() => {
-            send(workerC, {
-              type: 'c',
-              isFull,
-              c,
-              scale,
-              showP3: showP3.get(),
-              showRec2020: showRec2020.get(),
-              p3,
-              rec2020
-            })
-          }, 0)
-        })
-        reportFreeze(ms)
+        let message: MessageData = {
+          type: 'c',
+          isFull,
+          c,
+          scale,
+          showP3: showP3.get(),
+          showRec2020: showRec2020.get(),
+          p3,
+          rec2020
+        }
+
+        if (!isWorkerBusy.c) {
+          isWorkerBusy.c = true
+          let ms = trackTime(() => {
+            send(workerC, message)
+          })
+          reportFreeze(ms)
+        } else {
+          queue.c = [...queue.c, message]
+        }
       },
       h(h, isFull) {
         if (!showCharts.get()) return
@@ -171,22 +236,28 @@ function initCharts(): void {
           reportQuick('h', 1)
           return
         } 
+
         let [p3, rec2020] = getBorders()
-        let ms = trackTime(() => {
-          setTimeout(() => {
-            send(workerH, {
-              type: 'h',
-              isFull,
-              h,
-              scale,
-              showP3: showP3.get(),
-              showRec2020: showRec2020.get(),
-              p3,
-              rec2020
-            })
-          }, 0)
-        })
-        reportFreeze(ms)
+        let message: MessageData = {
+          type: 'h',
+          isFull,
+          h,
+          scale,
+          showP3: showP3.get(),
+          showRec2020: showRec2020.get(),
+          p3,
+          rec2020
+        }
+
+        if (!isWorkerBusy.h) {
+          isWorkerBusy.h = true
+          let ms = trackTime(() => {
+            send(workerH, message)
+          })
+          reportFreeze(ms)
+        } else {
+          queue.h = [...queue.h, message]
+        }
       }
     })
   } else {
