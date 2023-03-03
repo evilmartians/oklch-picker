@@ -1,8 +1,14 @@
 import type { MessageData } from './worker.js'
 
+import {
+  getQuickScale,
+  RenderType,
+  reportFreeze,
+  reportPaint,
+  reportQuick
+} from '../../stores/benchmark.js'
 import { atom, map } from 'nanostores'
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { getQuickScale, RenderType, reportFreeze, reportPaint, reportQuick } from '../../stores/benchmark.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
@@ -86,20 +92,18 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
-export interface IsWorkerBusy {
-  l: boolean
-  c: boolean
-  h: boolean
-}
-
 function initCharts(): void {
-  if (canvasL.transferControlToOffscreen && canvasL.getContext('bitmaprenderer')) {
-    let queue = atom<MessageData[]>([])
-    let isWorkerBusy = map<IsWorkerBusy>({
-      l: false,
-      c: false,
-      h: false
-    })
+  if (
+    canvasL.transferControlToOffscreen &&
+    canvasL.getContext('bitmaprenderer')
+  ) {
+    let isBusyL = atom<boolean>(false)
+    let isBusyC = atom<boolean>(false)
+    let isBusyH = atom<boolean>(false)
+
+    let lastPendingL = atom<MessageData | null>(null)
+    let lastPendingC = atom<MessageData | null>(null)
+    let lastPendingH = atom<MessageData | null>(null)
 
     let ctxL = canvasL.getContext('bitmaprenderer')
     let ctxC = canvasC.getContext('bitmaprenderer')
@@ -121,17 +125,19 @@ function initCharts(): void {
       })
       worker.onmessage = (e: MessageEvent<MessageData>) => {
         if (e.data.type === 'painted') {
-          isWorkerBusy.setKey(e.data.workerType, false)
-          switch (e.data.renderType) {
-            case 'l':
-              ctxL!.transferFromImageBitmap(e.data.btm)
-              break
-            case 'c':
-              ctxC!.transferFromImageBitmap(e.data.btm)
-              break
-            case 'h':
-              ctxH!.transferFromImageBitmap(e.data.btm)
-              break
+          if (e.data.workerType === 'l') {
+            isBusyL.set(false)
+          } else if(e.data.workerType === 'c') {
+            isBusyL.set(false)
+          } else if (e.data.workerType === 'h') {
+            isBusyL.set(false)
+          }
+          if (e.data.renderType === 'l') {
+            ctxL!.transferFromImageBitmap(e.data.btm)
+          } else if(e.data.renderType === 'c') {
+            ctxC!.transferFromImageBitmap(e.data.btm)
+          } else if (e.data.renderType === 'h') {
+            ctxH!.transferFromImageBitmap(e.data.btm)
           }
           reportPaint(e.data.renderType, e.data.ms, e.data.isFull, true)
         }
@@ -143,45 +149,39 @@ function initCharts(): void {
     let workerC = init('c')
     let workerH = init('h')
 
-    isWorkerBusy.listen((value, key) => {if (!value[key]) queue.notify()})
-    queue.listen((queueVal) => {
-      if (queueVal.length !== 0) {
-        if (!isWorkerBusy.get().l) {
-          isWorkerBusy.setKey('l', true)
-          let ms = trackTime(() => {
-            send(workerL, queueVal[0])
-          })
-          reportFreeze(ms)
-          if (queue.get().length < 10) {
-            queue.set([...queueVal].slice(1, -1))
-          } else {
-            queue.set([...queueVal].slice(3, -1))
-          }
-        } else if (!isWorkerBusy.get().c) {
-          isWorkerBusy.setKey('c', true)
-          let ms = trackTime(() => {
-            send(workerC, queueVal[0])
-          })
-          reportFreeze(ms)
-          if (queue.get().length < 10) {
-            queue.set([...queueVal].slice(1, -1))
-          } else {
-            queue.set([...queueVal].slice(3, -1))
-          }
-        } else if (!isWorkerBusy.get().h) {
-          isWorkerBusy.setKey('h', true)
-          let ms = trackTime(() => {
-            send(workerH, queueVal[0])
-          })
-          reportFreeze(ms)
-          if (queue.get().length < 10) {
-            queue.set([...queueVal].slice(1, -1))
-          } else {
-            queue.set([...queueVal].slice(3, -1))
-          }
-        }
+    function sendMessageToUnbusyWorker(message: MessageData): null | void {
+      if (!isBusyL.get()) {
+        send(workerL, message)
+      } else if (!isBusyC.get()) {
+        send(workerC, message)
+      } else if (!isBusyH.get()) {
+        send(workerH, message)
+      } else {
+        return null
+      }
+    }
+
+    isBusyL.listen((isBusy) => {if (!isBusy) lastPendingL.notify()})
+    isBusyC.listen((isBusy) => {if (!isBusy) lastPendingC.notify()})
+    isBusyH.listen((isBusy) => {if (!isBusy) lastPendingH.notify()})
+
+    lastPendingL.listen((message) => {
+      if (message) {
+        isBusyL.set(true)
+        sendMessageToUnbusyWorker(message)
+        lastPendingL.set(null)
       }
     })
+    lastPendingC.listen((message) => {if (message) {
+      isBusyC.set(true)
+      sendMessageToUnbusyWorker(message)
+      lastPendingC.set(null)
+    }})
+    lastPendingH.listen((message) => {if (message) {
+      isBusyH.set(true)
+      sendMessageToUnbusyWorker(message)
+      lastPendingH.set(null)
+    }})
 
     onPaint({
       l(l, isFull) {
@@ -190,18 +190,21 @@ function initCharts(): void {
         if (scale > MAX_SCALE) {
           reportQuick('l', 1)
           return
-        } 
+        }
         let [p3, rec2020] = getBorders()
-        queue.set([...queue.get(), {
+        let message: MessageData = {
           type: 'l',
           isFull,
-          l: (L_MAX * l) / 100,
+          lch: (L_MAX * l) / 100,
           scale,
           showP3: showP3.get(),
           showRec2020: showRec2020.get(),
           p3,
           rec2020
-        }])
+        }
+        if (sendMessageToUnbusyWorker(message) === null) {
+          lastPendingL.set(message)
+        }
       },
       c(c, isFull) {
         if (!showCharts.get()) return
@@ -211,16 +214,19 @@ function initCharts(): void {
           return
         }
         let [p3, rec2020] = getBorders()
-        queue.set([...queue.get(), {
+        let message: MessageData = {
           type: 'c',
           isFull,
-          c,
+          lch: c,
           scale,
           showP3: showP3.get(),
           showRec2020: showRec2020.get(),
           p3,
           rec2020
-        }])
+        }
+        if (sendMessageToUnbusyWorker(message) === null) {
+          lastPendingL.set(message)
+        }
       },
       h(h, isFull) {
         if (!showCharts.get()) return
@@ -228,18 +234,21 @@ function initCharts(): void {
         if (scale > MAX_SCALE) {
           reportQuick('h', 1)
           return
-        } 
+        }
         let [p3, rec2020] = getBorders()
-        queue.set([...queue.get(), {
+        let message: MessageData = {
           type: 'h',
           isFull,
-          h,
+          lch: h,
           scale,
           showP3: showP3.get(),
           showRec2020: showRec2020.get(),
           p3,
           rec2020
-        }])
+        }
+        if (sendMessageToUnbusyWorker(message) === null) {
+          lastPendingL.set(message)
+        }
       }
     })
   } else {
