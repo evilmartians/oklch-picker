@@ -1,15 +1,18 @@
 import type { RenderType } from '../../stores/benchmark'
+import type { IsWorkerBusy } from '.'
 
-import { initCanvasSize } from '../../lib/canvas'
+import { getCleanCtx, initCanvasSize } from '../../lib/canvas'
 import { paintCH, paintCL, paintLH } from './paint'
 import { trackTime } from '../../lib/paint'
 
 export type MessageData =
   | {
       type: 'init'
-      canvas: OffscreenCanvas
+      workerType: keyof IsWorkerBusy
+      canvasLSize: DOMRect
+      canvasCSize: DOMRect
+      canvasHSize: DOMRect
       pixelRation: number
-      canvasSize: DOMRect
     }
   | {
       type: 'l'
@@ -42,28 +45,37 @@ export type MessageData =
       rec2020: string
     }
   | {
-      type: 'reportPaint'
+      type: 'painted'
       renderType: RenderType
+      workerType: keyof IsWorkerBusy
+      btm: ImageBitmap
       ms: number
       isFull: boolean
     }
 
-let canvas: OffscreenCanvas
+let workerType: keyof IsWorkerBusy
+let canvasL: OffscreenCanvas = new OffscreenCanvas(0, 0);
+let canvasC: OffscreenCanvas = new OffscreenCanvas(0, 0);
+let canvasH: OffscreenCanvas = new OffscreenCanvas(0, 0);
 
 onmessage = (e: MessageEvent<MessageData>) => {
   if (e.data.type === 'init') {
-    canvas = e.data.canvas
-    initCanvasSize(canvas, e.data.pixelRation, e.data.canvasSize)
+    workerType = e.data.workerType
+    initCanvasSize(canvasL, e.data.pixelRation, e.data.canvasLSize)
+    initCanvasSize(canvasC, e.data.pixelRation, e.data.canvasCSize)
+    initCanvasSize(canvasH, e.data.pixelRation, e.data.canvasHSize)
   } else {
     if (e.data.type === 'l') {
       let { type, isFull, l, scale, showP3, showRec2020, p3, rec2020 } = e.data
       let ms = trackTime(() => {
-        paintCH(canvas, l, scale, showP3, showRec2020, p3, rec2020)
+        paintCH(canvasL, l, scale, showP3, showRec2020, p3, rec2020)
       })
   
       let message: MessageData = {
+        type: 'painted',
         renderType: type,
-        type: 'reportPaint',
+        workerType,
+        btm: canvasL.transferToImageBitmap(),
         ms,
         isFull
       }
@@ -72,12 +84,14 @@ onmessage = (e: MessageEvent<MessageData>) => {
     if (e.data.type === 'c') {
       let { type, isFull, c, scale, showP3, showRec2020, p3, rec2020 } = e.data
       let ms = trackTime(() => {
-        paintLH(canvas, c, scale, showP3, showRec2020, p3, rec2020)
+        paintLH(canvasC, c, scale, showP3, showRec2020, p3, rec2020)
       })
   
       let message: MessageData = {
+        type: 'painted',
         renderType: type,
-        type: 'reportPaint',
+        workerType,
+        btm: canvasC.transferToImageBitmap(),
         ms,
         isFull
       }
@@ -86,12 +100,14 @@ onmessage = (e: MessageEvent<MessageData>) => {
     if (e.data.type === 'h') {
       let { type, isFull, h, scale, showP3, showRec2020, p3, rec2020 } = e.data
       let ms = trackTime(() => {
-        paintCL(canvas, h, scale, showP3, showRec2020, p3, rec2020)
+        paintCL(canvasH, h, scale, showP3, showRec2020, p3, rec2020)
       })
   
       let message: MessageData = {
+        type: 'painted',
         renderType: type,
-        type: 'reportPaint',
+        workerType,
+        btm: canvasH.transferToImageBitmap(),
         ms,
         isFull
       }

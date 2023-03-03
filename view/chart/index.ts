@@ -1,13 +1,13 @@
 import type { MessageData } from './worker.js'
 
+import { atom, map } from 'nanostores'
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { getQuickScale, reportFreeze, reportPaint, reportQuick } from '../../stores/benchmark.js'
+import { getQuickScale, RenderType, reportFreeze, reportPaint, reportQuick } from '../../stores/benchmark.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { paintCH, paintCL, paintLH } from './paint.js'
 import PaintWorker from './worker.js?worker'
-import { atom, map } from 'nanostores'
 
 const MAX_SCALE = 8
 
@@ -86,79 +86,102 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
-function initCharts(): void {
-  if (canvasL.transferControlToOffscreen) {
-    interface IsWorkerBusy {
-      l: boolean
-      c: boolean
-      h: boolean
-    }
-    interface Queue {
-      l: MessageData[]
-      c: MessageData[]
-      h: MessageData[]
-    }
+export interface IsWorkerBusy {
+  l: boolean
+  c: boolean
+  h: boolean
+}
 
-    let isWorkerBusy: IsWorkerBusy = {
+function initCharts(): void {
+  if (canvasL.transferControlToOffscreen && canvasL.getContext('bitmaprenderer')) {
+    let queue = atom<MessageData[]>([])
+    let isWorkerBusy = map<IsWorkerBusy>({
       l: false,
       c: false,
       h: false
-    }
-    let queue: Queue = {
-      l: [],
-      c: [],
-      h: []
-    }
+    })
 
-    // let queue = atom<MessageData[] | null>(null)
-    // let isWorkerBusy = map<IsWorkerBusy>({
-    //   l: false,
-    //   c: false,
-    //   h: false
-    // })
-
-    // isWorkerBusy.listen((isWorkerBusy, key) => {
-    //   console.log(isWorkerBusy[key])
-    // })
+    let ctxL = canvasL.getContext('bitmaprenderer')
+    let ctxC = canvasC.getContext('bitmaprenderer')
+    let ctxH = canvasH.getContext('bitmaprenderer')
 
     function send(worker: Worker, message: MessageData): void {
-      if (message.type === 'init') {
-        worker.postMessage(message, [message.canvas])
-      } else {
-        worker.postMessage(message)
-      }
+      worker.postMessage(message)
     }
 
-    function init(canvas: HTMLCanvasElement): Worker {
+    function init(workerType: RenderType): Worker {
       let worker = new PaintWorker()
       send(worker, {
         type: 'init',
-        canvas: canvas.transferControlToOffscreen!(),
-        pixelRation: Math.ceil(window.devicePixelRatio),
-        canvasSize: canvasL.getBoundingClientRect()
+        workerType: workerType,
+        canvasLSize: canvasL.getBoundingClientRect(),
+        canvasCSize: canvasC.getBoundingClientRect(),
+        canvasHSize: canvasH.getBoundingClientRect(),
+        pixelRation: Math.ceil(window.devicePixelRatio)
       })
       worker.onmessage = (e: MessageEvent<MessageData>) => {
-        if (e.data.type === 'reportPaint') {
-          if (queue[e.data.renderType].length !== 0) {
-            let ms = trackTime(() => {
-              send(worker, queue[e.data.renderType][0])
-            })
-            reportFreeze(ms)
-            // send(worker, queue[e.data.renderType][0])
-            queue[e.data.renderType].shift()
-          } else {
-            isWorkerBusy[e.data.renderType] = false
+        if (e.data.type === 'painted') {
+          isWorkerBusy.setKey(e.data.workerType, false)
+          switch (e.data.renderType) {
+            case 'l':
+              ctxL!.transferFromImageBitmap(e.data.btm)
+              break
+            case 'c':
+              ctxC!.transferFromImageBitmap(e.data.btm)
+              break
+            case 'h':
+              ctxH!.transferFromImageBitmap(e.data.btm)
+              break
           }
-          // isWorkerBusy.setKey(e.data.renderType, false)
           reportPaint(e.data.renderType, e.data.ms, e.data.isFull, true)
         }
       }
       return worker
     }
 
-    let workerL = init(canvasL)
-    let workerC = init(canvasC)
-    let workerH = init(canvasH)
+    let workerL = init('l')
+    let workerC = init('c')
+    let workerH = init('h')
+
+    isWorkerBusy.listen((value, key) => {if (!value[key]) queue.notify()})
+    queue.listen((queueVal) => {
+      if (queueVal.length !== 0) {
+        if (!isWorkerBusy.get().l) {
+          isWorkerBusy.setKey('l', true)
+          let ms = trackTime(() => {
+            send(workerL, queueVal[0])
+          })
+          reportFreeze(ms)
+          if (queue.get().length < 10) {
+            queue.set([...queueVal].slice(1, -1))
+          } else {
+            queue.set([...queueVal].slice(3, -1))
+          }
+        } else if (!isWorkerBusy.get().c) {
+          isWorkerBusy.setKey('c', true)
+          let ms = trackTime(() => {
+            send(workerC, queueVal[0])
+          })
+          reportFreeze(ms)
+          if (queue.get().length < 10) {
+            queue.set([...queueVal].slice(1, -1))
+          } else {
+            queue.set([...queueVal].slice(3, -1))
+          }
+        } else if (!isWorkerBusy.get().h) {
+          isWorkerBusy.setKey('h', true)
+          let ms = trackTime(() => {
+            send(workerH, queueVal[0])
+          })
+          reportFreeze(ms)
+          if (queue.get().length < 10) {
+            queue.set([...queueVal].slice(1, -1))
+          } else {
+            queue.set([...queueVal].slice(3, -1))
+          }
+        }
+      }
+    })
 
     onPaint({
       l(l, isFull) {
@@ -168,9 +191,8 @@ function initCharts(): void {
           reportQuick('l', 1)
           return
         } 
-        
         let [p3, rec2020] = getBorders()
-        let message: MessageData = {
+        queue.set([...queue.get(), {
           type: 'l',
           isFull,
           l: (L_MAX * l) / 100,
@@ -179,29 +201,7 @@ function initCharts(): void {
           showRec2020: showRec2020.get(),
           p3,
           rec2020
-        }
-
-        if (!isWorkerBusy.l) {
-          isWorkerBusy.l = true
-          let ms = trackTime(() => {
-            send(workerL, message)
-          })
-          reportFreeze(ms)
-        } else {
-          queue.l = [...queue.l, message]
-        }
-
-        // if (!isWorkerBusy.get().l) {
-        //   isWorkerBusy.setKey('l', true)
-        //   let ms = trackTime(() => {
-        //     send(workerL, message)
-        //   })
-        //   reportFreeze(ms)
-        // } else if (queue.get()) {
-        //   queue.set([...queue.get()!, message])
-        // } else {
-        //   queue.set([message])
-        // }
+        }])
       },
       c(c, isFull) {
         if (!showCharts.get()) return
@@ -209,10 +209,9 @@ function initCharts(): void {
         if (scale > MAX_SCALE) {
           reportQuick('c', 1)
           return
-        } 
-
+        }
         let [p3, rec2020] = getBorders()
-        let message: MessageData = {
+        queue.set([...queue.get(), {
           type: 'c',
           isFull,
           c,
@@ -221,17 +220,7 @@ function initCharts(): void {
           showRec2020: showRec2020.get(),
           p3,
           rec2020
-        }
-
-        if (!isWorkerBusy.c) {
-          isWorkerBusy.c = true
-          let ms = trackTime(() => {
-            send(workerC, message)
-          })
-          reportFreeze(ms)
-        } else {
-          queue.c = [...queue.c, message]
-        }
+        }])
       },
       h(h, isFull) {
         if (!showCharts.get()) return
@@ -240,9 +229,8 @@ function initCharts(): void {
           reportQuick('h', 1)
           return
         } 
-
         let [p3, rec2020] = getBorders()
-        let message: MessageData = {
+        queue.set([...queue.get(), {
           type: 'h',
           isFull,
           h,
@@ -251,17 +239,7 @@ function initCharts(): void {
           showRec2020: showRec2020.get(),
           p3,
           rec2020
-        }
-
-        if (!isWorkerBusy.h) {
-          isWorkerBusy.h = true
-          let ms = trackTime(() => {
-            send(workerH, message)
-          })
-          reportFreeze(ms)
-        } else {
-          queue.h = [...queue.h, message]
-        }
+        }])
       }
     })
   } else {

@@ -11,7 +11,19 @@ interface OffscreenCanvas extends EventTarget {
     contextId: '2d',
     contextAttributes?: CanvasRenderingContext2DSettings
   ): OffscreenCanvasRenderingContext2D | null
+
+  getContext(
+    contextId: 'bitmaprenderer',
+    contextAttributes?: WebGLContextAttributes,
+  ): ImageBitmapRenderingContext | null;
+
+  transferToImageBitmap(): ImageBitmap;
 }
+
+declare var OffscreenCanvas: {
+  prototype: OffscreenCanvas;
+  new (width: number, height: number): OffscreenCanvas;
+};
 
 interface OffscreenCanvasRenderingContext2D
   extends CanvasState,
@@ -35,7 +47,7 @@ interface OffscreenCanvasRenderingContext2D
 interface Worker extends EventTarget, AbstractWorker {
   postMessage(
     message: object,
-    transfer: (Transferable | HTMLCanvasElement)[]
+    transfer: (Transferable | OffscreenCanvas)[]
   ): void
 }
 
