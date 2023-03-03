@@ -7,7 +7,7 @@ import {
   reportPaint,
   reportQuick
 } from '../../stores/benchmark.js'
-import { atom, map } from 'nanostores'
+import { atom } from 'nanostores'
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
@@ -125,21 +125,31 @@ function initCharts(): void {
       })
       worker.onmessage = (e: MessageEvent<MessageData>) => {
         if (e.data.type === 'painted') {
-          if (e.data.workerType === 'l') {
+          let { workerType, renderType, btm, ms, isFull } = e.data
+
+          if (workerType === 'l') {
             isBusyL.set(false)
-          } else if(e.data.workerType === 'c') {
+          } else if(workerType === 'c') {
             isBusyL.set(false)
-          } else if (e.data.workerType === 'h') {
+          } else if (workerType === 'h') {
             isBusyL.set(false)
           }
-          if (e.data.renderType === 'l') {
-            ctxL!.transferFromImageBitmap(e.data.btm)
-          } else if(e.data.renderType === 'c') {
-            ctxC!.transferFromImageBitmap(e.data.btm)
-          } else if (e.data.renderType === 'h') {
-            ctxH!.transferFromImageBitmap(e.data.btm)
+
+          if (renderType === 'l') {
+            reportFreeze(trackTime(() => {
+              ctxL!.transferFromImageBitmap(btm)
+            }))
+          } else if(renderType === 'c') {
+            reportFreeze(trackTime(() => {
+              ctxL!.transferFromImageBitmap(btm)
+            }))
+          } else if (renderType === 'h') {
+            reportFreeze(trackTime(() => {
+              ctxH!.transferFromImageBitmap(btm)
+            }))
           }
-          reportPaint(e.data.renderType, e.data.ms, e.data.isFull, true)
+          
+          reportPaint(renderType, ms, isFull, true)
         }
       }
       return worker
