@@ -40,6 +40,22 @@ export function paintPixel(
   pixels.data[pos + 3] = 255
 }
 
+export function paintSeparatorPixel(
+  pixels: ImageData,
+  x: number,
+  y: number,
+  color: string
+): void {
+  let pos = 4 * (y * pixels.width + x)
+  let colorArr = color
+    .substring(color.indexOf('(') + 1, color.indexOf(')'))
+    .split(',')
+  pixels.data[pos] = +colorArr[0]
+  pixels.data[pos + 1] = +colorArr[1]
+  pixels.data[pos + 2] = +colorArr[2]
+  pixels.data[pos + 3] = +colorArr[3] * 255
+}
+
 export function trackTime(cb: () => void): number {
   let start = Date.now()
   cb()

@@ -7,42 +7,38 @@ import {
 } from '../../lib/colors.js'
 import {
   generateGetSeparator,
-  paintPixel
+  paintPixel,
+  paintSeparatorPixel
 } from '../../lib/paint.js'
-import { getCleanCtx, setScale } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 
 function paintSeparator(
-  ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
+  pixels: ImageData,
   color: string,
   line: [number, number][] | undefined
 ): void {
   if (!line) return
-  ctx.strokeStyle = color
-  ctx.lineWidth = 1
   if (line.length > 0) {
     let prevY = line[0][1]!
     let prevX = 0
-    ctx.beginPath()
     for (let [x, y] of line) {
       if (x > prevX + 1) {
-        ctx.stroke()
-        ctx.beginPath()
+        prevY = line[0][1]!
       }
       if (Math.abs(prevY - y) < 10) {
-        ctx.lineTo(x, y)
+        paintSeparatorPixel(pixels, x, y, color)
       }
       prevX = x
       prevY = y
     }
   }
-  ctx.stroke()
 }
 
 function paint(
-  ctx: OffscreenCanvasRenderingContext2D | CanvasRenderingContext2D,
   width: number,
   height: number,
+  xPos: number,
+  yPos: number,
   hasGaps: boolean,
   block: number,
   showP3: boolean,
@@ -50,7 +46,7 @@ function paint(
   p3: string,
   rec2020: string,
   getColor: GetColor
-): void {
+): ImageData {
   let getPixel = generateGetPixel(
     getColor,
     showP3,
@@ -60,12 +56,12 @@ function paint(
   let getSeparator = generateGetSeparator()
   let maxGap = 0.3 * height
 
-  let pixels = ctx.createImageData(width, height)
-  for (let x = 0; x <= width; x += 1) {
+  let pixels = new ImageData(width, height)
+  for (let x = xPos; xPos === 0 ? x <= width / 2 : x <= width; x += 1) {
     let nextPixel: Pixel
-    let pixel = getPixel(x, 0)
+    let pixel = getPixel(x, yPos)
     let prevPixel = pixel
-    for (let y = 0; y <= height; y += block) {
+    for (let y = yPos; yPos === 0 ? y <= height / 2 : y <= height; y += block) {
       nextPixel = getPixel(x, y + block)
 
       if (nextPixel[0] !== pixel[0]) {
@@ -100,41 +96,42 @@ function paint(
       pixel = nextPixel
     }
   }
-  ctx.putImageData(pixels, 0, 0)
 
   if (showP3 && showRec2020) {
-    paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
-    paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
-    paintSeparator(ctx, rec2020, getSeparator(Space.P3, Space.Rec2020))
-    paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.P3))
+    paintSeparator(pixels, p3, getSeparator(Space.sRGB, Space.P3))
+    paintSeparator(pixels, p3, getSeparator(Space.P3, Space.sRGB))
+    paintSeparator(pixels, rec2020, getSeparator(Space.P3, Space.Rec2020))
+    paintSeparator(pixels, rec2020, getSeparator(Space.Rec2020, Space.P3))
   } else if (!showRec2020 && showP3) {
-    paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
-    paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
+    paintSeparator(pixels, p3, getSeparator(Space.sRGB, Space.P3))
+    paintSeparator(pixels, p3, getSeparator(Space.P3, Space.sRGB))
   } else if (showRec2020 && !showP3) {
-    paintSeparator(ctx, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
-    paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
+    paintSeparator(pixels, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
+    paintSeparator(pixels, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
   }
+
+  return pixels
 }
 
 export function paintCL(
-  canvas: OffscreenCanvas | HTMLCanvasElement,
+  width: number,
+  height: number,
+  xPos: number,
+  yPos: number,
   h: number,
-  scale: number,
   showP3: boolean,
   showRec2020: boolean,
   p3: string,
   rec2020: string
-): void {
-  let [width, height] = setScale(canvas, scale)
-  let ctx = getCleanCtx(canvas)
-
+): ImageData {
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(
-    ctx,
+  return paint(
     width,
     height,
+    xPos,
+    yPos,
     false,
     6,
     showP3,
@@ -148,24 +145,24 @@ export function paintCL(
 }
 
 export function paintCH(
-  canvas: OffscreenCanvas | HTMLCanvasElement,
+  width: number,
+  height: number,
+  xPos: number,
+  yPos: number,
   l: number,
-  scale: number,
   showP3: boolean,
   showRec2020: boolean,
   p3: string,
   rec2020: string
-): void {
-  let [width, height] = setScale(canvas, scale)
-  let ctx = getCleanCtx(canvas)
-
+): ImageData {
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(
-    ctx,
+  return paint(
     width,
     height,
+    xPos,
+    yPos,
     false,
     6,
     showP3,
@@ -179,24 +176,24 @@ export function paintCH(
 }
 
 export function paintLH(
-  canvas: OffscreenCanvas | HTMLCanvasElement,
+  width: number,
+  height: number,
+  xPos: number,
+  yPos: number,
   c: number,
-  scale: number,
   showP3: boolean,
   showRec2020: boolean,
   p3: string,
   rec2020: string
-): void {
-  let [width, height] = setScale(canvas, scale)
-  let ctx = getCleanCtx(canvas)
-
+): ImageData {
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  paint(
-    ctx,
+  return paint(
     width,
     height,
+    xPos,
+    yPos,
     true,
     2,
     showP3,

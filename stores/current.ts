@@ -1,7 +1,10 @@
+import {
+  reportRunListenersFreeze,
+  benchmarking,
+  resetCollecting
+} from './benchmark.js'
 import { clampChroma, Color } from 'culori/fn'
 import { map } from 'nanostores'
-
-import { reportFreeze, benchmarking, resetCollecting } from './benchmark.js'
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
@@ -37,8 +40,6 @@ function parseHash(): LchValue | undefined {
 
 export let current = map<LchValue>(parseHash() || randomColor())
 
-let full = { l: false, c: false, h: false }
-
 current.subscribe(
   debounce(100, () => {
     let { l, c, h, a } = current.get()
@@ -55,11 +56,11 @@ window.addEventListener('hashchange', () => {
 })
 
 interface ComponentCallback {
-  (value: number, isFull: boolean): void
+  (value: number): void
 }
 
 interface LchCallback {
-  (value: LchValue, isFull: boolean): void
+  (value: LchValue): void
 }
 
 interface LchCallbacks {
@@ -76,17 +77,7 @@ interface LchCallbacks {
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
-let delayFullRepaint = debounce(100, (prev: PrevCurrentValue) => {
-  if (!full.l || !full.c || !full.h) {
-    runListeners(changeListeners, prev)
-  }
-})
-
-function runListeners(
-  list: LchCallbacks[],
-  prev: PrevCurrentValue,
-  isFull = true
-): void {
+function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let start = Date.now()
 
   let value = current.get()
@@ -94,48 +85,35 @@ function runListeners(
   let cChanged = prev.c !== value.c
   let hChanged = prev.h !== value.h
 
-  if (isFull) {
-    if (!full.l) lChanged = true
-    if (!full.c) cChanged = true
-    if (!full.h) hChanged = true
-    full = { l: true, c: true, h: true }
-  } else {
-    if (lChanged) full.l = false
-    if (cChanged) full.c = false
-    if (hChanged) full.h = false
-  }
-
   for (let i of list) {
     if (i.l && lChanged) {
-      i.l(value.l, isFull)
+      i.l(value.l)
     }
     if (i.c && cChanged) {
-      i.c(value.c, isFull)
+      i.c(value.c)
     }
     if (i.h && hChanged) {
-      i.h(value.h, isFull)
+      i.h(value.h)
     }
     if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a, isFull)
+      i.alpha(value.a)
     }
 
     if (i.lc && (lChanged || cChanged)) {
-      i.lc(value, isFull)
+      i.lc(value)
     }
     if (i.ch && (cChanged || hChanged)) {
-      i.ch(value, isFull)
+      i.ch(value)
     }
     if (i.lh && (lChanged || hChanged)) {
-      i.lh(value, isFull)
+      i.lh(value)
     }
     if (i.lch && (lChanged || cChanged || hChanged)) {
-      i.lch(value, isFull)
+      i.lch(value)
     }
   }
 
-  if (!isFull) delayFullRepaint(prev)
-
-  reportFreeze(Date.now() - start)
+  reportRunListenersFreeze(Date.now() - start)
 }
 
 export function onCurrentChange(callbacks: LchCallbacks): void {
@@ -149,7 +127,7 @@ setTimeout(() => {
 
   current.listen(value => {
     resetCollecting()
-    runListeners(changeListeners, prev, false)
+    runListeners(changeListeners, prev)
     prev = value
   })
 }, 1)

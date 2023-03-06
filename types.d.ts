@@ -3,53 +3,11 @@ interface HTMLCanvasElement {
   transferControlToOffscreen?: () => OffscreenCanvas
 }
 
-interface OffscreenCanvas extends EventTarget {
-  width: number
-  height: number
-
-  getContext(
-    contextId: '2d',
-    contextAttributes?: CanvasRenderingContext2DSettings
-  ): OffscreenCanvasRenderingContext2D | null
-
-  getContext(
-    contextId: 'bitmaprenderer',
-    contextAttributes?: WebGLContextAttributes,
-  ): ImageBitmapRenderingContext | null;
-
-  transferToImageBitmap(): ImageBitmap;
-}
-
-declare let OffscreenCanvas: {
-  prototype: OffscreenCanvas;
-  new (width: number, height: number): OffscreenCanvas;
-};
-
-interface OffscreenCanvasRenderingContext2D
-  extends CanvasState,
-    CanvasTransform,
-    CanvasCompositing,
-    CanvasImageSmoothing,
-    CanvasFillStrokeStyles,
-    CanvasShadowStyles,
-    CanvasFilters,
-    CanvasRect,
-    CanvasDrawPath,
-    CanvasText,
-    CanvasDrawImage,
-    CanvasImageData,
-    CanvasPathDrawingStyles,
-    CanvasTextDrawingStyles,
-    CanvasPath {
-  readonly canvas: OffscreenCanvas
-}
-
 interface Worker extends EventTarget, AbstractWorker {
-  postMessage(
-    message: object,
-    transfer: (Transferable | OffscreenCanvas)[]
-  ): void
+  postMessage(message: object, transfer: Transferable[]): void
 }
+
+declare function postMessage(message: any, transfer?: Transferable[]): void
 
 declare class ViteWorker extends Worker {
   constructor()

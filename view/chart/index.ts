@@ -1,21 +1,17 @@
-import type { MessageData } from './worker.js'
+import type { PaintMessageData, PaintedMessageData } from './worker.js'
 
-import {
-  getQuickScale,
-  RenderType,
-  reportFreeze,
-  reportPaint,
-  reportQuick
-} from '../../stores/benchmark.js'
 import { atom } from 'nanostores'
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
-import { paintCH, paintCL, paintLH } from './paint.js'
+import { support } from '../../stores/support.js'
 import PaintWorker from './worker.js?worker'
-
-const MAX_SCALE = 8
+import {
+  lastBenchmark,
+  reportPutImageDataFreeze,
+  reportFull
+} from '../../stores/benchmark.js'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -23,6 +19,15 @@ let chartH = document.querySelector<HTMLDivElement>('.chart.is-h')!
 let canvasL = chartL.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasC = chartC.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
+let ctxL = canvasL.getContext('2d', {
+  colorSpace: support.get().p3 ? 'display-p3' : 'srgb'
+})!
+let ctxC = canvasC.getContext('2d', {
+  colorSpace: support.get().p3 ? 'display-p3' : 'srgb'
+})!
+let ctxH = canvasH.getContext('2d', {
+  colorSpace: support.get().p3 ? 'display-p3' : 'srgb'
+})!
 
 function getMaxC(): number {
   return showRec2020.get() ? C_MAX_REC2020 : C_MAX
@@ -92,246 +97,314 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
-function initCharts(): void {
-  if (
-    canvasL.transferControlToOffscreen &&
-    canvasL.getContext('bitmaprenderer')
-  ) {
-    let isBusyL = atom<boolean>(false)
-    let isBusyC = atom<boolean>(false)
-    let isBusyH = atom<boolean>(false)
+let workersL: Worker[] = []
+let workersC: Worker[] = []
+let workersH: Worker[] = []
 
-    let lastPendingL = atom<MessageData | null>(null)
-    let lastPendingC = atom<MessageData | null>(null)
-    let lastPendingH = atom<MessageData | null>(null)
+let pixelsL: PaintedMessageData[] = []
+let pixelsC: PaintedMessageData[] = []
+let pixelsH: PaintedMessageData[] = []
 
-    let ctxL = canvasL.getContext('bitmaprenderer')
-    let ctxC = canvasC.getContext('bitmaprenderer')
-    let ctxH = canvasH.getContext('bitmaprenderer')
+let isBusyL = false
+let isBusyC = false
+let isBusyH = false
 
-    function send(worker: Worker, message: MessageData): void {
-      worker.postMessage(message)
-    }
+let lastPendingL = atom<PaintMessageData[]>([])
+let lastPendingC = atom<PaintMessageData[]>([])
+let lastPendingH = atom<PaintMessageData[]>([])
 
-    function init(workerType: RenderType): Worker {
-      let worker = new PaintWorker()
-      send(worker, {
-        type: 'init',
-        workerType: workerType,
-        canvasLSize: canvasL.getBoundingClientRect(),
-        canvasCSize: canvasC.getBoundingClientRect(),
-        canvasHSize: canvasH.getBoundingClientRect(),
-        pixelRation: Math.ceil(window.devicePixelRatio)
-      })
-      worker.onmessage = (e: MessageEvent<MessageData>) => {
-        if (e.data.type === 'painted') {
-          let { workerType, renderType, btm, ms, isFull } = e.data
+let renderTimeL = 0
+let renderTimeC = 0
+let renderTimeH = 0
 
-          if (workerType === 'l') {
-            isBusyL.set(false)
-          } else if(workerType === 'c') {
-            isBusyL.set(false)
-          } else if (workerType === 'h') {
-            isBusyL.set(false)
-          }
-
-          if (renderType === 'l') {
-            reportFreeze(trackTime(() => {
-              ctxL!.transferFromImageBitmap(btm)
-            }))
-          } else if(renderType === 'c') {
-            reportFreeze(trackTime(() => {
-              ctxL!.transferFromImageBitmap(btm)
-            }))
-          } else if (renderType === 'h') {
-            reportFreeze(trackTime(() => {
-              ctxH!.transferFromImageBitmap(btm)
-            }))
-          }
-          
-          reportPaint(renderType, ms, isFull, true)
-        }
-      }
-      return worker
-    }
-
-    let workerL = init('l')
-    let workerC = init('c')
-    let workerH = init('h')
-
-    function sendMessageToUnbusyWorker(message: MessageData): null | void {
-      if (!isBusyL.get()) {
-        send(workerL, message)
-      } else if (!isBusyC.get()) {
-        send(workerC, message)
-      } else if (!isBusyH.get()) {
-        send(workerH, message)
+function init(ctx: CanvasRenderingContext2D): Worker {
+  let worker = new PaintWorker()
+  worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
+    if (e.data.renderType === 'l') {
+      if (pixelsL.length < 3) {
+        pixelsL = [...pixelsL, e.data]
+        renderTimeL += e.data.renderTime
       } else {
-        return null
+        let freezeTime = 0
+
+        ;[...pixelsL, e.data].forEach(pixels => {
+          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
+
+          freezeTime += trackTime(() =>
+            ctx.putImageData(
+              new ImageData(
+                new Uint8ClampedArray(pixelsBuffer),
+                pixelsWidth,
+                pixelsHeight
+              ),
+              0,
+              0,
+              xPos,
+              pixelsHeight / 2 - yPos,
+              pixelsWidth / 2,
+              pixelsHeight / 2
+            )
+          )
+        })
+
+        pixelsL = []
+        reportPutImageDataFreeze(freezeTime)
+        reportFull(renderTimeL)
+        renderTimeL = 0
+        if (lastPendingL.get().length === 0) {
+          isBusyL = false
+        } else {
+          lastPendingL.notify()
+        }
+      }
+    } else if (e.data.renderType === 'c') {
+      if (pixelsC.length < 3) {
+        pixelsC = [...pixelsC, e.data]
+        renderTimeC += e.data.renderTime
+      } else {
+        let freezeTime = 0
+
+        ;[...pixelsC, e.data].forEach(pixels => {
+          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
+
+          freezeTime += trackTime(() => {
+            ctx.putImageData(
+              new ImageData(
+                new Uint8ClampedArray(pixelsBuffer),
+                pixelsWidth,
+                pixelsHeight
+              ),
+              0,
+              0,
+              xPos,
+              pixelsHeight / 2 - yPos,
+              pixelsWidth / 2,
+              pixelsHeight / 2
+            )
+          })
+        })
+
+        pixelsC = []
+        isBusyC = false
+        reportPutImageDataFreeze(freezeTime)
+        reportFull(renderTimeC)
+        renderTimeC = 0
+        if (lastPendingC.get().length === 0) {
+          isBusyC = false
+        } else {
+          lastPendingC.notify()
+        }
+      }
+    } else if (e.data.renderType === 'h') {
+      if (pixelsH.length < 3) {
+        pixelsH = [...pixelsH, e.data]
+        renderTimeH += e.data.renderTime
+      } else {
+        let freezeTime = 0
+
+        ;[...pixelsH, e.data].forEach(pixels => {
+          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
+
+          freezeTime += trackTime(() => {
+            ctx.putImageData(
+              new ImageData(
+                new Uint8ClampedArray(pixelsBuffer),
+                pixelsWidth,
+                pixelsHeight
+              ),
+              0,
+              0,
+              xPos,
+              pixelsHeight / 2 - yPos,
+              pixelsWidth / 2,
+              pixelsHeight / 2
+            )
+          })
+        })
+
+        pixelsH = []
+        reportPutImageDataFreeze(freezeTime)
+        reportFull(renderTimeH)
+        renderTimeH = 0
+        if (lastPendingH.get().length === 0) {
+          isBusyH = false
+        } else {
+          lastPendingH.notify()
+        }
       }
     }
-
-    isBusyL.listen((isBusy) => {if (!isBusy) lastPendingL.notify()})
-    isBusyC.listen((isBusy) => {if (!isBusy) lastPendingC.notify()})
-    isBusyH.listen((isBusy) => {if (!isBusy) lastPendingH.notify()})
-
-    lastPendingL.listen((message) => {
-      if (message) {
-        isBusyL.set(true)
-        sendMessageToUnbusyWorker(message)
-        lastPendingL.set(null)
-      }
-    })
-    lastPendingC.listen((message) => {if (message) {
-      isBusyC.set(true)
-      sendMessageToUnbusyWorker(message)
-      lastPendingC.set(null)
-    }})
-    lastPendingH.listen((message) => {if (message) {
-      isBusyH.set(true)
-      sendMessageToUnbusyWorker(message)
-      lastPendingH.set(null)
-    }})
-
-    onPaint({
-      l(l, isFull) {
-        if (!showCharts.get()) return
-        let scale = getQuickScale('l', isFull)
-        if (scale > MAX_SCALE) {
-          reportQuick('l', 1)
-          return
-        }
-        let [p3, rec2020] = getBorders()
-        let message: MessageData = {
-          type: 'l',
-          isFull,
-          lch: (L_MAX * l) / 100,
-          scale,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          p3,
-          rec2020
-        }
-        if (sendMessageToUnbusyWorker(message) === null) {
-          lastPendingL.set(message)
-        }
-      },
-      c(c, isFull) {
-        if (!showCharts.get()) return
-        let scale = getQuickScale('c', isFull)
-        if (scale > MAX_SCALE) {
-          reportQuick('c', 1)
-          return
-        }
-        let [p3, rec2020] = getBorders()
-        let message: MessageData = {
-          type: 'c',
-          isFull,
-          lch: c,
-          scale,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          p3,
-          rec2020
-        }
-        if (sendMessageToUnbusyWorker(message) === null) {
-          lastPendingL.set(message)
-        }
-      },
-      h(h, isFull) {
-        if (!showCharts.get()) return
-        let scale = getQuickScale('h', isFull)
-        if (scale > MAX_SCALE) {
-          reportQuick('h', 1)
-          return
-        }
-        let [p3, rec2020] = getBorders()
-        let message: MessageData = {
-          type: 'h',
-          isFull,
-          lch: h,
-          scale,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          p3,
-          rec2020
-        }
-        if (sendMessageToUnbusyWorker(message) === null) {
-          lastPendingL.set(message)
-        }
-      }
-    })
-  } else {
-    initCanvasSize(canvasL)
-    initCanvasSize(canvasC)
-    initCanvasSize(canvasH)
-
-    onPaint({
-      l(l, isFull) {
-        if (!showCharts.get()) return
-        let scale = getQuickScale('l', isFull)
-        if (scale > MAX_SCALE) {
-          reportQuick('l', 1)
-          return
-        }
-        let [p3, rec2020] = getBorders()
-        let ms = trackTime(() => {
-          paintCH(
-            canvasL,
-            (L_MAX * l) / 100,
-            scale,
-            showP3.get(),
-            showRec2020.get(),
-            p3,
-            rec2020
-          )
-        })
-        reportPaint('l', ms, isFull)
-      },
-      c(c, isFull) {
-        if (!showCharts.get()) return
-        let scale = getQuickScale('c', isFull)
-        if (scale > MAX_SCALE) {
-          reportQuick('c', 1)
-          return
-        }
-        let [p3, rec2020] = getBorders()
-        let ms = trackTime(() => {
-          paintLH(
-            canvasC,
-            c,
-            scale,
-            showP3.get(),
-            showRec2020.get(),
-            p3,
-            rec2020
-          )
-        })
-        reportPaint('c', ms, isFull)
-      },
-      h(h, isFull) {
-        if (!showCharts.get()) return
-        let scale = getQuickScale('h', isFull)
-        if (scale > MAX_SCALE) {
-          reportQuick('h', 1)
-          return
-        }
-        let [p3, rec2020] = getBorders()
-        let ms = trackTime(() => {
-          paintCL(
-            canvasH,
-            h,
-            scale,
-            showP3.get(),
-            showRec2020.get(),
-            p3,
-            rec2020
-          )
-        })
-        reportPaint('h', ms, isFull)
-      }
-    })
   }
+  return worker
+}
+
+for (let i = 0; i < 12; i++) {
+  if (i / 4 < 1) {
+    workersL = [...workersL, init(ctxL)]
+  } else if (i / 4 < 2) {
+    workersC = [...workersC, init(ctxC)]
+  } else if (i / 4 < 3) {
+    workersH = [...workersH, init(ctxH)]
+  }
+}
+
+lastPendingL.listen(messages => {
+  if (messages.length === 4) {
+    isBusyL = true
+    workersL.forEach((worker, index) => {
+      send(worker, messages[index])
+    })
+    lastPendingL.set([])
+  }
+})
+
+lastPendingC.listen(messages => {
+  if (messages.length === 4) {
+    isBusyC = true
+    workersC.forEach((worker, index) => {
+      send(worker, messages[index])
+    })
+    lastPendingC.set([])
+  }
+})
+
+lastPendingH.listen(messages => {
+  if (messages.length === 4) {
+    isBusyH = true
+    workersH.forEach((worker, index) => {
+      send(worker, messages[index])
+    })
+    lastPendingH.set([])
+  }
+})
+
+function send(worker: Worker, message: PaintMessageData): void {
+  worker.postMessage(message)
+}
+
+function initCharts(): void {
+  initCanvasSize(canvasL)
+  initCanvasSize(canvasC)
+  initCanvasSize(canvasH)
+
+  onPaint({
+    l(l) {
+      if (!showCharts.get()) return
+      let [p3, rec2020] = getBorders()
+      if (isBusyL === false) {
+        isBusyL = true
+        workersL.forEach((worker, index) => {
+          send(worker, {
+            renderType: 'l',
+            width: canvasL.width,
+            height: canvasL.height,
+            xPos: index % 2 === 1 ? canvasL.width / 2 : 0,
+            yPos: index > 1 ? canvasL.height / 2 : 0,
+            lch: (L_MAX * l) / 100,
+            showP3: showP3.get(),
+            showRec2020: showRec2020.get(),
+            p3,
+            rec2020
+          })
+        })
+      } else {
+        workersL.forEach((_, index) => {
+          lastPendingL.set([
+            ...lastPendingL.get(),
+            {
+              renderType: 'l',
+              width: canvasL.width,
+              height: canvasL.height,
+              xPos: index % 2 === 1 ? canvasL.width / 2 : 0,
+              yPos: index > 1 ? canvasL.height / 2 : 0,
+              lch: (L_MAX * l) / 100,
+              showP3: showP3.get(),
+              showRec2020: showRec2020.get(),
+              p3,
+              rec2020
+            }
+          ])
+        })
+      }
+    },
+    c(c) {
+      if (!showCharts.get()) return
+      let [p3, rec2020] = getBorders()
+      if (isBusyC === false) {
+        isBusyC = true
+        workersC.forEach((worker, index) => {
+          send(worker, {
+            renderType: 'c',
+            width: canvasL.width,
+            height: canvasL.height,
+            xPos: index % 2 === 1 ? canvasC.width / 2 : 0,
+            yPos: index > 1 ? canvasC.height / 2 : 0,
+            lch: c,
+            showP3: showP3.get(),
+            showRec2020: showRec2020.get(),
+            p3,
+            rec2020
+          })
+        })
+      } else {
+        workersC.forEach((_, index) => {
+          lastPendingC.set([
+            ...lastPendingC.get(),
+            {
+              renderType: 'c',
+              width: canvasL.width,
+              height: canvasL.height,
+              xPos: index % 2 === 1 ? canvasC.width / 2 : 0,
+              yPos: index > 1 ? canvasC.height / 2 : 0,
+              lch: c,
+              showP3: showP3.get(),
+              showRec2020: showRec2020.get(),
+              p3,
+              rec2020
+            }
+          ])
+        })
+      }
+    },
+    h(h) {
+      if (!showCharts.get()) return
+      let [p3, rec2020] = getBorders()
+      if (isBusyH === false) {
+        isBusyH = true
+        workersH.forEach((worker, index) => {
+          send(worker, {
+            renderType: 'h',
+            width: canvasH.width,
+            height: canvasH.height,
+            xPos: index % 2 === 1 ? canvasH.width / 2 : 0,
+            yPos: index > 1 ? canvasH.height / 2 : 0,
+            lch: h,
+            showP3: showP3.get(),
+            showRec2020: showRec2020.get(),
+            p3,
+            rec2020
+          })
+        })
+      } else {
+        workersH.forEach((_, index) => {
+          lastPendingH.set([
+            ...lastPendingH.get(),
+            {
+              renderType: 'h',
+              width: canvasH.width,
+              height: canvasH.height,
+              xPos: index % 2 === 1 ? canvasH.width / 2 : 0,
+              yPos: index > 1 ? canvasH.height / 2 : 0,
+              lch: h,
+              showP3: showP3.get(),
+              showRec2020: showRec2020.get(),
+              p3,
+              rec2020
+            }
+          ])
+        })
+      }
+    }
+  })
 }
 
 if (showCharts.get()) {
