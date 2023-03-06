@@ -5,7 +5,9 @@ import {
 } from '../../stores/benchmark.js'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
-let freeze = block.querySelector<HTMLSpanElement>('.benchmark_freeze')!
+let freezeSum = block.querySelector<HTMLSpanElement>('.benchmark_freeze_sum')!
+let freezeMax = block.querySelector<HTMLSpanElement>('.benchmark_freeze_max')!
+let frame = block.querySelector<HTMLSpanElement>('.benchmark_frame')!
 let full = block.querySelector<HTMLSpanElement>('.benchmark_full')!
 
 let unbind: undefined | (() => void)
@@ -15,7 +17,9 @@ benchmarking.subscribe(enabled => {
     block.setAttribute('aria-hidden', 'false')
     unbind = lastBenchmark.subscribe(result => {
       block.style.setProperty('--benchmark-color', getLastBenchmarkColor())
-      freeze.innerText = `${result.rlFreeze + result.pidFreeze}`
+      freezeSum.innerText =`${result.freezeSum}`
+      freezeMax.innerText =`${result.freezeMax}`
+      frame.innerText =`${result.frame}`
       full.innerText = `${result.full}`
     })
   } else {

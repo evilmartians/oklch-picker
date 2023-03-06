@@ -1,7 +1,13 @@
 .benchmark( aria-live="polite" aria-label="Benchmark" aria-hidden="true" )
   .benchmark_row
-    = "Freeze     "
-    strong.benchmark_freeze
+    = "Freeze sum  "
+    strong.benchmark_freeze_sum
+  .benchmark_row
+    = "Freeze max  "
+    strong.benchmark_freeze_max
+  .benchmark_row
+    = "Frame paint "
+    strong.benchmark_frame
   .benchmark_row
     = "Full paint "
     strong.benchmark_full

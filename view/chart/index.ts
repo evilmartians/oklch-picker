@@ -7,11 +7,7 @@ import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 import PaintWorker from './worker.js?worker'
-import {
-  lastBenchmark,
-  reportPutImageDataFreeze,
-  reportFull
-} from '../../stores/benchmark.js'
+import { reportFrame, reportFreeze, reportFull } from '../../stores/benchmark.js'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -120,36 +116,34 @@ let renderTimeH = 0
 function init(ctx: CanvasRenderingContext2D): Worker {
   let worker = new PaintWorker()
   worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
+    let start = Date.now()
+
     if (e.data.renderType === 'l') {
       if (pixelsL.length < 3) {
         pixelsL = [...pixelsL, e.data]
         renderTimeL += e.data.renderTime
       } else {
-        let freezeTime = 0
-
         ;[...pixelsL, e.data].forEach(pixels => {
           let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
 
-          freezeTime += trackTime(() =>
-            ctx.putImageData(
-              new ImageData(
-                new Uint8ClampedArray(pixelsBuffer),
-                pixelsWidth,
-                pixelsHeight
-              ),
-              0,
-              0,
-              xPos,
-              pixelsHeight / 2 - yPos,
-              pixelsWidth / 2,
-              pixelsHeight / 2
-            )
+          ctx.putImageData(
+            new ImageData(
+              new Uint8ClampedArray(pixelsBuffer),
+              pixelsWidth,
+              pixelsHeight
+            ),
+            0,
+            0,
+            xPos,
+            pixelsHeight / 2 - yPos,
+            pixelsWidth / 2,
+            pixelsHeight / 2
           )
         })
 
         pixelsL = []
-        reportPutImageDataFreeze(freezeTime)
-        reportFull(renderTimeL)
+        reportFull(Date.now())
+        reportFrame(renderTimeL)
         renderTimeL = 0
         if (lastPendingL.get().length === 0) {
           isBusyL = false
@@ -162,32 +156,27 @@ function init(ctx: CanvasRenderingContext2D): Worker {
         pixelsC = [...pixelsC, e.data]
         renderTimeC += e.data.renderTime
       } else {
-        let freezeTime = 0
-
         ;[...pixelsC, e.data].forEach(pixels => {
           let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
 
-          freezeTime += trackTime(() => {
-            ctx.putImageData(
-              new ImageData(
-                new Uint8ClampedArray(pixelsBuffer),
-                pixelsWidth,
-                pixelsHeight
-              ),
-              0,
-              0,
-              xPos,
-              pixelsHeight / 2 - yPos,
-              pixelsWidth / 2,
-              pixelsHeight / 2
-            )
-          })
+          ctx.putImageData(
+            new ImageData(
+              new Uint8ClampedArray(pixelsBuffer),
+              pixelsWidth,
+              pixelsHeight
+            ),
+            0,
+            0,
+            xPos,
+            pixelsHeight / 2 - yPos,
+            pixelsWidth / 2,
+            pixelsHeight / 2
+          )
         })
 
         pixelsC = []
-        isBusyC = false
-        reportPutImageDataFreeze(freezeTime)
-        reportFull(renderTimeC)
+        reportFull(Date.now())
+        reportFrame(renderTimeC)
         renderTimeC = 0
         if (lastPendingC.get().length === 0) {
           isBusyC = false
@@ -200,31 +189,27 @@ function init(ctx: CanvasRenderingContext2D): Worker {
         pixelsH = [...pixelsH, e.data]
         renderTimeH += e.data.renderTime
       } else {
-        let freezeTime = 0
-
         ;[...pixelsH, e.data].forEach(pixels => {
           let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
 
-          freezeTime += trackTime(() => {
-            ctx.putImageData(
-              new ImageData(
-                new Uint8ClampedArray(pixelsBuffer),
-                pixelsWidth,
-                pixelsHeight
-              ),
-              0,
-              0,
-              xPos,
-              pixelsHeight / 2 - yPos,
-              pixelsWidth / 2,
-              pixelsHeight / 2
-            )
-          })
+          ctx.putImageData(
+            new ImageData(
+              new Uint8ClampedArray(pixelsBuffer),
+              pixelsWidth,
+              pixelsHeight
+            ),
+            0,
+            0,
+            xPos,
+            pixelsHeight / 2 - yPos,
+            pixelsWidth / 2,
+            pixelsHeight / 2
+          )
         })
 
         pixelsH = []
-        reportPutImageDataFreeze(freezeTime)
-        reportFull(renderTimeH)
+        reportFull(Date.now())
+        reportFrame(renderTimeH)
         renderTimeH = 0
         if (lastPendingH.get().length === 0) {
           isBusyH = false
@@ -233,6 +218,8 @@ function init(ctx: CanvasRenderingContext2D): Worker {
         }
       }
     }
+
+    reportFreeze(Date.now() - start)
   }
   return worker
 }

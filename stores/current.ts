@@ -1,7 +1,8 @@
 import {
-  reportRunListenersFreeze,
   benchmarking,
-  resetCollecting
+  setStart,
+  resetFreeze,
+  reportFreeze
 } from './benchmark.js'
 import { clampChroma, Color } from 'culori/fn'
 import { map } from 'nanostores'
@@ -79,6 +80,7 @@ let paintListeners: LchCallbacks[] = []
 
 function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let start = Date.now()
+  setStart(start)
 
   let value = current.get()
   let lChanged = prev.l !== value.l
@@ -113,7 +115,7 @@ function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
     }
   }
 
-  reportRunListenersFreeze(Date.now() - start)
+  reportFreeze(Date.now() - start)
 }
 
 export function onCurrentChange(callbacks: LchCallbacks): void {
@@ -126,7 +128,7 @@ setTimeout(() => {
   prev = current.get()
 
   current.listen(value => {
-    resetCollecting()
+    resetFreeze()
     runListeners(changeListeners, prev)
     prev = value
   })
