@@ -140,7 +140,7 @@ function init(ctx: CanvasRenderingContext2D): Worker {
     // reportFrame(renderTime)
 
     if (e.data.renderType === 'l') {
-      console.log(Date.now() - e.data.start!)
+      console.log(`2: ${Date.now() - e.data.start!}`)
       if (pixelsL.length < 3) {
         pixelsL = [...pixelsL, e.data]
         renderTimeL += e.data.renderTime

@@ -101,6 +101,6 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
     },
     [pixels.data.buffer]
   )
-  // console.log(Date.now() - start)
+  console.log(`1: ${Date.now() - start}`)
   start = 0
 }
