@@ -7,7 +7,11 @@ import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 import PaintWorker from './worker.js?worker'
-import { reportFrame, reportFreeze, reportFull } from '../../stores/benchmark.js'
+import {
+  reportFrame,
+  reportFreeze,
+  reportFull
+} from '../../stores/benchmark.js'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -113,12 +117,30 @@ let renderTimeL = 0
 let renderTimeC = 0
 let renderTimeH = 0
 
+let startL = 0
+
 function init(ctx: CanvasRenderingContext2D): Worker {
   let worker = new PaintWorker()
   worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
     let start = Date.now()
 
+    // let { renderTime, pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = e.data
+
+    // ctx.putImageData(
+    //   new ImageData(
+    //     new Uint8ClampedArray(pixelsBuffer),
+    //     pixelsWidth,
+    //     pixelsHeight
+    //   ),
+    //   0,
+    //   0,
+    // )
+
+    // reportFull(Date.now())
+    // reportFrame(renderTime)
+
     if (e.data.renderType === 'l') {
+      console.log(Date.now() - e.data.start!)
       if (pixelsL.length < 3) {
         pixelsL = [...pixelsL, e.data]
         renderTimeL += e.data.renderTime
@@ -233,6 +255,9 @@ for (let i = 0; i < 12; i++) {
     workersH = [...workersH, init(ctxH)]
   }
 }
+// workersL = [init(ctxL)]
+// workersC = [init(ctxC)]
+// workersH = [init(ctxH)]
 
 lastPendingL.listen(messages => {
   if (messages.length === 4) {
@@ -290,7 +315,8 @@ function initCharts(): void {
             showP3: showP3.get(),
             showRec2020: showRec2020.get(),
             p3,
-            rec2020
+            rec2020,
+            start: Date.now()
           })
         })
       } else {
@@ -321,8 +347,8 @@ function initCharts(): void {
         workersC.forEach((worker, index) => {
           send(worker, {
             renderType: 'c',
-            width: canvasL.width,
-            height: canvasL.height,
+            width: canvasC.width,
+            height: canvasC.height,
             xPos: index % 2 === 1 ? canvasC.width / 2 : 0,
             yPos: index > 1 ? canvasC.height / 2 : 0,
             lch: c,

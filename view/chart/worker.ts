@@ -13,7 +13,8 @@ export type PaintMessageData = {
   showP3: boolean
   showRec2020: boolean
   p3: string
-  rec2020: string
+  rec2020: string,
+  start?: number
 }
 
 export type PaintedMessageData = {
@@ -23,7 +24,8 @@ export type PaintedMessageData = {
   pixelsWidth: number
   pixelsHeight: number
   xPos: number
-  yPos: number
+  yPos: number,
+  start?: number
 }
 
 function send(message: PaintedMessageData, transfer: ArrayBufferLike[]) {
@@ -31,6 +33,7 @@ function send(message: PaintedMessageData, transfer: ArrayBufferLike[]) {
 }
 
 onmessage = (e: MessageEvent<PaintMessageData>) => {
+  let start = Date.now()
   let {
     renderType,
     width,
@@ -58,6 +61,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         p3,
         rec2020
       )
+
     } else if (renderType === 'c') {
       pixels = paintLH(
         width,
@@ -84,7 +88,6 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       )
     }
   })
-
   send(
     {
       renderType,
@@ -93,8 +96,11 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixelsWidth: pixels.width,
       pixelsHeight: pixels.height,
       xPos,
-      yPos
+      yPos,
+      start: e.data.start
     },
     [pixels.data.buffer]
   )
+  // console.log(Date.now() - start)
+  start = 0
 }
