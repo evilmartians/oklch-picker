@@ -7,7 +7,11 @@ import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { initCanvasSize } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 import PaintWorker from './worker.js?worker'
-import { reportFrame, reportFreeze, reportFull } from '../../stores/benchmark.js'
+import {
+  reportFrame,
+  reportFreeze,
+  reportFull
+} from '../../stores/benchmark.js'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -141,15 +145,13 @@ function init(ctx: CanvasRenderingContext2D): Worker {
           )
         })
 
-        pixelsL = []
         reportFull(Date.now())
         reportFrame(renderTimeL)
+
+        pixelsL = []
         renderTimeL = 0
-        if (lastPendingL.get().length === 0) {
-          isBusyL = false
-        } else {
-          lastPendingL.notify()
-        }
+        isBusyL = false
+        lastPendingL.notify()
       }
     } else if (e.data.renderType === 'c') {
       if (pixelsC.length < 3) {
@@ -174,15 +176,13 @@ function init(ctx: CanvasRenderingContext2D): Worker {
           )
         })
 
-        pixelsC = []
         reportFull(Date.now())
         reportFrame(renderTimeC)
+
+        pixelsC = []
         renderTimeC = 0
-        if (lastPendingC.get().length === 0) {
-          isBusyC = false
-        } else {
-          lastPendingC.notify()
-        }
+        isBusyC = false
+        lastPendingC.notify()
       }
     } else if (e.data.renderType === 'h') {
       if (pixelsH.length < 3) {
@@ -207,15 +207,13 @@ function init(ctx: CanvasRenderingContext2D): Worker {
           )
         })
 
-        pixelsH = []
         reportFull(Date.now())
         reportFrame(renderTimeH)
+
+        pixelsH = []
         renderTimeH = 0
-        if (lastPendingH.get().length === 0) {
-          isBusyH = false
-        } else {
-          lastPendingH.notify()
-        }
+        isBusyH = false
+        lastPendingH.notify()
       }
     }
 
@@ -235,7 +233,7 @@ for (let i = 0; i < 12; i++) {
 }
 
 lastPendingL.listen(messages => {
-  if (messages.length === 4) {
+  if (!isBusyL && messages.length === 4) {
     isBusyL = true
     workersL.forEach((worker, index) => {
       send(worker, messages[index])
@@ -245,7 +243,8 @@ lastPendingL.listen(messages => {
 })
 
 lastPendingC.listen(messages => {
-  if (messages.length === 4) {
+  console.log(isBusyC)
+  if (!isBusyC && messages.length === 4) {
     isBusyC = true
     workersC.forEach((worker, index) => {
       send(worker, messages[index])
@@ -255,7 +254,7 @@ lastPendingC.listen(messages => {
 })
 
 lastPendingH.listen(messages => {
-  if (messages.length === 4) {
+  if (!isBusyH && messages.length === 4) {
     isBusyH = true
     workersH.forEach((worker, index) => {
       send(worker, messages[index])
@@ -277,10 +276,11 @@ function initCharts(): void {
     l(l) {
       if (!showCharts.get()) return
       let [p3, rec2020] = getBorders()
-      if (isBusyL === false) {
-        isBusyL = true
-        workersL.forEach((worker, index) => {
-          send(worker, {
+      lastPendingL.set([])
+      workersL.forEach((_, index) => {
+        lastPendingL.set([
+          ...lastPendingL.get(),
+          {
             renderType: 'l',
             width: canvasL.width,
             height: canvasL.height,
@@ -291,35 +291,18 @@ function initCharts(): void {
             showRec2020: showRec2020.get(),
             p3,
             rec2020
-          })
-        })
-      } else {
-        workersL.forEach((_, index) => {
-          lastPendingL.set([
-            ...lastPendingL.get(),
-            {
-              renderType: 'l',
-              width: canvasL.width,
-              height: canvasL.height,
-              xPos: index % 2 === 1 ? canvasL.width / 2 : 0,
-              yPos: index > 1 ? canvasL.height / 2 : 0,
-              lch: (L_MAX * l) / 100,
-              showP3: showP3.get(),
-              showRec2020: showRec2020.get(),
-              p3,
-              rec2020
-            }
-          ])
-        })
-      }
+          }
+        ])
+      })
     },
     c(c) {
       if (!showCharts.get()) return
       let [p3, rec2020] = getBorders()
-      if (isBusyC === false) {
-        isBusyC = true
-        workersC.forEach((worker, index) => {
-          send(worker, {
+      lastPendingC.set([])
+      workersC.forEach((_, index) => {
+        lastPendingC.set([
+          ...lastPendingC.get(),
+          {
             renderType: 'c',
             width: canvasL.width,
             height: canvasL.height,
@@ -330,35 +313,18 @@ function initCharts(): void {
             showRec2020: showRec2020.get(),
             p3,
             rec2020
-          })
-        })
-      } else {
-        workersC.forEach((_, index) => {
-          lastPendingC.set([
-            ...lastPendingC.get(),
-            {
-              renderType: 'c',
-              width: canvasL.width,
-              height: canvasL.height,
-              xPos: index % 2 === 1 ? canvasC.width / 2 : 0,
-              yPos: index > 1 ? canvasC.height / 2 : 0,
-              lch: c,
-              showP3: showP3.get(),
-              showRec2020: showRec2020.get(),
-              p3,
-              rec2020
-            }
-          ])
-        })
-      }
+          }
+        ])
+      })
     },
     h(h) {
       if (!showCharts.get()) return
       let [p3, rec2020] = getBorders()
-      if (isBusyH === false) {
-        isBusyH = true
-        workersH.forEach((worker, index) => {
-          send(worker, {
+      lastPendingH.set([])
+      workersH.forEach((_, index) => {
+        lastPendingH.set([
+          ...lastPendingH.get(),
+          {
             renderType: 'h',
             width: canvasH.width,
             height: canvasH.height,
@@ -369,27 +335,9 @@ function initCharts(): void {
             showRec2020: showRec2020.get(),
             p3,
             rec2020
-          })
-        })
-      } else {
-        workersH.forEach((_, index) => {
-          lastPendingH.set([
-            ...lastPendingH.get(),
-            {
-              renderType: 'h',
-              width: canvasH.width,
-              height: canvasH.height,
-              xPos: index % 2 === 1 ? canvasH.width / 2 : 0,
-              yPos: index > 1 ? canvasH.height / 2 : 0,
-              lch: h,
-              showP3: showP3.get(),
-              showRec2020: showRec2020.get(),
-              p3,
-              rec2020
-            }
-          ])
-        })
-      }
+          }
+        ])
+      })
     }
   })
 }
