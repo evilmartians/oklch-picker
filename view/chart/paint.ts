@@ -57,11 +57,11 @@ function paint(
   let maxGap = 0.3 * height
 
   let pixels = new ImageData(width, height)
-  for (let x = xPos; xPos === 0 ? x <= width : x <= width; x += 1) {
+  for (let x = xPos; xPos === 0 ? x <= width / 2 : x <= width; x += 1) {
     let nextPixel: Pixel
     let pixel = getPixel(x, yPos)
     let prevPixel = pixel
-    for (let y = yPos; yPos === 0 ? y <= height : y <= height; y += block) {
+    for (let y = yPos; yPos === 0 ? y <= height / 2 : y <= height; y += block) {
       nextPixel = getPixel(x, y + block)
 
       if (nextPixel[0] !== pixel[0]) {
