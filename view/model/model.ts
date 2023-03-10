@@ -34,7 +34,7 @@ let canvasHeight = canvas.clientHeight
 
 function init(): void {
   scene = new Scene()
-  camera = new PerspectiveCamera(75, 2, 0.1, 1000)
+  camera = new PerspectiveCamera(75, 3, 0.1, 1000)
   renderer = new WebGLRenderer({ canvas, alpha: true })
 
   renderer.setPixelRatio(window.devicePixelRatio)
