@@ -1,0 +1,5 @@
+.model {
+  &.is-hidden {
+    display: none;
+  }
+}

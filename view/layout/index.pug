@@ -1,7 +1,6 @@
 include ../chart/mixin.pug
 include ../field/mixin.pug
 include ../card/mixin.pug
-include ../model/mixin.pug
 include ../banner/mixin.pug
 
 .layout
@@ -17,12 +16,6 @@ include ../banner/mixin.pug
         'https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl'
       )
 
-  .layout_model_settings
-    include ../model/index.pug
-
-  .layout_model
-    +model
-
   .layout_l
     +card('l')
   .layout_c
@@ -31,8 +24,6 @@ include ../banner/mixin.pug
     +card('h')
   .layout_a
     +card('a')
-
-
 
   .layout_prefs
     include ../settings/index.pug

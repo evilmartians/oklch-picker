@@ -1,9 +1,10 @@
 import { clampChroma, Color } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { reportFreeze, benchmarking, resetCollecting } from './benchmark.js'
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
-import { showRec2020, showP3, showCharts, showModel } from './settings.js'
+import { showRec2020, showP3, showCharts } from './settings.js'
+import { reportFreeze, resetCollecting } from './benchmark.js'
+import { isBenchmark } from './mode.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
 
@@ -16,20 +17,12 @@ export interface LchValue {
 
 type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
 
-let generateModel: Function | undefined
-
 function randomColor(): LchValue {
   return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
 }
 
 function parseHash(): LchValue | undefined {
-  let parts
-  if (location.hash.includes('?3d')) {
-    showModel.set(true)
-    parts = location.hash.slice(1, location.hash.indexOf('?')).split(',')
-  } else {
-    parts = location.hash.slice(1).split(',')
-  }
+  let parts = location.hash.slice(1).split(',')
   if (parts.length === 4) {
     if (parts.every(i => /^\d+(\.\d+)?$/.test(i))) {
       return {
@@ -43,14 +36,6 @@ function parseHash(): LchValue | undefined {
   return undefined
 }
 
-export async function loadModel(): Promise<void> {
-  let loader = document.querySelector<HTMLDivElement>('.model_loader')!
-  loader.style.display = 'block'
-  let bundle = await import('../view/model/index.js')
-  loader.style.display = 'none'
-  generateModel = bundle.generateModel
-}
-
 export let current = map<LchValue>(parseHash() || randomColor())
 
 let full = { l: false, c: false, h: false }
@@ -59,13 +44,8 @@ current.subscribe(
   debounce(100, () => {
     let { l, c, h, a } = current.get()
     let hash = `#${l},${c},${h},${a}`
-    let model = ''
-    if (showModel.get()) {
-      loadModel()
-      model = '?3d'
-    }
     if (location.hash !== hash) {
-      history.pushState(null, '', `#${l},${c},${h},${a}${model}`)
+      history.pushState(null, '', `#${l},${c},${h},${a}`)
     }
   })
 )
@@ -261,8 +241,8 @@ export function setCurrentComponents(parts: Partial<LchValue>): void {
   })
 }
 
-benchmarking.listen(enabled => {
-  if (enabled) {
+isBenchmark.listen(value => {
+  if (value) {
     runListeners(paintListeners, {})
   }
 })
@@ -272,16 +252,10 @@ support.listen(() => {
 })
 
 showRec2020.listen(() => {
-  if (showModel.get()) {
-    generateModel!()
-  }
   runListeners(paintListeners, {})
 })
 
 showP3.listen(() => {
-  if (showModel.get() && !showRec2020.get()) {
-    generateModel!()
-  }
   runListeners(paintListeners, {})
 })
 
@@ -290,16 +264,6 @@ showCharts.listen(show => {
     setTimeout(() => {
       runListeners(paintListeners, {})
     }, 400)
-  }
-})
-
-showModel.listen(show => {
-  if (show) {
-    !generateModel && loadModel()
-    history.pushState(null, '', `${location.hash}?3d`)
-  } else {
-    let { l, c, h, a } = current.get()
-    history.pushState(null, '', `#${l},${c},${h},${a}`)
   }
 })
 

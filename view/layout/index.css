@@ -8,8 +8,6 @@
   @media (width < 830px) {
     grid-template:
       "title"
-      "model"
-      "model-btn"
       "L"
       "C"
       "H"
@@ -27,21 +25,20 @@
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
       "title title"
-      "main  main"
-      "model-btn ."
-      "model L"
-      "C     H"
-      "alpha prefs";
+      "main  prefs"
+      "main  source"
+      "L     C"
+      "alpha H";
+    padding-bottom: 28px;
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "title model-btn ."
-      "main model model"
-      "main model model"
-      "main L C"
-      "main H alpha"
-      "main H prefs";
+      "title title source"
+      "main  L     C"
+      "main  alpha H"
+      "main  prefs H"
+      "main  .     .";
   }
 }
 
@@ -79,10 +76,6 @@
   grid-area: alpha;
 }
 
-.layout_model {
-  grid-area: model;
-}
-
 .layout_prefs {
   grid-area: prefs;
 }
@@ -118,21 +111,4 @@
   @media (width < 1230px) {
     grid-area: "model-btn";
   }
-}
-
-.model_loader {
-  display: none;
-  width: 100px;
-  height: 100px;
-  margin-bottom: 10px;
-  margin-left: 90px;
-  border: 16px solid var(--surface-ui-regular);
-  border-top: 16px solid var(--surface-ui-accent);
-  border-radius: 50%;
-  animation: spin 2s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
