@@ -63,6 +63,10 @@ jobs:
     name: Preview
     runs-on: ubuntu-latest
     if: github.ref != 'refs/heads/main' && github.actor == 'ai'
+    permissions:
+      contents: read
+      checks: write
+      pull-requests: write
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
