@@ -19,8 +19,8 @@
     "@nanostores/persistent": "^0.7.0",
     "autoprefixer": "^10.4.14",
     "culori": "^3.0.1",
-    "firebase-tools": "^11.24.1",
     "delaunator": "^5.0.0",
+    "firebase-tools": "^11.24.1",
     "jstransformer-markdown-it": "^3.0.0",
     "nanostores": "^0.7.4",
     "postcss": "^8.4.21",
@@ -28,7 +28,7 @@
     "postcss-mixins": "^9.0.4",
     "postcss-nesting": "^11.2.1",
     "postcss-opacity-percentage": "^2.0.0",
-    "three": "^0.149.0",
+    "three": "^0.150.1",
     "vite": "^4.1.4",
     "vite-plugin-pug-transformer": "^1.0.3"
   },
