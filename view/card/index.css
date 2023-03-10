@@ -48,6 +48,23 @@ body {
   }
 }
 
+.card_model {
+  position: relative;
+  height: calc(100% + 2px);
+  padding: 0 20px;
+  padding-bottom: 39px;
+  margin: 0 -20px;
+  overflow: hidden;
+
+  @nest body.was-loaded & {
+    transition: height 400ms;
+  }
+
+  @nest body.is-model-hidden & {
+    height: 0;
+  }
+}
+
 .card_size {
   height: 150px;
 }

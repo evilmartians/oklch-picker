@@ -11,10 +11,13 @@ specifiers:
   '@logux/stylelint-config': ^0.14.0
   '@nanostores/persistent': ^0.7.0
   '@size-limit/file': ^8.2.4
+  '@types/delaunator': ^5.0.0
+  '@types/three': ^0.149.0
   '@typescript-eslint/eslint-plugin': ^5.54.1
   '@typescript-eslint/parser': ^5.54.1
   autoprefixer: ^10.4.14
   culori: ^3.0.1
+  delaunator: ^5.0.0
   eslint: ^8.35.0
   eslint-config-standard: ^17.0.0
   eslint-plugin-import: ^2.27.5
@@ -34,6 +37,7 @@ specifiers:
   size-limit: ^8.2.4
   stylelint: ^15.2.0
   svgo: ^3.0.2
+  three: ^0.149.0
   typescript: ^4.9.5
   vite: ^4.1.4
   vite-plugin-pug-transformer: ^1.0.3
@@ -43,6 +47,7 @@ dependencies:
   '@nanostores/persistent': 0.7.0_nanostores@0.7.4
   autoprefixer: 10.4.14_postcss@8.4.21
   culori: 3.0.1
+  delaunator: 5.0.0
   firebase-tools: 11.24.1
   jstransformer-markdown-it: 3.0.0
   nanostores: 0.7.4
@@ -51,6 +56,7 @@ dependencies:
   postcss-mixins: 9.0.4_postcss@8.4.21
   postcss-nesting: 11.2.1_postcss@8.4.21
   postcss-opacity-percentage: 2.0.0_postcss@8.4.21
+  three: 0.149.0
   vite: 4.1.4
   vite-plugin-pug-transformer: 1.0.3_vite@4.1.4
 
@@ -58,6 +64,8 @@ devDependencies:
   '@logux/eslint-config': 49.0.0_444x2rvuomcugfh45frpv7ku2e
   '@logux/stylelint-config': 0.14.0_stylelint@15.2.0
   '@size-limit/file': 8.2.4_size-limit@8.2.4
+  '@types/delaunator': 5.0.0
+  '@types/three': 0.149.0
   '@typescript-eslint/eslint-plugin': 5.54.1_mlk7dnz565t663n4razh6a6v6i
   '@typescript-eslint/parser': 5.54.1_ycpbpc6yetojsgtrx3mwntkhsu
   eslint: 8.35.0
@@ -702,6 +710,10 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
+  /@types/delaunator/5.0.0:
+    resolution: {integrity: sha512-00nrXdKbhF9FQsq6MskmdUgEqd5MWzA+x8CoDt8OJqbS4QB528SgkOfEcnQMa2sIg2XTKowwwVQx8iGsAX6CAQ==}
+    dev: true
+
   /@types/duplexify/3.6.1:
     resolution: {integrity: sha512-n0zoEj/fMdMOvqbHxmqnza/kXyoGgJmEpsXjpP+gEqE1Ye4yNqc7xWipKnUoMpWhMuzJQSfK2gMrwlElly7OGQ==}
     dependencies:
@@ -768,10 +780,20 @@ packages:
     resolution: {integrity: sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==}
     dev: true
 
+  /@types/three/0.149.0:
+    resolution: {integrity: sha512-fgNBm9LWc65ER/W0cvoXdC0iMy7Ke9e2CONmEr6Jt8sDSY3sw4DgOubZfmdZ747dkPhbQrgRQAWwDEr2S/7IEg==}
+    dependencies:
+      '@types/webxr': 0.5.1
+    dev: true
+
   /@types/triple-beam/1.3.2:
     resolution: {integrity: sha512-txGIh+0eDFzKGC25zORnswy+br1Ha7hj5cMVwKIU7+s0U2AxxJru/jZSMU6OC9MJWP6+pc/hc6ZjyZShpsyY2g==}
     dev: false
 
+  /@types/webxr/0.5.1:
+    resolution: {integrity: sha512-xlFXPfgJR5vIuDefhaHuUM9uUgvPaXB6GKdXy2gdEh8gBWQZ2ul24AJz3foUd8NNKlSTQuWYJpCb1/pL81m1KQ==}
+    dev: true
+    
   /@typescript-eslint/eslint-plugin/5.54.1_mlk7dnz565t663n4razh6a6v6i:
     resolution: {integrity: sha512-a2RQAkosH3d3ZIV08s3DcL/mcGc2M/UC528VkPULFxR9VnVPT8pBu0IyBAJJmVsCmhVfwQX1v6q+QGnmSe1bew==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -2069,6 +2091,12 @@ packages:
       escodegen: 1.14.3
       esprima: 4.0.1
       vm2: 3.9.14
+    dev: false
+
+  /delaunator/5.0.0:
+    resolution: {integrity: sha512-AyLvtyJdbv/U1GkiS6gUUzclRoAY4Gs75qkMygJJhU75LW4DNuSF2RMzpxs9jw9Oz1BobHjTdkG3zdP55VxAqw==}
+    dependencies:
+      robust-predicates: 3.0.1
     dev: false
 
   /delayed-stream/1.0.0:
@@ -5714,6 +5742,10 @@ packages:
     dependencies:
       glob: 7.2.3
 
+  /robust-predicates/3.0.1:
+    resolution: {integrity: sha512-ndEIpszUHiG4HtDsQLeIuMvRsDnn8c8rYStabochtUeCvfuvNptb5TUbVD68LRAILPX7p9nqQGh4xJgn3EHS/g==}
+    dev: false
+    
   /rollup/3.19.1:
     resolution: {integrity: sha512-lAbrdN7neYCg/8WaoWn/ckzCtz+jr70GFfYdlf50OF7387HTg+wiuiqJRFYawwSPpqfqDNYqK7smY/ks2iAudg==}
     engines: {node: '>=14.18.0', npm: '>=8.0.0'}
@@ -6351,6 +6383,10 @@ packages:
   /text-table/0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
+
+  /three/0.149.0:
+    resolution: {integrity: sha512-tohpUxPDht0qExRLDTM8sjRLc5d9STURNrdnK3w9A+V4pxaTBfKWWT/IqtiLfg23Vfc3Z+ImNfvRw1/0CtxrkQ==}
+    dev: false
 
   /through/2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}

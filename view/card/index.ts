@@ -1,5 +1,5 @@
 import { current, onCurrentChange } from '../../stores/current.js'
-import { showRec2020, showCharts } from '../../stores/settings.js'
+import { showRec2020, showCharts, showModel } from '../../stores/settings.js'
 
 function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
@@ -38,4 +38,8 @@ showCharts.subscribe(show => {
 
 showRec2020.subscribe(show => {
   textC.max = String(show ? C_MAX_REC2020 : C_MAX)
+})
+
+showModel.subscribe(show => {
+  document.body.classList.toggle('is-model-hidden', !show)
 })
