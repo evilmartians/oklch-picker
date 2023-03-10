@@ -1,3 +1,5 @@
+import type { Rgb, P3, Rec2020 } from 'culori/fn'
+
 import {
   Scene,
   PerspectiveCamera,
@@ -12,7 +14,6 @@ import {
   Camera,
   MOUSE
 } from 'three'
-import { Rgb, P3, Rec2020 } from 'culori'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
