@@ -1,4 +1,3 @@
-include ../checkbox/mixin.pug
-
-.model_settings
-  +checkbox('model', 'Show 3d Space', false)
+.model.is-hidden( aria-hidden="true" )
+  .model_loader( aria-hidden="true" )
+  canvas.model_canvas

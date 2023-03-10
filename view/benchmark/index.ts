@@ -1,8 +1,5 @@
-import {
-  getLastBenchmarkColor,
-  lastBenchmark,
-  benchmarking
-} from '../../stores/benchmark.js'
+import { getLastBenchmarkColor, lastBenchmark } from '../../stores/benchmark.js'
+import { isBenchmark } from '../../stores/mode.js'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
 let freeze = block.querySelector<HTMLSpanElement>('.benchmark_freeze')!
@@ -10,8 +7,8 @@ let quick = block.querySelector<HTMLSpanElement>('.benchmark_quick')!
 let full = block.querySelector<HTMLSpanElement>('.benchmark_full')!
 
 let unbind: undefined | (() => void)
-benchmarking.subscribe(enabled => {
-  if (enabled) {
+isBenchmark.subscribe(value => {
+  if (value) {
     block.classList.add('is-enabled')
     block.setAttribute('aria-hidden', 'false')
     unbind = lastBenchmark.subscribe(result => {

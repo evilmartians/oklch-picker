@@ -1,24 +1,23 @@
 import type { Rgb, P3, Rec2020 } from 'culori/fn'
 
 import {
-  Scene,
-  PerspectiveCamera,
-  WebGLRenderer,
   MeshBasicMaterial,
+  PerspectiveCamera,
   BufferAttribute,
   BufferGeometry,
-  Vector3,
-  Mesh,
   PlaneGeometry,
+  WebGLRenderer,
   DoubleSide,
+  Vector3,
   Camera,
-  MOUSE
+  Scene,
+  MOUSE,
+  Mesh
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { oklch, lch } from '../../lib/colors.js'
-import { showP3, showRec2020 } from '../../stores/settings.js'
 
 interface ModelData {
   coordinates: Vector3[]
@@ -63,16 +62,10 @@ function init(): void {
   controls.maxDistance = 3
 }
 
-function getModelData(): ModelData {
+function getModelData(mode: 'rgb' | 'rec2020' | 'p3'): ModelData {
   let coordinates = []
   let colors = []
 
-  let mode: Rgb['mode'] | P3['mode'] | Rec2020['mode'] = 'rgb'
-  if (showRec2020.get()) {
-    mode = 'rec2020'
-  } else if (showP3.get()) {
-    mode = 'p3'
-  }
   for (let x = 0; x <= 1; x += 0.01) {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
@@ -120,8 +113,15 @@ function getModelData(): ModelData {
   return { coordinates, colors }
 }
 
-function generateMesh(): void {
-  let modelData = getModelData()
+function generateMesh(p3: boolean, rec2020: boolean): void {
+  let mode: 'rgb' | 'rec2020' | 'p3' = 'rgb'
+  if (rec2020) {
+    mode = 'rec2020'
+  } else if (p3) {
+    mode = 'p3'
+  }
+
+  let modelData = getModelData(mode)
   let geometry = new BufferGeometry().setFromPoints(modelData.coordinates)
   let color = new Float32Array(modelData.colors)
   geometry.setAttribute('color', new BufferAttribute(color, 3))
@@ -166,8 +166,8 @@ function generateMesh(): void {
   if (!LCH) plane.translate(0, 0, -0.5)
   else {
     let translate = -0.65
-    if (showP3.get()) translate = -0.73
-    if (showRec2020.get()) translate = -0.96
+    if (p3) translate = -0.73
+    if (rec2020) translate = -0.96
     plane.translate(0, 0, translate)
   }
   let planeMat = new MeshBasicMaterial({
@@ -185,12 +185,12 @@ function animate(): void {
   renderer.render(scene, camera!)
 }
 
-export function generateModel(): void {
+export function generate3d(p3: boolean, rec2020: boolean): void {
   if (camera) {
     cameraPosition = camera.position
   }
   init()
-  generateMesh()
+  generateMesh(p3, rec2020)
   animate()
   if (cameraPosition) {
     camera!.position.setZ(cameraPosition.z)
@@ -198,5 +198,3 @@ export function generateModel(): void {
     camera!.position.setY(cameraPosition.y)
   }
 }
-
-generateModel()

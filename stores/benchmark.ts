@@ -1,24 +1,13 @@
 import { Oklch, formatHex } from 'culori/fn'
-import { atom, map } from 'nanostores'
+import { map } from 'nanostores'
+
+import { isBenchmark } from './mode.js'
 
 export type RenderType = 'l' | 'c' | 'h'
 
-export let benchmarking = atom(false)
-
-if (/^\?bench(=|&|$)/.test(location.search)) {
-  benchmarking.set(true)
-}
-benchmarking.listen(value => {
-  history.pushState(
-    null,
-    '',
-    location.pathname + (value ? '?bench' : '') + location.hash
-  )
-})
-
 function keyUp(e: KeyboardEvent): void {
   if (e.key === 'b' && e.target === document.body) {
-    benchmarking.set(!benchmarking.get())
+    isBenchmark.set(!isBenchmark.get())
   }
 }
 document.body.addEventListener('keyup', keyUp)
@@ -51,7 +40,7 @@ export function resetCollecting(): void {
 }
 
 export function reportFreeze(ms: number): void {
-  if (benchmarking.get()) {
+  if (isBenchmark.get()) {
     lastBenchmark.setKey('freeze', ms)
   }
 }
@@ -81,7 +70,7 @@ export function reportQuick(type: RenderType, ms: number): void {
   quick[type].count += 1
   quick[type].total += ms
 
-  if (benchmarking.get()) {
+  if (isBenchmark.get()) {
     startCollecting()
     totalQuick += ms
   }
@@ -100,7 +89,7 @@ export function getQuickScale(type: RenderType, isFull: boolean): number {
 }
 
 export function reportFull(ms: number): void {
-  if (benchmarking.get()) {
+  if (isBenchmark.get()) {
     startCollecting()
     totalFull += ms
   }

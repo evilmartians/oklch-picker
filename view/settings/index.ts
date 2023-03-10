@@ -1,11 +1,6 @@
 import type { WritableAtom } from 'nanostores'
 
-import {
-  showCharts,
-  showP3,
-  showRec2020,
-  showModel
-} from '../../stores/settings.js'
+import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { getCheckbox, onChange } from '../checkbox/index.js'
 
 function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
@@ -20,4 +15,3 @@ function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
 init(showCharts, getCheckbox('charts')!)
 init(showP3, getCheckbox('p3')!)
 init(showRec2020, getCheckbox('rec2020')!)
-init(showModel, getCheckbox('model')!)
