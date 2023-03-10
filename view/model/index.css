@@ -1,4 +1,5 @@
 .model {
+  position: relative;
   display: flex;
   justify-content: center;
   height: 0;
@@ -16,4 +17,15 @@
 
 .model_canvas {
   height: 500px;
+}
+
+.model_title {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  left: 0;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  text-align: center;
 }
