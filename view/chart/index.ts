@@ -4,7 +4,7 @@ import { atom } from 'nanostores'
 import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { getBorders, trackTime } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
-import { initCanvasSize } from '../../lib/canvas.js'
+import { initCanvasSize, workersPerCanvas } from '../../lib/canvas.js'
 import { support } from '../../stores/support.js'
 import PaintWorker from './worker.js?worker'
 import {
@@ -121,14 +121,13 @@ function init(ctx: CanvasRenderingContext2D): Worker {
   let worker = new PaintWorker()
   worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
     let start = Date.now()
-
     if (e.data.renderType === 'l') {
-      if (pixelsL.length < 3) {
+      if (pixelsL.length < workersPerCanvas - 1) {
         pixelsL = [...pixelsL, e.data]
         renderTimeL += e.data.renderTime
       } else {
         ;[...pixelsL, e.data].forEach(pixels => {
-          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
+          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
           ctx.putImageData(
             new ImageData(
@@ -139,9 +138,9 @@ function init(ctx: CanvasRenderingContext2D): Worker {
             0,
             0,
             xPos,
-            pixelsHeight / 2 - yPos,
-            pixelsWidth / 2,
-            pixelsHeight / 2
+            0,
+            pixelsWidth / workersPerCanvas,
+            pixelsHeight
           )
         })
 
@@ -154,12 +153,12 @@ function init(ctx: CanvasRenderingContext2D): Worker {
         lastPendingL.notify()
       }
     } else if (e.data.renderType === 'c') {
-      if (pixelsC.length < 3) {
+      if (pixelsC.length < workersPerCanvas - 1) {
         pixelsC = [...pixelsC, e.data]
         renderTimeC += e.data.renderTime
       } else {
         ;[...pixelsC, e.data].forEach(pixels => {
-          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
+          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
           ctx.putImageData(
             new ImageData(
@@ -170,9 +169,9 @@ function init(ctx: CanvasRenderingContext2D): Worker {
             0,
             0,
             xPos,
-            pixelsHeight / 2 - yPos,
-            pixelsWidth / 2,
-            pixelsHeight / 2
+            0,
+            pixelsWidth / workersPerCanvas,
+            pixelsHeight
           )
         })
 
@@ -185,12 +184,12 @@ function init(ctx: CanvasRenderingContext2D): Worker {
         lastPendingC.notify()
       }
     } else if (e.data.renderType === 'h') {
-      if (pixelsH.length < 3) {
+      if (pixelsH.length < workersPerCanvas - 1) {
         pixelsH = [...pixelsH, e.data]
         renderTimeH += e.data.renderTime
       } else {
         ;[...pixelsH, e.data].forEach(pixels => {
-          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos, yPos } = pixels
+          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
           ctx.putImageData(
             new ImageData(
@@ -201,9 +200,9 @@ function init(ctx: CanvasRenderingContext2D): Worker {
             0,
             0,
             xPos,
-            pixelsHeight / 2 - yPos,
-            pixelsWidth / 2,
-            pixelsHeight / 2
+            0,
+            pixelsWidth / workersPerCanvas,
+            pixelsHeight
           )
         })
 
@@ -222,18 +221,18 @@ function init(ctx: CanvasRenderingContext2D): Worker {
   return worker
 }
 
-for (let i = 0; i < 12; i++) {
-  if (i / 4 < 1) {
+for (let i = 0; i < workersPerCanvas * 3; i++) {
+  if (i / workersPerCanvas < 1) {
     workersL = [...workersL, init(ctxL)]
-  } else if (i / 4 < 2) {
+  } else if (i / workersPerCanvas < 2) {
     workersC = [...workersC, init(ctxC)]
-  } else if (i / 4 < 3) {
+  } else if (i / workersPerCanvas < 3) {
     workersH = [...workersH, init(ctxH)]
   }
 }
 
 lastPendingL.listen(messages => {
-  if (!isBusyL && messages.length === 4) {
+  if (!isBusyL && messages.length === workersPerCanvas) {
     isBusyL = true
     workersL.forEach((worker, index) => {
       send(worker, messages[index])
@@ -243,8 +242,7 @@ lastPendingL.listen(messages => {
 })
 
 lastPendingC.listen(messages => {
-  console.log(isBusyC)
-  if (!isBusyC && messages.length === 4) {
+  if (!isBusyC && messages.length === workersPerCanvas) {
     isBusyC = true
     workersC.forEach((worker, index) => {
       send(worker, messages[index])
@@ -254,7 +252,7 @@ lastPendingC.listen(messages => {
 })
 
 lastPendingH.listen(messages => {
-  if (!isBusyH && messages.length === 4) {
+  if (!isBusyH && messages.length === workersPerCanvas) {
     isBusyH = true
     workersH.forEach((worker, index) => {
       send(worker, messages[index])
@@ -284,8 +282,7 @@ function initCharts(): void {
             renderType: 'l',
             width: canvasL.width,
             height: canvasL.height,
-            xPos: index % 2 === 1 ? canvasL.width / 2 : 0,
-            yPos: index > 1 ? canvasL.height / 2 : 0,
+            xPos: index * Math.floor(canvasL.width / workersPerCanvas),
             lch: (L_MAX * l) / 100,
             showP3: showP3.get(),
             showRec2020: showRec2020.get(),
@@ -306,8 +303,7 @@ function initCharts(): void {
             renderType: 'c',
             width: canvasL.width,
             height: canvasL.height,
-            xPos: index % 2 === 1 ? canvasC.width / 2 : 0,
-            yPos: index > 1 ? canvasC.height / 2 : 0,
+            xPos: index * Math.floor(canvasC.width / workersPerCanvas),
             lch: c,
             showP3: showP3.get(),
             showRec2020: showRec2020.get(),
@@ -328,8 +324,7 @@ function initCharts(): void {
             renderType: 'h',
             width: canvasH.width,
             height: canvasH.height,
-            xPos: index % 2 === 1 ? canvasH.width / 2 : 0,
-            yPos: index > 1 ? canvasH.height / 2 : 0,
+            xPos: index * Math.floor(canvasH.width / workersPerCanvas),
             lch: h,
             showP3: showP3.get(),
             showRec2020: showRec2020.get(),

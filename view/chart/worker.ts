@@ -2,13 +2,13 @@ import type { RenderType } from '../../stores/benchmark'
 
 import { paintCH, paintCL, paintLH } from './paint'
 import { trackTime } from '../../lib/paint'
+import { workersPerCanvas } from '../../lib/canvas'
 
 export type PaintMessageData = {
   renderType: RenderType
   width: number
   height: number
   xPos: number
-  yPos: number
   lch: number
   showP3: boolean
   showRec2020: boolean
@@ -23,7 +23,6 @@ export type PaintedMessageData = {
   pixelsWidth: number
   pixelsHeight: number
   xPos: number
-  yPos: number
 }
 
 function send(message: PaintedMessageData, transfer: ArrayBufferLike[]) {
@@ -36,7 +35,6 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
     width,
     height,
     xPos,
-    yPos,
     lch,
     showP3,
     showRec2020,
@@ -51,7 +49,6 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         width,
         height,
         xPos,
-        yPos,
         lch,
         showP3,
         showRec2020,
@@ -63,7 +60,6 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         width,
         height,
         xPos,
-        yPos,
         lch,
         showP3,
         showRec2020,
@@ -75,7 +71,6 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         width,
         height,
         xPos,
-        yPos,
         lch,
         showP3,
         showRec2020,
@@ -92,8 +87,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixelsBuffer: pixels.data.buffer,
       pixelsWidth: pixels.width,
       pixelsHeight: pixels.height,
-      xPos,
-      yPos
+      xPos
     },
     [pixels.data.buffer]
   )

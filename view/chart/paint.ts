@@ -1,3 +1,4 @@
+import { workersPerCanvas } from '../../lib/canvas.js'
 import {
   generateGetPixel,
   GetColor,
@@ -38,7 +39,6 @@ function paint(
   width: number,
   height: number,
   xPos: number,
-  yPos: number,
   hasGaps: boolean,
   block: number,
   showP3: boolean,
@@ -57,11 +57,11 @@ function paint(
   let maxGap = 0.3 * height
 
   let pixels = new ImageData(width, height)
-  for (let x = xPos; xPos === 0 ? x <= width / 2 : x <= width; x += 1) {
+  for (let x = xPos; x <= width / workersPerCanvas + xPos; x += 1) {
     let nextPixel: Pixel
-    let pixel = getPixel(x, yPos)
+    let pixel = getPixel(x, 0)
     let prevPixel = pixel
-    for (let y = yPos; yPos === 0 ? y <= height / 2 : y <= height; y += block) {
+    for (let y = 0; y <= height; y += block) {
       nextPixel = getPixel(x, y + block)
 
       if (nextPixel[0] !== pixel[0]) {
@@ -117,7 +117,6 @@ export function paintCL(
   width: number,
   height: number,
   xPos: number,
-  yPos: number,
   h: number,
   showP3: boolean,
   showRec2020: boolean,
@@ -131,7 +130,6 @@ export function paintCL(
     width,
     height,
     xPos,
-    yPos,
     false,
     6,
     showP3,
@@ -148,7 +146,6 @@ export function paintCH(
   width: number,
   height: number,
   xPos: number,
-  yPos: number,
   l: number,
   showP3: boolean,
   showRec2020: boolean,
@@ -162,7 +159,6 @@ export function paintCH(
     width,
     height,
     xPos,
-    yPos,
     false,
     6,
     showP3,
@@ -179,7 +175,6 @@ export function paintLH(
   width: number,
   height: number,
   xPos: number,
-  yPos: number,
   c: number,
   showP3: boolean,
   showRec2020: boolean,
@@ -193,7 +188,6 @@ export function paintLH(
     width,
     height,
     xPos,
-    yPos,
     true,
     2,
     showP3,
