@@ -1,21 +1,27 @@
+import type { OutputFormats } from './settings.js'
+
 import {
   formatHex8,
   formatHex,
   formatRgb,
   formatCss,
   Color,
+  Oklab
+} from 'culori/fn'
+import { computed } from 'nanostores'
+
+import {
+  toPercent,
+  inRGB,
+  toRgb,
+  clean,
   oklab,
-  Oklab,
   lch,
   lab,
   hsl,
   p3
-} from 'culori'
-import { computed } from 'nanostores'
-
-import { inRGB, toRgb, clean, toPercent } from '../lib/colors.js'
+} from '../lib/colors.js'
 import { current, valueToColor } from './current.js'
-import { OutputFormats } from './settings.js'
 
 function formatOklab(color: Oklab): string {
   let { l, a, b, alpha } = color

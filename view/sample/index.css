@@ -21,15 +21,15 @@
   border: var(--unavailable-border);
   border-radius: var(--radius);
 
-  @nest .sample:not(.is-supported).is-p3 &.is-p3 {
+  .sample:not(.is-supported).is-p3 &.is-p3 {
     display: flex;
   }
 
-  @nest .sample:not(.is-supported).is-rec2020 &.is-rec2020 {
+  .sample:not(.is-supported).is-rec2020 &.is-rec2020 {
     display: flex;
   }
 
-  @nest .sample:not(.is-supported).is-out &.is-out {
+  .sample:not(.is-supported).is-out &.is-out {
     display: flex;
   }
 }
@@ -37,7 +37,7 @@
 .sample_compare {
   display: flex;
 
-  @nest .sample.is-srgb & {
+  .sample.is-srgb & {
     display: none;
   }
 }
@@ -60,13 +60,13 @@
 }
 
 .sample_normal {
-  @nest .sample:not(.is-srgb) & {
+  .sample:not(.is-srgb) & {
     display: none;
   }
 }
 
 .sample_real {
-  @nest .sample:not(.is-supported) & {
+  .sample:not(.is-supported) & {
     display: none;
   }
 }

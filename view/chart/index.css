@@ -23,6 +23,7 @@ body {
   left: 0;
   width: 100%;
   height: calc(100% + 1px);
+  pointer-events: none;
 
   &.is-l.is-x {
     --chart-line-position: var(--chart-l);
@@ -49,14 +50,14 @@ body {
   mix-blend-mode: difference;
   opacity: 40%;
 
-  @nest .is-x& {
+  .is-x& {
     right: 0;
     bottom: var(--chart-line-position);
     left: 0;
     height: 1px;
   }
 
-  @nest .is-y& {
+  .is-y& {
     top: 0;
     bottom: 0;
     left: var(--chart-line-position);
@@ -74,12 +75,12 @@ body {
   user-select: none;
   opacity: 50%;
 
-  @nest .chart_line.is-x & {
+  .chart_line.is-x & {
     bottom: calc(var(--chart-line-position) - 7px);
     left: -15px;
   }
 
-  @nest .chart_line.is-y & {
+  .chart_line.is-y & {
     top: 100%;
     left: calc(var(--chart-line-position) - 7px);
   }

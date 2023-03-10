@@ -39,11 +39,11 @@ body {
   margin: 0 -20px;
   overflow: hidden;
 
-  @nest body.was-loaded & {
+  :is(body.was-loaded) & {
     transition: height 400ms;
   }
 
-  @nest body.is-chart-hidden & {
+  :is(body.is-chart-hidden) & {
     height: 0;
   }
 }

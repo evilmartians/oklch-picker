@@ -1,4 +1,4 @@
-import { WritableAtom } from 'nanostores'
+import type { WritableAtom } from 'nanostores'
 
 import {
   showCharts,

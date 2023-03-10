@@ -17,13 +17,13 @@
   padding: 12px 48px 12px 12px;
   cursor: pointer;
 
-  @nest .checkbox_input:focus + & {
+  .checkbox_input:focus + & {
     border-radius: 20px;
     outline: var(--accent) solid 3px;
     outline-offset: 3px;
   }
 
-  @nest .checkbox_input:not(:focus-visible):focus + & {
+  .checkbox_input:not(:focus-visible):focus + & {
     outline: none;
   }
 }
@@ -48,7 +48,7 @@
   opacity: 0%;
   transition: opacity 150ms;
 
-  @nest .checkbox_input:checked + .checkbox_control > & {
+  .checkbox_input:checked + .checkbox_control > & {
     opacity: 100%;
   }
 }
@@ -65,7 +65,7 @@
   transition: transform 150ms;
   transform: translateX(0);
 
-  @nest .checkbox_input:checked + .checkbox_control > & {
+  .checkbox_input:checked + .checkbox_control > & {
     transform: translateX(24px);
   }
 }
