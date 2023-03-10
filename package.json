@@ -22,6 +22,7 @@
     "delaunator": "^5.0.0",
     "firebase-tools": "^11.24.1",
     "jstransformer-markdown-it": "^3.0.0",
+    "nanodelay": "^2.0.2",
     "nanostores": "^0.7.4",
     "postcss": "^8.4.21",
     "postcss-media-minmax": "^5.0.0",

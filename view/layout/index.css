@@ -13,7 +13,8 @@
       "H"
       "alpha"
       "prefs"
-      "links";
+      "links"
+      "model";
     padding-bottom: 450px;
 
     :is(body.is-main-collapsed) & {
@@ -26,6 +27,7 @@
       "title title"
       "main  links"
       "main  prefs"
+      "main  model"
       "L     C"
       "alpha H";
     padding-bottom: 28px;
@@ -33,7 +35,7 @@
 
   @media (width >= 1230px) {
     grid-template:
-      "title title ."
+      "title title title"
       "main  L     C"
       "main  alpha H"
       "links alpha H"
@@ -87,4 +89,22 @@
 
 .layout_prefs {
   grid-area: prefs;
+}
+
+.layout_model {
+  display: flex;
+  grid-area: model;
+  align-items: center;
+  justify-content: center;
+
+  @media (width >= 1230px) {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 76px;
+  }
+
+  @media (width < 830px) {
+    display: none;
+  }
 }

@@ -27,6 +27,7 @@ specifiers:
   firebase-tools: ^11.24.1
   jstransformer-markdown-it: ^3.0.0
   nano-staged: ^0.8.0
+  nanodelay: ^2.0.2
   nanostores: ^0.7.4
   postcss: ^8.4.21
   postcss-media-minmax: ^5.0.0
@@ -50,6 +51,7 @@ dependencies:
   delaunator: 5.0.0
   firebase-tools: 11.24.1
   jstransformer-markdown-it: 3.0.0
+  nanodelay: 2.0.2
   nanostores: 0.7.4
   postcss: 8.4.21
   postcss-media-minmax: 5.0.0_postcss@8.4.21
@@ -4670,6 +4672,11 @@ packages:
     dependencies:
       picocolors: 1.0.0
     dev: true
+
+  /nanodelay/2.0.2:
+    resolution: {integrity: sha512-6AS5aCSXsjoxq2Jr9CdaAeT60yoYDOTp6po9ziqeOeY6vf6uTEHYSqWql6EFILrM3fEfXgkZ4KqE9L0rTm/wlA==}
+    engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
+    dev: false
 
   /nanoid/3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
