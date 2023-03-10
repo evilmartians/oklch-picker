@@ -1,4 +1,4 @@
-import type { Color, Oklch, Rgb, Lch } from 'culori/fn'
+import type { Color, Oklch, Rgb, Lch, P3, Rec2020 } from 'culori/fn'
 
 import {
   formatRgb as formatRgbFast,
@@ -20,6 +20,7 @@ import {
 import { support } from '../stores/support.js'
 
 export type AnyLch = Lch | Oklch
+export type AnyRgb = Rgb | P3 | Rec2020
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)

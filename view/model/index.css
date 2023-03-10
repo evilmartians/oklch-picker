@@ -11,12 +11,12 @@
   }
 
   &.is-shown {
-    height: 500px;
+    height: 400px;
   }
 }
 
 .model_canvas {
-  height: 500px;
+  height: 400px;
 }
 
 .model_title {

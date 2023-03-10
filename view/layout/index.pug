@@ -12,7 +12,7 @@ include ../button/mixin.pug
   .layout_links
     +link(
       'help',
-      'Why OKLCH is better than RGB and HSL',
+      'Why OKLCH is better than ' + (LCH ? 'LCH, ' : '') + 'RGB and HSL',
       'https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl'
     )
     +link(
@@ -34,4 +34,4 @@ include ../button/mixin.pug
     include ../settings/index.pug
 
   .layout_model
-    +button('Show OKLCH in 3D', 'model')
+    +button(LCH ? 'Show LCH in 3D' : 'Show OKLCH in 3D', 'model')
