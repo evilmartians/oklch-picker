@@ -1,13 +1,13 @@
 import { Oklch, formatHex } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { isBenchmark } from './mode.js'
+import { mode } from './mode.js'
 
 export type RenderType = 'l' | 'c' | 'h'
 
 function keyUp(e: KeyboardEvent): void {
   if (e.key === 'b' && e.target === document.body) {
-    isBenchmark.set(!isBenchmark.get())
+    mode.setKey('benchmark', !mode.get().benchmark)
   }
 }
 document.body.addEventListener('keyup', keyUp)
@@ -40,7 +40,7 @@ export function resetCollecting(): void {
 }
 
 export function reportFreeze(ms: number): void {
-  if (isBenchmark.get()) {
+  if (mode.get().benchmark) {
     lastBenchmark.setKey('freeze', ms)
   }
 }
@@ -70,7 +70,7 @@ export function reportQuick(type: RenderType, ms: number): void {
   quick[type].count += 1
   quick[type].total += ms
 
-  if (isBenchmark.get()) {
+  if (mode.get().benchmark) {
     startCollecting()
     totalQuick += ms
   }
@@ -89,7 +89,7 @@ export function getQuickScale(type: RenderType, isFull: boolean): number {
 }
 
 export function reportFull(ms: number): void {
-  if (isBenchmark.get()) {
+  if (mode.get().benchmark) {
     startCollecting()
     totalFull += ms
   }

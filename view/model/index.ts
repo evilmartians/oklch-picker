@@ -1,7 +1,7 @@
 import { delay } from 'nanodelay'
 
 import { showP3, showRec2020 } from '../../stores/settings.js'
-import { is3d } from '../../stores/mode.js'
+import { mode } from '../../stores/mode.js'
 
 let button = document.querySelector<HTMLButtonElement>('[data-button=model]')!
 let model = document.querySelector<HTMLDivElement>('.model')!
@@ -9,7 +9,7 @@ let model = document.querySelector<HTMLDivElement>('.model')!
 let showText = button.innerText
 
 button.addEventListener('click', () => {
-  is3d.set(!is3d.get())
+  mode.setKey('model', !mode.get().model)
 })
 
 let loading = true
@@ -31,11 +31,11 @@ async function init(): Promise<void> {
   })
 }
 
-is3d.subscribe(async value => {
-  if (value) init()
-  model.classList.toggle('is-shown', value)
-  model.setAttribute('aria-hidden', value ? 'false' : 'true')
-  button.innerText = value ? 'Hide 3D model' : showText
+mode.subscribe(async value => {
+  if (value.model) init()
+  model.classList.toggle('is-shown', value.model)
+  model.setAttribute('aria-hidden', value.model ? 'false' : 'true')
+  button.innerText = value.model ? 'Hide 3D model' : showText
 })
 
 setTimeout(() => {

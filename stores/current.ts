@@ -4,9 +4,9 @@ import { map } from 'nanostores'
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { reportFreeze, resetCollecting } from './benchmark.js'
-import { isBenchmark } from './mode.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
+import { mode } from './mode.js'
 
 export interface LchValue {
   l: number
@@ -241,8 +241,8 @@ export function setCurrentComponents(parts: Partial<LchValue>): void {
   })
 }
 
-isBenchmark.listen(value => {
-  if (value) {
+mode.listen(value => {
+  if (value.benchmark) {
     runListeners(paintListeners, {})
   }
 })
