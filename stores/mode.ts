@@ -1,23 +1,27 @@
-import { atom } from 'nanostores'
+import { map } from 'nanostores'
 
-export let isBenchmark = atom(false)
-export let is3d = atom(false)
+export let mode = map({
+  benchmark: false,
+  model: false
+})
 
-if (/[?&]bench(=|&|$|&)/.test(location.search)) {
-  isBenchmark.set(true)
+function parseUrl(): void {
+  mode.set({
+    benchmark: /[?&]bench(=|&|$|&)/.test(location.search),
+    model: /[?&]3d(=|&|$|&)/.test(location.search)
+  })
 }
-if (/[?&]3d(=|&|$|&)/.test(location.search)) {
-  is3d.set(true)
-}
 
-function update(): void {
+window.addEventListener('popstate', parseUrl)
+parseUrl()
+
+mode.listen(value => {
   let array = []
-  if (isBenchmark.get()) array.push('bench')
-  if (is3d.get()) array.push('3d')
+  if (value.benchmark) array.push('bench')
+  if (value.model) array.push('3d')
   let string = ''
   if (array.length > 0) string = '?' + array.join('&')
-  history.pushState(null, '', location.pathname + string + location.hash)
-}
-
-isBenchmark.listen(update)
-is3d.listen(update)
+  if (location.search !== string) {
+    history.pushState(null, '', location.pathname + string + location.hash)
+  }
+})
