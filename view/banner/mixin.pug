@@ -1,9 +1,0 @@
-mixin banner(icon, text, href)
-  a.banner( target="_blank" href=href )
-    .banner_icon( class=`is-${icon}` )
-      if icon === 'github'
-        include ./github.svg
-      else if icon === 'help'
-        include ./help.svg
-    .banner_external
-    = text

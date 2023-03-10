@@ -1,7 +1,8 @@
 include ../chart/mixin.pug
 include ../field/mixin.pug
 include ../card/mixin.pug
-include ../banner/mixin.pug
+include ../link/mixin.pug
+include ../button/mixin.pug
 
 .layout
   .layout_title
@@ -9,12 +10,12 @@ include ../banner/mixin.pug
   .layout_main
     include ../main/index.pug
   .layout_links
-    +banner(
+    +link(
       'help',
       'Why OKLCH is better than RGB and HSL',
       'https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl'
     )
-    +banner(
+    +link(
       'github',
       'evilmartians / oklch-picker',
       'https://github.com/evilmartians/oklch-picker'
@@ -31,3 +32,6 @@ include ../banner/mixin.pug
 
   .layout_prefs
     include ../settings/index.pug
+
+  .layout_model
+    +button('Show OKLCH in 3D', 'model')

@@ -1,4 +1,4 @@
-.banner {
+.link {
   position: relative;
   box-sizing: border-box;
   display: block;
@@ -21,7 +21,7 @@
   }
 }
 
-.banner_icon > svg {
+.link_icon > svg {
   position: absolute;
   top: 12px;
   left: 12px;
@@ -29,13 +29,13 @@
   height: 48px;
 }
 
-.banner_icon.is-github > svg {
+.link_icon.is-github > svg {
   @media (prefers-color-scheme: dark) {
     filter: invert(1);
   }
 }
 
-.banner_external {
+.link_external {
   position: absolute;
   top: 28px;
   right: 28px;
