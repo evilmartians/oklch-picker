@@ -168,7 +168,11 @@ function initScene(
 
   let controls = new OrbitControls(camera, renderer.domElement)
   controls.enablePan = fullControl
-  controls.enableZoom = false
+  controls.enableZoom = fullControl
+  if (fullControl) {
+    controls.minDistance = 0.9
+    controls.maxDistance = 3
+  }
 
   return [scene, camera, renderer, controls]
 }
