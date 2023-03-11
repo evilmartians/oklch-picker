@@ -2,7 +2,6 @@ include ../chart/mixin.pug
 include ../field/mixin.pug
 include ../card/mixin.pug
 include ../link/mixin.pug
-include ../button/mixin.pug
 
 .layout
   .layout_title
@@ -32,6 +31,3 @@ include ../button/mixin.pug
 
   .layout_prefs
     include ../settings/index.pug
-
-  .layout_model
-    +button(LCH ? 'Show LCH in 3D' : 'Show OKLCH in 3D', 'model')

@@ -2,16 +2,10 @@ import { delay } from 'nanodelay'
 
 import { showP3, showRec2020, show3d } from '../../stores/settings.js'
 
-let button = document.querySelector<HTMLButtonElement>('[data-button=model]')!
 let model = document.querySelector<HTMLDivElement>('.model')!
 let title = document.querySelector<HTMLHeadingElement>('.model_title')!
 
-let showText = button.innerText
 let titleText = title.innerText
-
-button.addEventListener('click', () => {
-  show3d.set(!show3d.get())
-})
 
 let loading = true
 let initialized = false
@@ -38,7 +32,6 @@ show3d.subscribe(async value => {
   if (value) init()
   model.classList.toggle('is-shown', value)
   model.setAttribute('aria-hidden', value ? 'false' : 'true')
-  button.innerText = value ? 'Hide 3D model' : showText
 })
 
 setTimeout(() => {
