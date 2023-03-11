@@ -4,7 +4,7 @@ import { map } from 'nanostores'
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { reportFreeze, resetCollecting } from './benchmark.js'
-import { benchmarking } from './benchmarking.js'
+import { benchmarking } from './url.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
 

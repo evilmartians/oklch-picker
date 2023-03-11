@@ -59,3 +59,7 @@ mixin card(type)
         })
       .card_range
         +range('a', ALPHA_MAX, ALPHA_STEP, 100)
+
+    else if type === '3d'
+      h2.card_title 3D
+      include ../minimodel/index.pug
