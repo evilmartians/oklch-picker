@@ -53,3 +53,7 @@
   color: var(--text-secondary);
   transform: translateX(-50%);
 }
+
+.fullmodel_title {
+  padding-top: 12px;
+}
