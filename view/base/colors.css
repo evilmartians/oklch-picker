@@ -3,6 +3,7 @@
   --surface-1: oklch(100% 0 0);
   --surface-2: oklch(99% 0 0 / 85%);
   --surface-2-shadow: oklch(0% 0 0 / 6%);
+  --surface-3d: oklch(96% 0.005 300);
   --surface-ui-regular: oklch(70% 0.05 310 / 18%);
   --surface-ui-accent: oklch(69% 0.17 286 / 20%);
   --surface-ui-danger: oklch(79% 0.18 3 / 20%);
@@ -26,6 +27,7 @@
     --surface-1: oklch(29% 0.01 300);
     --surface-2: oklch(29% 0 0 / 85%);
     --surface-2-shadow: oklch(0% 0 0 / 40%);
+    --surface-3d: oklch(29% 0.01 300);
     --text-primary: oklch(100% 0 0);
     --text-note: oklch(45% 0 0);
     --chess: oklch(38% 0.01 297);
