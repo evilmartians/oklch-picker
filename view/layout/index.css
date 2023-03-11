@@ -99,7 +99,7 @@
   overflow: hidden;
 
   &.is-shown {
-    height: 322px;
+    height: calc(var(--card-max-height) + 4px);
   }
 
   :is(body.was-loaded) & {
