@@ -1,5 +1,5 @@
 .minimodel {
-  height: 214px;
+  height: calc(var(--chart-height) + 64px);
 }
 
 .minimodel_button {
@@ -12,13 +12,17 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: calc(var(--card-width) + 2 * var(--card-padding));
   height: 100%;
   cursor: grab;
   image-rendering: crisp-edges;
 
   :is(body.is-grabbing) & {
     cursor: grabbing;
+  }
+
+  @media (width <= 404px) {
+    width: 100%;
   }
 }
 
