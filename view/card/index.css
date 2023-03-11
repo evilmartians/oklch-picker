@@ -1,5 +1,7 @@
 body {
   --card-width: 340px;
+  --card-top-padding: 20px;
+  --card-padding: 32px;
 
   @media (width <= 404px) {
     --card-width: auto;
@@ -11,7 +13,7 @@ body {
 
   position: relative;
   width: var(--card-width);
-  padding: 20px 32px 32px;
+  padding: var(--card-top-padding) var(--card-padding) var(--card-padding);
   background: var(--current-surface);
   border-radius: 36px;
 }

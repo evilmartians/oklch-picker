@@ -1,0 +1,21 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 40px;
+  color: var(--accent);
+  background: var(--surface-ui-accent);
+  border: none;
+  border-radius: var(--radius);
+
+  &:hover {
+    color: var(--text-badge);
+    background: var(--accent);
+  }
+}
+
+.button > svg {
+  width: 16px;
+  height: 16px;
+}
