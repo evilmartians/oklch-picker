@@ -1,16 +1,9 @@
 import { Oklch, formatHex } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { mode } from './mode.js'
+import { benchmarking } from './benchmarking.js'
 
 export type RenderType = 'l' | 'c' | 'h'
-
-function keyUp(e: KeyboardEvent): void {
-  if (e.key === 'b' && e.target === document.body) {
-    mode.setKey('benchmark', !mode.get().benchmark)
-  }
-}
-document.body.addEventListener('keyup', keyUp)
 
 export let lastBenchmark = map({ freeze: 0, quick: 0, full: 0 })
 
@@ -40,7 +33,7 @@ export function resetCollecting(): void {
 }
 
 export function reportFreeze(ms: number): void {
-  if (mode.get().benchmark) {
+  if (benchmarking.get()) {
     lastBenchmark.setKey('freeze', ms)
   }
 }
@@ -70,7 +63,7 @@ export function reportQuick(type: RenderType, ms: number): void {
   quick[type].count += 1
   quick[type].total += ms
 
-  if (mode.get().benchmark) {
+  if (benchmarking.get()) {
     startCollecting()
     totalQuick += ms
   }
@@ -89,7 +82,7 @@ export function getQuickScale(type: RenderType, isFull: boolean): number {
 }
 
 export function reportFull(ms: number): void {
-  if (mode.get().benchmark) {
+  if (benchmarking.get()) {
     startCollecting()
     totalFull += ms
   }
