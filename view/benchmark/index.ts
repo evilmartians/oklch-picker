@@ -1,8 +1,5 @@
-import {
-  getLastBenchmarkColor,
-  lastBenchmark,
-  benchmarking
-} from '../../stores/benchmark.js'
+import { getLastBenchmarkColor, lastBenchmark } from '../../stores/benchmark.js'
+import { benchmarking } from '../../stores/benchmarking.js'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
 let freezeSum = block.querySelector<HTMLSpanElement>('.benchmark_freeze_sum')!

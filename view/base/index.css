@@ -18,7 +18,8 @@
 }
 
 body,
-kbd {
+kbd,
+button {
   font-family: "Martian Mono", monospace;
   font-size: 15px;
   font-stretch: 112.5%;

@@ -1,0 +1,31 @@
+.model {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 0;
+  overflow: hidden;
+  background: var(--surface-2);
+
+  :is(body.was-loaded) & {
+    transition: height 400ms;
+  }
+
+  &.is-shown {
+    height: 400px;
+  }
+}
+
+.model_canvas {
+  height: 400px;
+}
+
+.model_title {
+  position: absolute;
+  top: 4px;
+  right: 0;
+  left: 0;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  text-align: center;
+}

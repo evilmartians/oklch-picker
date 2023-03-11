@@ -12,6 +12,7 @@ let encoder = {
 export let showCharts = persistentAtom('settings:charts', true, encoder)
 export let showP3 = persistentAtom('settings:p3', true, encoder)
 export let showRec2020 = persistentAtom('settings:rec2020', false, encoder)
+export let show3d = persistentAtom('settings:3d', false, encoder)
 
 export type OutputFormats =
   | 'hex/rgba'

@@ -1,27 +1,9 @@
 import { Oklch, formatHex } from 'culori/fn'
-import { atom, map } from 'nanostores'
+import { map } from 'nanostores'
+
+import { benchmarking } from './benchmarking.js'
 
 export type RenderType = 'l' | 'c' | 'h'
-
-export let benchmarking = atom(false)
-
-if (/^\?bench(=|&|$)/.test(location.search)) {
-  benchmarking.set(true)
-}
-benchmarking.listen(value => {
-  history.pushState(
-    null,
-    '',
-    location.pathname + (value ? '?bench' : '') + location.hash
-  )
-})
-
-function keyUp(e: KeyboardEvent): void {
-  if (e.key === 'b' && e.target === document.body) {
-    benchmarking.set(!benchmarking.get())
-  }
-}
-document.body.addEventListener('keyup', keyUp)
 
 export let lastBenchmark = map({ freezeSum: 0, freezeMax: 0, frame: 0, full: 0 })
 

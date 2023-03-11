@@ -1,6 +1,7 @@
 include ../checkbox/mixin.pug
 
-.settings
+section.settings( aria-label="Settings" )
   +checkbox('charts', 'Show graphs', true)
   +checkbox('p3', 'Show P3', true)
   +checkbox('rec2020', 'Show Rec2020', false)
+  +checkbox('mode3d', 'Show 3D', false)

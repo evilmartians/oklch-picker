@@ -1,20 +1,24 @@
 include ../chart/mixin.pug
 include ../field/mixin.pug
 include ../card/mixin.pug
-include ../banner/mixin.pug
+include ../link/mixin.pug
 
 .layout
   .layout_title
     include ../title/index.pug
   .layout_main
-    .layout_panel
-      include ../main/index.pug
-    .layout_desc
-      +banner(
-        'help',
-        'Why OKLCH is better than RGB and HSL',
-        'https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl'
-      )
+    include ../main/index.pug
+  .layout_links
+    +link(
+      'help',
+      'Why OKLCH is better than ' + (LCH ? 'LCH, ' : '') + 'RGB and HSL',
+      'https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl'
+    )
+    +link(
+      'github',
+      'evilmartians / oklch-picker',
+      'https://github.com/evilmartians/oklch-picker'
+    )
 
   .layout_l
     +card('l')
@@ -27,10 +31,3 @@ include ../banner/mixin.pug
 
   .layout_prefs
     include ../settings/index.pug
-
-  .layout_source
-    +banner(
-      'github',
-      'evilmartians / oklch-picker',
-      'https://github.com/evilmartians/oklch-picker'
-    )

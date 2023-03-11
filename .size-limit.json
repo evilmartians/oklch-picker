@@ -1,13 +1,25 @@
 [
   {
     "name": "Files to download",
-    "path": ["dist/**/*", "!dist/*.ico", "!dist/*.webmanifest", "!dist/*.png"],
+    "path": [
+      "dist/**/*",
+      "!dist/model-*.js",
+      "!dist/*.ico",
+      "!dist/*.webmanifest",
+      "!dist/*.png"
+    ],
     "limit": "60 KB"
   },
   {
-    "name": "All scripts to execute",
-    "path": "dist/*.js",
+    "name": "Base scripts to execute",
+    "path": ["dist/*.js", "!dist/model-*.js"],
     "gzip": false,
     "limit": "75 KB"
+  },
+  {
+    "name": "Scripts for 3D model",
+    "path": "dist/model-*.js",
+    "gzip": false,
+    "limit": "430 KB"
   }
 ]

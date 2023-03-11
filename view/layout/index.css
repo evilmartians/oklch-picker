@@ -13,32 +13,33 @@
       "H"
       "alpha"
       "prefs"
-      "main"
-      "source";
+      "links";
     padding-bottom: 450px;
 
     :is(body.is-main-collapsed) & {
-      padding-bottom: calc(450px - 296px);
+      padding-bottom: calc(450px - 287px);
     }
   }
 
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
       "title title"
+      "main  links"
       "main  prefs"
-      "main  source"
+      "main  ."
       "L     C"
       "alpha H";
-      padding-bottom: 28px;
+    padding-bottom: 28px;
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "title title source"
+      "title title title"
       "main  L     C"
       "main  alpha H"
-      "main  prefs H"
-      "main  .     .";
+      "links alpha H"
+      "links prefs H"
+      "links .     .";
   }
 }
 
@@ -47,17 +48,26 @@
 }
 
 .layout_main {
-  position: relative;
   grid-area: main;
+
+  @media (width < 830px) {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    overflow: hidden;
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+
+    :is(body.is-main-collapsed) & {
+      transform: translateY(calc(287px + env(safe-area-inset-bottom, 0)));
+    }
+  }
 }
 
-.layout_desc {
-  @media (width >= 830px) and (width < 1230px) {
-    position: absolute;
-    bottom: 74px;
-    left: calc(100% + 4px);
-    width: 100%;
-  }
+.layout_links {
+  position: relative;
+  grid-area: links;
 }
 
 .layout_l {
@@ -78,29 +88,4 @@
 
 .layout_prefs {
   grid-area: prefs;
-}
-
-.layout_panel {
-  @media (width < 830px) {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 10;
-    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
-
-    :is(body.is-main-collapsed) & {
-      transform: translateY(calc(287px + env(safe-area-inset-bottom, 0)));
-    }
-  }
-}
-
-.layout_source {
-  grid-area: source;
-  line-height: 0;
-
-  @media (width >= 830px) and (width < 1230px) {
-    display: flex;
-    align-items: flex-end;
-  }
 }
