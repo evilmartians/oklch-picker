@@ -241,8 +241,8 @@ export function setCurrentComponents(parts: Partial<LchValue>): void {
   })
 }
 
-benchmarking.listen(value => {
-  if (value) {
+benchmarking.listen(enabled => {
+  if (enabled) {
     runListeners(paintListeners, {})
   }
 })

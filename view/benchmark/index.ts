@@ -7,8 +7,8 @@ let quick = block.querySelector<HTMLSpanElement>('.benchmark_quick')!
 let full = block.querySelector<HTMLSpanElement>('.benchmark_full')!
 
 let unbind: undefined | (() => void)
-benchmarking.subscribe(value => {
-  if (value) {
+benchmarking.subscribe(enabled => {
+  if (enabled) {
     block.classList.add('is-enabled')
     block.setAttribute('aria-hidden', 'false')
     unbind = lastBenchmark.subscribe(result => {
