@@ -1,8 +1,5 @@
 import { support } from '../stores/support.js'
 
-export let workersPerCanvas = navigator.hardwareConcurrency ? navigator.hardwareConcurrency : 4
-// export let workersPerCanvas = 4
-
 export function getCleanCtx(
   canvas: HTMLCanvasElement
 ): CanvasRenderingContext2D {

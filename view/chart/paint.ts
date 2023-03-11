@@ -1,4 +1,3 @@
-import { workersPerCanvas } from '../../lib/canvas.js'
 import {
   generateGetPixel,
   GetColor,
@@ -38,6 +37,7 @@ function paintSeparator(
 function paint(
   width: number,
   height: number,
+  section: number,
   xPos: number,
   hasGaps: boolean,
   block: number,
@@ -57,7 +57,7 @@ function paint(
   let maxGap = 0.3 * height
 
   let pixels = new ImageData(width, height)
-  for (let x = xPos; x <= width / workersPerCanvas + xPos; x += 1) {
+  for (let x = xPos; x <= section + xPos; x += 1) {
     let nextPixel: Pixel
     let pixel = getPixel(x, 0)
     let prevPixel = pixel
@@ -116,6 +116,7 @@ function paint(
 export function paintCL(
   width: number,
   height: number,
+  section: number,
   xPos: number,
   h: number,
   showP3: boolean,
@@ -129,6 +130,7 @@ export function paintCL(
   return paint(
     width,
     height,
+    section,
     xPos,
     false,
     6,
@@ -145,6 +147,7 @@ export function paintCL(
 export function paintCH(
   width: number,
   height: number,
+  section: number,
   xPos: number,
   l: number,
   showP3: boolean,
@@ -158,6 +161,7 @@ export function paintCH(
   return paint(
     width,
     height,
+    section,
     xPos,
     false,
     6,
@@ -174,6 +178,7 @@ export function paintCH(
 export function paintLH(
   width: number,
   height: number,
+  section: number,
   xPos: number,
   c: number,
   showP3: boolean,
@@ -187,6 +192,7 @@ export function paintLH(
   return paint(
     width,
     height,
+    section,
     xPos,
     true,
     2,

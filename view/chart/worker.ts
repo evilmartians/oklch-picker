@@ -2,12 +2,12 @@ import type { RenderType } from '../../stores/benchmark'
 
 import { paintCH, paintCL, paintLH } from './paint'
 import { trackTime } from '../../lib/paint'
-import { workersPerCanvas } from '../../lib/canvas'
 
 export type PaintMessageData = {
   renderType: RenderType
   width: number
   height: number
+  section: number
   xPos: number
   lch: number
   showP3: boolean
@@ -25,7 +25,7 @@ export type PaintedMessageData = {
   xPos: number
 }
 
-function send(message: PaintedMessageData, transfer: ArrayBufferLike[]) {
+function send(message: PaintedMessageData, transfer: ArrayBufferLike[]): void {
   postMessage(message, transfer)
 }
 
@@ -34,6 +34,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
     renderType,
     width,
     height,
+    section,
     xPos,
     lch,
     showP3,
@@ -48,6 +49,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixels = paintCH(
         width,
         height,
+        section,
         xPos,
         lch,
         showP3,
@@ -59,6 +61,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixels = paintLH(
         width,
         height,
+        section,
         xPos,
         lch,
         showP3,
@@ -66,10 +69,11 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         p3,
         rec2020
       )
-    } else if (renderType === 'h') {
+    } else {
       pixels = paintCL(
         width,
         height,
+        section,
         xPos,
         lch,
         showP3,
