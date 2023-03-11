@@ -86,12 +86,18 @@
   justify-content: center;
   width: 100%;
   height: 100%;
+  color: var(--accent);
   background: var(--surface-ui-accent);
   border-top-right-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
 
   .field_select:focus + & {
     outline: var(--accent) solid 3px;
+  }
+
+  .field_select:hover + & {
+    color: var(--text-badge);
+    background: var(--accent);
   }
 
   .field_select:not(:focus-visible):focus + & {
@@ -102,8 +108,4 @@
 .field_button > svg {
   width: 16px;
   height: 16px;
-
-  & > path {
-    fill: var(--accent);
-  }
 }
