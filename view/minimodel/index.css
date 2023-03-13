@@ -1,0 +1,36 @@
+.minimodel {
+  height: calc(var(--chart-height) + 64px);
+}
+
+.minimodel_button {
+  position: absolute;
+  top:  var(--card-top-padding);
+  right: var(--card-padding);
+}
+
+.minimodel_canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--card-width) + 2 * var(--card-padding));
+  height: 100%;
+  cursor: grab;
+  image-rendering: crisp-edges;
+
+  :is(body.is-grabbing) & {
+    cursor: grabbing;
+  }
+
+  @media (width <= 404px) {
+    width: 100%;
+  }
+}
+
+.minimodel_status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 12px;
+  color: var(--text-secondary);
+  transform: translate(-50%, -50%);
+}

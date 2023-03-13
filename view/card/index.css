@@ -1,8 +1,11 @@
 body {
   --card-width: 340px;
+  --card-top-padding: 20px;
+  --card-padding: 32px;
+  --card-max-height: calc(var(--chart-height) + 168px);
 
   @media (width <= 404px) {
-    --card-width: auto;
+    --card-width: 100%;
   }
 }
 
@@ -11,9 +14,13 @@ body {
 
   position: relative;
   width: var(--card-width);
-  padding: 20px 32px 32px;
+  padding: var(--card-top-padding) var(--card-padding) var(--card-padding);
   background: var(--current-surface);
   border-radius: 36px;
+
+  @media (width <= 404px) {
+    width: auto;
+  }
 }
 
 .card_title {
@@ -34,7 +41,7 @@ body {
 
 .card_chart {
   position: relative;
-  height: calc(150px + 24px);
+  height: calc(var(--chart-height) + 24px);
   padding: 0 20px;
   margin: 0 -20px;
   overflow: hidden;
@@ -49,5 +56,5 @@ body {
 }
 
 .card_size {
-  height: 150px;
+  height: var(--chart-height);
 }

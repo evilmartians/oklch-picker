@@ -11,7 +11,7 @@ include ../link/mixin.pug
   .layout_links
     +link(
       'help',
-      'Why OKLCH is better than ' + (LCH ? 'LCH, ' : '') + 'RGB and HSL',
+      'Why OKLCH is better than ' + (LCH ? 'LCH' : 'RGB') + ' and HSL',
       'https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl'
     )
     +link(
@@ -26,7 +26,9 @@ include ../link/mixin.pug
     +card('c')
   .layout_h
     +card('h')
-  .layout_a
+  .layout_extra
+    .layout_3d
+      +card('3d')
     +card('a')
 
   .layout_prefs

@@ -5,13 +5,17 @@
   width: fit-content;
   margin: 0 auto;
 
+  &.is-hidden {
+    display: none;
+  }
+
   @media (width < 830px) {
     grid-template:
       "title"
       "L"
       "C"
       "H"
-      "alpha"
+      "extra"
       "prefs"
       "links";
     padding-bottom: 450px;
@@ -28,7 +32,7 @@
       "main  prefs"
       "main  ."
       "L     C"
-      "alpha H";
+      "extra H";
     padding-bottom: 28px;
   }
 
@@ -36,10 +40,10 @@
     grid-template:
       "title title title"
       "main  L     C"
-      "main  alpha H"
-      "links alpha H"
-      "links prefs H"
-      "links .     .";
+      "main  extra H"
+      "links extra H"
+      "prefs extra H"
+      "prefs extra .";
   }
 }
 
@@ -82,10 +86,23 @@
   grid-area: H;
 }
 
-.layout_a {
-  grid-area: alpha;
+.layout_extra {
+  grid-area: extra;
 }
 
 .layout_prefs {
   grid-area: prefs;
+}
+
+.layout_3d {
+  height: 0;
+  overflow: hidden;
+
+  &.is-shown {
+    height: calc(var(--card-max-height) + 4px);
+  }
+
+  :is(body.was-loaded) & {
+    transition: height 400ms;
+  }
 }

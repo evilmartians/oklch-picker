@@ -1,7 +1,7 @@
 import { Oklch, formatHex } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { benchmarking } from './benchmarking.js'
+import { benchmarking } from './url.js'
 
 export type RenderType = 'l' | 'c' | 'h'
 

@@ -1,0 +1,6 @@
+mixin button(text, icon, cls)
+  button.button( title=text class=`is-${cls}` )
+    if icon === 'expand'
+      include ./expand.svg
+    else if icon === 'cross'
+      include ./cross.svg

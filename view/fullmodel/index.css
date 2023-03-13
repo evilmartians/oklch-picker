@@ -1,0 +1,59 @@
+.fullmodel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  background: var(--surface-3d);
+
+  &.is-hidden {
+    display: none;
+  }
+}
+
+.fullmodel_canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  image-rendering: crisp-edges;
+
+  :is(body.is-grabbing) & {
+    cursor: grabbing;
+  }
+}
+
+.fullmodel_button {
+  position: absolute;
+  top: 30px;
+  right: 40px;
+  z-index: 2;
+}
+
+.fullmodel_status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 12px;
+  color: var(--text-secondary);
+  transform: translate(-50%, -50%);
+}
+
+.fullmodel_note {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  z-index: -2;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  transform: translateX(-50%);
+}
+
+.fullmodel_title {
+  padding-top: 12px;
+}
