@@ -1,10 +1,16 @@
-import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { trackPaint, getQuickScale } from '../../stores/benchmark.js'
-import { paintCL, paintCH, paintLH } from './paint.js'
-import { showCharts, showRec2020 } from '../../stores/settings.js'
-import { initCanvasSize } from '../../lib/canvas.js'
+import type { PaintMessageData, PaintedMessageData } from './worker.js'
 
-const MAX_SCALE = 8
+import {
+  RenderType,
+  reportFrame,
+  reportFreeze,
+  reportFull
+} from '../../stores/benchmark.js'
+import { setCurrentComponents, onPaint } from '../../stores/current.js'
+import { getBorders } from '../../lib/paint.js'
+import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
+import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
+import PaintWorker from './worker.js?worker'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -81,34 +87,182 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
+let unbusyWorkers: Worker[] = []
+let busyWorkers: Worker[] = []
+
+let totalWorkers = navigator.hardwareConcurrency
+
+for (let i = 0; i < totalWorkers; i++) {
+  unbusyWorkers = [...unbusyWorkers, init()]
+}
+
+let pixelsL: PaintedMessageData[] = []
+let pixelsC: PaintedMessageData[] = []
+let pixelsH: PaintedMessageData[] = []
+
+let renderTimeL = 0
+let renderTimeC = 0
+let renderTimeH = 0
+
+function init(): Worker {
+  let worker = new PaintWorker()
+  worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
+    let start = Date.now()
+
+    let [unbusyWorker] = busyWorkers.splice(busyWorkers.indexOf(worker), 1)
+    unbusyWorkers = [...unbusyWorkers, unbusyWorker]
+
+    if (e.data.renderType === 'l') {
+      if (pixelsL.length < e.data.workers - 1) {
+        pixelsL = [...pixelsL, e.data]
+        renderTimeL += e.data.renderTime
+      } else {
+        let ctx = getCleanCtx(canvasL)
+
+        ;[...pixelsL, e.data].forEach(pixels => {
+          ctx.putImageData(
+            new ImageData(
+              new Uint8ClampedArray(pixels.pixelsBuffer),
+              pixels.pixelsWidth,
+              pixels.pixelsHeight
+            ),
+            0,
+            0,
+            pixels.xPos,
+            0,
+            pixels.pixelsWidth / e.data.workers,
+            pixels.pixelsHeight
+          )
+        })
+
+        reportFull(Date.now())
+        reportFrame(renderTimeL + e.data.renderTime)
+
+        pixelsL = []
+        renderTimeL = 0
+      }
+    } else if (e.data.renderType === 'c') {
+      if (pixelsC.length < e.data.workers - 1) {
+        pixelsC = [...pixelsC, e.data]
+        renderTimeC += e.data.renderTime
+      } else {
+        let ctx = getCleanCtx(canvasC)
+
+        ;[...pixelsC, e.data].forEach(pixels => {
+          ctx.putImageData(
+            new ImageData(
+              new Uint8ClampedArray(pixels.pixelsBuffer),
+              pixels.pixelsWidth,
+              pixels.pixelsHeight
+            ),
+            0,
+            0,
+            pixels.xPos,
+            0,
+            pixels.pixelsWidth / e.data.workers,
+            pixels.pixelsHeight
+          )
+        })
+
+        reportFull(Date.now())
+        reportFrame(renderTimeC + e.data.renderTime)
+
+        pixelsC = []
+        renderTimeC = 0
+      }
+    } else if (pixelsH.length < e.data.workers - 1) {
+      pixelsH = [...pixelsH, e.data]
+      renderTimeH += e.data.renderTime
+    } else {
+      let ctx = getCleanCtx(canvasH)
+
+      ;[...pixelsH, e.data].forEach(pixels => {
+        ctx.putImageData(
+          new ImageData(
+            new Uint8ClampedArray(pixels.pixelsBuffer),
+            pixels.pixelsWidth,
+            pixels.pixelsHeight
+          ),
+          0,
+          0,
+          pixels.xPos,
+          0,
+          pixels.pixelsWidth / e.data.workers,
+          pixels.pixelsHeight
+        )
+      })
+
+      reportFull(Date.now())
+      reportFrame(renderTimeH + e.data.renderTime)
+
+      pixelsH = []
+      renderTimeH = 0
+    }
+
+    reportFreeze(Date.now() - start)
+  }
+  return worker
+}
+
+function send(worker: Worker, message: PaintMessageData): void {
+  worker.postMessage(message)
+}
+
+function loadWorkers(
+  availableWorkers: number,
+  renderType: RenderType,
+  canvas: HTMLCanvasElement,
+  value: number
+): void {
+  let [p3, rec2020] = getBorders()
+
+  for (let i = 0; i < availableWorkers; i++) {
+    send(unbusyWorkers[0], {
+      renderType,
+      width: canvas.width,
+      height: canvas.height,
+      workers: availableWorkers,
+      xPos: i * Math.floor(canvas.width / availableWorkers),
+      value,
+      showP3: showP3.get(),
+      showRec2020: showRec2020.get(),
+      p3,
+      rec2020
+    })
+
+    busyWorkers = [...busyWorkers, ...unbusyWorkers.splice(0, 1)]
+  }
+}
+
 function initCharts(): void {
   initCanvasSize(canvasL)
   initCanvasSize(canvasC)
   initCanvasSize(canvasH)
+
   onPaint({
-    l(l, isFull) {
+    l(l, framesToChange) {
       if (!showCharts.get()) return
-      let scale = getQuickScale('l', isFull)
-      if (scale > MAX_SCALE) return
-      trackPaint('l', isFull, () => {
-        paintCH(canvasL, (L_MAX * l) / 100, scale)
-      })
+      let availableWorkers = Math.floor(totalWorkers / framesToChange)
+
+      if (unbusyWorkers.length >= availableWorkers) {
+        loadWorkers(availableWorkers, 'l', canvasL, (L_MAX * l) / 100)
+      }
     },
-    c(c, isFull) {
+    c(c, framesToChange) {
       if (!showCharts.get()) return
-      let scale = getQuickScale('c', isFull)
-      if (scale > MAX_SCALE) return
-      trackPaint('c', isFull, () => {
-        paintLH(canvasC, c, scale)
-      })
+      let availableWorkers = Math.ceil(totalWorkers / framesToChange)
+
+      if (unbusyWorkers.length >= availableWorkers) {
+        loadWorkers(availableWorkers, 'c', canvasC, c)
+      }
     },
-    h(h, isFull) {
+    h(h, framesToChange) {
       if (!showCharts.get()) return
-      let scale = getQuickScale('h', isFull)
-      if (scale > MAX_SCALE) return
-      trackPaint('h', isFull, () => {
-        paintCL(canvasH, h, scale)
-      })
+      let availableWorkers = Math.floor(totalWorkers / framesToChange)
+
+      if (unbusyWorkers.length >= availableWorkers) {
+        loadWorkers(availableWorkers, 'h', canvasH, h)
+      }
     }
   })
 }

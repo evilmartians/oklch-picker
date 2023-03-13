@@ -39,3 +39,16 @@ export function paintPixel(
   pixels.data[pos + 2] = pixel[3]
   pixels.data[pos + 3] = 255
 }
+
+export function paintSeparatorPixel(
+  pixels: ImageData,
+  x: number,
+  y: number,
+  colorArr: string[]
+): void {
+  let pos = 4 * (y * pixels.width + x)
+  pixels.data[pos] = +colorArr[0]
+  pixels.data[pos + 1] = +colorArr[1]
+  pixels.data[pos + 2] = +colorArr[2]
+  pixels.data[pos + 3] = +colorArr[3] * 255
+}

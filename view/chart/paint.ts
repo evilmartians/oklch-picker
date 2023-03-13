@@ -7,59 +7,61 @@ import {
 } from '../../lib/colors.js'
 import {
   generateGetSeparator,
-  getBorders,
-  paintPixel
+  paintPixel,
+  paintSeparatorPixel
 } from '../../lib/paint.js'
-import { getCleanCtx, setScale } from '../../lib/canvas.js'
-import { showRec2020, showP3 } from '../../stores/settings.js'
 import { support } from '../../stores/support.js'
 
 function paintSeparator(
-  ctx: CanvasRenderingContext2D,
+  pixels: ImageData,
   color: string,
   line: [number, number][] | undefined
 ): void {
+  let colorArr = color
+    .substring(color.indexOf('(') + 1, color.indexOf(')'))
+    .split(',')
+
   if (!line) return
-  ctx.strokeStyle = color
-  ctx.lineWidth = 1
   if (line.length > 0) {
     let prevY = line[0][1]!
     let prevX = 0
-    ctx.beginPath()
     for (let [x, y] of line) {
       if (x > prevX + 1) {
-        ctx.stroke()
-        ctx.beginPath()
+        prevY = line[0][1]!
       }
       if (Math.abs(prevY - y) < 10) {
-        ctx.lineTo(x, y)
+        paintSeparatorPixel(pixels, x, y, colorArr)
       }
       prevX = x
       prevY = y
     }
   }
-  ctx.stroke()
 }
 
 function paint(
-  ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
+  workers: number,
+  xPos: number,
   hasGaps: boolean,
   block: number,
+  showP3: boolean,
+  showRec2020: boolean,
+  p3: string,
+  rec2020: string,
   getColor: GetColor
-): void {
+): ImageData {
   let getPixel = generateGetPixel(
     getColor,
-    showP3.get(),
-    showRec2020.get(),
+    showP3,
+    showRec2020,
     support.get().p3
   )
   let getSeparator = generateGetSeparator()
   let maxGap = 0.3 * height
 
-  let pixels = ctx.createImageData(width, height)
-  for (let x = 0; x <= width; x += 1) {
+  let pixels = new ImageData(width, height)
+  for (let x = xPos; x <= Math.floor(width / workers) + xPos; x += 1) {
     let nextPixel: Pixel
     let pixel = getPixel(x, 0)
     let prevPixel = pixel
@@ -98,59 +100,112 @@ function paint(
       pixel = nextPixel
     }
   }
-  ctx.putImageData(pixels, 0, 0)
 
-  let [p3, rec2020] = getBorders()
-  if (showP3.get() && showRec2020.get()) {
-    paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
-    paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
-    paintSeparator(ctx, rec2020, getSeparator(Space.P3, Space.Rec2020))
-    paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.P3))
-  } else if (!showRec2020.get() && showP3.get()) {
-    paintSeparator(ctx, p3, getSeparator(Space.sRGB, Space.P3))
-    paintSeparator(ctx, p3, getSeparator(Space.P3, Space.sRGB))
-  } else if (showRec2020.get() && !showP3.get()) {
-    paintSeparator(ctx, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
-    paintSeparator(ctx, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
+  if (showP3 && showRec2020) {
+    paintSeparator(pixels, p3, getSeparator(Space.sRGB, Space.P3))
+    paintSeparator(pixels, p3, getSeparator(Space.P3, Space.sRGB))
+    paintSeparator(pixels, rec2020, getSeparator(Space.P3, Space.Rec2020))
+    paintSeparator(pixels, rec2020, getSeparator(Space.Rec2020, Space.P3))
+  } else if (!showRec2020 && showP3) {
+    paintSeparator(pixels, p3, getSeparator(Space.sRGB, Space.P3))
+    paintSeparator(pixels, p3, getSeparator(Space.P3, Space.sRGB))
+  } else if (showRec2020 && !showP3) {
+    paintSeparator(pixels, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
+    paintSeparator(pixels, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
   }
+
+  return pixels
 }
 
-export function paintCL(canvas: HTMLCanvasElement, h: number, scale: number): void {
-  let [width, height] = setScale(canvas, scale)
-  let ctx = getCleanCtx(canvas)
-
+export function paintCL(
+  width: number,
+  height: number,
+  workers: number,
+  xPos: number,
+  h: number,
+  showP3: boolean,
+  showRec2020: boolean,
+  p3: string,
+  rec2020: string
+): ImageData {
   let lFactor = L_MAX / width
-  let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
+  let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, 6, (x, y) => {
-    return build(x * lFactor, y * cFactor, h)
-  })
+  return paint(
+    width,
+    height,
+    workers,
+    xPos,
+    false,
+    6,
+    showP3,
+    showRec2020,
+    p3,
+    rec2020,
+    (x, y) => {
+      return build(x * lFactor, y * cFactor, h)
+    }
+  )
 }
 
-export function paintCH(canvas: HTMLCanvasElement, l: number, scale: number): void {
-  let [width, height] = setScale(canvas, scale)
-  let ctx = getCleanCtx(canvas)
-
+export function paintCH(
+  width: number,
+  height: number,
+  workers: number,
+  xPos: number,
+  l: number,
+  showP3: boolean,
+  showRec2020: boolean,
+  p3: string,
+  rec2020: string
+): ImageData {
   let hFactor = H_MAX / width
-  let cFactor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / height
+  let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
-  paint(ctx, width, height, false, 6, (x, y) => {
-    return build(l, y * cFactor, x * hFactor)
-  })
+  return paint(
+    width,
+    height,
+    workers,
+    xPos,
+    false,
+    6,
+    showP3,
+    showRec2020,
+    p3,
+    rec2020,
+    (x, y) => {
+      return build(l, y * cFactor, x * hFactor)
+    }
+  )
 }
 
 export function paintLH(
-  canvas: HTMLCanvasElement,
+  width: number,
+  height: number,
+  workers: number,
+  xPos: number,
   c: number,
-  scale: number
-): void {
-  let [width, height] = setScale(canvas, scale)
-  let ctx = getCleanCtx(canvas)
-
+  showP3: boolean,
+  showRec2020: boolean,
+  p3: string,
+  rec2020: string
+): ImageData {
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
 
-  paint(ctx, width, height, true, 2, (x, y) => {
-    return build(y * lFactor, c, x * hFactor)
-  })
+  return paint(
+    width,
+    height,
+    workers,
+    xPos,
+    true,
+    2,
+    showP3,
+    showRec2020,
+    p3,
+    rec2020,
+    (x, y) => {
+      return build(y * lFactor, c, x * hFactor)
+    }
+  )
 }
