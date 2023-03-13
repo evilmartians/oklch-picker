@@ -1,6 +1,7 @@
 import type { PaintMessageData, PaintedMessageData } from './worker.js'
 
 import {
+  RenderType,
   reportFrame,
   reportFreeze,
   reportFull
@@ -181,37 +182,35 @@ function init(): Worker {
         pixelsC = []
         renderTimeC = 0
       }
+    } else if (pixelsH.length < e.data.workers - 1) {
+      pixelsH = [...pixelsH, e.data]
+      renderTimeH += e.data.renderTime
     } else {
-      if (pixelsH.length < e.data.workers - 1) {
-        pixelsH = [...pixelsH, e.data]
-        renderTimeH += e.data.renderTime
-      } else {
-        let ctx = getCleanCtx(canvasH)
+      let ctx = getCleanCtx(canvasH)
 
-        ;[...pixelsH, e.data].forEach(pixels => {
-          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
+      ;[...pixelsH, e.data].forEach(pixels => {
+        let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
-          ctx.putImageData(
-            new ImageData(
-              new Uint8ClampedArray(pixelsBuffer),
-              pixelsWidth,
-              pixelsHeight
-            ),
-            0,
-            0,
-            xPos,
-            0,
-            pixelsWidth / e.data.workers,
+        ctx.putImageData(
+          new ImageData(
+            new Uint8ClampedArray(pixelsBuffer),
+            pixelsWidth,
             pixelsHeight
-          )
-        })
+          ),
+          0,
+          0,
+          xPos,
+          0,
+          pixelsWidth / e.data.workers,
+          pixelsHeight
+        )
+      })
 
-        reportFull(Date.now())
-        reportFrame(renderTimeH)
+      reportFull(Date.now())
+      reportFrame(renderTimeH)
 
-        pixelsH = []
-        renderTimeH = 0
-      }
+      pixelsH = []
+      renderTimeH = 0
     }
 
     reportFreeze(Date.now() - start)
@@ -231,8 +230,11 @@ function loadWorkers(
   let [p3, rec2020] = getBorders()
 
   for (let i = 0; i < availableWorkers; i++) {
+    let renderType: RenderType =
+      canvas === canvasL ? 'l' : canvas === canvasC ? 'c' : 'h'
+
     send(unbusyWorkers[0], {
-      renderType: canvas === canvasL ? 'l' : canvas === canvasC ? 'c' : 'h',
+      renderType,
       width: canvas.width,
       height: canvas.height,
       workers: availableWorkers,
@@ -243,6 +245,7 @@ function loadWorkers(
       p3,
       rec2020
     })
+
     busyWorkers = [...busyWorkers, ...unbusyWorkers.splice(0, 1)]
   }
 }

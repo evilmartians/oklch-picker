@@ -7,8 +7,6 @@ export type RenderType = 'l' | 'c' | 'h'
 
 export let lastBenchmark = map({ freezeSum: 0, freezeMax: 0, frame: 0, full: 0 })
 
-let collectingTimeout: number
-let collecting = false
 let start = 0
 
 export function reportFrame(ms: number): void {
