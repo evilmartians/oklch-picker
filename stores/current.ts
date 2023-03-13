@@ -1,18 +1,12 @@
-import {
-  benchmarking,
-  setStart,
-  resetFreeze,
-  reportFreeze
-} from './benchmark.js'
+import { setStart, resetFreeze, reportFreeze } from './benchmark.js'
 import { clampChroma, Color } from 'culori/fn'
-import { map } from 'nanostores'
+import { atom, map } from 'nanostores'
 
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
-import { reportFreeze, resetCollecting } from './benchmark.js'
-import { benchmarking } from './benchmarking.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
+import { benchmarking } from './benchmarking.js'
 
 export interface LchValue {
   l: number
@@ -81,6 +75,8 @@ interface LchCallbacks {
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
+export let framesToChange = atom<number>(0)
+
 function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let start = Date.now()
   setStart(start)
@@ -89,6 +85,18 @@ function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let lChanged = prev.l !== value.l
   let cChanged = prev.c !== value.c
   let hChanged = prev.h !== value.h
+
+  if (lChanged && cChanged && hChanged) {
+    framesToChange.set(3)
+  } else if (
+    (lChanged && cChanged) ||
+    (cChanged && hChanged) ||
+    (hChanged && lChanged)
+  ) {
+    framesToChange.set(2)
+  } else {
+    framesToChange.set(1)
+  }
 
   for (let i of list) {
     if (i.l && lChanged) {

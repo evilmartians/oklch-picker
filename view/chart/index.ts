@@ -5,12 +5,14 @@ import {
   reportFreeze,
   reportFull
 } from '../../stores/benchmark.js'
-import { atom } from 'nanostores'
-import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { getBorders, trackTime } from '../../lib/paint.js'
+import {
+  setCurrentComponents,
+  onPaint,
+  framesToChange
+} from '../../stores/current.js'
+import { getBorders } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
-import { initCanvasSize } from '../../lib/canvas.js'
-import { support } from '../../stores/support.js'
+import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import PaintWorker from './worker.js?worker'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
@@ -19,15 +21,6 @@ let chartH = document.querySelector<HTMLDivElement>('.chart.is-h')!
 let canvasL = chartL.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasC = chartC.querySelector<HTMLCanvasElement>('.chart_canvas')!
 let canvasH = chartH.querySelector<HTMLCanvasElement>('.chart_canvas')!
-let ctxL = canvasL.getContext('2d', {
-  colorSpace: support.get().p3 ? 'display-p3' : 'srgb'
-})!
-let ctxC = canvasC.getContext('2d', {
-  colorSpace: support.get().p3 ? 'display-p3' : 'srgb'
-})!
-let ctxH = canvasH.getContext('2d', {
-  colorSpace: support.get().p3 ? 'display-p3' : 'srgb'
-})!
 
 function getMaxC(): number {
   return showRec2020.get() ? C_MAX_REC2020 : C_MAX
@@ -97,35 +90,42 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
-let workersL: Worker[] = []
-let workersC: Worker[] = []
-let workersH: Worker[] = []
+let unbusyWorkers: Worker[] = []
+let busyWorkers: Worker[] = []
+
+let totalWorkers = navigator.hardwareConcurrency
+  ? navigator.hardwareConcurrency
+  : 12
+
+for (let i = 0; i < totalWorkers; i++) {
+  unbusyWorkers = [...unbusyWorkers, init()]
+}
 
 let pixelsL: PaintedMessageData[] = []
 let pixelsC: PaintedMessageData[] = []
 let pixelsH: PaintedMessageData[] = []
 
-let isBusyL = false
-let isBusyC = false
-let isBusyH = false
-
-let lastPendingL = atom<PaintMessageData[]>([])
-let lastPendingC = atom<PaintMessageData[]>([])
-let lastPendingH = atom<PaintMessageData[]>([])
-
 let renderTimeL = 0
 let renderTimeC = 0
 let renderTimeH = 0
 
-function init(ctx: CanvasRenderingContext2D): Worker {
+function init(): Worker {
   let worker = new PaintWorker()
   worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
     let start = Date.now()
+
+    unbusyWorkers = [
+      ...unbusyWorkers,
+      ...busyWorkers.splice(busyWorkers.indexOf(worker), 1)
+    ]
+
     if (e.data.renderType === 'l') {
-      if (pixelsL.length < workersL.length - 1) {
+      if (pixelsL.length < e.data.workers - 1) {
         pixelsL = [...pixelsL, e.data]
         renderTimeL += e.data.renderTime
       } else {
+        let ctx = getCleanCtx(canvasL)
+
         ;[...pixelsL, e.data].forEach(pixels => {
           let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
@@ -139,7 +139,7 @@ function init(ctx: CanvasRenderingContext2D): Worker {
             0,
             xPos,
             0,
-            pixelsWidth / workersL.length,
+            pixelsWidth / e.data.workers,
             pixelsHeight
           )
         })
@@ -149,14 +149,14 @@ function init(ctx: CanvasRenderingContext2D): Worker {
 
         pixelsL = []
         renderTimeL = 0
-        isBusyL = false
-        lastPendingL.notify()
       }
     } else if (e.data.renderType === 'c') {
-      if (pixelsC.length < workersC.length - 1) {
+      if (pixelsC.length < e.data.workers - 1) {
         pixelsC = [...pixelsC, e.data]
         renderTimeC += e.data.renderTime
       } else {
+        let ctx = getCleanCtx(canvasC)
+
         ;[...pixelsC, e.data].forEach(pixels => {
           let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
@@ -170,7 +170,7 @@ function init(ctx: CanvasRenderingContext2D): Worker {
             0,
             xPos,
             0,
-            pixelsWidth / workersC.length,
+            pixelsWidth / e.data.workers,
             pixelsHeight
           )
         })
@@ -180,14 +180,14 @@ function init(ctx: CanvasRenderingContext2D): Worker {
 
         pixelsC = []
         renderTimeC = 0
-        isBusyC = false
-        lastPendingC.notify()
       }
     } else {
-      if (pixelsH.length < workersH.length - 1) {
+      if (pixelsH.length < e.data.workers - 1) {
         pixelsH = [...pixelsH, e.data]
         renderTimeH += e.data.renderTime
       } else {
+        let ctx = getCleanCtx(canvasH)
+
         ;[...pixelsH, e.data].forEach(pixels => {
           let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
 
@@ -201,7 +201,7 @@ function init(ctx: CanvasRenderingContext2D): Worker {
             0,
             xPos,
             0,
-            pixelsWidth / workersH.length,
+            pixelsWidth / e.data.workers,
             pixelsHeight
           )
         })
@@ -211,8 +211,6 @@ function init(ctx: CanvasRenderingContext2D): Worker {
 
         pixelsH = []
         renderTimeH = 0
-        isBusyH = false
-        lastPendingH.notify()
       }
     }
 
@@ -221,52 +219,32 @@ function init(ctx: CanvasRenderingContext2D): Worker {
   return worker
 }
 
-let totalWorkers = navigator.hardwareConcurrency
-  ? navigator.hardwareConcurrency
-  : 12
-
-for (let i = 0; i < totalWorkers; i++) {
-  if (i / Math.floor(totalWorkers / 3) < 1) {
-    workersL = [...workersL, init(ctxL)]
-  } else if (i / Math.floor(totalWorkers / 3) < 2) {
-    workersH = [...workersH, init(ctxH)]
-  } else {
-    workersC = [...workersC, init(ctxC)]
-  }
-}
-
-lastPendingL.listen(messages => {
-  if (!isBusyL && messages.length === workersL.length) {
-    isBusyL = true
-    workersL.forEach((worker, index) => {
-      send(worker, messages[index])
-    })
-    lastPendingL.set([])
-  }
-})
-
-lastPendingC.listen(messages => {
-  if (!isBusyC && messages.length === workersC.length) {
-    isBusyC = true
-    workersC.forEach((worker, index) => {
-      send(worker, messages[index])
-    })
-    lastPendingC.set([])
-  }
-})
-
-lastPendingH.listen(messages => {
-  if (!isBusyH && messages.length === workersH.length) {
-    isBusyH = true
-    workersH.forEach((worker, index) => {
-      send(worker, messages[index])
-    })
-    lastPendingH.set([])
-  }
-})
-
 function send(worker: Worker, message: PaintMessageData): void {
   worker.postMessage(message)
+}
+
+function loadWorkers(
+  availableWorkers: number,
+  canvas: HTMLCanvasElement,
+  lch: number
+): void {
+  let [p3, rec2020] = getBorders()
+
+  for (let i = 0; i < availableWorkers; i++) {
+    send(unbusyWorkers[0], {
+      renderType: canvas === canvasL ? 'l' : canvas === canvasC ? 'c' : 'h',
+      width: canvas.width,
+      height: canvas.height,
+      workers: availableWorkers,
+      xPos: i * Math.floor(canvas.width / availableWorkers),
+      lch,
+      showP3: showP3.get(),
+      showRec2020: showRec2020.get(),
+      p3,
+      rec2020
+    })
+    busyWorkers = [...busyWorkers, ...unbusyWorkers.splice(0, 1)]
+  }
 }
 
 function initCharts(): void {
@@ -277,69 +255,27 @@ function initCharts(): void {
   onPaint({
     l(l) {
       if (!showCharts.get()) return
-      let [p3, rec2020] = getBorders()
-      lastPendingL.set([])
-      workersL.forEach((_, index) => {
-        lastPendingL.set([
-          ...lastPendingL.get(),
-          {
-            renderType: 'l',
-            width: canvasL.width,
-            height: canvasL.height,
-            section: Math.floor(canvasL.width / workersL.length),
-            xPos: index * Math.floor(canvasL.width / workersL.length),
-            lch: (L_MAX * l) / 100,
-            showP3: showP3.get(),
-            showRec2020: showRec2020.get(),
-            p3,
-            rec2020
-          }
-        ])
-      })
+      let availableWorkers = Math.floor(totalWorkers / framesToChange.get())
+
+      if (unbusyWorkers.length >= availableWorkers) {
+        loadWorkers(availableWorkers, canvasL, (L_MAX * l) / 100)
+      }
     },
     c(c) {
       if (!showCharts.get()) return
-      let [p3, rec2020] = getBorders()
-      lastPendingC.set([])
-      workersC.forEach((_, index) => {
-        lastPendingC.set([
-          ...lastPendingC.get(),
-          {
-            renderType: 'c',
-            width: canvasL.width,
-            height: canvasL.height,
-            section: Math.floor(canvasC.width / workersC.length),
-            xPos: index * Math.floor(canvasC.width / workersC.length),
-            lch: c,
-            showP3: showP3.get(),
-            showRec2020: showRec2020.get(),
-            p3,
-            rec2020
-          }
-        ])
-      })
+      let availableWorkers = Math.ceil(totalWorkers / framesToChange.get())
+
+      if (unbusyWorkers.length >= availableWorkers) {
+        loadWorkers(availableWorkers, canvasC, c)
+      }
     },
     h(h) {
       if (!showCharts.get()) return
-      let [p3, rec2020] = getBorders()
-      lastPendingH.set([])
-      workersH.forEach((_, index) => {
-        lastPendingH.set([
-          ...lastPendingH.get(),
-          {
-            renderType: 'h',
-            width: canvasH.width,
-            height: canvasH.height,
-            section: Math.floor(canvasH.width / workersH.length),
-            xPos: index * Math.floor(canvasH.width / workersH.length),
-            lch: h,
-            showP3: showP3.get(),
-            showRec2020: showRec2020.get(),
-            p3,
-            rec2020
-          }
-        ])
-      })
+      let availableWorkers = Math.floor(totalWorkers / framesToChange.get())
+
+      if (unbusyWorkers.length >= availableWorkers) {
+        loadWorkers(availableWorkers, canvasH, h)
+      }
     }
   })
 }

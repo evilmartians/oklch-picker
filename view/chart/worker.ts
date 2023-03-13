@@ -7,7 +7,7 @@ export type PaintMessageData = {
   renderType: RenderType
   width: number
   height: number
-  section: number
+  workers: number
   xPos: number
   lch: number
   showP3: boolean
@@ -22,6 +22,7 @@ export type PaintedMessageData = {
   pixelsBuffer: ArrayBufferLike
   pixelsWidth: number
   pixelsHeight: number
+  workers: number
   xPos: number
 }
 
@@ -34,7 +35,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
     renderType,
     width,
     height,
-    section,
+    workers,
     xPos,
     lch,
     showP3,
@@ -49,7 +50,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixels = paintCH(
         width,
         height,
-        section,
+        workers,
         xPos,
         lch,
         showP3,
@@ -61,7 +62,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixels = paintLH(
         width,
         height,
-        section,
+        workers,
         xPos,
         lch,
         showP3,
@@ -73,7 +74,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixels = paintCL(
         width,
         height,
-        section,
+        workers,
         xPos,
         lch,
         showP3,
@@ -91,6 +92,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
       pixelsBuffer: pixels.data.buffer,
       pixelsWidth: pixels.width,
       pixelsHeight: pixels.height,
+      workers,
       xPos
     },
     [pixels.data.buffer]
