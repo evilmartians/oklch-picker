@@ -28,8 +28,7 @@ export function setFrameStart(time: number): void {
 
 export function reportFreeze(ms: number): void {
   if (benchmarking.get()) {
-    if (ms > lastBenchmark.get().freezeMax)
-      lastBenchmark.setKey('freezeMax', ms)
+    if (ms > lastBenchmark.get().freezeMax) lastBenchmark.setKey('freezeMax', ms)
     lastBenchmark.setKey('freezeSum', lastBenchmark.get().freezeSum + ms)
   }
 }

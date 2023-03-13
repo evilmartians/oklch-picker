@@ -90,7 +90,7 @@ initEvents(canvasH)
 let unbusyWorkers: Worker[] = []
 let busyWorkers: Worker[] = []
 
-let totalWorkers = navigator.hardwareConcurrency ?? 8
+let totalWorkers = navigator.hardwareConcurrency
 
 for (let i = 0; i < totalWorkers; i++) {
   unbusyWorkers = [...unbusyWorkers, init()]
@@ -231,39 +231,6 @@ function loadWorkers(
     })
 
     busyWorkers = [...busyWorkers, ...unbusyWorkers.splice(0, 1)]
-  }
-}
-
-function fillCtx(data: PaintedMessageData, pixels: PaintedMessageData[], canvas: HTMLCanvasElement): void {
-  if (pixels.length < data.workers - 1) {
-    pixels = [...pixels, data]
-    console.log(pixels)
-  } else {
-    let ctx = getCleanCtx(canvas)
-
-    ;[...pixels, data].forEach(pixels => {
-      let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
-
-      ctx.putImageData(
-        new ImageData(
-          new Uint8ClampedArray(pixelsBuffer),
-          pixelsWidth,
-          pixelsHeight
-        ),
-        0,
-        0,
-        xPos,
-        0,
-        pixelsWidth / data.workers,
-        pixelsHeight
-      )
-    })
-
-    reportFull(Date.now())
-    reportFrame(renderTimeL)
-
-    pixelsL = []
-    renderTimeL = 0
   }
 }
 
