@@ -8,15 +8,15 @@ export type RenderType = 'l' | 'c' | 'h'
 export let lastBenchmark = map({
   freezeSum: 0,
   freezeMax: 0,
-  frame: 0,
-  full: 0
+  paint: 0,
+  workersSum: 0
 })
 
 let start = 0
 
 export function reportFrame(ms: number): void {
   if (benchmarking.get()) {
-    lastBenchmark.setKey('frame', ms)
+    lastBenchmark.setKey('paint', ms)
   }
 }
 
@@ -28,8 +28,10 @@ export function setFrameStart(time: number): void {
 
 export function reportFreeze(ms: number): void {
   if (benchmarking.get()) {
-    if (ms > lastBenchmark.get().freezeMax) lastBenchmark.setKey('freezeMax', ms)
     lastBenchmark.setKey('freezeSum', lastBenchmark.get().freezeSum + ms)
+    if (ms > lastBenchmark.get().freezeMax) {
+      lastBenchmark.setKey('freezeMax', ms)
+    }
   }
 }
 
@@ -40,7 +42,7 @@ export function resetFreeze(): void {
 
 export function reportFull(time: number): void {
   if (benchmarking.get()) {
-    lastBenchmark.setKey('full', time - start)
+    lastBenchmark.setKey('workersSum', time - start)
   }
 }
 

@@ -4,8 +4,8 @@ import { benchmarking } from '../../stores/url.js'
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
 let freezeSum = block.querySelector<HTMLSpanElement>('.benchmark_freeze-sum')!
 let freezeMax = block.querySelector<HTMLSpanElement>('.benchmark_freeze-max')!
-let frame = block.querySelector<HTMLSpanElement>('.benchmark_frame')!
-let full = block.querySelector<HTMLSpanElement>('.benchmark_full')!
+let frame = block.querySelector<HTMLSpanElement>('.benchmark_paint')!
+let full = block.querySelector<HTMLSpanElement>('.benchmark_workers-sum')!
 
 let unbind: undefined | (() => void)
 benchmarking.subscribe(enabled => {
@@ -16,8 +16,8 @@ benchmarking.subscribe(enabled => {
       block.style.setProperty('--benchmark-color', getLastBenchmarkColor())
       freezeSum.innerText =`${result.freezeSum}`
       freezeMax.innerText =`${result.freezeMax}`
-      frame.innerText =`${result.frame}`
-      full.innerText = `${result.full}`
+      frame.innerText =`${result.paint}`
+      full.innerText = `${result.workersSum}`
     })
   } else {
     block.classList.remove('is-enabled')
