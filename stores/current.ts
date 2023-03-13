@@ -6,7 +6,7 @@ import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
-import { benchmarking } from './benchmarking.js'
+import { benchmarking } from './url.js'
 
 export interface LchValue {
   l: number
