@@ -2,8 +2,8 @@ import { getLastBenchmarkColor, lastBenchmark } from '../../stores/benchmark.js'
 import { benchmarking } from '../../stores/url.js'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
-let freezeSum = block.querySelector<HTMLSpanElement>('.benchmark_freeze_sum')!
-let freezeMax = block.querySelector<HTMLSpanElement>('.benchmark_freeze_max')!
+let freezeSum = block.querySelector<HTMLSpanElement>('.benchmark_freeze-sum')!
+let freezeMax = block.querySelector<HTMLSpanElement>('.benchmark_freeze-max')!
 let frame = block.querySelector<HTMLSpanElement>('.benchmark_frame')!
 let full = block.querySelector<HTMLSpanElement>('.benchmark_full')!
 

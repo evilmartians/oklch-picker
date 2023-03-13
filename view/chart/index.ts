@@ -6,11 +6,7 @@ import {
   reportFreeze,
   reportFull
 } from '../../stores/benchmark.js'
-import {
-  setCurrentComponents,
-  onPaint,
-  framesToChange
-} from '../../stores/current.js'
+import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { getBorders } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
@@ -94,9 +90,7 @@ initEvents(canvasH)
 let unbusyWorkers: Worker[] = []
 let busyWorkers: Worker[] = []
 
-let totalWorkers = navigator.hardwareConcurrency
-  ? navigator.hardwareConcurrency
-  : 12
+let totalWorkers = navigator.hardwareConcurrency ?? 8
 
 for (let i = 0; i < totalWorkers; i++) {
   unbusyWorkers = [...unbusyWorkers, init()]
@@ -115,10 +109,8 @@ function init(): Worker {
   worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
     let start = Date.now()
 
-    unbusyWorkers = [
-      ...unbusyWorkers,
-      ...busyWorkers.splice(busyWorkers.indexOf(worker), 1)
-    ]
+    let [unbusyWorker] = busyWorkers.splice(busyWorkers.indexOf(worker), 1)
+    unbusyWorkers = [...unbusyWorkers, unbusyWorker]
 
     if (e.data.renderType === 'l') {
       if (pixelsL.length < e.data.workers - 1) {
@@ -128,25 +120,23 @@ function init(): Worker {
         let ctx = getCleanCtx(canvasL)
 
         ;[...pixelsL, e.data].forEach(pixels => {
-          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
-
           ctx.putImageData(
             new ImageData(
-              new Uint8ClampedArray(pixelsBuffer),
-              pixelsWidth,
-              pixelsHeight
+              new Uint8ClampedArray(pixels.pixelsBuffer),
+              pixels.pixelsWidth,
+              pixels.pixelsHeight
             ),
             0,
             0,
-            xPos,
+            pixels.xPos,
             0,
-            pixelsWidth / e.data.workers,
-            pixelsHeight
+            pixels.pixelsWidth / e.data.workers,
+            pixels.pixelsHeight
           )
         })
 
         reportFull(Date.now())
-        reportFrame(renderTimeL)
+        reportFrame(renderTimeL + e.data.renderTime)
 
         pixelsL = []
         renderTimeL = 0
@@ -159,25 +149,23 @@ function init(): Worker {
         let ctx = getCleanCtx(canvasC)
 
         ;[...pixelsC, e.data].forEach(pixels => {
-          let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
-
           ctx.putImageData(
             new ImageData(
-              new Uint8ClampedArray(pixelsBuffer),
-              pixelsWidth,
-              pixelsHeight
+              new Uint8ClampedArray(pixels.pixelsBuffer),
+              pixels.pixelsWidth,
+              pixels.pixelsHeight
             ),
             0,
             0,
-            xPos,
+            pixels.xPos,
             0,
-            pixelsWidth / e.data.workers,
-            pixelsHeight
+            pixels.pixelsWidth / e.data.workers,
+            pixels.pixelsHeight
           )
         })
 
         reportFull(Date.now())
-        reportFrame(renderTimeC)
+        reportFrame(renderTimeC + e.data.renderTime)
 
         pixelsC = []
         renderTimeC = 0
@@ -189,25 +177,23 @@ function init(): Worker {
       let ctx = getCleanCtx(canvasH)
 
       ;[...pixelsH, e.data].forEach(pixels => {
-        let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
-
         ctx.putImageData(
           new ImageData(
-            new Uint8ClampedArray(pixelsBuffer),
-            pixelsWidth,
-            pixelsHeight
+            new Uint8ClampedArray(pixels.pixelsBuffer),
+            pixels.pixelsWidth,
+            pixels.pixelsHeight
           ),
           0,
           0,
-          xPos,
+          pixels.xPos,
           0,
-          pixelsWidth / e.data.workers,
-          pixelsHeight
+          pixels.pixelsWidth / e.data.workers,
+          pixels.pixelsHeight
         )
       })
 
       reportFull(Date.now())
-      reportFrame(renderTimeH)
+      reportFrame(renderTimeH + e.data.renderTime)
 
       pixelsH = []
       renderTimeH = 0
@@ -226,7 +212,7 @@ function loadWorkers(
   availableWorkers: number,
   renderType: RenderType,
   canvas: HTMLCanvasElement,
-  lch: number
+  value: number
 ): void {
   let [p3, rec2020] = getBorders()
 
@@ -237,7 +223,7 @@ function loadWorkers(
       height: canvas.height,
       workers: availableWorkers,
       xPos: i * Math.floor(canvas.width / availableWorkers),
-      lch,
+      value,
       showP3: showP3.get(),
       showRec2020: showRec2020.get(),
       p3,
@@ -248,31 +234,64 @@ function loadWorkers(
   }
 }
 
+function fillCtx(data: PaintedMessageData, pixels: PaintedMessageData[], canvas: HTMLCanvasElement): void {
+  if (pixels.length < data.workers - 1) {
+    pixels = [...pixels, data]
+    console.log(pixels)
+  } else {
+    let ctx = getCleanCtx(canvas)
+
+    ;[...pixels, data].forEach(pixels => {
+      let { pixelsBuffer, pixelsWidth, pixelsHeight, xPos } = pixels
+
+      ctx.putImageData(
+        new ImageData(
+          new Uint8ClampedArray(pixelsBuffer),
+          pixelsWidth,
+          pixelsHeight
+        ),
+        0,
+        0,
+        xPos,
+        0,
+        pixelsWidth / data.workers,
+        pixelsHeight
+      )
+    })
+
+    reportFull(Date.now())
+    reportFrame(renderTimeL)
+
+    pixelsL = []
+    renderTimeL = 0
+  }
+}
+
 function initCharts(): void {
   initCanvasSize(canvasL)
   initCanvasSize(canvasC)
   initCanvasSize(canvasH)
 
   onPaint({
-    l(l) {
+    l(l, framesToChange) {
       if (!showCharts.get()) return
-      let availableWorkers = Math.floor(totalWorkers / framesToChange.get())
+      let availableWorkers = Math.floor(totalWorkers / framesToChange)
 
       if (unbusyWorkers.length >= availableWorkers) {
         loadWorkers(availableWorkers, 'l', canvasL, (L_MAX * l) / 100)
       }
     },
-    c(c) {
+    c(c, framesToChange) {
       if (!showCharts.get()) return
-      let availableWorkers = Math.ceil(totalWorkers / framesToChange.get())
+      let availableWorkers = Math.ceil(totalWorkers / framesToChange)
 
       if (unbusyWorkers.length >= availableWorkers) {
         loadWorkers(availableWorkers, 'c', canvasC, c)
       }
     },
-    h(h) {
+    h(h, framesToChange) {
       if (!showCharts.get()) return
-      let availableWorkers = Math.floor(totalWorkers / framesToChange.get())
+      let availableWorkers = Math.floor(totalWorkers / framesToChange)
 
       if (unbusyWorkers.length >= availableWorkers) {
         loadWorkers(availableWorkers, 'h', canvasH, h)

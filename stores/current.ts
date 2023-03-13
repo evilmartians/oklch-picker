@@ -2,7 +2,7 @@ import { atom, map } from 'nanostores'
 import { clampChroma, Color } from 'culori/fn'
 
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
-import { setStart, resetFreeze, reportFreeze } from './benchmark.js'
+import { setFrameStart, resetFreeze, reportFreeze } from './benchmark.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
@@ -54,7 +54,7 @@ window.addEventListener('hashchange', () => {
 })
 
 interface ComponentCallback {
-  (value: number): void
+  (value: number, framesToChange: number): void
 }
 
 interface LchCallback {
@@ -75,41 +75,40 @@ interface LchCallbacks {
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
-export let framesToChange = atom<number>(0)
-
 function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let start = Date.now()
-  setStart(start)
+  setFrameStart(start)
 
+  let framesToChange = 0
   let value = current.get()
   let lChanged = prev.l !== value.l
   let cChanged = prev.c !== value.c
   let hChanged = prev.h !== value.h
 
   if (lChanged && cChanged && hChanged) {
-    framesToChange.set(3)
+    framesToChange = 3
   } else if (
     (lChanged && cChanged) ||
     (cChanged && hChanged) ||
     (hChanged && lChanged)
   ) {
-    framesToChange.set(2)
+    framesToChange = 2
   } else {
-    framesToChange.set(1)
+    framesToChange = 1
   }
 
   for (let i of list) {
     if (i.l && lChanged) {
-      i.l(value.l)
+      i.l(value.l, framesToChange)
     }
     if (i.c && cChanged) {
-      i.c(value.c)
+      i.c(value.c, framesToChange)
     }
     if (i.h && hChanged) {
-      i.h(value.h)
+      i.h(value.h, framesToChange)
     }
     if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a)
+      i.alpha(value.a, 0)
     }
 
     if (i.lc && (lChanged || cChanged)) {

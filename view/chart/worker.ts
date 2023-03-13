@@ -1,7 +1,7 @@
-import type { RenderType } from '../../stores/benchmark'
+import type { RenderType } from '../../stores/benchmark.js'
 
-import { paintCH, paintCL, paintLH } from './paint'
-import { trackTime } from '../../lib/time'
+import { paintCH, paintCL, paintLH } from './paint.js'
+import { trackTime } from '../../lib/time.js'
 
 export type PaintMessageData = {
   renderType: RenderType
@@ -9,7 +9,7 @@ export type PaintMessageData = {
   height: number
   workers: number
   xPos: number
-  lch: number
+  value: number
   showP3: boolean
   showRec2020: boolean
   p3: string
@@ -26,10 +26,6 @@ export type PaintedMessageData = {
   xPos: number
 }
 
-function send(message: PaintedMessageData, transfer: ArrayBufferLike[]): void {
-  postMessage(message, transfer)
-}
-
 onmessage = (e: MessageEvent<PaintMessageData>) => {
   let {
     renderType,
@@ -37,7 +33,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
     height,
     workers,
     xPos,
-    lch,
+    value,
     showP3,
     showRec2020,
     p3,
@@ -52,7 +48,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         height,
         workers,
         xPos,
-        lch,
+        value,
         showP3,
         showRec2020,
         p3,
@@ -64,7 +60,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         height,
         workers,
         xPos,
-        lch,
+        value,
         showP3,
         showRec2020,
         p3,
@@ -76,7 +72,7 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
         height,
         workers,
         xPos,
-        lch,
+        value,
         showP3,
         showRec2020,
         p3,
@@ -85,16 +81,14 @@ onmessage = (e: MessageEvent<PaintMessageData>) => {
     }
   })
 
-  send(
-    {
-      renderType,
-      renderTime,
-      pixelsBuffer: pixels.data.buffer,
-      pixelsWidth: pixels.width,
-      pixelsHeight: pixels.height,
-      workers,
-      xPos
-    },
-    [pixels.data.buffer]
-  )
+  let message: PaintedMessageData = {
+    renderType,
+    renderTime,
+    pixelsBuffer: pixels.data.buffer,
+    pixelsWidth: pixels.width,
+    pixelsHeight: pixels.height,
+    workers,
+    xPos
+  }
+  postMessage(message, [pixels.data.buffer])
 }

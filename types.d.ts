@@ -4,7 +4,10 @@ interface HTMLCanvasElement {
 }
 
 interface Worker extends EventTarget, AbstractWorker {
-  postMessage(message: object, transfer: Transferable[]): void
+  postMessage(
+    message: object,
+    transfer: (Transferable | HTMLCanvasElement)[]
+  ): void
 }
 
 declare function postMessage(message: object, transfer?: Transferable[]): void
@@ -120,16 +123,7 @@ declare module 'culori/fn' {
   export function formatRgb(c: Color): string
   export function formatRgb(c: string): string | undefined
 
-  export type Color =
-    | Hsl
-    | Lab
-    | Lch
-    | Oklab
-    | Oklch
-    | Xyz65
-    | P3
-    | Rec2020
-    | Rgb
+  export type Color = Hsl | Lab | Lch | Oklab | Oklch | Xyz65 | P3 | Rec2020 | Rgb
   type Mode = Color['mode']
 
   export function clampChroma<C extends Color>(
