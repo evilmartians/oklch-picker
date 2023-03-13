@@ -10,6 +10,8 @@ interface Worker extends EventTarget, AbstractWorker {
   ): void
 }
 
+declare function postMessage(message: object, transfer?: Transferable[]): void
+
 declare class ViteWorker extends Worker {
   constructor()
 }

@@ -1,12 +1,12 @@
-import { clampChroma, Color } from 'culori/fn'
 import { map } from 'nanostores'
+import { clampChroma, Color } from 'culori/fn'
 
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
+import { setFrameStart, resetFreeze, reportFreeze } from './benchmark.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
-import { reportFreeze, resetCollecting } from './benchmark.js'
-import { benchmarking } from './url.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
+import { benchmarking } from './url.js'
 
 export interface LchValue {
   l: number
@@ -38,8 +38,6 @@ function parseHash(): LchValue | undefined {
 
 export let current = map<LchValue>(parseHash() || randomColor())
 
-let full = { l: false, c: false, h: false }
-
 current.subscribe(
   debounce(100, () => {
     let { l, c, h, a } = current.get()
@@ -56,11 +54,11 @@ window.addEventListener('hashchange', () => {
 })
 
 interface ComponentCallback {
-  (value: number, isFull: boolean): void
+  (value: number, framesToChange: number): void
 }
 
 interface LchCallback {
-  (value: LchValue, isFull: boolean): void
+  (value: LchValue): void
 }
 
 interface LchCallbacks {
@@ -77,64 +75,55 @@ interface LchCallbacks {
 let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
-let delayFullRepaint = debounce(100, (prev: PrevCurrentValue) => {
-  if (!full.l || !full.c || !full.h) {
-    runListeners(changeListeners, prev)
-  }
-})
-
-function runListeners(
-  list: LchCallbacks[],
-  prev: PrevCurrentValue,
-  isFull = true
-): void {
+function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
   let start = Date.now()
+  setFrameStart(start)
 
+  let framesToChange = 0
   let value = current.get()
   let lChanged = prev.l !== value.l
   let cChanged = prev.c !== value.c
   let hChanged = prev.h !== value.h
 
-  if (isFull) {
-    if (!full.l) lChanged = true
-    if (!full.c) cChanged = true
-    if (!full.h) hChanged = true
-    full = { l: true, c: true, h: true }
+  if (lChanged && cChanged && hChanged) {
+    framesToChange = 3
+  } else if (
+    (lChanged && cChanged) ||
+    (cChanged && hChanged) ||
+    (hChanged && lChanged)
+  ) {
+    framesToChange = 2
   } else {
-    if (lChanged) full.l = false
-    if (cChanged) full.c = false
-    if (hChanged) full.h = false
+    framesToChange = 1
   }
 
   for (let i of list) {
     if (i.l && lChanged) {
-      i.l(value.l, isFull)
+      i.l(value.l, framesToChange)
     }
     if (i.c && cChanged) {
-      i.c(value.c, isFull)
+      i.c(value.c, framesToChange)
     }
     if (i.h && hChanged) {
-      i.h(value.h, isFull)
+      i.h(value.h, framesToChange)
     }
     if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a, isFull)
+      i.alpha(value.a, 0)
     }
 
     if (i.lc && (lChanged || cChanged)) {
-      i.lc(value, isFull)
+      i.lc(value)
     }
     if (i.ch && (cChanged || hChanged)) {
-      i.ch(value, isFull)
+      i.ch(value)
     }
     if (i.lh && (lChanged || hChanged)) {
-      i.lh(value, isFull)
+      i.lh(value)
     }
     if (i.lch && (lChanged || cChanged || hChanged)) {
-      i.lch(value, isFull)
+      i.lch(value)
     }
   }
-
-  if (!isFull) delayFullRepaint(prev)
 
   reportFreeze(Date.now() - start)
 }
@@ -149,8 +138,8 @@ setTimeout(() => {
   prev = current.get()
 
   current.listen(value => {
-    resetCollecting()
-    runListeners(changeListeners, prev, false)
+    resetFreeze()
+    runListeners(changeListeners, prev)
     prev = value
   })
 }, 1)
