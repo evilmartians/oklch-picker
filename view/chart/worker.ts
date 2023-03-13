@@ -1,7 +1,7 @@
 import type { RenderType } from '../../stores/benchmark'
 
 import { paintCH, paintCL, paintLH } from './paint'
-import { trackTime } from '../../lib/paint'
+import { trackTime } from '../../lib/time'
 
 export type PaintMessageData = {
   renderType: RenderType

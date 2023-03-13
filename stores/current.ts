@@ -1,8 +1,8 @@
 import { atom, map } from 'nanostores'
-import { setStart, resetFreeze, reportFreeze } from './benchmark.js'
 import { clampChroma, Color } from 'culori/fn'
 
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
+import { setStart, resetFreeze, reportFreeze } from './benchmark.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'

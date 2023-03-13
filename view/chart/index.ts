@@ -224,15 +224,13 @@ function send(worker: Worker, message: PaintMessageData): void {
 
 function loadWorkers(
   availableWorkers: number,
+  renderType: RenderType,
   canvas: HTMLCanvasElement,
   lch: number
 ): void {
   let [p3, rec2020] = getBorders()
 
   for (let i = 0; i < availableWorkers; i++) {
-    let renderType: RenderType =
-      canvas === canvasL ? 'l' : canvas === canvasC ? 'c' : 'h'
-
     send(unbusyWorkers[0], {
       renderType,
       width: canvas.width,
@@ -261,7 +259,7 @@ function initCharts(): void {
       let availableWorkers = Math.floor(totalWorkers / framesToChange.get())
 
       if (unbusyWorkers.length >= availableWorkers) {
-        loadWorkers(availableWorkers, canvasL, (L_MAX * l) / 100)
+        loadWorkers(availableWorkers, 'l', canvasL, (L_MAX * l) / 100)
       }
     },
     c(c) {
@@ -269,7 +267,7 @@ function initCharts(): void {
       let availableWorkers = Math.ceil(totalWorkers / framesToChange.get())
 
       if (unbusyWorkers.length >= availableWorkers) {
-        loadWorkers(availableWorkers, canvasC, c)
+        loadWorkers(availableWorkers, 'c', canvasC, c)
       }
     },
     h(h) {
@@ -277,7 +275,7 @@ function initCharts(): void {
       let availableWorkers = Math.floor(totalWorkers / framesToChange.get())
 
       if (unbusyWorkers.length >= availableWorkers) {
-        loadWorkers(availableWorkers, canvasH, h)
+        loadWorkers(availableWorkers, 'h', canvasH, h)
       }
     }
   })

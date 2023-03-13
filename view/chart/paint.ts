@@ -17,6 +17,10 @@ function paintSeparator(
   color: string,
   line: [number, number][] | undefined
 ): void {
+  let colorArr = color
+    .substring(color.indexOf('(') + 1, color.indexOf(')'))
+    .split(',')
+
   if (!line) return
   if (line.length > 0) {
     let prevY = line[0][1]!
@@ -26,7 +30,7 @@ function paintSeparator(
         prevY = line[0][1]!
       }
       if (Math.abs(prevY - y) < 10) {
-        paintSeparatorPixel(pixels, x, y, color)
+        paintSeparatorPixel(pixels, x, y, colorArr)
       }
       prevX = x
       prevY = y
