@@ -1,7 +1,7 @@
 import {
+  Float32BufferAttribute,
   MeshBasicMaterial,
   PerspectiveCamera,
-  BufferAttribute,
   BufferGeometry,
   PlaneGeometry,
   WebGLRenderer,
@@ -88,8 +88,7 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
 
   let [coordinates, colors] = getModelData(mode)
   let geometry = new BufferGeometry().setFromPoints(coordinates)
-  let color = new Float32Array(colors)
-  geometry.setAttribute('color', new BufferAttribute(color, 3))
+  geometry.setAttribute('color', new Float32BufferAttribute(colors, 3))
   geometry.center()
 
   let indexDel = Delaunator.from(coordinates.map(c => [c.x, c.z]))
@@ -111,8 +110,7 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
     planeColor.push(0, 0, 0)
     planeColor.push(1, 1, 1)
   }
-  let planeColor32 = new Float32Array(planeColor)
-  plane.setAttribute('color', new BufferAttribute(planeColor32, 3))
+  plane.setAttribute('color', new Float32BufferAttribute(planeColor, 3))
 
   if ('array' in plane.attributes.position) {
     let position = Array.from(plane.attributes.position.array)
@@ -120,8 +118,7 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
     position[4] = 0.5
     position[7] = -0.5
     position[10] = -0.5
-    let position32 = new Float32Array(position)
-    plane.setAttribute('position', new BufferAttribute(position32, 3))
+    plane.setAttribute('position', new Float32BufferAttribute(position, 3))
   }
   plane.translate(0, 0, -0.2)
   let planeMat = new MeshBasicMaterial({
