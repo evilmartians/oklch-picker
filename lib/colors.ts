@@ -102,12 +102,15 @@ support.subscribe(value => {
 })
 
 export function parse(value: string): Color | undefined {
-  value = value.trim()
-  value = value.replace(/\s*;$/, '')
+  return originParse(value.trim())
+}
+
+export function parseAnything(value: string): Color | undefined {
+  value = value.replace(/\s*;\s*$/, '')
   if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(value)) {
     value = value.replace(/^[\w-]+:\s*/, '')
   }
-  return originParse(value)
+  return parse(value)
 }
 
 export function toRgb(color: Color): Rgb {
