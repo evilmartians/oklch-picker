@@ -7,3 +7,11 @@ export function toggleVisibility(element: HTMLElement, shown: boolean): void {
     element.setAttribute('inert', '')
   }
 }
+
+export function getBorders(): [string, string] {
+  let styles = window.getComputedStyle(document.body)
+  return [
+    styles.getPropertyValue('--border-p3') || '#fff',
+    styles.getPropertyValue('--border-rec2020') || '#fff'
+  ]
+}
