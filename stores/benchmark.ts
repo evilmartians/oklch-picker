@@ -53,11 +53,13 @@ export function reportFreeze(cb: () => void): void {
 
 const BEST_HUE = 150
 const WORST_HUE = 40
-const MAX_TIME = 300
+const MAX_FREEZE = 30
+const MAX_PAINT = 1000
 
 export function getLastBenchmarkColor(): string {
-  let { freezeSum } = lastBenchmark.get()
-  let hue = BEST_HUE - ((BEST_HUE - WORST_HUE) * freezeSum) / MAX_TIME
+  let { freezeSum, paint } = lastBenchmark.get()
+  let worstRate = Math.max(freezeSum / MAX_FREEZE, paint / MAX_PAINT)
+  let hue = BEST_HUE - (BEST_HUE - WORST_HUE) * worstRate
   if (hue < WORST_HUE) hue = WORST_HUE
   let oklch: Oklch = { mode: 'oklch', l: 0.57, c: 0.11, h: hue }
   return formatHex(oklch)
