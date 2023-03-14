@@ -36,7 +36,6 @@ function separate(
 }
 
 function paint(
-  width: number,
   height: number,
   from: number,
   to: number,
@@ -129,7 +128,6 @@ export function paintCL(
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
   return paint(
-    width,
     height,
     from,
     to,
@@ -158,7 +156,6 @@ export function paintCH(
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
   return paint(
-    width,
     height,
     from,
     to,
@@ -187,7 +184,6 @@ export function paintLH(
   let lFactor = L_MAX / height
 
   return paint(
-    width,
     height,
     from,
     to,
