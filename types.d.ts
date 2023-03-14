@@ -1,23 +1,12 @@
-interface HTMLCanvasElement {
-  // @ts-expect-error Some browsers doesn’t have OffscreenCanvas support
-  transferControlToOffscreen?: () => OffscreenCanvas
-}
-
-interface Worker extends EventTarget, AbstractWorker {
-  postMessage(
-    message: object,
-    transfer: (Transferable | HTMLCanvasElement)[]
-  ): void
-}
-
 declare function postMessage(message: object, transfer?: Transferable[]): void
 
-declare class ViteWorker extends Worker {
-  constructor()
+interface ViteWorker extends Worker {
+  new (): ViteWorker
 }
 
 declare module '*?worker' {
-  export default ViteWorker
+  let worker: ViteWorker
+  export default worker
 }
 
 declare const COLOR_FN: 'oklch' | 'lch'
@@ -123,7 +112,16 @@ declare module 'culori/fn' {
   export function formatRgb(c: Color): string
   export function formatRgb(c: string): string | undefined
 
-  export type Color = Hsl | Lab | Lch | Oklab | Oklch | Xyz65 | P3 | Rec2020 | Rgb
+  export type Color =
+    | Hsl
+    | Lab
+    | Lch
+    | Oklab
+    | Oklch
+    | Xyz65
+    | P3
+    | Rec2020
+    | Rgb
   type Mode = Color['mode']
 
   export function clampChroma<C extends Color>(

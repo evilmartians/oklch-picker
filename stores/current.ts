@@ -1,12 +1,12 @@
-import { map } from 'nanostores'
 import { clampChroma, Color } from 'culori/fn'
+import { map } from 'nanostores'
 
 import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
-import { setFrameStart, resetFreeze, reportFreeze } from './benchmark.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
+import { startPainting, reportFreeze } from './benchmark.js'
+import { benchmarking } from './url.js'
 import { debounce } from '../lib/time.js'
 import { support } from './support.js'
-import { benchmarking } from './url.js'
 
 export interface LchValue {
   l: number
@@ -54,7 +54,7 @@ window.addEventListener('hashchange', () => {
 })
 
 interface ComponentCallback {
-  (value: number, framesToChange: number): void
+  (value: number, chartsToChange: number): void
 }
 
 interface LchCallback {
@@ -76,56 +76,54 @@ let changeListeners: LchCallbacks[] = []
 let paintListeners: LchCallbacks[] = []
 
 function runListeners(list: LchCallbacks[], prev: PrevCurrentValue): void {
-  let start = Date.now()
-  setFrameStart(start)
+  startPainting()
+  reportFreeze(() => {
+    let chartsToChange = 0
+    let value = current.get()
+    let lChanged = prev.l !== value.l
+    let cChanged = prev.c !== value.c
+    let hChanged = prev.h !== value.h
 
-  let framesToChange = 0
-  let value = current.get()
-  let lChanged = prev.l !== value.l
-  let cChanged = prev.c !== value.c
-  let hChanged = prev.h !== value.h
-
-  if (lChanged && cChanged && hChanged) {
-    framesToChange = 3
-  } else if (
-    (lChanged && cChanged) ||
-    (cChanged && hChanged) ||
-    (hChanged && lChanged)
-  ) {
-    framesToChange = 2
-  } else {
-    framesToChange = 1
-  }
-
-  for (let i of list) {
-    if (i.l && lChanged) {
-      i.l(value.l, framesToChange)
-    }
-    if (i.c && cChanged) {
-      i.c(value.c, framesToChange)
-    }
-    if (i.h && hChanged) {
-      i.h(value.h, framesToChange)
-    }
-    if (i.alpha && prev.a !== value.a) {
-      i.alpha(value.a, 0)
+    if (lChanged && cChanged && hChanged) {
+      chartsToChange = 3
+    } else if (
+      (lChanged && cChanged) ||
+      (cChanged && hChanged) ||
+      (hChanged && lChanged)
+    ) {
+      chartsToChange = 2
+    } else {
+      chartsToChange = 1
     }
 
-    if (i.lc && (lChanged || cChanged)) {
-      i.lc(value)
-    }
-    if (i.ch && (cChanged || hChanged)) {
-      i.ch(value)
-    }
-    if (i.lh && (lChanged || hChanged)) {
-      i.lh(value)
-    }
-    if (i.lch && (lChanged || cChanged || hChanged)) {
-      i.lch(value)
-    }
-  }
+    for (let i of list) {
+      if (i.l && lChanged) {
+        i.l(value.l, chartsToChange)
+      }
+      if (i.c && cChanged) {
+        i.c(value.c, chartsToChange)
+      }
+      if (i.h && hChanged) {
+        i.h(value.h, chartsToChange)
+      }
+      if (i.alpha && prev.a !== value.a) {
+        i.alpha(value.a, 0)
+      }
 
-  reportFreeze(Date.now() - start)
+      if (i.lc && (lChanged || cChanged)) {
+        i.lc(value)
+      }
+      if (i.ch && (cChanged || hChanged)) {
+        i.ch(value)
+      }
+      if (i.lh && (lChanged || hChanged)) {
+        i.lh(value)
+      }
+      if (i.lch && (lChanged || cChanged || hChanged)) {
+        i.lch(value)
+      }
+    }
+  })
 }
 
 export function onCurrentChange(callbacks: LchCallbacks): void {
@@ -138,7 +136,6 @@ setTimeout(() => {
   prev = current.get()
 
   current.listen(value => {
-    resetFreeze()
     runListeners(changeListeners, prev)
     prev = value
   })

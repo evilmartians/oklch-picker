@@ -11,9 +11,3 @@ export function debounce<Args extends any[]>(
     }, wait)
   }
 }
-
-export function trackTime(cb: () => void): number {
-  let start = Date.now()
-  cb()
-  return Date.now() - start
-}

@@ -11,7 +11,7 @@ export function getCleanCtx(
 }
 
 export function initCanvasSize(canvas: HTMLCanvasElement): [number, number] {
-  let pixelRation = window.devicePixelRatio
+  let pixelRation = Math.ceil(window.devicePixelRatio)
   let canvasSize = canvas.getBoundingClientRect()
   let width = canvasSize.width * pixelRation
   let height = canvasSize.height * pixelRation

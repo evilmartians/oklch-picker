@@ -3,24 +3,17 @@ import {
   GetColor,
   Pixel,
   Space,
-  build
+  build,
+  Rgb
 } from '../../lib/colors.js'
-import {
-  generateGetSeparator,
-  paintPixel,
-  paintSeparatorPixel
-} from '../../lib/paint.js'
+import { generateGetSeparator, paintPixel } from '../../lib/paint.js'
 import { support } from '../../stores/support.js'
 
-function paintSeparator(
+function separate(
   pixels: ImageData,
-  color: string,
+  color: Rgb,
   line: [number, number][] | undefined
 ): void {
-  let colorArr = color
-    .substring(color.indexOf('(') + 1, color.indexOf(')'))
-    .split(',')
-
   if (!line) return
   if (line.length > 0) {
     let prevY = line[0][1]!
@@ -30,7 +23,11 @@ function paintSeparator(
         prevY = line[0][1]!
       }
       if (Math.abs(prevY - y) < 10) {
-        paintSeparatorPixel(pixels, x, y, colorArr)
+        let pos = 4 * (y * pixels.width + x)
+        pixels.data[pos] = Math.round(color.r * 255)
+        pixels.data[pos + 1] = Math.round(color.g * 255)
+        pixels.data[pos + 2] = Math.round(color.b * 255)
+        pixels.data[pos + 3] = Math.round((color.alpha ?? 1) * 255)
       }
       prevX = x
       prevY = y
@@ -41,14 +38,14 @@ function paintSeparator(
 function paint(
   width: number,
   height: number,
-  workers: number,
-  xPos: number,
+  from: number,
+  to: number,
   hasGaps: boolean,
   block: number,
   showP3: boolean,
   showRec2020: boolean,
-  p3: string,
-  rec2020: string,
+  borderP3: Rgb,
+  borderRec2020: Rgb,
   getColor: GetColor
 ): ImageData {
   let getPixel = generateGetPixel(
@@ -60,13 +57,13 @@ function paint(
   let getSeparator = generateGetSeparator()
   let maxGap = 0.3 * height
 
-  let pixels = new ImageData(width, height)
-  for (let x = xPos; x <= Math.floor(width / workers) + xPos; x += 1) {
+  let pixels = new ImageData(to - from + 1, height)
+  for (let x = 0; x <= to - from; x += 1) {
     let nextPixel: Pixel
-    let pixel = getPixel(x, 0)
+    let pixel = getPixel(from + x, 0)
     let prevPixel = pixel
     for (let y = 0; y <= height; y += block) {
-      nextPixel = getPixel(x, y + block)
+      nextPixel = getPixel(from + x, y + block)
 
       if (nextPixel[0] !== pixel[0]) {
         if (pixel[0] !== Space.Out) {
@@ -75,7 +72,7 @@ function paint(
 
         let prevIPixel = pixel
         for (let i = 1; i <= block; i++) {
-          let iPixel = getPixel(x, y + i)
+          let iPixel = getPixel(from + x, y + i)
           if (iPixel[0] !== prevIPixel[0]) {
             getSeparator(prevIPixel[0], iPixel[0]).push([x, height - y - i])
           }
@@ -102,16 +99,16 @@ function paint(
   }
 
   if (showP3 && showRec2020) {
-    paintSeparator(pixels, p3, getSeparator(Space.sRGB, Space.P3))
-    paintSeparator(pixels, p3, getSeparator(Space.P3, Space.sRGB))
-    paintSeparator(pixels, rec2020, getSeparator(Space.P3, Space.Rec2020))
-    paintSeparator(pixels, rec2020, getSeparator(Space.Rec2020, Space.P3))
+    separate(pixels, borderP3, getSeparator(Space.sRGB, Space.P3))
+    separate(pixels, borderP3, getSeparator(Space.P3, Space.sRGB))
+    separate(pixels, borderRec2020, getSeparator(Space.P3, Space.Rec2020))
+    separate(pixels, borderRec2020, getSeparator(Space.Rec2020, Space.P3))
   } else if (!showRec2020 && showP3) {
-    paintSeparator(pixels, p3, getSeparator(Space.sRGB, Space.P3))
-    paintSeparator(pixels, p3, getSeparator(Space.P3, Space.sRGB))
+    separate(pixels, borderP3, getSeparator(Space.sRGB, Space.P3))
+    separate(pixels, borderP3, getSeparator(Space.P3, Space.sRGB))
   } else if (showRec2020 && !showP3) {
-    paintSeparator(pixels, rec2020, getSeparator(Space.sRGB, Space.Rec2020))
-    paintSeparator(pixels, rec2020, getSeparator(Space.Rec2020, Space.sRGB))
+    separate(pixels, borderRec2020, getSeparator(Space.sRGB, Space.Rec2020))
+    separate(pixels, borderRec2020, getSeparator(Space.Rec2020, Space.sRGB))
   }
 
   return pixels
@@ -120,13 +117,13 @@ function paint(
 export function paintCL(
   width: number,
   height: number,
-  workers: number,
-  xPos: number,
+  from: number,
+  to: number,
   h: number,
   showP3: boolean,
   showRec2020: boolean,
-  p3: string,
-  rec2020: string
+  borderP3: Rgb,
+  borderRec2020: Rgb
 ): ImageData {
   let lFactor = L_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
@@ -134,30 +131,28 @@ export function paintCL(
   return paint(
     width,
     height,
-    workers,
-    xPos,
+    from,
+    to,
     false,
     6,
     showP3,
     showRec2020,
-    p3,
-    rec2020,
-    (x, y) => {
-      return build(x * lFactor, y * cFactor, h)
-    }
+    borderP3,
+    borderRec2020,
+    (x, y) => build(x * lFactor, y * cFactor, h)
   )
 }
 
 export function paintCH(
   width: number,
   height: number,
-  workers: number,
-  xPos: number,
+  from: number,
+  to: number,
   l: number,
   showP3: boolean,
   showRec2020: boolean,
-  p3: string,
-  rec2020: string
+  borderP3: Rgb,
+  borderRec2020: Rgb
 ): ImageData {
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
@@ -165,30 +160,28 @@ export function paintCH(
   return paint(
     width,
     height,
-    workers,
-    xPos,
+    from,
+    to,
     false,
     6,
     showP3,
     showRec2020,
-    p3,
-    rec2020,
-    (x, y) => {
-      return build(l, y * cFactor, x * hFactor)
-    }
+    borderP3,
+    borderRec2020,
+    (x, y) => build(l, y * cFactor, x * hFactor)
   )
 }
 
 export function paintLH(
   width: number,
   height: number,
-  workers: number,
-  xPos: number,
+  from: number,
+  to: number,
   c: number,
   showP3: boolean,
   showRec2020: boolean,
-  p3: string,
-  rec2020: string
+  borderP3: Rgb,
+  borderRec2020: Rgb
 ): ImageData {
   let hFactor = H_MAX / width
   let lFactor = L_MAX / height
@@ -196,16 +189,14 @@ export function paintLH(
   return paint(
     width,
     height,
-    workers,
-    xPos,
+    from,
+    to,
     true,
     2,
     showP3,
     showRec2020,
-    p3,
-    rec2020,
-    (x, y) => {
-      return build(y * lFactor, c, x * hFactor)
-    }
+    borderP3,
+    borderRec2020,
+    (x, y) => build(y * lFactor, c, x * hFactor)
   )
 }

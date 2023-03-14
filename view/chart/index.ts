@@ -1,15 +1,12 @@
-import type { PaintMessageData, PaintedMessageData } from './worker.js'
+import type { PaintData, PaintedData } from './worker.js'
 
-import {
-  RenderType,
-  reportFrame,
-  reportFreeze,
-  reportFull
-} from '../../stores/benchmark.js'
-import { setCurrentComponents, onPaint } from '../../stores/current.js'
-import { getBorders } from '../../lib/paint.js'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
+import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
+import { reportFreeze, reportPaint } from '../../stores/benchmark.js'
+import { prepareWorkers } from '../../lib/workers.js'
+import { parse, rgb } from '../../lib/colors.js'
+import { getBorders } from '../../lib/paint.js'
 import PaintWorker from './worker.js?worker'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
@@ -87,151 +84,60 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
-let unbusyWorkers: Worker[] = []
-let busyWorkers: Worker[] = []
+let startWork = prepareWorkers<PaintData, PaintedData>(PaintWorker)
 
-let totalWorkers = navigator.hardwareConcurrency
-
-for (let i = 0; i < totalWorkers; i++) {
-  unbusyWorkers = [...unbusyWorkers, init()]
-}
-
-let pixelsL: PaintedMessageData[] = []
-let pixelsC: PaintedMessageData[] = []
-let pixelsH: PaintedMessageData[] = []
-
-let renderTimeL = 0
-let renderTimeC = 0
-let renderTimeH = 0
-
-function init(): Worker {
-  let worker = new PaintWorker()
-  worker.onmessage = (e: MessageEvent<PaintedMessageData>) => {
-    let start = Date.now()
-
-    let [unbusyWorker] = busyWorkers.splice(busyWorkers.indexOf(worker), 1)
-    unbusyWorkers = [...unbusyWorkers, unbusyWorker]
-
-    if (e.data.renderType === 'l') {
-      if (pixelsL.length < e.data.workers - 1) {
-        pixelsL = [...pixelsL, e.data]
-        renderTimeL += e.data.renderTime
-      } else {
-        let ctx = getCleanCtx(canvasL)
-
-        ;[...pixelsL, e.data].forEach(pixels => {
-          ctx.putImageData(
-            new ImageData(
-              new Uint8ClampedArray(pixels.pixelsBuffer),
-              pixels.pixelsWidth,
-              pixels.pixelsHeight
-            ),
-            0,
-            0,
-            pixels.xPos,
-            0,
-            pixels.pixelsWidth / e.data.workers,
-            pixels.pixelsHeight
-          )
-        })
-
-        reportFull(Date.now())
-        reportFrame(renderTimeL + e.data.renderTime)
-
-        pixelsL = []
-        renderTimeL = 0
-      }
-    } else if (e.data.renderType === 'c') {
-      if (pixelsC.length < e.data.workers - 1) {
-        pixelsC = [...pixelsC, e.data]
-        renderTimeC += e.data.renderTime
-      } else {
-        let ctx = getCleanCtx(canvasC)
-
-        ;[...pixelsC, e.data].forEach(pixels => {
-          ctx.putImageData(
-            new ImageData(
-              new Uint8ClampedArray(pixels.pixelsBuffer),
-              pixels.pixelsWidth,
-              pixels.pixelsHeight
-            ),
-            0,
-            0,
-            pixels.xPos,
-            0,
-            pixels.pixelsWidth / e.data.workers,
-            pixels.pixelsHeight
-          )
-        })
-
-        reportFull(Date.now())
-        reportFrame(renderTimeC + e.data.renderTime)
-
-        pixelsC = []
-        renderTimeC = 0
-      }
-    } else if (pixelsH.length < e.data.workers - 1) {
-      pixelsH = [...pixelsH, e.data]
-      renderTimeH += e.data.renderTime
-    } else {
-      let ctx = getCleanCtx(canvasH)
-
-      ;[...pixelsH, e.data].forEach(pixels => {
-        ctx.putImageData(
-          new ImageData(
-            new Uint8ClampedArray(pixels.pixelsBuffer),
-            pixels.pixelsWidth,
-            pixels.pixelsHeight
-          ),
-          0,
-          0,
-          pixels.xPos,
-          0,
-          pixels.pixelsWidth / e.data.workers,
-          pixels.pixelsHeight
-        )
-      })
-
-      reportFull(Date.now())
-      reportFrame(renderTimeH + e.data.renderTime)
-
-      pixelsH = []
-      renderTimeH = 0
-    }
-
-    reportFreeze(Date.now() - start)
-  }
-  return worker
-}
-
-function send(worker: Worker, message: PaintMessageData): void {
-  worker.postMessage(message)
-}
-
-function loadWorkers(
-  availableWorkers: number,
-  renderType: RenderType,
+function startWorkForComponent(
   canvas: HTMLCanvasElement,
-  value: number
+  type: 'l' | 'c' | 'h',
+  value: number,
+  chartsToChange: number
 ): void {
-  let [p3, rec2020] = getBorders()
+  let [cssP3, cssRec2020] = getBorders()
+  let borderP3 = rgb(parse(cssP3)!)
+  let borderRec2020 = rgb(parse(cssRec2020)!)
 
-  for (let i = 0; i < availableWorkers; i++) {
-    send(unbusyWorkers[0], {
-      renderType,
-      width: canvas.width,
-      height: canvas.height,
-      workers: availableWorkers,
-      xPos: i * Math.floor(canvas.width / availableWorkers),
-      value,
-      showP3: showP3.get(),
-      showRec2020: showRec2020.get(),
-      p3,
-      rec2020
-    })
-
-    busyWorkers = [...busyWorkers, ...unbusyWorkers.splice(0, 1)]
-  }
+  let parts: [ImageData, number][] = []
+  startWork(
+    type,
+    chartsToChange,
+    messages =>
+      messages.map((_, i) => {
+        let step = Math.ceil(canvas.width / messages.length)
+        return {
+          type,
+          width: canvas.width,
+          height: canvas.height,
+          from: step * i + i,
+          to: Math.min(step * (i + 1) + i, canvas.width),
+          value,
+          showP3: showP3.get(),
+          showRec2020: showRec2020.get(),
+          borderP3,
+          borderRec2020
+        }
+      }),
+    result => {
+      reportFreeze(() => {
+        parts.push([
+          new ImageData(
+            new Uint8ClampedArray(result.pixels),
+            result.width,
+            canvas.height
+          ),
+          result.from
+        ])
+      })
+      reportPaint(result.time)
+    },
+      () => {
+        reportFreeze(() => {
+          let ctx = getCleanCtx(canvas)
+          for (let [image, from] of parts) {
+            ctx.putImageData(image, from, 0)
+          }
+        })
+      }
+  )
 }
 
 function initCharts(): void {
@@ -240,29 +146,17 @@ function initCharts(): void {
   initCanvasSize(canvasH)
 
   onPaint({
-    l(l, framesToChange) {
+    l(l, chartsToChange) {
       if (!showCharts.get()) return
-      let availableWorkers = Math.floor(totalWorkers / framesToChange)
-
-      if (unbusyWorkers.length >= availableWorkers) {
-        loadWorkers(availableWorkers, 'l', canvasL, (L_MAX * l) / 100)
-      }
+      startWorkForComponent(canvasL, 'l', (L_MAX * l) / 100, chartsToChange)
     },
-    c(c, framesToChange) {
+    c(c, chartsToChange) {
       if (!showCharts.get()) return
-      let availableWorkers = Math.ceil(totalWorkers / framesToChange)
-
-      if (unbusyWorkers.length >= availableWorkers) {
-        loadWorkers(availableWorkers, 'c', canvasC, c)
-      }
+      startWorkForComponent(canvasC, 'c', c, chartsToChange)
     },
-    h(h, framesToChange) {
+    h(h, chartsToChange) {
       if (!showCharts.get()) return
-      let availableWorkers = Math.floor(totalWorkers / framesToChange)
-
-      if (unbusyWorkers.length >= availableWorkers) {
-        loadWorkers(availableWorkers, 'h', canvasH, h)
-      }
+      startWorkForComponent(canvasH, 'h', h, chartsToChange)
     }
   })
 }
