@@ -5,8 +5,8 @@ export type Separators = Partial<Record<`${Space}${Space}`, [number, number][]>>
 export function getBorders(): [string, string] {
   let styles = window.getComputedStyle(document.body)
   return [
-    styles.getPropertyValue('--border-p3'),
-    styles.getPropertyValue('--border-rec2020')
+    styles.getPropertyValue('--border-p3') || '#fff',
+    styles.getPropertyValue('--border-rec2020') || '#fff'
   ]
 }
 
