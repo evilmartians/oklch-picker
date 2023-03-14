@@ -5,7 +5,7 @@ import {
 } from '../../stores/current.js'
 import { formats, FormatsValue, srgbFormats } from '../../stores/formats.js'
 import { outputFormat, OutputFormats } from '../../stores/settings.js'
-import { parse, formatLch } from '../../lib/colors.js'
+import { parseAnything, formatLch } from '../../lib/colors.js'
 import { visible } from '../../stores/visible.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
@@ -75,7 +75,7 @@ function listenChanges(input: HTMLInputElement): void {
     if (newValue === prevValues.get(input)) return
     prevValues.set(input, newValue)
 
-    let parsed = parse(newValue)
+    let parsed = parseAnything(newValue)
     if (parsed) {
       setCurrentFromColor(parsed)
       toggle(input, false)
