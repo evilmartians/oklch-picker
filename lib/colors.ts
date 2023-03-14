@@ -102,6 +102,7 @@ support.subscribe(value => {
 })
 
 export function parse(value: string): Color | undefined {
+  value = value.trim()
   value = value.replace(/\s*;$/, '')
   if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(value)) {
     value = value.replace(/^[\w-]+:\s*/, '')
