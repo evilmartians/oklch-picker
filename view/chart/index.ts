@@ -86,8 +86,6 @@ initEvents(canvasH)
 
 let startWork = prepareWorkers<PaintData, PaintedData>(PaintWorker)
 
-const WHITE = { mode: 'rgb' as const, r: 1, g: 1, b: 1 }
-
 function startWorkForComponent(
   canvas: HTMLCanvasElement,
   type: 'l' | 'c' | 'h',
@@ -95,8 +93,8 @@ function startWorkForComponent(
   chartsToChange: number
 ): void {
   let [cssP3, cssRec2020] = getBorders()
-  let borderP3 = rgb(parse(cssP3) ?? WHITE)
-  let borderRec2020 = rgb(parse(cssRec2020) ?? WHITE)
+  let borderP3 = rgb(parse(cssP3)!)
+  let borderRec2020 = rgb(parse(cssRec2020)!)
 
   let parts: [ImageData, number][] = []
   startWork(
