@@ -3,46 +3,51 @@ import { map } from 'nanostores'
 
 import { benchmarking } from './url.js'
 
-export type RenderType = 'l' | 'c' | 'h'
-
 export let lastBenchmark = map({
-  freezeSum: 0,
   freezeMax: 0,
-  paint: 0,
-  workersSum: 0
+  freezeSum: 0,
+  workerMax: 0,
+  workerSum: 0,
+  paint: 0
 })
 
-let start = 0
+let paintStart = 0
 
-export function reportFrame(ms: number): void {
+export function startPainting(): void {
   if (benchmarking.get()) {
-    lastBenchmark.setKey('paint', ms)
+    lastBenchmark.set({
+      freezeMax: 0,
+      freezeSum: 0,
+      workerMax: 0,
+      workerSum: 0,
+      paint: 0
+    })
+    paintStart = Date.now()
   }
 }
 
-export function setFrameStart(time: number): void {
+export function reportPaint(ms: number): void {
   if (benchmarking.get()) {
-    start = time
-  }
-}
-
-export function reportFreeze(ms: number): void {
-  if (benchmarking.get()) {
-    lastBenchmark.setKey('freezeSum', lastBenchmark.get().freezeSum + ms)
-    if (ms > lastBenchmark.get().freezeMax) {
-      lastBenchmark.setKey('freezeMax', ms)
+    lastBenchmark.setKey('paint', Date.now() - paintStart)
+    lastBenchmark.setKey('workerSum', lastBenchmark.get().workerSum + ms)
+    if (ms > lastBenchmark.get().workerMax) {
+      lastBenchmark.setKey('workerMax', ms)
     }
   }
 }
 
-export function resetFreeze(): void {
-  lastBenchmark.setKey('freezeMax', 0)
-  lastBenchmark.setKey('freezeSum', 0)
-}
-
-export function reportFull(time: number): void {
+export function reportFreeze(cb: () => void): void {
   if (benchmarking.get()) {
-    lastBenchmark.setKey('workersSum', time - start)
+    let start = Date.now()
+    cb()
+    let ms = Date.now() - start
+
+    lastBenchmark.setKey('freezeSum', lastBenchmark.get().freezeSum + ms)
+    if (ms > lastBenchmark.get().freezeMax) {
+      lastBenchmark.setKey('freezeMax', ms)
+    }
+  } else {
+    cb()
   }
 }
 

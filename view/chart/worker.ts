@@ -1,94 +1,74 @@
-import type { RenderType } from '../../stores/benchmark.js'
+import type { Rgb } from '../../lib/colors.js'
 
 import { paintCH, paintCL, paintLH } from './paint.js'
-import { trackTime } from '../../lib/time.js'
 
-export type PaintMessageData = {
-  renderType: RenderType
+export type PaintData = {
+  type: 'l' | 'c' | 'h'
   width: number
   height: number
-  workers: number
-  xPos: number
+  from: number
+  to: number
   value: number
   showP3: boolean
   showRec2020: boolean
-  p3: string
-  rec2020: string
+  borderP3: Rgb
+  borderRec2020: Rgb
 }
 
-export type PaintedMessageData = {
-  renderType: RenderType
-  renderTime: number
-  pixelsBuffer: ArrayBufferLike
-  pixelsWidth: number
-  pixelsHeight: number
-  workers: number
-  xPos: number
+export type PaintedData = {
+  time: number
+  pixels: ArrayBuffer
+  width: number
+  from: number
 }
 
-onmessage = (e: MessageEvent<PaintMessageData>) => {
-  let {
-    renderType,
-    width,
-    height,
-    workers,
-    xPos,
-    value,
-    showP3,
-    showRec2020,
-    p3,
-    rec2020
-  } = e.data
+onmessage = (e: MessageEvent<PaintData>) => {
+  let start = Date.now()
 
-  let pixels!: ImageData
-  let renderTime = trackTime(() => {
-    if (renderType === 'l') {
-      pixels = paintCH(
-        width,
-        height,
-        workers,
-        xPos,
-        value,
-        showP3,
-        showRec2020,
-        p3,
-        rec2020
-      )
-    } else if (renderType === 'c') {
-      pixels = paintLH(
-        width,
-        height,
-        workers,
-        xPos,
-        value,
-        showP3,
-        showRec2020,
-        p3,
-        rec2020
-      )
-    } else {
-      pixels = paintCL(
-        width,
-        height,
-        workers,
-        xPos,
-        value,
-        showP3,
-        showRec2020,
-        p3,
-        rec2020
-      )
-    }
-  })
-
-  let message: PaintedMessageData = {
-    renderType,
-    renderTime,
-    pixelsBuffer: pixels.data.buffer,
-    pixelsWidth: pixels.width,
-    pixelsHeight: pixels.height,
-    workers,
-    xPos
+  let image: ImageData
+  if (e.data.type === 'l') {
+    image = paintCH(
+      e.data.width,
+      e.data.height,
+      e.data.from,
+      e.data.to,
+      e.data.value,
+      e.data.showP3,
+      e.data.showRec2020,
+      e.data.borderP3,
+      e.data.borderRec2020
+    )
+  } else if (e.data.type === 'c') {
+    image = paintLH(
+      e.data.width,
+      e.data.height,
+      e.data.from,
+      e.data.to,
+      e.data.value,
+      e.data.showP3,
+      e.data.showRec2020,
+      e.data.borderP3,
+      e.data.borderRec2020
+    )
+  } else {
+    image = paintCL(
+      e.data.width,
+      e.data.height,
+      e.data.from,
+      e.data.to,
+      e.data.value,
+      e.data.showP3,
+      e.data.showRec2020,
+      e.data.borderP3,
+      e.data.borderRec2020
+    )
   }
-  postMessage(message, [pixels.data.buffer])
+
+  let message: PaintedData = {
+    time: Date.now() - start,
+    pixels: image.data.buffer,
+    width: image.width,
+    from: e.data.from
+  }
+  postMessage(message, [image.data.buffer])
 }

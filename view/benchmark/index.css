@@ -18,11 +18,9 @@
   padding-top: 4px;
 }
 
-.benchmark_freeze,
-.benchmark_quick,
-.benchmark_full {
+.benchmark_value {
   display: inline-block;
-  min-width: 25px;
+  min-width: 37px;
   font-weight: 400;
   text-align: right;
 }

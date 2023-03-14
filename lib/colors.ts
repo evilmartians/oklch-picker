@@ -19,6 +19,8 @@ import {
 
 import { support } from '../stores/support.js'
 
+export type { Rgb } from 'culori/fn'
+
 export type AnyLch = Lch | Oklch
 export type AnyRgb = Rgb | P3 | Rec2020
 

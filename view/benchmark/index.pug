@@ -1,13 +1,16 @@
 .benchmark( aria-live="polite" aria-label="Benchmark" aria-hidden="true" )
   .benchmark_row
-    = "Freeze sum  "
-    strong.benchmark_freeze-sum
+    = "Freeze max "
+    strong.benchmark_value.is-freeze-max
   .benchmark_row
-    = "Freeze max  "
-    strong.benchmark_freeze-max
+    = "Freeze sum "
+    strong.benchmark_value.is-freeze-sum
   .benchmark_row
-    = "Paint       "
-    strong.benchmark_paint
+    = "Worker max "
+    strong.benchmark_value.is-worker-max
   .benchmark_row
-    = "Workers Sum "
-    strong.benchmark_workers-sum
+    = "Worker sum "
+    strong.benchmark_value.is-worker-sum
+  .benchmark_row
+    = "Paint      "
+    strong.benchmark_value.is-paint
