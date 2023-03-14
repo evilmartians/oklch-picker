@@ -6,7 +6,7 @@ import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { reportFreeze, reportPaint } from '../../stores/benchmark.js'
 import { prepareWorkers } from '../../lib/workers.js'
 import { parse, rgb } from '../../lib/colors.js'
-import { getBorders } from '../../lib/paint.js'
+import { getBorders } from '../../lib/dom.js'
 import PaintWorker from './worker.js?worker'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!

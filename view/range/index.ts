@@ -14,7 +14,7 @@ import {
 } from '../../lib/colors.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import { showRec2020, showP3 } from '../../stores/settings.js'
-import { getBorders } from '../../lib/paint.js'
+import { getBorders } from '../../lib/dom.js'
 import { visible } from '../../stores/visible.js'
 
 function initRange(

@@ -2,14 +2,6 @@ import type { Space, Pixel } from './colors.js'
 
 export type Separators = Partial<Record<`${Space}${Space}`, [number, number][]>>
 
-export function getBorders(): [string, string] {
-  let styles = window.getComputedStyle(document.body)
-  return [
-    styles.getPropertyValue('--border-p3') || '#fff',
-    styles.getPropertyValue('--border-rec2020') || '#fff'
-  ]
-}
-
 export interface GetSeparator {
   (prevSpace: Space, nextSpace: Space): [number, number][]
 }
