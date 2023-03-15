@@ -16,7 +16,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { oklch, lch, rgb, build, AnyRgb } from './colors.js'
-import { showP3, showRec2020 } from '../stores/settings.js'
+import { biggestRgb, RgbMode } from '../stores/settings.js'
 
 let addColor: (colors: number[], coordinates: Vector3[], rgb: AnyRgb) => void
 if (LCH) {
@@ -37,7 +37,7 @@ if (LCH) {
   }
 }
 
-function getModelData(mode: 'rgb' | 'rec2020' | 'p3'): [Vector3[], number[]] {
+function getModelData(mode: RgbMode): [Vector3[], number[]] {
   let coordinates: Vector3[] = []
   let colors: number[] = []
 
@@ -76,53 +76,42 @@ function getModelData(mode: 'rgb' | 'rec2020' | 'p3'): [Vector3[], number[]] {
   return [coordinates, colors]
 }
 
-function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
+function generateMesh(scene: Scene, mode: RgbMode): void {
   scene.clear()
 
-  let mode: 'rgb' | 'rec2020' | 'p3' = 'rgb'
-  if (rec2020) {
-    mode = 'rec2020'
-  } else if (p3) {
-    mode = 'p3'
-  }
-
   let [coordinates, colors] = getModelData(mode)
-  let geometry = new BufferGeometry().setFromPoints(coordinates)
-  geometry.setAttribute('color', new Float32BufferAttribute(colors, 3))
-  geometry.center()
+  let top = new BufferGeometry().setFromPoints(coordinates)
+  top.setAttribute('color', new Float32BufferAttribute(colors, 3))
+  top.center()
+  top.setIndex(
+    Array.from(Delaunator.from(coordinates.map(c => [c.x, c.z])).triangles)
+  )
+  top.computeVertexNormals()
+  let topMesh = new Mesh(top, new MeshBasicMaterial({ vertexColors: true }))
+  topMesh.translateY(0.3)
+  scene.add(topMesh)
 
-  let indexDel = Delaunator.from(coordinates.map(c => [c.x, c.z]))
-  let meshIndex = []
-  for (let i in indexDel.triangles) {
-    meshIndex.push(indexDel.triangles[i])
-  }
-  geometry.setIndex(meshIndex)
-  geometry.computeVertexNormals()
-
-  let material = new MeshBasicMaterial({ vertexColors: true })
-  let mesh = new Mesh(geometry, material)
-  mesh.translateY(0.3)
-  scene.add(mesh)
-
-  let basement = new PlaneGeometry(1, 1, 1, 5)
-  let basementColors = []
-  if ('array' in basement.attributes.position) {
-    let basementSteps = basement.attributes.position.array.length / 3
-    for (let i = 0; i <= basementSteps; i += 1) {
-      let rgbL = 1 - rgb(build((L_MAX * i) / basementSteps, 0, 0)).r
-      basementColors.push(rgbL, rgbL, rgbL)
+  let bottom = new PlaneGeometry(1, 1, 1, 5)
+  let bottomColors = []
+  if ('array' in bottom.attributes.position) {
+    let bottomSteps = bottom.attributes.position.array.length / 3
+    for (let i = 0; i <= bottomSteps; i += 1) {
+      let rgbL = 1 - rgb(build((L_MAX * i) / bottomSteps, 0, 0)).r
+      bottomColors.push(rgbL, rgbL, rgbL)
     }
   }
-  basement.setAttribute('color', new Float32BufferAttribute(basementColors, 3))
-  basement.translate(0, 0, -0.2)
-  let basementMat = new MeshBasicMaterial({
-    vertexColors: true,
-    side: DoubleSide
-  })
-  let basementMesh = new Mesh(basement, basementMat)
-  basementMesh.rotateX(-Math.PI * 0.5)
-  basementMesh.rotateZ(-Math.PI * 0.5)
-  scene.add(basementMesh)
+  bottom.setAttribute('color', new Float32BufferAttribute(bottomColors, 3))
+  bottom.translate(0, 0, -0.2)
+  let bottomMesh = new Mesh(
+    bottom,
+    new MeshBasicMaterial({
+      vertexColors: true,
+      side: DoubleSide
+    })
+  )
+  bottomMesh.rotateX(-Math.PI * 0.5)
+  bottomMesh.rotateZ(-Math.PI * 0.5)
+  scene.add(bottomMesh)
 }
 
 function initScene(
@@ -157,7 +146,7 @@ export function initCanvas(
   fullControl: boolean = false
 ): Camera {
   let [scene, camera, renderer, controls] = initScene(canvas, fullControl)
-  generateMesh(scene, showP3.get(), showRec2020.get())
+  generateMesh(scene, biggestRgb.get())
 
   function animate(): void {
     requestAnimationFrame(animate)
@@ -166,11 +155,8 @@ export function initCanvas(
   }
   animate()
 
-  showP3.listen(() => {
-    generateMesh(scene, showP3.get(), showRec2020.get())
-  })
-  showRec2020.listen(() => {
-    generateMesh(scene, showP3.get(), showRec2020.get())
+  biggestRgb.listen(() => {
+    generateMesh(scene, biggestRgb.get())
   })
 
   return camera
