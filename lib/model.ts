@@ -18,21 +18,21 @@ import Delaunator from 'delaunator'
 import { oklch, lch, rgb, build, AnyRgb } from './colors.js'
 import { biggestRgb, RgbMode } from '../stores/settings.js'
 
-let addColor: (colors: number[], coordinates: Vector3[], rgb: AnyRgb) => void
+let addColor: (colors: number[], coordinates: Vector3[], color: AnyRgb) => void
 if (LCH) {
-  addColor = (colors, coordinates, modelRgb) => {
-    let color = lch(modelRgb)
-    if (color.h) {
-      colors.push(modelRgb.r, modelRgb.g, modelRgb.b)
-      coordinates.push(new Vector3(color.l / 100, color.c / 250, color.h / 360))
+  addColor = (colors, coordinates, color) => {
+    let to = lch(color)
+    if (to.h) {
+      colors.push(color.r, color.g, color.b)
+      coordinates.push(new Vector3(to.l / 100, to.c / 250, to.h / 360))
     }
   }
 } else {
-  addColor = (colors, coordinates, modelRgb) => {
-    let color = oklch(modelRgb)
-    if (color.h) {
-      colors.push(modelRgb.r, modelRgb.g, modelRgb.b)
-      coordinates.push(new Vector3(color.l, color.c * 1.3, color.h / 360))
+  addColor = (colors, coordinates, color) => {
+    let to = oklch(color)
+    if (to.h) {
+      colors.push(color.r, color.g, color.b)
+      coordinates.push(new Vector3(to.l, to.c * 1.3, to.h / 360))
     }
   }
 }
@@ -49,8 +49,8 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
         if (onGamutEdge(x, y, z)) {
-          let modelRgb: AnyRgb = { mode, r: x, g: y, b: z }
-          addColor(colors, coordinates, modelRgb)
+          let edgeRgb: AnyRgb = { mode, r: x, g: y, b: z }
+          addColor(colors, coordinates, edgeRgb)
         }
       }
     }
