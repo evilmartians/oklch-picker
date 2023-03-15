@@ -77,6 +77,13 @@ export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
   return { mode: COLOR_FN, l, c, h, alpha }
 }
 
+export let toTarget: (color: Color) => AnyLch
+if (LCH) {
+  toTarget = lch
+} else {
+  toTarget = oklch
+}
+
 export let fastLchFormat: (c: AnyLch) => string = formatRgbFast
 
 export let canvasFormat: (c: AnyLch) => string = formatRgbFast
@@ -156,10 +163,10 @@ export enum Space {
 }
 
 let getProxyColor: (color: Color) => Color
-if (COLOR_FN === 'oklch') {
-  getProxyColor = rgb
-} else {
+if (LCH) {
   getProxyColor = xyz65
+} else {
+  getProxyColor = rgb
 }
 
 export function getSpace(color: Color): Space {

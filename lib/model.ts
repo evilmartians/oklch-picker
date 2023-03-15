@@ -15,27 +15,8 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
-import { oklch, lch, rgb, build, AnyRgb } from './colors.js'
+import { toTarget, rgb, build, AnyRgb } from './colors.js'
 import { biggestRgb, RgbMode } from '../stores/settings.js'
-
-let addColor: (colors: number[], coordinates: Vector3[], color: AnyRgb) => void
-if (LCH) {
-  addColor = (colors, coordinates, color) => {
-    let to = lch(color)
-    if (to.h) {
-      colors.push(color.r, color.g, color.b)
-      coordinates.push(new Vector3(to.l / 100, to.c / 250, to.h / 360))
-    }
-  }
-} else {
-  addColor = (colors, coordinates, color) => {
-    let to = oklch(color)
-    if (to.h) {
-      colors.push(color.r, color.g, color.b)
-      coordinates.push(new Vector3(to.l, to.c * 1.3, to.h / 360))
-    }
-  }
-}
 
 function onGamutEdge(r: number, g: number, b: number): boolean {
   return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99
@@ -50,7 +31,13 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
       for (let z = 0; z <= 1; z += 0.01) {
         if (onGamutEdge(x, y, z)) {
           let edgeRgb: AnyRgb = { mode, r: x, g: y, b: z }
-          addColor(colors, coordinates, edgeRgb)
+          let to = toTarget(edgeRgb)
+          if (to.h) {
+            colors.push(edgeRgb.r, edgeRgb.g, edgeRgb.b)
+            coordinates.push(
+              new Vector3(to.l / L_MAX, to.c / (C_MAX * 2), to.h / 360)
+            )
+          }
         }
       }
     }
