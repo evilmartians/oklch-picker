@@ -16,22 +16,22 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { showP3, showRec2020 } from '../stores/settings.js'
-import { oklch, lch, AnyRgb } from './colors.js'
+import { oklch, lch, rgb, AnyRgb, AnyLch } from './colors.js'
 
 let addColor: (colors: number[], coordinates: Vector3[], rgb: AnyRgb) => void
 if (LCH) {
-  addColor = (colors, coordinates, rgb) => {
-    let color = lch(rgb)
+  addColor = (colors, coordinates, modelRgb) => {
+    let color = lch(modelRgb)
     if (color.h) {
-      colors.push(rgb.r, rgb.g, rgb.b)
+      colors.push(modelRgb.r, modelRgb.g, modelRgb.b)
       coordinates.push(new Vector3(color.l / 100, color.c / 250, color.h / 360))
     }
   }
 } else {
-  addColor = (colors, coordinates, rgb) => {
-    let color = oklch(rgb)
+  addColor = (colors, coordinates, modelRgb) => {
+    let color = oklch(modelRgb)
     if (color.h) {
-      colors.push(rgb.r, rgb.g, rgb.b)
+      colors.push(modelRgb.r, modelRgb.g, modelRgb.b)
       coordinates.push(new Vector3(color.l, color.c * 1.3, color.h / 360))
     }
   }
@@ -44,16 +44,16 @@ function getModelData(mode: 'rgb' | 'rec2020' | 'p3'): [Vector3[], number[]] {
   for (let x = 0; x <= 1; x += 0.01) {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
-        let rgb: AnyRgb = { mode, r: x, g: y, b: z }
+        let modelRgb: AnyRgb = { mode, r: x, g: y, b: z }
         if (
-          rgb.r === 0 ||
-          rgb.g === 0 ||
-          rgb.b === 0 ||
-          rgb.r > 0.99 ||
-          rgb.g > 0.99 ||
-          rgb.b > 0.99
+          modelRgb.r === 0 ||
+          modelRgb.g === 0 ||
+          modelRgb.b === 0 ||
+          modelRgb.r > 0.99 ||
+          modelRgb.g > 0.99 ||
+          modelRgb.b > 0.99
         ) {
-          addColor(colors, coordinates, rgb)
+          addColor(colors, coordinates, modelRgb)
         }
       }
     }
@@ -104,22 +104,19 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
   mesh.translateY(0.3)
   scene.add(mesh)
 
-  let plane = new PlaneGeometry(1, 2)
-  let planeColor = []
-  for (let i = 0; i < 2; i++) {
-    planeColor.push(0, 0, 0)
+  let plane = new PlaneGeometry(1, 1, 1, 5)
+  let planeColor = [0, 0, 0]
+  if ('array' in plane.attributes.position) {
+  let vertices = plane.attributes.position.array.length
+    for (let i = 3; i < vertices - 3; i += 3) {
+      let vertexLch: AnyLch = { mode: LCH ? 'lch' : 'oklch', l: i * 2.6, c: 0, h: 0 }
+      let vertexRgb = rgb(vertexLch)
+      let vertexCol = LCH ? vertexRgb.r : vertexRgb.r / 255
+      planeColor.push(vertexCol, vertexCol, vertexCol)
+    }
     planeColor.push(1, 1, 1)
   }
   plane.setAttribute('color', new Float32BufferAttribute(planeColor, 3))
-
-  if ('array' in plane.attributes.position) {
-    let position = Array.from(plane.attributes.position.array)
-    position[1] = 0.5
-    position[4] = 0.5
-    position[7] = -0.5
-    position[10] = -0.5
-    plane.setAttribute('position', new Float32BufferAttribute(position, 3))
-  }
   plane.translate(0, 0, -0.2)
   let planeMat = new MeshBasicMaterial({
     vertexColors: true,
