@@ -94,10 +94,10 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
   let bottom = new PlaneGeometry(1, 1, 1, 5)
   let bottomColors = []
   if ('array' in bottom.attributes.position) {
-    let bottomSteps = bottom.attributes.position.array.length / 3
+    let bottomSteps = bottom.attributes.position.array.length / 6
     for (let i = 0; i <= bottomSteps; i += 1) {
       let rgbL = 1 - rgb(build((L_MAX * i) / bottomSteps, 0, 0)).r
-      bottomColors.push(rgbL, rgbL, rgbL)
+      bottomColors.push(rgbL, rgbL, rgbL, rgbL, rgbL, rgbL)
     }
   }
   bottom.setAttribute('color', new Float32BufferAttribute(bottomColors, 3))
