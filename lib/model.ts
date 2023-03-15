@@ -15,8 +15,8 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
+import { oklch, lch, rgb, build, AnyRgb } from './colors.js'
 import { showP3, showRec2020 } from '../stores/settings.js'
-import { oklch, lch, rgb, build, AnyRgb, AnyLch } from './colors.js'
 
 let addColor: (colors: number[], coordinates: Vector3[], rgb: AnyRgb) => void
 if (LCH) {
@@ -104,28 +104,25 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
   mesh.translateY(0.3)
   scene.add(mesh)
 
-  let plane = new PlaneGeometry(1, 1, 1, 5)
-  let planeColor = [0, 0, 0]
-  if ('array' in plane.attributes.position) {
-  let vertices = plane.attributes.position.array.length
-    for (let i = 3; i < vertices - 3; i += 3) {
-      let vertexLch: AnyLch = build(i * 2.6 * L_MAX, 0, 0)
-      let vertexRgb = rgb(vertexLch)
-      let vertexCol = vertexRgb.r / 255
-      planeColor.push(vertexCol, vertexCol, vertexCol)
+  let basement = new PlaneGeometry(1, 1, 1, 5)
+  let basementColors = []
+  if ('array' in basement.attributes.position) {
+    let basementSteps = basement.attributes.position.array.length / 3
+    for (let i = 0; i <= basementSteps; i += 1) {
+      let rgbL = 1 - rgb(build((L_MAX * i) / basementSteps, 0, 0)).r
+      basementColors.push(rgbL, rgbL, rgbL)
     }
-    planeColor.push(1, 1, 1)
   }
-  plane.setAttribute('color', new Float32BufferAttribute(planeColor, 3))
-  plane.translate(0, 0, -0.2)
-  let planeMat = new MeshBasicMaterial({
+  basement.setAttribute('color', new Float32BufferAttribute(basementColors, 3))
+  basement.translate(0, 0, -0.2)
+  let basementMat = new MeshBasicMaterial({
     vertexColors: true,
     side: DoubleSide
   })
-  let planeMesh = new Mesh(plane, planeMat)
-  planeMesh.rotateX(-Math.PI * 0.5)
-  planeMesh.rotateZ(Math.PI * 0.5)
-  scene.add(planeMesh)
+  let basementMesh = new Mesh(basement, basementMat)
+  basementMesh.rotateX(-Math.PI * 0.5)
+  basementMesh.rotateZ(-Math.PI * 0.5)
+  scene.add(basementMesh)
 }
 
 function initScene(
