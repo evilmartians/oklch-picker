@@ -58,13 +58,13 @@ export function prepareWorkers<
 
         finished += 1
         if (finished === started) {
-          onFinal()
           busy.delete(type)
           let args = lastPending.get(type)
           if (args) {
             lastPending.delete(type)
             startWork.apply(null, args)
           }
+          onFinal()
         }
       }
       worker.postMessage(messages[i])
