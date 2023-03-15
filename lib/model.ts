@@ -37,6 +37,10 @@ if (LCH) {
   }
 }
 
+function onGamutEdge(r: number, g: number, b: number): boolean {
+  return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99
+}
+
 function getModelData(mode: RgbMode): [Vector3[], number[]] {
   let coordinates: Vector3[] = []
   let colors: number[] = []
@@ -44,15 +48,8 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
   for (let x = 0; x <= 1; x += 0.01) {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
-        let modelRgb: AnyRgb = { mode, r: x, g: y, b: z }
-        if (
-          modelRgb.r === 0 ||
-          modelRgb.g === 0 ||
-          modelRgb.b === 0 ||
-          modelRgb.r > 0.99 ||
-          modelRgb.g > 0.99 ||
-          modelRgb.b > 0.99
-        ) {
+        if (onGamutEdge(x, y, z)) {
+          let modelRgb: AnyRgb = { mode, r: x, g: y, b: z }
           addColor(colors, coordinates, modelRgb)
         }
       }
