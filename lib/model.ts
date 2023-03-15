@@ -155,8 +155,8 @@ export function initCanvas(
   }
   animate()
 
-  biggestRgb.listen(() => {
-    generateMesh(scene, biggestRgb.get())
+  biggestRgb.listen(value => {
+    generateMesh(scene, value)
   })
 
   return camera
