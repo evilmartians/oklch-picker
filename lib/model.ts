@@ -16,7 +16,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { showP3, showRec2020 } from '../stores/settings.js'
-import { oklch, lch, rgb, AnyRgb, AnyLch } from './colors.js'
+import { oklch, lch, rgb, build, AnyRgb, AnyLch } from './colors.js'
 
 let addColor: (colors: number[], coordinates: Vector3[], rgb: AnyRgb) => void
 if (LCH) {
@@ -109,7 +109,7 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
   if ('array' in plane.attributes.position) {
   let vertices = plane.attributes.position.array.length
     for (let i = 3; i < vertices - 3; i += 3) {
-      let vertexLch: AnyLch = { mode: LCH ? 'lch' : 'oklch', l: i * 2.6, c: 0, h: 0 }
+      let vertexLch: AnyLch = build(i * 2.6, 0, 0)
       let vertexRgb = rgb(vertexLch)
       let vertexCol = LCH ? vertexRgb.r : vertexRgb.r / 255
       planeColor.push(vertexCol, vertexCol, vertexCol)
