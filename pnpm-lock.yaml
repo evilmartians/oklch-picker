@@ -11,6 +11,7 @@ specifiers:
   '@logux/stylelint-config': ^0.14.0
   '@nanostores/persistent': ^0.7.0
   '@size-limit/file': ^8.2.4
+  '@types/culori': ^2.0.0
   '@types/delaunator': ^5.0.0
   '@types/three': ^0.149.0
   '@typescript-eslint/eslint-plugin': ^5.55.0
@@ -66,6 +67,7 @@ devDependencies:
   '@logux/eslint-config': 49.0.0_fmuk6hllkjhbc4efjnhs5ftdfa
   '@logux/stylelint-config': 0.14.0_stylelint@15.2.0
   '@size-limit/file': 8.2.4_size-limit@8.2.4
+  '@types/culori': 2.0.0
   '@types/delaunator': 5.0.0
   '@types/three': 0.149.0
   '@typescript-eslint/eslint-plugin': 5.55.0_342y7v4tc7ytrrysmit6jo4wri
@@ -725,6 +727,10 @@ packages:
   /@trysound/sax/0.2.0:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
+    dev: true
+
+  /@types/culori/2.0.0:
+    resolution: {integrity: sha512-bKpEra39sQS9UZ+1JoWhuGJEzwKS0dUkNCohVYmn6CAEBkqyIXimKiPDRZWtiOB7sKgkWMaTUpHFimygRoGIlg==}
     dev: true
 
   /@types/delaunator/5.0.0:

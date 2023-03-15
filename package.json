@@ -37,6 +37,7 @@
     "@logux/eslint-config": "^49.0.0",
     "@logux/stylelint-config": "^0.14.0",
     "@size-limit/file": "^8.2.4",
+    "@types/culori": "^2.0.0",
     "@types/delaunator": "^5.0.0",
     "@types/three": "^0.149.0",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
