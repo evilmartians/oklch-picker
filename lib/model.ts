@@ -124,6 +124,7 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
   })
   let planeMesh = new Mesh(plane, planeMat)
   planeMesh.rotateX(-Math.PI * 0.5)
+  planeMesh.rotateZ(Math.PI * 0.5)
   scene.add(planeMesh)
 }
 
