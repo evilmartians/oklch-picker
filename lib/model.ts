@@ -109,7 +109,7 @@ function generateMesh(scene: Scene, p3: boolean, rec2020: boolean): void {
   if ('array' in plane.attributes.position) {
   let vertices = plane.attributes.position.array.length
     for (let i = 3; i < vertices - 3; i += 3) {
-      let vertexLch: AnyLch = build(i * 2.6, 0, 0)
+      let vertexLch: AnyLch = build(i * 2.6 * L_MAX, 0, 0)
       let vertexRgb = rgb(vertexLch)
       let vertexCol = LCH ? vertexRgb.r : vertexRgb.r / 255
       planeColor.push(vertexCol, vertexCol, vertexCol)
