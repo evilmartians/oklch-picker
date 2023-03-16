@@ -21,15 +21,7 @@
   border: var(--unavailable-border);
   border-radius: var(--radius);
 
-  .sample:not(.is-supported).is-p3 &.is-p3 {
-    display: flex;
-  }
-
-  .sample:not(.is-supported).is-rec2020 &.is-rec2020 {
-    display: flex;
-  }
-
-  .sample:not(.is-supported).is-out &.is-out {
+  .sample:not(.is-supported) & {
     display: flex;
   }
 }
