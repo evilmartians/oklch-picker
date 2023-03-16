@@ -71,7 +71,10 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
     Array.from(Delaunator.from(coordinates.map(c => [c.x, c.z])).triangles)
   )
   top.computeVertexNormals()
-  let topMesh = new Mesh(top, new MeshBasicMaterial({ vertexColors: true }))
+  let topMesh = new Mesh(
+    top,
+    new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
+  )
   topMesh.translateY(0.3)
   scene.add(topMesh)
 
@@ -89,10 +92,7 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
   bottom.translate(0, 0, -0.2)
   let bottomMesh = new Mesh(
     bottom,
-    new MeshBasicMaterial({
-      vertexColors: true,
-      side: DoubleSide
-    })
+    new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
   )
   bottomMesh.rotateX(-Math.PI * 0.5)
   bottomMesh.rotateZ(Math.PI * 0.5)
