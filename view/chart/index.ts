@@ -103,12 +103,13 @@ function startWorkForComponent(
     messages =>
       messages.map((_, i) => {
         let step = Math.ceil(canvas.width / messages.length)
+        let move = i === 0 ? 0 : 1
         return {
           type,
           width: canvas.width,
           height: canvas.height,
-          from: step * i,
-          to: Math.min(step * (i + 1), canvas.width),
+          from: step * i + move,
+          to: Math.min(step * (i + 1) + move, canvas.width),
           value,
           showP3: showP3.get(),
           showRec2020: showRec2020.get(),
