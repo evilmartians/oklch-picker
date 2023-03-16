@@ -126,23 +126,43 @@ function initScene(
   return [scene, camera, renderer, controls]
 }
 
+export interface Model {
+  started: boolean
+  stop(): void
+  start(): void
+  camera: Camera
+}
+
 export function initCanvas(
   canvas: HTMLCanvasElement,
   fullControl: boolean = false
-): Camera {
+): Model {
   let [scene, camera, renderer, controls] = initScene(canvas, fullControl)
   generateMesh(scene, biggestRgb.get())
 
   function animate(): void {
-    requestAnimationFrame(animate)
+    if (model.started) requestAnimationFrame(animate)
     controls.update()
     renderer.render(scene, camera)
   }
-  animate()
+
+  let model = {
+    started: true,
+    camera,
+    start(): void {
+      model.started = true
+      animate()
+    },
+    stop(): void {
+      model.started = false
+    }
+  }
+
+  model.start()
 
   biggestRgb.listen(value => {
     generateMesh(scene, value)
   })
 
-  return camera
+  return model
 }

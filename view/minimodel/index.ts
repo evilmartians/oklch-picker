@@ -1,3 +1,5 @@
+import type { Model } from '../../lib/model.js'
+
 import { registerCamera, syncCamerasFrom } from '../../lib/cameras.js'
 import { generateLoader } from '../../lib/loader.js'
 import { getButton } from '../button/index.js'
@@ -17,11 +19,20 @@ let load = generateLoader(
   url.get() === '3d' ? 0 : 400
 )
 
+let model: Model | undefined
+
 function checkRendering(): void {
   if (show3d.get() && url.get() !== '3d') {
-    load(({ initCanvas }) => {
-      registerCamera(initCanvas(canvas), 'mini')
-    })
+    if (!model) {
+      load(({ initCanvas }) => {
+        model = initCanvas(canvas)
+        registerCamera(model.camera, 'mini')
+      })
+    } else {
+      model.start()
+    }
+  } else if (model?.started) {
+    model.stop()
   }
 }
 show3d.subscribe(checkRendering)
