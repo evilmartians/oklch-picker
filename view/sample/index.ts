@@ -1,8 +1,11 @@
 import { visible } from '../../stores/visible.js'
+import { support } from '../../stores/support.js'
 
 let sample = document.querySelector<HTMLDivElement>('.sample')!
 let type = document.querySelector<HTMLDivElement>('.sample_reader')!
 let unavailable = document.querySelector<HTMLDivElement>('.sample_unavailable')!
+
+let postfix = support.get().oklch ? ' in this browser' : ' on this monitor'
 
 visible.subscribe(({ space, real, fallback }) => {
   sample.classList.toggle('is-srgb', space === 'srgb')
@@ -11,9 +14,9 @@ visible.subscribe(({ space, real, fallback }) => {
   if (real) {
     unavailable.innerText = ''
   } else if (space === 'p3') {
-    unavailable.innerText = 'P3 is unavailable on this device'
+    unavailable.innerText = 'P3 is unavailable' + postfix
   } else if (space === 'rec2020') {
-    unavailable.innerText = 'Rec2020 is unavailable on this device'
+    unavailable.innerText = 'Rec2020 is unavailable' + postfix
   } else if (space === 'out') {
     unavailable.innerText = 'Unavailable on any device'
   }
