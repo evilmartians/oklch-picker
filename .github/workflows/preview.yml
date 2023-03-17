@@ -33,6 +33,7 @@ jobs:
       - name: Build OKLCH
         run: pnpm build
       - name: Deploy
+        id: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
