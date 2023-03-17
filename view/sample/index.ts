@@ -5,7 +5,7 @@ let sample = document.querySelector<HTMLDivElement>('.sample')!
 let type = document.querySelector<HTMLDivElement>('.sample_reader')!
 let unavailable = document.querySelector<HTMLDivElement>('.sample_unavailable')!
 
-let postfix = support.get().oklch ? ' in this browser' : ' on this monitor'
+let postfix = support.get().oklch ? ' on this monitor' : ' in this browser'
 
 visible.subscribe(({ space, real, fallback }) => {
   sample.classList.toggle('is-srgb', space === 'srgb')
