@@ -1,0 +1,16 @@
+name: Clean Preview
+on:
+  pull_request:
+    types: [ closed ]
+permissions:
+  deployments: write
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean from GitHub
+        uses: bobheadxi/deployments@v1
+        with:
+          step: delete-env
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: preview-${{ github.event.number }}
