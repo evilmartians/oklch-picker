@@ -11,6 +11,6 @@ jobs:
       - name: Clean from GitHub
         uses: bobheadxi/deployments@v1
         with:
-          step: delete-env
+          step: deactivate-env
           token: ${{ secrets.GITHUB_TOKEN }}
           env: preview-${{ github.event.number }}
