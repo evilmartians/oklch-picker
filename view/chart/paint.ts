@@ -49,7 +49,7 @@ function paint(
     support.get().p3
   )
   let getSeparator = generateGetSeparator()
-  let maxGap = 0.3 * height
+  let maxGap = 0.42 * height
 
   let pixels = new ImageData(to - from + 1, height)
   for (let x = 0; x <= to - from; x += 1) {
