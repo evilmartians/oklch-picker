@@ -1,12 +1,7 @@
-import {
-  generateGetPixel,
-  GetColor,
-  Pixel,
-  Space,
-  build,
-  Rgb
-} from '../../lib/colors.js'
+import type { GetColor, Pixel, Rgb } from '../../lib/colors.js'
+
 import { generateGetSeparator, paintPixel } from '../../lib/paint.js'
+import { generateGetPixel, Space, build } from '../../lib/colors.js'
 import { support } from '../../stores/support.js'
 
 function separate(

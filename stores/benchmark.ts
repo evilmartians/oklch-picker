@@ -1,4 +1,6 @@
-import { Oklch, formatHex } from 'culori/fn'
+import type { Oklch } from 'culori/fn'
+
+import { formatHex } from 'culori/fn'
 import { map } from 'nanostores'
 
 import { benchmarking } from './url.js'

@@ -51,9 +51,9 @@
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.8.1",
     "size-limit": "^8.2.4",
-    "stylelint": "^15.2.0",
+    "stylelint": "^15.3.0",
     "svgo": "^3.0.2",
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.2"
   },
   "pnpm": {
     "overrides": {

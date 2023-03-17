@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowJs": true,

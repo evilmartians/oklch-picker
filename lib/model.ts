@@ -1,3 +1,7 @@
+import type { Renderer } from 'three'
+import type { AnyRgb } from './colors.js'
+import type { RgbMode } from '../stores/settings.js'
+
 import {
   Float32BufferAttribute,
   MeshBasicMaterial,
@@ -6,7 +10,6 @@ import {
   PlaneGeometry,
   WebGLRenderer,
   DoubleSide,
-  Renderer,
   Vector3,
   Camera,
   Scene,
@@ -15,8 +18,8 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
-import { toTarget, rgb, build, AnyRgb } from './colors.js'
-import { biggestRgb, RgbMode } from '../stores/settings.js'
+import { toTarget, rgb, build } from './colors.js'
+import { biggestRgb } from '../stores/settings.js'
 
 function onGamutEdge(r: number, g: number, b: number): boolean {
   return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99

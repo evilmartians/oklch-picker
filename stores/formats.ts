@@ -1,13 +1,7 @@
 import type { OutputFormats } from './settings.js'
+import type { Color, Oklab } from 'culori/fn'
 
-import {
-  formatHex8,
-  formatHex,
-  formatRgb,
-  formatCss,
-  Color,
-  Oklab
-} from 'culori/fn'
+import { formatHex8, formatHex, formatRgb, formatCss } from 'culori/fn'
 import { computed } from 'nanostores'
 
 import {

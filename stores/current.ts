@@ -1,7 +1,10 @@
-import { clampChroma, Color } from 'culori/fn'
+import type { AnyLch } from '../lib/colors.js'
+import type { Color } from 'culori/fn'
+
+import { clampChroma } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { getSpace, build, oklch, lch, AnyLch, Space } from '../lib/colors.js'
+import { getSpace, build, oklch, lch, Space } from '../lib/colors.js'
 import { showRec2020, showP3, showCharts } from './settings.js'
 import { startPainting, reportFreeze } from './benchmark.js'
 import { benchmarking } from './url.js'

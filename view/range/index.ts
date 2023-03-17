@@ -1,3 +1,5 @@
+import type { AnyLch } from '../../lib/colors.js'
+
 import {
   onCurrentChange,
   valueToColor,
@@ -8,7 +10,6 @@ import {
   generateGetSpace,
   canvasFormat,
   fastFormat,
-  AnyLch,
   build,
   Space
 } from '../../lib/colors.js'

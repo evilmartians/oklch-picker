@@ -1,11 +1,14 @@
+import type { OutputFormats } from '../../stores/settings.js'
+import type { FormatsValue } from '../../stores/formats.js'
+
 import {
   setCurrentFromColor,
   valueToColor,
   current
 } from '../../stores/current.js'
-import { formats, FormatsValue, srgbFormats } from '../../stores/formats.js'
-import { outputFormat, OutputFormats } from '../../stores/settings.js'
 import { parseAnything, formatLch } from '../../lib/colors.js'
+import { formats, srgbFormats } from '../../stores/formats.js'
+import { outputFormat } from '../../stores/settings.js'
 import { visible } from '../../stores/visible.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
