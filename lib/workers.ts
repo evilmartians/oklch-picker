@@ -10,6 +10,10 @@ interface StartWork<TaskData extends object, ResultData extends object> {
 
 const TOTAL_WORKERS = navigator.hardwareConcurrency
 
+function anyValue<V>(map: Map<string, V>): V | undefined {
+  return map.values().next().value
+}
+
 export function prepareWorkers<
   TaskData extends object,
   ResultData extends object
@@ -25,6 +29,15 @@ export function prepareWorkers<
     Parameters<StartWork<TaskData, ResultData>>
   >()
 
+  function startPending(
+    args: Parameters<StartWork<TaskData, ResultData>> | undefined
+  ): void {
+    if (!args) return
+    let type = args[0]
+    lastPending.delete(type)
+    startWork(type, 1, args[2], args[3], args[4])
+  }
+
   let startWork: StartWork<TaskData, ResultData> = (
     type,
     parallelTasks,
@@ -36,7 +49,6 @@ export function prepareWorkers<
       lastPending.set(type, [type, parallelTasks, prepare, onResult, onFinal])
       return
     }
-    busy.add(type)
 
     let started = Math.floor(TOTAL_WORKERS / parallelTasks)
     if (available.length / started > parallelTasks) started += 1
@@ -47,6 +59,7 @@ export function prepareWorkers<
       return
     }
 
+    busy.add(type)
     let finished = 0
     let workers = available.splice(0, started)
     let messages = prepare(Array(workers.length).fill(undefined))
@@ -59,11 +72,7 @@ export function prepareWorkers<
         finished += 1
         if (finished === started) {
           busy.delete(type)
-          let args = lastPending.get(type)
-          if (args) {
-            lastPending.delete(type)
-            startWork.apply(null, args)
-          }
+          startPending(lastPending.get(type) ?? anyValue(lastPending))
           onFinal()
         }
       }
