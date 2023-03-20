@@ -30,7 +30,7 @@
     "postcss-nesting": "^11.2.1",
     "postcss-opacity-percentage": "^2.0.0",
     "three": "^0.150.1",
-    "vite": "^4.2.0",
+    "vite": "^4.2.1",
     "vite-plugin-pug-transformer": "^1.0.3"
   },
   "devDependencies": {
@@ -40,8 +40,8 @@
     "@types/culori": "^2.0.0",
     "@types/delaunator": "^5.0.0",
     "@types/three": "^0.149.0",
-    "@typescript-eslint/eslint-plugin": "^5.55.0",
-    "@typescript-eslint/parser": "^5.55.0",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
     "eslint": "^8.36.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
