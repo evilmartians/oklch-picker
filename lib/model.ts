@@ -1,4 +1,3 @@
-import type { Renderer } from 'three'
 import type { AnyRgb } from './colors.js'
 import type { RgbMode } from '../stores/settings.js'
 
@@ -13,7 +12,10 @@ import {
   Vector3,
   Camera,
   Scene,
-  Mesh
+  Mesh,
+  Vector2,
+  Shader,
+  Renderer
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
@@ -63,7 +65,7 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
   return [coordinates, colors]
 }
 
-function generateMesh(scene: Scene, mode: RgbMode): void {
+function generateMesh(scene: Scene, mode: RgbMode): Vector2[] {
   scene.clear()
 
   let [coordinates, colors] = getModelData(mode)
@@ -74,10 +76,8 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
     Array.from(Delaunator.from(coordinates.map(c => [c.x, c.z])).triangles)
   )
   top.computeVertexNormals()
-  let topMesh = new Mesh(
-    top,
-    new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
-  )
+  let [topMaterial, selectors] = generateMaterialWithShader()
+  let topMesh = new Mesh(top, topMaterial)
   topMesh.translateY(0.3)
   scene.add(topMesh)
 
@@ -100,6 +100,48 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
   bottomMesh.rotateX(-Math.PI * 0.5)
   bottomMesh.rotateZ(Math.PI * 0.5)
   scene.add(bottomMesh)
+  return selectors 
+}
+
+function generateMaterialWithShader(): [MeshBasicMaterial, Vector2[]] {
+  let material = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
+  let selectorL = new Vector2(0, -1)
+  let selectorC = new Vector2(0, -1)
+  let selectorH = new Vector2(0, -1)
+  material.onBeforeCompile = (shader: Shader) => {
+    shader.uniforms.selectorL = { value: selectorL }
+    shader.uniforms.selectorC = { value: selectorC }
+    shader.uniforms.selectorH = { value: selectorH }
+    shader.vertexShader = `
+      varying vec3 vPos;
+      ${shader.vertexShader}
+    `.replace(
+      `#include <begin_vertex>`,
+      `#include <begin_vertex>
+      vPos = transformed;
+      `
+    )
+    shader.fragmentShader = `
+      #define ss(a, b, c) smoothstep(a, b, c)
+      uniform vec2 selectorL, selectorC, selectorH;
+      varying vec3 vPos;
+      ${shader.fragmentShader}
+    `.replace(
+      `#include <dithering_fragment>`,
+      `#include <dithering_fragment>
+        vec3 col = vec3(0, 0, 0);
+        float width = 0.005;
+        float l = ss(width, 0., abs(vPos.y - selectorL.y));
+        float c = ss(width, 0., abs(selectorC.y + vPos.x));
+        float h = ss(width, 0., abs(vPos.z - selectorH.y));
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, l);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, c);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, h);
+      `
+    )
+  }
+
+  return [material, [selectorL, selectorC, selectorH]]
 }
 
 function initScene(
@@ -129,6 +171,15 @@ function initScene(
   return [scene, camera, renderer, controls]
 }
 
+function updateSelectors(selectorL: Vector2, selectorC: Vector2, selectorH: Vector2): void {
+  //y: 0 - -0.5
+ selectorL.set(0, -0.48)
+  //y: -1 - 1
+  selectorC.set(0, -0.1)
+  //y: -0.5 - 0.5
+  selectorH.set(0, 0.3)
+}
+
 export interface Model {
   started: boolean
   stop(): void
@@ -141,7 +192,7 @@ export function initCanvas(
   fullControl: boolean = false
 ): Model {
   let [scene, camera, renderer, controls] = initScene(canvas, fullControl)
-  generateMesh(scene, biggestRgb.get())
+  let [selectorL, selectorC, selectorH] = generateMesh(scene, biggestRgb.get())
 
   function animate(): void {
     if (model.started) requestAnimationFrame(animate)
@@ -166,6 +217,9 @@ export function initCanvas(
   biggestRgb.listen(value => {
     generateMesh(scene, value)
   })
+  
+  // TODO listen to store change
+  updateSelectors(selectorL, selectorC, selectorH)
 
   return model
 }
