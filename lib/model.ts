@@ -22,6 +22,7 @@ import Delaunator from 'delaunator'
 
 import { toTarget, rgb, build } from './colors.js'
 import { biggestRgb } from '../stores/settings.js'
+import { current, type LchValue } from '../stores/current.js'
 
 function onGamutEdge(r: number, g: number, b: number): boolean {
   return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99
@@ -171,11 +172,13 @@ function initScene(
 function updateSelectors(
   selectorL: Vector2,
   selectorC: Vector2,
-  selectorH: Vector2
+  selectorH: Vector2,
+  color: LchValue
 ): void {
-  selectorL.set(0, 0.1)
-  selectorC.set(0, 0.3)
-  selectorH.set(0, 0.1)
+  selectorL.set(0, 0.01 * -color.l + 0.5)
+  selectorC.set(0, 1.53 * -color.c + 0.5)
+  let borderH =  color.h >  350 ? 0.51 : 0.5
+  selectorH.set(0, 0.0028 * color.h - borderH)
 }
 
 export interface Model {
@@ -215,9 +218,13 @@ export function initCanvas(
   biggestRgb.listen(value => {
     generateMesh(scene, value)
   })
-
-  // TODO listen to store change
-  updateSelectors(selectorL, selectorC, selectorH)
+  
+  if (!fullControl) {
+    updateSelectors(selectorL, selectorC, selectorH, current.get())
+  }
+  current.listen(value => {
+    updateSelectors(selectorL, selectorC, selectorH, value)
+  })
 
   return model
 }
