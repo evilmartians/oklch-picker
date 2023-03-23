@@ -176,7 +176,7 @@ function updateSelectors(
   color: LchValue
 ): void {
   selectorL.set(0, 0.01 * -color.l + 0.5)
-  selectorC.set(0, 1.53 * -color.c + 0.5)
+  selectorC.set(0, 0.55 * -color.c / C_MAX + 0.5)
   let borderH =  color.h >  350 ? 0.51 : 0.5
   selectorH.set(0, 0.0028 * color.h - borderH)
 }
