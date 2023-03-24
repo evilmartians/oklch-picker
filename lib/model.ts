@@ -1,5 +1,7 @@
-import type { AnyRgb } from './colors.js'
+import type { Renderer, Shader } from 'three'
+import type { LchValue } from '../stores/current.js'
 import type { RgbMode } from '../stores/settings.js'
+import type { AnyRgb } from './colors.js'
 
 import {
   Float32BufferAttribute,
@@ -10,19 +12,21 @@ import {
   WebGLRenderer,
   DoubleSide,
   Vector3,
+  Vector2,
   Camera,
   Scene,
-  Mesh,
-  Vector2,
-  type Shader,
-  type Renderer
+  Mesh
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { toTarget, rgb, build } from './colors.js'
 import { biggestRgb } from '../stores/settings.js'
-import { current, type LchValue } from '../stores/current.js'
+import { current } from '../stores/current.js'
+
+interface UpdateSlice {
+  (color: LchValue): void
+}
 
 function onGamutEdge(r: number, g: number, b: number): boolean {
   return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99
@@ -66,7 +70,7 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
   return [coordinates, colors]
 }
 
-function generateMesh(scene: Scene, mode: RgbMode): Vector2[] {
+function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
   scene.clear()
 
   let [coordinates, colors] = getModelData(mode)
@@ -77,7 +81,44 @@ function generateMesh(scene: Scene, mode: RgbMode): Vector2[] {
     Array.from(Delaunator.from(coordinates.map(c => [c.x, c.z])).triangles)
   )
   top.computeVertexNormals()
-  let [material, selectors] = generateMaterialWithShader()
+
+  let material = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
+  let l = new Vector2(0, 1)
+  let c = new Vector2(0, 1)
+  let h = new Vector2(0, 1)
+  material.onBeforeCompile = (shader: Shader) => {
+    shader.uniforms.sliceL = { value: l }
+    shader.uniforms.sliceC = { value: c }
+    shader.uniforms.sliceH = { value: h }
+    shader.vertexShader = `
+      varying vec3 vPos;
+      ${shader.vertexShader}
+    `.replace(
+      `#include <begin_vertex>`,
+      `#include <begin_vertex>
+      vPos = transformed;
+      `
+    )
+    shader.fragmentShader = `
+      #define ss(a, b, c) smoothstep(a, b, c)
+      uniform vec2 sliceL, sliceC, sliceH;
+      varying vec3 vPos;
+      ${shader.fragmentShader}
+    `.replace(
+      `#include <dithering_fragment>`,
+      `#include <dithering_fragment>
+        vec3 col = vec3(0.5, 0.5, 0.5);
+        float width = 0.0025;
+        float l = ss(width, 0., abs(vPos.x + sliceL.y));
+        float c = ss(width, 0., abs(vPos.y + sliceC.y));
+        float h = ss(width, 0., abs(vPos.z - sliceH.y));
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, l);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, c);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, h);
+      `
+    )
+  }
+
   let topMesh = new Mesh(top, material)
   topMesh.translateY(0.3)
   scene.add(topMesh)
@@ -98,48 +139,12 @@ function generateMesh(scene: Scene, mode: RgbMode): Vector2[] {
   bottom.rotateX(-Math.PI * 0.5)
   let bottomMesh = new Mesh(bottom, material)
   scene.add(bottomMesh)
-  return selectors
-}
 
-function generateMaterialWithShader(): [MeshBasicMaterial, Vector2[]] {
-  let material = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
-  let selectorL = new Vector2(0, 1)
-  let selectorC = new Vector2(0, 1)
-  let selectorH = new Vector2(0, 1)
-  material.onBeforeCompile = (shader: Shader) => {
-    shader.uniforms.selectorL = { value: selectorL }
-    shader.uniforms.selectorC = { value: selectorC }
-    shader.uniforms.selectorH = { value: selectorH }
-    shader.vertexShader = `
-      varying vec3 vPos;
-      ${shader.vertexShader}
-    `.replace(
-      `#include <begin_vertex>`,
-      `#include <begin_vertex>
-      vPos = transformed;
-      `
-    )
-    shader.fragmentShader = `
-      #define ss(a, b, c) smoothstep(a, b, c)
-      uniform vec2 selectorL, selectorC, selectorH;
-      varying vec3 vPos;
-      ${shader.fragmentShader}
-    `.replace(
-      `#include <dithering_fragment>`,
-      `#include <dithering_fragment>
-        vec3 col = vec3(0.5, 0.5, 0.5);
-        float width = 0.0025;
-        float l = ss(width, 0., abs(vPos.x + selectorL.y));
-        float c = ss(width, 0., abs(vPos.y + selectorC.y));
-        float h = ss(width, 0., abs(vPos.z - selectorH.y));
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, l);
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, c);
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, h);
-      `
-    )
+  return color => {
+    l.set(0, 0.01 * -color.l + 0.5)
+    c.set(0, (0.5 * -color.c) / C_MAX + 0.5)
+    h.set(0, 0.0028 * color.h - (color.h > 350 ? 0.51 : 0.5))
   }
-
-  return [material, [selectorL, selectorC, selectorH]]
 }
 
 function initScene(
@@ -169,18 +174,6 @@ function initScene(
   return [scene, camera, renderer, controls]
 }
 
-function updateSelectors(
-  selectorL: Vector2,
-  selectorC: Vector2,
-  selectorH: Vector2,
-  color: LchValue
-): void {
-  selectorL.set(0, 0.01 * -color.l + 0.5)
-  selectorC.set(0, (0.55 * -color.c) / C_MAX + 0.5)
-  let borderH = color.h > 350 ? 0.51 : 0.5
-  selectorH.set(0, 0.0028 * color.h - borderH)
-}
-
 export interface Model {
   started: boolean
   stop(): void
@@ -190,10 +183,9 @@ export interface Model {
 
 export function initCanvas(
   canvas: HTMLCanvasElement,
-  fullControl: boolean = false
+  fullscreen: boolean = false
 ): Model {
-  let [scene, camera, renderer, controls] = initScene(canvas, fullControl)
-  let [selectorL, selectorC, selectorH] = generateMesh(scene, biggestRgb.get())
+  let [scene, camera, renderer, controls] = initScene(canvas, fullscreen)
 
   function animate(): void {
     if (model.started) requestAnimationFrame(animate)
@@ -201,30 +193,36 @@ export function initCanvas(
     renderer.render(scene, camera)
   }
 
+  let updateSlices: UpdateSlice
+  let unbindMode: undefined | VoidFunction
+  let unbindCurrent: undefined | VoidFunction
+
   let model = {
     started: true,
     camera,
     start(): void {
+      unbindMode = biggestRgb.subscribe(value => {
+        updateSlices = generateMesh(scene, value)
+        if (!fullscreen) updateSlices(current.get())
+      })
+
+      if (!fullscreen) {
+        unbindCurrent = current.subscribe(value => {
+          updateSlices(value)
+        })
+      }
+
       model.started = true
       animate()
     },
     stop(): void {
+      unbindCurrent?.()
+      unbindMode?.()
       model.started = false
     }
   }
 
   model.start()
-
-  biggestRgb.listen(value => {
-    generateMesh(scene, value)
-  })
-
-  if (!fullControl) {
-    updateSelectors(selectorL, selectorC, selectorH, current.get())
-    current.listen(value => {
-      updateSelectors(selectorL, selectorC, selectorH, value)
-    })
-  }
 
   return model
 }
