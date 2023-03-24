@@ -128,7 +128,7 @@ function generateMaterialWithShader(): [MeshBasicMaterial, Vector2[]] {
       `#include <dithering_fragment>`,
       `#include <dithering_fragment>
         vec3 col = vec3(0.5, 0.5, 0.5);
-        float width = 0.005;
+        float width = 0.0025;
         float l = ss(width, 0., abs(vPos.x + selectorL.y));
         float c = ss(width, 0., abs(vPos.y + selectorC.y));
         float h = ss(width, 0., abs(vPos.z - selectorH.y));
