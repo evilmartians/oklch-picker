@@ -176,8 +176,8 @@ function updateSelectors(
   color: LchValue
 ): void {
   selectorL.set(0, 0.01 * -color.l + 0.5)
-  selectorC.set(0, 0.55 * -color.c / C_MAX + 0.5)
-  let borderH =  color.h >  350 ? 0.51 : 0.5
+  selectorC.set(0, (0.55 * -color.c) / C_MAX + 0.5)
+  let borderH = color.h > 350 ? 0.51 : 0.5
   selectorH.set(0, 0.0028 * color.h - borderH)
 }
 
@@ -218,13 +218,13 @@ export function initCanvas(
   biggestRgb.listen(value => {
     generateMesh(scene, value)
   })
-  
+
   if (!fullControl) {
     updateSelectors(selectorL, selectorC, selectorH, current.get())
+    current.listen(value => {
+      updateSelectors(selectorL, selectorC, selectorH, value)
+    })
   }
-  current.listen(value => {
-    updateSelectors(selectorL, selectorC, selectorH, value)
-  })
 
   return model
 }
