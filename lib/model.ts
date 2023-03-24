@@ -1,4 +1,3 @@
-import type { Renderer } from 'three'
 import type { AnyRgb } from './colors.js'
 import type { RgbMode } from '../stores/settings.js'
 
@@ -13,13 +12,17 @@ import {
   Vector3,
   Camera,
   Scene,
-  Mesh
+  Mesh,
+  Vector2,
+  type Shader,
+  type Renderer
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Delaunator from 'delaunator'
 
 import { toTarget, rgb, build } from './colors.js'
 import { biggestRgb } from '../stores/settings.js'
+import { current, type LchValue } from '../stores/current.js'
 
 function onGamutEdge(r: number, g: number, b: number): boolean {
   return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99
@@ -63,7 +66,7 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
   return [coordinates, colors]
 }
 
-function generateMesh(scene: Scene, mode: RgbMode): void {
+function generateMesh(scene: Scene, mode: RgbMode): Vector2[] {
   scene.clear()
 
   let [coordinates, colors] = getModelData(mode)
@@ -74,10 +77,8 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
     Array.from(Delaunator.from(coordinates.map(c => [c.x, c.z])).triangles)
   )
   top.computeVertexNormals()
-  let topMesh = new Mesh(
-    top,
-    new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
-  )
+  let [material, selectors] = generateMaterialWithShader()
+  let topMesh = new Mesh(top, material)
   topMesh.translateY(0.3)
   scene.add(topMesh)
 
@@ -93,13 +94,52 @@ function generateMesh(scene: Scene, mode: RgbMode): void {
   }
   bottom.setAttribute('color', new Float32BufferAttribute(bottomColors, 3))
   bottom.translate(0, 0, -0.2)
-  let bottomMesh = new Mesh(
-    bottom,
-    new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
-  )
-  bottomMesh.rotateX(-Math.PI * 0.5)
-  bottomMesh.rotateZ(Math.PI * 0.5)
+  bottom.rotateZ(Math.PI * 0.5)
+  bottom.rotateX(-Math.PI * 0.5)
+  let bottomMesh = new Mesh(bottom, material)
   scene.add(bottomMesh)
+  return selectors
+}
+
+function generateMaterialWithShader(): [MeshBasicMaterial, Vector2[]] {
+  let material = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
+  let selectorL = new Vector2(0, 1)
+  let selectorC = new Vector2(0, 1)
+  let selectorH = new Vector2(0, 1)
+  material.onBeforeCompile = (shader: Shader) => {
+    shader.uniforms.selectorL = { value: selectorL }
+    shader.uniforms.selectorC = { value: selectorC }
+    shader.uniforms.selectorH = { value: selectorH }
+    shader.vertexShader = `
+      varying vec3 vPos;
+      ${shader.vertexShader}
+    `.replace(
+      `#include <begin_vertex>`,
+      `#include <begin_vertex>
+      vPos = transformed;
+      `
+    )
+    shader.fragmentShader = `
+      #define ss(a, b, c) smoothstep(a, b, c)
+      uniform vec2 selectorL, selectorC, selectorH;
+      varying vec3 vPos;
+      ${shader.fragmentShader}
+    `.replace(
+      `#include <dithering_fragment>`,
+      `#include <dithering_fragment>
+        vec3 col = vec3(0.5, 0.5, 0.5);
+        float width = 0.0025;
+        float l = ss(width, 0., abs(vPos.x + selectorL.y));
+        float c = ss(width, 0., abs(vPos.y + selectorC.y));
+        float h = ss(width, 0., abs(vPos.z - selectorH.y));
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, l);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, c);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, col, h);
+      `
+    )
+  }
+
+  return [material, [selectorL, selectorC, selectorH]]
 }
 
 function initScene(
@@ -129,6 +169,18 @@ function initScene(
   return [scene, camera, renderer, controls]
 }
 
+function updateSelectors(
+  selectorL: Vector2,
+  selectorC: Vector2,
+  selectorH: Vector2,
+  color: LchValue
+): void {
+  selectorL.set(0, 0.01 * -color.l + 0.5)
+  selectorC.set(0, (0.55 * -color.c) / C_MAX + 0.5)
+  let borderH = color.h > 350 ? 0.51 : 0.5
+  selectorH.set(0, 0.0028 * color.h - borderH)
+}
+
 export interface Model {
   started: boolean
   stop(): void
@@ -141,7 +193,7 @@ export function initCanvas(
   fullControl: boolean = false
 ): Model {
   let [scene, camera, renderer, controls] = initScene(canvas, fullControl)
-  generateMesh(scene, biggestRgb.get())
+  let [selectorL, selectorC, selectorH] = generateMesh(scene, biggestRgb.get())
 
   function animate(): void {
     if (model.started) requestAnimationFrame(animate)
@@ -166,6 +218,13 @@ export function initCanvas(
   biggestRgb.listen(value => {
     generateMesh(scene, value)
   })
+
+  if (!fullControl) {
+    updateSelectors(selectorL, selectorC, selectorH, current.get())
+    current.listen(value => {
+      updateSelectors(selectorL, selectorC, selectorH, value)
+    })
+  }
 
   return model
 }
