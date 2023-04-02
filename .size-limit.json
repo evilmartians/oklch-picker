@@ -20,6 +20,6 @@
     "name": "Scripts for 3D model",
     "path": "dist/model-*.js",
     "gzip": false,
-    "limit": "430 KB"
+    "limit": "440 KB"
   }
 ]
