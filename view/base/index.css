@@ -47,6 +47,13 @@ select {
   }
 }
 
+body.is-loading * {
+  &, &::before, &::after {
+    transition: none !important;
+    animation-duration: 0.001s !important;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;

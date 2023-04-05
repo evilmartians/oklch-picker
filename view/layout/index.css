@@ -98,13 +98,10 @@
 .layout_3d {
   height: 0;
   overflow: hidden;
+  transition: height 400ms;
 
   &.is-shown {
     height: calc(var(--card-max-height) + 4px);
-  }
-
-  :is(body.was-loaded) & {
-    transition: height 400ms;
   }
 }
 

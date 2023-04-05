@@ -45,10 +45,7 @@ body {
   padding: 0 20px;
   margin: 0 -20px;
   overflow: hidden;
-
-  :is(body.was-loaded) & {
-    transition: height 400ms;
-  }
+  transition: height 400ms;
 
   :is(body.is-chart-hidden) & {
     height: 0;

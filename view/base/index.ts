@@ -7,7 +7,7 @@ accent.subscribe(({ main, surface }) => {
 })
 
 loading.subscribe(value => {
-  document.body.classList.toggle('was-loaded', !value)
+  document.body.classList.toggle('is-loading', value)
 })
 
 document.body.addEventListener('mousedown', () => {
