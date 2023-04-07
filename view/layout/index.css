@@ -104,19 +104,3 @@
     height: calc(var(--card-max-height) + 4px);
   }
 }
-
-.layout_banner {
-  position: absolute;
-  top: 13px;
-  right: 0;
-  border-radius: 10px;
-
-  @media (width < 1230px) {
-    display: none;
-  }
-}
-
-.layout_banner > img {
-  width:250px;
-  height:54px
-}

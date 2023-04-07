@@ -24,7 +24,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'none'; img-src 'self' https://api.producthunt.com data:; script-src 'self'; style-src 'self'; font-src 'self'; manifest-src 'self';"
+            "value": "default-src 'none'; img-src 'self' data:; script-src 'self'; style-src 'self'; font-src 'self'; manifest-src 'self';"
           }
         ]
       }
