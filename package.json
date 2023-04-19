@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@logux/eslint-config": "^49.0.0",
-    "@logux/stylelint-config": "^0.14.0",
+    "@logux/stylelint-config": "^0.15.1",
     "@size-limit/file": "^8.2.4",
     "@types/culori": "^2.0.0",
     "@types/delaunator": "^5.0.0",
