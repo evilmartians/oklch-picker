@@ -52,11 +52,11 @@ dependencies:
     specifier: ^0.151.3
     version: 0.151.3
   vite:
-    specifier: ^4.2.2
-    version: 4.2.2
+    specifier: ^4.3.0
+    version: 4.3.0
   vite-plugin-pug-transformer:
     specifier: ^1.0.3
-    version: 1.0.3(vite@4.2.2)
+    version: 1.0.3(vite@4.3.0)
 
 devDependencies:
   '@logux/eslint-config':
@@ -562,7 +562,7 @@ packages:
     engines: {node: ^8.13.0 || >=10.10.0}
     dependencies:
       '@grpc/proto-loader': 0.7.6
-      '@types/node': 18.15.11
+      '@types/node': 18.15.12
     dev: false
 
   /@grpc/proto-loader@0.7.6:
@@ -796,14 +796,14 @@ packages:
   /@types/duplexify@3.6.1:
     resolution: {integrity: sha512-n0zoEj/fMdMOvqbHxmqnza/kXyoGgJmEpsXjpP+gEqE1Ye4yNqc7xWipKnUoMpWhMuzJQSfK2gMrwlElly7OGQ==}
     dependencies:
-      '@types/node': 18.15.11
+      '@types/node': 18.15.12
     dev: false
 
   /@types/glob@8.1.0:
     resolution: {integrity: sha512-IO+MJPVhoqz+28h1qLAcBEH2+xHMK6MTyHJc7MTnnYb6wsoLR29POVGJ7LycmVXIqyy/4/2ShP5sUwTXuOwb/w==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.15.11
+      '@types/node': 18.15.12
     dev: false
 
   /@types/json-schema@7.0.11:
@@ -840,8 +840,8 @@ packages:
     resolution: {integrity: sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==}
     dev: true
 
-  /@types/node@18.15.11:
-    resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
+  /@types/node@18.15.12:
+    resolution: {integrity: sha512-Wha1UwsB3CYdqUm2PPzh/1gujGCNtWVUYF0mB00fJFoR4gTyWTDPjSm+zBF787Ahw8vSGgBja90MkgFwvB86Dg==}
     dev: false
 
   /@types/normalize-package-data@2.4.1:
@@ -852,7 +852,7 @@ packages:
     resolution: {integrity: sha512-F3OznnSLAUxFrCEu/L5PY8+ny8DtcFRjx7fZZ9bycvXRi3KPTRS9HOitGZwvPg0juRhXFWIeKX58cnX5YqLohQ==}
     dependencies:
       '@types/glob': 8.1.0
-      '@types/node': 18.15.11
+      '@types/node': 18.15.12
     dev: false
 
   /@types/semver@7.3.13:
@@ -5407,7 +5407,7 @@ packages:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
-      '@types/node': 18.15.11
+      '@types/node': 18.15.12
       long: 5.2.3
     dev: false
 
@@ -6862,7 +6862,7 @@ packages:
       extsprintf: 1.3.0
     dev: false
 
-  /vite-plugin-pug-transformer@1.0.3(vite@4.2.2):
+  /vite-plugin-pug-transformer@1.0.3(vite@4.3.0):
     resolution: {integrity: sha512-cndWLK7iQE/yryjRNGJAOxPYnL7v5miMbwCXUbkP754BILh5hwJKbE10X4QKDl1X46ntIb1oBMBYKcw4NVBnkg==}
     engines: {node: '>=12.22.0'}
     peerDependencies:
@@ -6870,11 +6870,11 @@ packages:
     dependencies:
       picocolors: 1.0.0
       pug: 3.0.2
-      vite: 4.2.2
+      vite: 4.3.0
     dev: false
 
-  /vite@4.2.2:
-    resolution: {integrity: sha512-PcNtT5HeDxb3QaSqFYkEum8f5sCVe0R3WK20qxgIvNBZPXU/Obxs/+ubBMeE7nLWeCo2LDzv+8hRYSlcaSehig==}
+  /vite@4.3.0:
+    resolution: {integrity: sha512-JTGFgDh3dVxeGBpuQX04Up+JZmuG6wu9414Ei36vQzaEruY/M4K0AgwtuB2b4HaBgB7R8l+LHxjB0jcgz4d2qQ==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:
@@ -6900,7 +6900,6 @@ packages:
     dependencies:
       esbuild: 0.17.17
       postcss: 8.4.23
-      resolve: 1.22.2
       rollup: 3.20.6
     optionalDependencies:
       fsevents: 2.3.2
