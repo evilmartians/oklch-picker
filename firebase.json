@@ -24,7 +24,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "frame-ancestors 'none'; script-src 'self'; style-src 'self'; font-src 'self'; worker-src 'self';"
+            "value": "frame-ancestors 'none'; script-src 'self'; style-src 'self'; font-src 'self'; worker-src 'self'; child-src 'self';"
           }
         ]
       }
