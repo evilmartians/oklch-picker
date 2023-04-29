@@ -31,7 +31,7 @@
 .checkbox_icon {
   position: absolute;
   top: 4px;
-  right: 4px;
+  inset-inline-end: 4px;
   width: 56px;
   height: 32px;
   background: var(--surface-ui-regular);

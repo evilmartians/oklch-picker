@@ -35,7 +35,7 @@ body {
 .card_number {
   position: absolute;
   top: 20px;
-  right: 32px;
+  inset-inline-end: 32px;
   width: 110px;
 }
 
