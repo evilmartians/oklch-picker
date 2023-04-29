@@ -38,7 +38,7 @@
 .field_hotkey {
   position: absolute;
   top: 10px;
-  left: -24px;
+  inset-inline-start: -24px;
   width: 16px;
   height: 16px;
   font-size: 10px;
