@@ -21,7 +21,7 @@
   }
 }
 
-.link_icon > svg {
+.link_icon {
   position: absolute;
   top: 12px;
   left: 12px;
@@ -29,7 +29,7 @@
   height: 48px;
 }
 
-.link_icon.is-github > svg {
+.link.is-github .link_icon {
   @media (prefers-color-scheme: dark) {
     filter: invert(1);
   }
