@@ -1,14 +1,12 @@
 .link {
   position: relative;
   box-sizing: border-box;
-  display: block;
+  display: flex;
+  align-items: center;
   max-width: 100vw;
-  height: 72px;
-  padding: 0 55px 0 72px;
-  margin-bottom: 4px;
+  padding: 28px 55px 28px 72px;
   overflow: hidden;
   font-size: 10px;
-  line-height: 72px;
   color: var(--text-primary);
   text-decoration: none;
   text-overflow: ellipsis;
@@ -19,14 +17,34 @@
   &:hover {
     background: var(--surface-ui-accent);
   }
+
+  &::after {
+    --link-external-size: 16px;
+
+    position: absolute;
+    top: 50%;
+    right: 28px;
+    width: var(--link-external-size);
+    height: var(--link-external-size);
+    content: "";
+    background: url("./external.svg");
+    transform: translateY(-50%);
+
+    @media (prefers-color-scheme: dark) {
+      filter: invert(1);
+    }
+  }
 }
 
 .link_icon {
+  --link-icon-size: 48px;
+
   position: absolute;
-  top: 12px;
+  top: 50%;
   left: 12px;
-  width: 48px;
-  height: 48px;
+  width: var(--link-icon-size);
+  height: var(--link-icon-size);
+  transform: translateY(-50%);
 }
 
 .link.is-github .link_icon {
@@ -34,17 +52,3 @@
     filter: invert(1);
   }
 }
-
-.link_external {
-  position: absolute;
-  top: 28px;
-  right: 28px;
-  width: 16px;
-  height: 16px;
-  background: url(./external.svg);
-
-  @media (prefers-color-scheme: dark) {
-    filter: invert(1);
-  }
-}
-
