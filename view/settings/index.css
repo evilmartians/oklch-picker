@@ -1,3 +1,6 @@
 .settings {
-  padding: 16px 32px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  padding: 16px 32px 16px 20px;
 }
