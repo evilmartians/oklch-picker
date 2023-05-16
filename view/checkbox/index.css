@@ -1,12 +1,6 @@
 .checkbox {
   position: relative;
   display: block;
-  margin-bottom: 12px;
-  margin-left: -12px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 
 .checkbox_input {
