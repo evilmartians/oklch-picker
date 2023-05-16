@@ -1,5 +1,5 @@
 mixin button(text, icon, cls)
-  button.button( aria-label=text class=`is-${cls}` type='button' )
+  button.button( aria-label=text title=text class=`is-${cls}` type='button' )
     if icon === 'expand'
       include ./expand.svg
     else if icon === 'cross'
