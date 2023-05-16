@@ -1,12 +1,12 @@
 .link {
   position: relative;
   box-sizing: border-box;
-  display: flex;
-  align-items: center;
+  display: block;
   max-width: 100vw;
-  padding: 28px 55px 28px 72px;
+  padding: 31px 55px 31px 72px;
   overflow: hidden;
   font-size: 10px;
+  line-height: 1;
   color: var(--text-primary);
   text-decoration: none;
   text-overflow: ellipsis;
