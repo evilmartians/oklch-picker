@@ -1,5 +1,5 @@
-mixin button(text, icon, cls)
-  button.button( title=text class=`is-${cls}` )
+mixin button(text, icon, cls, bemMix)
+  button.button( title=text class=`is-${cls} ${bemMix ? bemMix : ''}` )
     if icon === 'expand'
       include ./expand.svg
     else if icon === 'cross'

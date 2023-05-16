@@ -28,7 +28,7 @@
   }
 }
 
-.fullmodel .is-close3d {
+.fullmodel__close {
   position: absolute;
   top: 30px;
   right: 40px;
