@@ -1,7 +1,7 @@
 include ../range/mixin.pug
 
-mixin card(type)
-  section.card( class=`is-${type}` )
+mixin card(type, layout)
+  section.card( class=`is-${type} ${layout ? layout : ''}` )
 
     if type === 'l'
       h2.card_title Lightness

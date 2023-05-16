@@ -4,10 +4,8 @@ include ../card/mixin.pug
 include ../link/mixin.pug
 
 .layout
-  .layout_title
-    include ../title/index.pug
-  .layout_main
-    include ../main/index.pug
+  include ../title/index.pug
+  include ../main/index.pug
   .layout_links
     +link(
       'help',
@@ -20,16 +18,12 @@ include ../link/mixin.pug
       'https://github.com/evilmartians/oklch-picker'
     )
 
-  .layout_l
-    +card('l')
-  .layout_c
-    +card('c')
-  .layout_h
-    +card('h')
+  +card('l', 'layout_l')
+  +card('c', 'layout_c')
+  +card('h', 'layout_h')
   .layout_extra
     .layout_3d
       +card('3d')
     +card('a')
 
-  .layout_prefs
-    include ../settings/index.pug
+  include ../settings/index.pug
