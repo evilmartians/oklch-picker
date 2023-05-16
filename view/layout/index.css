@@ -72,7 +72,10 @@
 
 .layout_links {
   position: relative;
+  display: grid;
   grid-area: links;
+  grid-template-columns: 1fr;
+  gap: 4px;
 }
 
 .layout_l {
