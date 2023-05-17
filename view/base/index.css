@@ -31,7 +31,7 @@ body {
   line-height: 16px;
   color: var(--text-primary);
   background: var(--current-surface);
-  -webkit-tap-highlight-color: oklch(0% 0 0 / 0);
+  -webkit-tap-highlight-color: oklch(0% 0 0 / 0%);
 }
 
 a,
