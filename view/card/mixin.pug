@@ -15,8 +15,7 @@ mixin card(type)
       .card_chart
         .card_size
           +chart('h', 'c', 'l')
-      .card_range
-        +range('l', 100, L_STEP, 70)
+      +range('l', 100, L_STEP, 70)
 
     else if type === 'c'
       h2.card_title Chroma
@@ -29,8 +28,7 @@ mixin card(type)
       .card_chart
         .card_size
           +chart('l', 'c', 'h')
-      .card_range
-        +range('c', C_MAX, C_STEP, LCH ? 39 : 0.1)
+      +range('c', C_MAX, C_STEP, LCH ? 39 : 0.1)
 
     else if type === 'h'
       h2.card_title Hue
@@ -44,8 +42,7 @@ mixin card(type)
       .card_chart
         .card_size
           +chart('c', 'l', 'h')
-      .card_range
-        +range('h', H_MAX, H_STEP, 286)
+      +range('h', H_MAX, H_STEP, 286)
 
     else if type === 'a'
       h2.card_title Alpha
@@ -57,8 +54,7 @@ mixin card(type)
           max: ALPHA_MAX,
           step: ALPHA_STEP,
         })
-      .card_range
-        +range('a', ALPHA_MAX, ALPHA_STEP, 100)
+      +range('a', ALPHA_MAX, ALPHA_STEP, 100)
 
     else if type === '3d'
       h2.card_title 3D
