@@ -12,12 +12,12 @@ body {
   &.is-a {
     background: var(--opacity-pattern);
     border: none;
+  }
 
-    &::before {
-      inset: 0;
-      content: "";
-      background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
-    }
+  &.is-a::before {
+    inset: 0;
+    content: "";
+    background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
   }
 }
 
