@@ -6,7 +6,7 @@
 .code.is-rgb
   +field('hex/rgba CSS code', 'r', {
     type: 'text',
-    options: {
+    'data-options': {
       'hex/rgba': 'Auto hex/rgba',
       'hex': '',
       'rgb': '',
@@ -16,7 +16,7 @@
       'lab': '',
       'oklab': '',
     },
-    optionsLabel: 'Change format'
+    'data-optionsLabel': 'Change format'
   })
   .code_note.is-paste
     = `Paste HEX, RGBA, or HSL to convert to ${LCH ? 'LCH' : 'OKLCH'}`
