@@ -13,25 +13,23 @@ body {
     background: var(--opacity-pattern);
     border: none;
   }
-
-  &.is-a::before {
-    inset: 0;
-    content: "";
-    background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
-  }
 }
 
-.range_space,
 .range.is-a::before {
   position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
   border-radius: var(--radius);
 }
 
 .range_space {
+  position: absolute;
   top: -1px;
   left: -1px;
   width: calc(100% + 2px);
   height: calc(100% + 2px);
+  border-radius: var(--radius);
 }
 
 @define-mixin range-thumb {
