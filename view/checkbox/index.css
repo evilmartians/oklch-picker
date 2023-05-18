@@ -8,6 +8,7 @@
 }
 
 .checkbox_control {
+  display: block;
   padding: 12px 48px 12px 12px;
   cursor: pointer;
 
