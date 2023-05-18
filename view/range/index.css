@@ -13,10 +13,16 @@ body {
     background: var(--opacity-pattern);
     border: none;
   }
+
+  &.is-a::before {
+    inset: 0;
+    content: "";
+    background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
+  }
 }
 
 .range_space,
-.range_gradient {
+.range.is-a::before {
   position: absolute;
   border-radius: var(--radius);
 }
@@ -26,11 +32,6 @@ body {
   left: -1px;
   width: calc(100% + 2px);
   height: calc(100% + 2px);
-}
-
-.range_gradient {
-  inset: 0;
-  background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
 }
 
 @define-mixin range-thumb {

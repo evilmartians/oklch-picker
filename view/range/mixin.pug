@@ -1,8 +1,6 @@
 mixin range(type, max, step, defaultValue)
   .range( class=`is-${type}` )
-    if type === 'a'
-      .range_gradient
-    else
+    if type !== 'a'
       canvas.range_space
     input.range_input(
       type="range"
