@@ -7,9 +7,10 @@ mixin card(type)
       h2.card_title Lightness
       .card_number
         +field('L', 'l', {
-          type: 'number',
-          min: 0,
-          max: 100,
+          type: 'text',
+          role: 'spinbutton',
+          'aria-valuemin': 0,
+          'aria-valuemax': 100,
           step: L_STEP
         })
       .card_chart
@@ -21,8 +22,9 @@ mixin card(type)
       h2.card_title Chroma
       .card_number
         +field('C', 'c', {
-          type: 'number',
-          min: 0,
+          type: 'text',
+          role: 'spinbutton',
+          'aria-valuemin': 0,
           step: C_STEP
         })
       .card_chart
@@ -34,9 +36,10 @@ mixin card(type)
       h2.card_title Hue
       .card_number
         +field('H', 'h', {
-          type: 'number',
-          min: 0,
-          max: H_MAX,
+          type: 'text',
+          role: 'spinbutton',
+          'aria-valuemin': 0,
+          'aria-valuemax': H_MAX,
           step: H_STEP
         })
       .card_chart
@@ -48,11 +51,12 @@ mixin card(type)
       h2.card_title Alpha
       .card_number
         +field('Alpha', 'a', {
-          type: 'number',
-          min: 0,
+          type: 'text',
+          role: 'spinbutton',
           value: ALPHA_MAX,
-          max: ALPHA_MAX,
           step: ALPHA_STEP,
+          'aria-valuemin': 0,
+          'aria-valuemax': ALPHA_MAX,
         })
       +range('a', ALPHA_MAX, ALPHA_STEP, 100)
 

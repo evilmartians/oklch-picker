@@ -3,7 +3,7 @@ import { showRec2020, showCharts } from '../../stores/settings.js'
 
 function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
-  let text = card.querySelector<HTMLInputElement>('[type=number]')!
+  let text = card.querySelector<HTMLInputElement>('[role=spinbutton]')!
 
   text.addEventListener('change', () => {
     current.setKey(type, parseFloat(text.value))
