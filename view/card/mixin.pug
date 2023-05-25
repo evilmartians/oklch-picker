@@ -11,6 +11,8 @@ mixin card(type)
           role: 'spinbutton',
           'aria-valuemin': 0,
           'aria-valuemax': 100,
+          pattern: '^[0-9+\/*\-\.]+$',
+          inputmode: 'decimal',
           step: L_STEP
         })
       .card_chart
@@ -24,7 +26,9 @@ mixin card(type)
         +field('C', 'c', {
           type: 'text',
           role: 'spinbutton',
+          pattern: '^[0-9+\/*\-\.]+$',
           'aria-valuemin': 0,
+          inputmode: 'decimal',
           step: C_STEP
         })
       .card_chart
@@ -38,8 +42,10 @@ mixin card(type)
         +field('H', 'h', {
           type: 'text',
           role: 'spinbutton',
+          pattern: '^[0-9+\/*\-\.]+$',
           'aria-valuemin': 0,
           'aria-valuemax': H_MAX,
+          inputmode: 'decimal',
           step: H_STEP
         })
       .card_chart
@@ -53,10 +59,12 @@ mixin card(type)
         +field('Alpha', 'a', {
           type: 'text',
           role: 'spinbutton',
-          value: ALPHA_MAX,
-          step: ALPHA_STEP,
           'aria-valuemin': 0,
           'aria-valuemax': ALPHA_MAX,
+          value: ALPHA_MAX,
+          step: ALPHA_STEP,
+          inputmode: 'decimal',
+          pattern: '[0-9]*(.[0-9]+)?'
         })
       +range('a', ALPHA_MAX, ALPHA_STEP, 100)
 
