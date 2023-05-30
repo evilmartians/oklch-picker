@@ -1,19 +1,20 @@
-import type { Renderer, Shader } from 'three'
+import type { Renderer, Shader, Camera } from 'three'
 import type { LchValue } from '../stores/current.js'
 import type { RgbMode } from '../stores/settings.js'
 import type { AnyRgb } from './colors.js'
 
 import {
   Float32BufferAttribute,
+  LinearSRGBColorSpace,
   MeshBasicMaterial,
   PerspectiveCamera,
+  ColorManagement,
   BufferGeometry,
   PlaneGeometry,
   WebGLRenderer,
   DoubleSide,
   Vector3,
   Vector2,
-  Camera,
   Scene,
   Mesh
 } from 'three'
@@ -23,6 +24,8 @@ import Delaunator from 'delaunator'
 import { toTarget, rgb, build } from './colors.js'
 import { biggestRgb } from '../stores/settings.js'
 import { current } from '../stores/current.js'
+
+ColorManagement.enabled = false
 
 interface UpdateSlice {
   (color: LchValue): void
@@ -158,6 +161,7 @@ function initScene(
   let camera = new PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 1000)
   let renderer = new WebGLRenderer({ canvas, alpha: true })
 
+  renderer.outputColorSpace = LinearSRGBColorSpace
   renderer.setPixelRatio(window.devicePixelRatio)
   renderer.setSize(canvasWidth, canvasHeight)
   camera.position.set(0.79, 0, 0.79)
