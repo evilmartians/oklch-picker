@@ -41,7 +41,10 @@ function toPostfix(str: string): string[] {
       let topElement = stack[stack.length - 1] as keyof Operators
       let currentPicked = current as keyof Operators
 
-      while (operators[topElement] <= operators[currentPicked]) {
+      while (
+        stack.length > 0 &&
+        operators[topElement] <= operators[currentPicked]
+      ) {
         result.push(stack.pop()!)
       }
       stack.push(current)
