@@ -16,7 +16,8 @@
   border: none;
   border-radius: var(--radius);
 
-  &[type="number"] {
+  &[role="spinbutton"] {
+    padding-inline-end: 23px;
     text-align: right;
   }
 
@@ -32,6 +33,32 @@
   .field.is-options & {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+  }
+}
+
+.field_controls {
+  position: absolute;
+  inset-inline-end: 7px;
+  top: 50%;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1px;
+  overflow: hidden;
+  border-radius: 23px;
+  transform: translateY(-50%);
+}
+
+.field_control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 9px;
+  background: var(--surface-1);
+  border: none;
+
+  & svg {
+    pointer-events: none;
   }
 }
 
@@ -108,4 +135,8 @@
 .field_button > svg {
   width: 16px;
   height: 16px;
+}
+
+.field_control:first-child > svg {
+  transform: rotate(180deg);
 }

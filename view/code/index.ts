@@ -24,7 +24,7 @@ let noteFallback = document.querySelector<HTMLDivElement>(
 
 let format = document.querySelector<HTMLSelectElement>('.code select')!
 
-function toggle(input: HTMLInputElement, invalid: boolean): void {
+export function toggle(input: HTMLInputElement, invalid: boolean): void {
   if (invalid) {
     input.setAttribute('aria-invalid', 'true')
   } else {
