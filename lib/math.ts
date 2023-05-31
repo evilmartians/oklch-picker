@@ -19,6 +19,8 @@ const OPERATIONS = {
   '/': (a: number, b: number) => b / a
 }
 
+const OPERATORS_PATTERN = /[*+-/]/
+
 export function parseValue(n: number | string): number {
   if (typeof n === 'number') return n
   let parsedValue = parseFloat(n)
@@ -69,7 +71,11 @@ function toPostfix(str: string): string[] {
 }
 
 export function computeExpression(str: string): number {
-  if (!/[*+-/]/.test(str)) return parseValue(str)
+  let firstCh = str.charAt(0)
+
+  if (!OPERATORS_PATTERN.test(str) || OPERATORS_PATTERN.test(firstCh)) {
+    return parseValue(str)
+  }
 
   let postfixOfExpression = toPostfix(str)
   let stack: number[] = []
@@ -86,4 +92,18 @@ export function computeExpression(str: string): number {
   let result = stack.pop() ?? 0
 
   return result
+}
+
+export function cycleByWheel(value: number, max: number): number {
+  if (value > 0 && value <= max) {
+    return value
+  }
+
+  let remainder = value % max
+
+  if (remainder > 0) {
+    return remainder
+  }
+
+  return max - Math.abs(remainder)
 }
