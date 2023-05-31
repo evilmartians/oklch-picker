@@ -91,3 +91,14 @@ export function computeExpression(str: string): number {
 
   return result
 }
+
+export function cycleByWheel(value: number, max: number): number {
+  if (value > 0 && value <= max) {
+    return value
+  }
+
+  let remainder = value % max
+  let result = value > 0 ? remainder : max - Math.abs(remainder)
+
+  return result
+}
