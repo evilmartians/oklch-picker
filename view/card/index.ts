@@ -1,6 +1,6 @@
 import type { SpinEvent } from '../field/index.js'
 
-import { computeExpression, parseValue } from '../../lib/math.js'
+import { computeExpression, cycleByWheel, parseValue } from '../../lib/math.js'
 import { current, onCurrentChange } from '../../stores/current.js'
 import { showRec2020, showCharts } from '../../stores/settings.js'
 import { clean } from '../../lib/colors.js'
@@ -19,19 +19,33 @@ function getInputMeta(input: HTMLInputElement): MetaSpinInput {
   }
 }
 
+type ClampAngleFn = (
+  value: number,
+  range: Omit<MetaSpinInput, 'step'>
+) => number
+
+function clampInRange(useWheel: boolean): ClampAngleFn {
+  return (value, range) => {
+    let angle = useWheel ? cycleByWheel(value, range.max) : value
+    let clamped = Math.max(range.min, Math.min(range.max, angle))
+
+    return clean(clamped)
+  }
+}
+
 function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
   let text = card.querySelector<HTMLInputElement>('[role=spinbutton]')!
+  let bindedClamp = clampInRange(type === 'h')
 
   text.addEventListener('change', () => {
     let { max, min } = getInputMeta(text)
 
-    let computedExpression = clean(
-      Math.max(min, Math.min(max, computeExpression(text.value)))
-    )
+    let computedExpression = computeExpression(text.value)
+    let angleInRange = bindedClamp(computedExpression, { max, min })
 
-    current.setKey(type, computedExpression)
-    text.setAttribute('aria-valuenow', String(computedExpression))
+    current.setKey(type, angleInRange)
+    text.setAttribute('aria-valuenow', String(angleInRange))
   })
 
   text.addEventListener('spin', e => {
@@ -41,10 +55,10 @@ function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
 
     switch ((e as SpinEvent).detail.action) {
       case 'increase':
-        value = Math.min(max, value + step)
+        value = value + step
         break
       case 'decrease':
-        value = Math.max(min, value - step)
+        value = value - step
         break
       case 'setMaximum':
         value = max
@@ -54,7 +68,8 @@ function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
         break
     }
 
-    let parsedValue = clean(value)
+    let parsedValue = bindedClamp(value, { max, min })
+
     current.setKey(type, parsedValue)
     text.setAttribute('aria-valuenow', String(parsedValue))
   })
