@@ -69,7 +69,11 @@ function toPostfix(str: string): string[] {
 }
 
 export function computeExpression(str: string): number {
-  if (!/[*+-/]/.test(str)) return parseValue(str)
+  let pattern = /[*+-/]/
+
+  if (!pattern.test(str) || pattern.test(str.charAt(0))) {
+    return parseValue(str)
+  }
 
   let postfixOfExpression = toPostfix(str)
   let stack: number[] = []
