@@ -100,9 +100,8 @@ let currentNotifyCb = (): void => {}
 let pinchTimer: number
 
 function useSpinButton(input: HTMLInputElement): void {
-  let container = input.nextElementSibling!
-  let increase = container.querySelector<HTMLButtonElement>('.is-increase')!
-  let decrease = container.querySelector<HTMLButtonElement>('.is-decrease')!
+  let increase = input.nextElementSibling as HTMLButtonElement
+  let decrease = increase.nextElementSibling as HTMLButtonElement
 
   function changeNotice(type: SpinEvent['detail']['action']): void {
     if (/[0-9]/.test(input.value.charAt(input.value.length - 1))) {
