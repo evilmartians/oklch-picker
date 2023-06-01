@@ -19,11 +19,11 @@ import { current, valueToColor } from './current.js'
 
 function formatOklab(color: Oklab): string {
   let { l, a, b, alpha } = color
+  let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {
-    return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)} / ${toPercent(alpha)}`
-  } else {
-    return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)})`
+    postfix = ` / ${clean(alpha)}`
   }
+  return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)}${postfix})`
 }
 
 function cleanComponents<Obj extends {}>(color: Obj): Obj {
