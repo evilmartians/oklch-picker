@@ -114,7 +114,11 @@ listenChanges(rgbInput)
 format.value = outputFormat.get()
 outputFormat.listen(value => {
   format.value = value
-  rgb.ariaLabel = `${value} CSS code`
+  if (value === 'numbers') {
+    rgb.ariaLabel = `OKLCH ${value}`
+  } else {
+    rgb.ariaLabel = `${value} CSS code`
+  }
   setRgb()
 })
 format.addEventListener('change', () => {
