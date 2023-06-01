@@ -1,5 +1,6 @@
-import type { OutputFormats } from './settings.js'
 import type { Color, Oklab } from 'culori/fn'
+import type { OutputFormats } from './settings.js'
+import type { AnyLch } from '../lib/colors.js'
 
 import { formatHex8, formatHex, formatRgb, formatCss } from 'culori/fn'
 import { computed } from 'nanostores'
@@ -24,6 +25,16 @@ function formatOklab(color: Oklab): string {
     postfix = ` / ${clean(alpha)}`
   }
   return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)}${postfix})`
+}
+
+function toNumbers(color: AnyLch): string {
+  let { l, c, h, alpha } = color
+  let prefix = `${clean(l)}, ${clean(c)}, ${clean(h ?? 0)}`
+  if (typeof alpha !== 'undefined' && alpha < 1) {
+    return `${prefix}, ${clean(alpha)}`
+  } else {
+    return prefix
+  }
 }
 
 function cleanComponents<Obj extends {}>(color: Obj): Obj {
@@ -52,7 +63,7 @@ export const srgbFormats = new Set<OutputFormats>([
 export const formats = computed<FormatsValue, typeof current>(
   current,
   value => {
-    let color: Color = valueToColor(value)
+    let color: AnyLch = valueToColor(value)
     let rgbColor: Color = inRGB(color) ? color : toRgb(color)
     let hex = formatHex(rgbColor)
     let rgba = formatRgb(rgbColor)
@@ -65,7 +76,8 @@ export const formats = computed<FormatsValue, typeof current>(
       'p3': formatCss(cleanComponents(p3(color))),
       'lch': formatCss(cleanComponents(lch(color))),
       'lab': formatCss(cleanComponents(lab(color))),
-      'oklab': formatOklab(oklab(color))
+      'oklab': formatOklab(oklab(color)),
+      'numbers': toNumbers(color)
     }
   }
 )

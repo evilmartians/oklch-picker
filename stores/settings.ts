@@ -36,6 +36,7 @@ export type OutputFormats =
   | 'lch'
   | 'lab'
   | 'oklab'
+  | 'numbers'
 
 export let outputFormat = persistentAtom<OutputFormats>(
   'settings:output',
