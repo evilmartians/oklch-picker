@@ -3,11 +3,8 @@ mixin field(label, hotkey, opts = {})
     kbd.field_hotkey= hotkey
     input.field_input( aria-label=label )&attributes({ type: 'text', ...opts })
     if (opts.role === 'spinbutton')
-      .field_controls( aria-hidden="true" )
-        button.field_control.is-increase( tabindex="-1" )
-          include ./down.svg
-        button.field_control.is-decrease( tabindex="-1" )
-          include ./down.svg
+      button.field_control.is-increase( tabindex="-1" aria-hidden="true" )
+      button.field_control.is-decrease( tabindex="-1" aria-hidden="true" )
     if opts.options
       .field_options
         select.field_select( aria-label=opts.optionsLabel )
