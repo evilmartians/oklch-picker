@@ -118,6 +118,10 @@ function useSpinButton(input: HTMLInputElement): void {
     if (e.button !== 0) return
     e.preventDefault()
 
+    if (document.activeElement !== input) {
+      input.focus()
+    }
+
     let target = e.target as HTMLButtonElement
     let increased = target === increase
 
