@@ -162,7 +162,7 @@ function useSpinButton(input: HTMLInputElement): void {
     clearTimeout(pinchTimer)
     currentNotifyCb()
     pinchTimer = setTimeout(() => {
-      onPinchButton(30)
+      onPinchButton(50)
     }, delay)
   }
 
