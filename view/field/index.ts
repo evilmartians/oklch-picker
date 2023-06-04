@@ -218,4 +218,5 @@ function useSpinButton(input: HTMLInputElement): void {
 
   input.addEventListener('keydown', onKeyPressed)
   input.addEventListener('input', onFieldInput)
+  input.addEventListener('blur', onDispose)
 }
