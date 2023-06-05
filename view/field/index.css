@@ -52,6 +52,10 @@
   &.is-decrease {
     bottom: 0;
   }
+
+  &.is-grab::before {
+    background: var(--surface-ui-accent);
+  }
 }
 
 .field_control::before {

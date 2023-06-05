@@ -89,13 +89,35 @@ function removeByPosition(str: string, position: number): string {
   return str.slice(0, position) + str.slice(position + 1)
 }
 
+const highlightControl = {
+  set(element: HTMLElement | null) {
+    if (element) {
+      element.classList.add('is-grab')
+    }
+  },
+  unset(element: HTMLElement | null) {
+    if (element) {
+      element.classList.remove('is-grab')
+    }
+  }
+}
+
 export interface SpinEvent extends Event {
   detail: {
     action: 'increase' | 'decrease' | 'setMinimum' | 'setMaximum'
   }
 }
 
-let draggableRect: DOMRect | null = null
+interface DraggableState {
+  rect: null | DOMRect
+  activeControl: HTMLButtonElement | null
+}
+
+const draggableState: DraggableState = {
+  activeControl: null,
+  rect: null
+}
+
 let currentNotifyCb = (): void => {}
 let pinchTimer: number
 
@@ -136,25 +158,45 @@ function useSpinButton(input: HTMLInputElement): void {
       }
     }
 
-    draggableRect = target.getBoundingClientRect()
+    draggableState.rect = target.getBoundingClientRect()
+    draggableState.activeControl = target
+
     onPinchButton(400)
   }
 
   function onDragging(e: MouseEvent): void {
     let target = e.target as HTMLButtonElement
+    let draggableRect = draggableState.rect
+
     if (!draggableRect) return
 
     let increased = target === increase
     let boundary = increased ? draggableRect.bottom : draggableRect.top
 
+    if (draggableState.activeControl) {
+      setGrabHighlight(draggableState.activeControl)
+    }
+
     if (boundary > e.clientY) {
       currentNotifyCb = () => {
+        draggableState.activeControl = increase
         changeNotice('increase')
       }
     } else {
       currentNotifyCb = () => {
+        draggableState.activeControl = decrease
         changeNotice('decrease')
       }
+    }
+  }
+  
+  let lastHoldControl: HTMLButtonElement | null = null
+  function setGrabHighlight(button: HTMLButtonElement): void {
+    if (lastHoldControl !== button) {
+      highlightControl.set(button)
+      highlightControl.unset(lastHoldControl)
+
+      lastHoldControl = button
     }
   }
 
@@ -193,6 +235,11 @@ function useSpinButton(input: HTMLInputElement): void {
     clearTimeout(pinchTimer)
     window.removeEventListener('mouseup', onDispose)
     window.removeEventListener('mousemove', onDragging)
+
+    highlightControl.unset(draggableState.activeControl)
+    highlightControl.unset(lastHoldControl)
+    draggableState.activeControl = null
+    lastHoldControl = null
   }
 
   function onFieldInput(e: Event): void {
