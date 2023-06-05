@@ -95,7 +95,6 @@ export interface SpinEvent extends Event {
   }
 }
 
-let draggableRect: DOMRect | null = null
 let currentNotifyCb = (): void => {}
 let pinchTimer: number
 
@@ -118,11 +117,15 @@ function useSpinButton(input: HTMLInputElement): void {
     if (e.button !== 0) return
     e.preventDefault()
 
+    if (document.activeElement !== input) {
+      input.focus()
+    }
+
     let target = e.target as HTMLButtonElement
     let increased = target === increase
 
-    window.addEventListener('mousemove', onDragging)
     window.addEventListener('mouseup', onDispose)
+    target.addEventListener('mouseleave', onDispose)
 
     currentNotifyCb = () => {
       if (increased) {
@@ -132,33 +135,14 @@ function useSpinButton(input: HTMLInputElement): void {
       }
     }
 
-    draggableRect = target.getBoundingClientRect()
     onPinchButton(400)
-  }
-
-  function onDragging(e: MouseEvent): void {
-    let target = e.target as HTMLButtonElement
-    if (!draggableRect) return
-
-    let increased = target === increase
-    let boundary = increased ? draggableRect.bottom : draggableRect.top
-
-    if (boundary > e.clientY) {
-      currentNotifyCb = () => {
-        changeNotice('increase')
-      }
-    } else {
-      currentNotifyCb = () => {
-        changeNotice('decrease')
-      }
-    }
   }
 
   function onPinchButton(delay: number): void {
     clearTimeout(pinchTimer)
     currentNotifyCb()
     pinchTimer = setTimeout(() => {
-      onPinchButton(30)
+      onPinchButton(50)
     }, delay)
   }
 
@@ -188,7 +172,8 @@ function useSpinButton(input: HTMLInputElement): void {
   function onDispose(): void {
     clearTimeout(pinchTimer)
     window.removeEventListener('mouseup', onDispose)
-    window.removeEventListener('mousemove', onDragging)
+    increase.removeEventListener('mouseleave', onDispose)
+    decrease.removeEventListener('mouseleave', onDispose)
   }
 
   function onFieldInput(e: Event): void {
@@ -214,4 +199,5 @@ function useSpinButton(input: HTMLInputElement): void {
 
   input.addEventListener('keydown', onKeyPressed)
   input.addEventListener('input', onFieldInput)
+  input.addEventListener('blur', onDispose)
 }

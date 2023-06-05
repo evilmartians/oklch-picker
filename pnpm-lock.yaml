@@ -20,8 +20,8 @@ dependencies:
     specifier: ^10.4.14
     version: 10.4.14(postcss@8.4.24)
   culori:
-    specifier: ^3.1.0
-    version: 3.1.0
+    specifier: ^3.1.2
+    version: 3.1.2
   delaunator:
     specifier: ^5.0.0
     version: 5.0.0
@@ -2887,8 +2887,8 @@ packages:
     resolution: {integrity: sha512-JiQosUWiOFgp4hQn0an+SBoV9IKdqzhROM0iiN4LB7UpfJBlsSJlWl9nq4zGgxgMAzHJ6V4t29VAVD+3+2NJAg==}
     dev: false
 
-  /culori@3.1.0:
-    resolution: {integrity: sha512-UfE5Cz+Hy67GljfCTobMeEyOd8EfUk0Gd32N4ZrpzgWBssJEkFDg917t0CM5g1yK7MqB7MBneJfh2maIHjBrFQ==}
+  /culori@3.1.2:
+    resolution: {integrity: sha512-RT5C5hGTmmI2zGPdB6/Qt0NtXUYU9qB7XB4Phh14qrsJcfBQXWqPC/eKcBGuk1+Rrr9AsfOz1EwwmaBFpl0pyQ==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 

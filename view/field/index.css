@@ -36,18 +36,6 @@
   }
 }
 
-.field_controls {
-  position: absolute;
-  inset-inline-end: 7px;
-  top: 50%;
-  display: inline-flex;
-  flex-direction: column;
-  gap: 1px;
-  overflow: hidden;
-  border-radius: 23px;
-  transform: translateY(-50%);
-}
-
 .field_control {
   position: absolute;
   right: 0;
