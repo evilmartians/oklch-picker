@@ -33,10 +33,10 @@ body {
 }
 
 @define-mixin range-thumb {
-  appearance: none;
   box-sizing: border-box;
   width: 27px;
   height: 27px;
+  appearance: none;
   cursor: grab;
   background:
     linear-gradient(var(--range-color), var(--range-color)),
@@ -70,10 +70,10 @@ body {
   z-index: 2;
   width: calc(100% + 26px);
   height: calc(100% + 2px);
+  appearance: none;
   cursor: pointer;
   background: transparent;
   border-radius: var(--radius);
-  appearance: none;
   outline-offset: 3px -10px;
 }
 
