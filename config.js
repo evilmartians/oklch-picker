@@ -10,7 +10,7 @@ let config = {
   C_RANDOM: 0.1,
 
   H_MAX: 360,
-  H_STEP: 0.45,
+  H_STEP: 1,
 
   ALPHA_MAX: 100,
   ALPHA_STEP: 5,
