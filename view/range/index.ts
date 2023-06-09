@@ -1,25 +1,24 @@
-import type { AnyLch } from '../../lib/colors.js'
-
+import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
 import {
-  onCurrentChange,
-  valueToColor,
-  onPaint,
-  current
-} from '../../stores/current.js'
-import {
-  generateGetSpace,
+  type AnyLch,
+  build,
   canvasFormat,
   fastFormat,
-  build,
+  generateGetSpace,
   Space
 } from '../../lib/colors.js'
-import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
-import { showRec2020, showP3 } from '../../stores/settings.js'
 import { getBorders } from '../../lib/dom.js'
+import {
+  current,
+  onCurrentChange,
+  onPaint,
+  valueToColor
+} from '../../stores/current.js'
+import { showP3, showRec2020 } from '../../stores/settings.js'
 import { visible } from '../../stores/visible.js'
 
 function initRange(
-  type: 'l' | 'c' | 'h' | 'a'
+  type: 'a' | 'c' | 'h' | 'l'
 ): [HTMLDivElement, HTMLInputElement] {
   let div = document.querySelector<HTMLDivElement>(`.range.is-${type}`)!
   let range = div.querySelector<HTMLInputElement>('.range_input')!
@@ -88,8 +87,8 @@ function paint(
 }
 
 onCurrentChange({
-  l(value) {
-    inputL.value = String(value)
+  alpha(value) {
+    inputA.value = String(value)
   },
   c(value) {
     inputC.value = String(value)
@@ -97,8 +96,8 @@ onCurrentChange({
   h(value) {
     inputH.value = String(value)
   },
-  alpha(value) {
-    inputA.value = String(value)
+  l(value) {
+    inputL.value = String(value)
   }
 })
 
@@ -111,6 +110,12 @@ onPaint({
     let factor = L_MAX / width
     paint(canvasL, width, height, true, x => build(x * factor, c, h))
   },
+  lc(value) {
+    let { c, l } = valueToColor(value)
+    let [width, height] = initCanvasSize(canvasH)
+    let factor = H_MAX / width
+    paint(canvasH, width, height, true, x => build(l, c, x * factor))
+  },
   lh(value) {
     let color = valueToColor(value)
     let l = color.l
@@ -118,17 +123,11 @@ onPaint({
     let [width, height] = initCanvasSize(canvasC)
     let factor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / width
     paint(canvasC, width, height, false, x => build(l, x * factor, h))
-  },
-  lc(value) {
-    let { l, c } = valueToColor(value)
-    let [width, height] = initCanvasSize(canvasH)
-    let factor = H_MAX / width
-    paint(canvasH, width, height, true, x => build(l, c, x * factor))
   }
 })
 
 function setRangeColor(): void {
-  let { real, fallback, space } = visible.get()
+  let { fallback, real, space } = visible.get()
   let isVisible = false
   if (space === 'srgb') {
     isVisible = true

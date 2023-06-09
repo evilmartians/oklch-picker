@@ -1,13 +1,13 @@
 import { map } from 'nanostores'
 
 export interface SupportValue {
-  p3: boolean
   oklch: boolean
+  p3: boolean
 }
 
 export let support = map<SupportValue>({
-  p3: false,
-  oklch: false
+  oklch: false,
+  p3: false
 })
 
 if (typeof window !== 'undefined') {
@@ -16,7 +16,7 @@ if (typeof window !== 'undefined') {
   let isFF = navigator.userAgent.toLowerCase().includes('firefox')
   if (CSS.supports('color', 'color(display-p3 1 1 1)') && !isFF) {
     let media = window.matchMedia('(color-gamut:p3)')
-    support.set({ p3: media.matches, oklch: true })
+    support.set({ oklch: true, p3: media.matches })
     media.addEventListener('change', () => {
       support.setKey('p3', media.matches)
     })

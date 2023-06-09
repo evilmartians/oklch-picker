@@ -1,20 +1,24 @@
-import type { Color, Oklch, Rgb, Lch, P3, Rec2020 } from 'culori/fn'
-
 import {
-  formatRgb as formatRgbFast,
-  parse as originParse,
   clampChroma,
-  modeRec2020,
-  modeOklch,
-  modeOklab,
-  modeXyz65,
+  type Color,
   formatCss,
-  useMode,
-  modeRgb,
+  formatRgb as formatRgbFast,
+  type Lch,
   modeHsl,
-  modeLch,
   modeLab,
-  modeP3
+  modeLch,
+  modeOklab,
+  modeOklch,
+  modeP3,
+  modeRec2020,
+  modeRgb,
+  modeXyz65,
+  type Oklch,
+  parse as originParse,
+  type P3,
+  type Rec2020,
+  type Rgb,
+  useMode
 } from 'culori/fn'
 
 import { support } from '../stores/support.js'
@@ -22,7 +26,7 @@ import { support } from '../stores/support.js'
 export type { Rgb } from 'culori/fn'
 
 export type AnyLch = Lch | Oklch
-export type AnyRgb = Rgb | P3 | Rec2020
+export type AnyRgb = P3 | Rec2020 | Rgb
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
@@ -38,7 +42,7 @@ const GAMUT_MIN = -GAMUT_EPSILON
 const GAMUT_MAX = 1 + GAMUT_EPSILON
 
 export function inRGB(color: Color): boolean {
-  let { r, g, b } = rgb(color)
+  let { b, g, r } = rgb(color)
   return (
     r >= GAMUT_MIN &&
     r <= GAMUT_MAX &&
@@ -50,7 +54,7 @@ export function inRGB(color: Color): boolean {
 }
 
 export function inP3(color: Color): boolean {
-  let { r, g, b } = p3(color)
+  let { b, g, r } = p3(color)
   return (
     r >= GAMUT_MIN &&
     r <= GAMUT_MAX &&
@@ -62,7 +66,7 @@ export function inP3(color: Color): boolean {
 }
 
 export function inRec2020(color: Color): boolean {
-  let { r, g, b } = rec2020(color)
+  let { b, g, r } = rec2020(color)
   return (
     r >= GAMUT_MIN &&
     r <= GAMUT_MAX &&
@@ -74,7 +78,7 @@ export function inRec2020(color: Color): boolean {
 }
 
 export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
-  return { mode: COLOR_FN, l, c, h, alpha }
+  return { alpha, c, h, l, mode: COLOR_FN }
 }
 
 export let toTarget: (color: Color) => AnyLch
@@ -100,7 +104,7 @@ function formatP3Css(c: Color): string {
 }
 
 function fastFormatToLch(color: AnyLch): string {
-  let { l, c, h, alpha } = color
+  let { alpha, c, h, l } = color
   let a = alpha ?? 1
   return `${COLOR_FN}(${(100 * l) / L_MAX}% ${c} ${h} / ${100 * a})`
 }
@@ -138,7 +142,7 @@ export function formatRgb(color: Rgb): string {
 }
 
 export function formatLch(color: AnyLch): string {
-  let { l, c, h, alpha } = color
+  let { alpha, c, h, l } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {
     postfix = ` / ${toPercent(alpha)}`

@@ -1,29 +1,27 @@
-import type { Renderer, Shader, Camera } from 'three'
-import type { LchValue } from '../stores/current.js'
-import type { RgbMode } from '../stores/settings.js'
-import type { AnyRgb } from './colors.js'
-
+import Delaunator from 'delaunator'
 import {
+  BufferGeometry,
+  type Camera,
+  ColorManagement,
+  DoubleSide,
   Float32BufferAttribute,
   LinearSRGBColorSpace,
+  Mesh,
   MeshBasicMaterial,
   PerspectiveCamera,
-  ColorManagement,
-  BufferGeometry,
   PlaneGeometry,
-  WebGLRenderer,
-  DoubleSide,
-  Vector3,
-  Vector2,
+  type Renderer,
   Scene,
-  Mesh
+  type Shader,
+  Vector2,
+  Vector3,
+  WebGLRenderer
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import Delaunator from 'delaunator'
 
-import { toTarget, rgb, build } from './colors.js'
-import { biggestRgb } from '../stores/settings.js'
-import { current } from '../stores/current.js'
+import { current, type LchValue } from '../stores/current.js'
+import { biggestRgb, type RgbMode } from '../stores/settings.js'
+import { type AnyRgb, build, rgb, toTarget } from './colors.js'
 
 ColorManagement.enabled = false
 
@@ -43,7 +41,7 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
         if (onGamutEdge(x, y, z)) {
-          let edgeRgb: AnyRgb = { mode, r: x, g: y, b: z }
+          let edgeRgb: AnyRgb = { b: z, g: y, mode, r: x }
           let to = toTarget(edgeRgb)
           if (to.h) {
             colors.push(edgeRgb.r, edgeRgb.g, edgeRgb.b)
@@ -85,7 +83,7 @@ function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
   )
   top.computeVertexNormals()
 
-  let material = new MeshBasicMaterial({ vertexColors: true, side: DoubleSide })
+  let material = new MeshBasicMaterial({ side: DoubleSide, vertexColors: true })
   let l = new Vector2(0, 1)
   let c = new Vector2(0, 1)
   let h = new Vector2(0, 1)
@@ -159,7 +157,7 @@ function initScene(
 
   let scene = new Scene()
   let camera = new PerspectiveCamera(75, canvasWidth / canvasHeight, 0.1, 1000)
-  let renderer = new WebGLRenderer({ canvas, alpha: true })
+  let renderer = new WebGLRenderer({ alpha: true, canvas })
 
   renderer.outputColorSpace = LinearSRGBColorSpace
   renderer.setPixelRatio(window.devicePixelRatio)
@@ -179,10 +177,10 @@ function initScene(
 }
 
 export interface Model {
+  camera: Camera
+  start(): void
   started: boolean
   stop(): void
-  start(): void
-  camera: Camera
 }
 
 export function initCanvas(
@@ -202,7 +200,6 @@ export function initCanvas(
   let unbindCurrent: undefined | VoidFunction
 
   let model = {
-    started: true,
     camera,
     start(): void {
       unbindMode = biggestRgb.subscribe(value => {
@@ -219,6 +216,7 @@ export function initCanvas(
       model.started = true
       animate()
     },
+    started: true,
     stop(): void {
       unbindCurrent?.()
       unbindMode?.()

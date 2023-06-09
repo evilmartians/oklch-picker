@@ -91,7 +91,7 @@ function removeByPosition(str: string, position: number): string {
 
 export interface SpinEvent extends Event {
   detail: {
-    action: 'increase' | 'decrease' | 'setMinimum' | 'setMaximum'
+    action: 'decrease' | 'increase' | 'setMaximum' | 'setMinimum'
   }
 }
 

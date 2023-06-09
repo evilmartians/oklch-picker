@@ -1,9 +1,8 @@
-import type { SpinEvent } from '../field/index.js'
-
+import { clean } from '../../lib/colors.js'
 import { computeExpression, cycleByWheel, parseValue } from '../../lib/math.js'
 import { current, onCurrentChange } from '../../stores/current.js'
-import { showRec2020, showCharts } from '../../stores/settings.js'
-import { clean } from '../../lib/colors.js'
+import { showCharts, showRec2020 } from '../../stores/settings.js'
+import type { SpinEvent } from '../field/index.js'
 
 interface MetaSpinInput {
   max: number
@@ -13,9 +12,9 @@ interface MetaSpinInput {
 
 function getInputMeta(input: HTMLInputElement): MetaSpinInput {
   return {
-    step: parseValue(input.getAttribute('step')!),
     max: parseValue(input.getAttribute('aria-valuemax')!),
-    min: parseValue(input.getAttribute('aria-valuemin')!)
+    min: parseValue(input.getAttribute('aria-valuemin')!),
+    step: parseValue(input.getAttribute('step')!)
   }
 }
 
@@ -33,7 +32,7 @@ function clampInRange(useWheel: boolean): ClampAngleFn {
   }
 }
 
-function initInput(type: 'l' | 'c' | 'h' | 'a'): HTMLInputElement {
+function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
   let text = card.querySelector<HTMLInputElement>('[role=spinbutton]')!
   let bindedClamp = clampInRange(type === 'h')
@@ -83,8 +82,8 @@ let textH = initInput('h')
 let textA = initInput('a')
 
 onCurrentChange({
-  l(value) {
-    textL.value = String(value)
+  alpha(value) {
+    textA.value = String(value)
   },
   c(value) {
     textC.value = String(value)
@@ -92,8 +91,8 @@ onCurrentChange({
   h(value) {
     textH.value = String(value)
   },
-  alpha(value) {
-    textA.value = String(value)
+  l(value) {
+    textL.value = String(value)
   }
 })
 

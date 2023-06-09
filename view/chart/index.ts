@@ -1,12 +1,11 @@
-import type { PaintData, PaintedData } from './worker.js'
-
-import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
-import { setCurrentComponents, onPaint } from '../../stores/current.js'
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
-import { reportFreeze, reportPaint } from '../../stores/benchmark.js'
-import { prepareWorkers } from '../../lib/workers.js'
 import { parse, rgb } from '../../lib/colors.js'
 import { getBorders } from '../../lib/dom.js'
+import { prepareWorkers } from '../../lib/workers.js'
+import { reportFreeze, reportPaint } from '../../stores/benchmark.js'
+import { onPaint, setCurrentComponents } from '../../stores/current.js'
+import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
+import type { PaintData, PaintedData } from './worker.js'
 import PaintWorker from './worker.js?worker'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
@@ -25,14 +24,14 @@ function clamp(val: number, min: number, max: number): number {
 }
 
 onPaint({
-  l(l) {
-    document.body.style.setProperty('--chart-l', `${l}%`)
-  },
   c(c) {
     document.body.style.setProperty('--chart-c', `${(100 * c) / getMaxC()}%`)
   },
   h(h) {
     document.body.style.setProperty('--chart-h', `${(100 * h) / H_MAX}%`)
+  },
+  l(l) {
+    document.body.style.setProperty('--chart-l', `${l}%`)
   }
 })
 
@@ -46,18 +45,18 @@ function setComponentsFromSpace(
   let y = clamp(rect.height - (mouseY - rect.top), 0, rect.height)
   if (space.parentElement!.classList.contains('is-l')) {
     setCurrentComponents({
-      h: (H_MAX * x) / rect.width,
-      c: (getMaxC() * y) / rect.height
+      c: (getMaxC() * y) / rect.height,
+      h: (H_MAX * x) / rect.width
     })
   } else if (space.parentElement!.classList.contains('is-c')) {
     setCurrentComponents({
-      l: (100 * y) / rect.height,
-      h: (H_MAX * x) / rect.width
+      h: (H_MAX * x) / rect.width,
+      l: (100 * y) / rect.height
     })
   } else if (space.parentElement!.classList.contains('is-h')) {
     setCurrentComponents({
-      l: (100 * x) / rect.width,
-      c: (getMaxC() * y) / rect.height
+      c: (getMaxC() * y) / rect.height,
+      l: (100 * x) / rect.width
     })
   }
 }
@@ -88,7 +87,7 @@ let startWork = prepareWorkers<PaintData, PaintedData>(PaintWorker)
 
 function startWorkForComponent(
   canvas: HTMLCanvasElement,
-  type: 'l' | 'c' | 'h',
+  type: 'c' | 'h' | 'l',
   value: number,
   chartsToChange: number
 ): void {
@@ -104,16 +103,16 @@ function startWorkForComponent(
       messages.map((_, i) => {
         let step = Math.ceil(canvas.width / messages.length)
         return {
-          type,
-          width: canvas.width,
-          height: canvas.height,
+          borderP3,
+          borderRec2020,
           from: step * i + (i === 0 ? 0 : 1),
-          to: Math.min(step * (i + 1), canvas.width),
-          value,
+          height: canvas.height,
           showP3: showP3.get(),
           showRec2020: showRec2020.get(),
-          borderP3,
-          borderRec2020
+          to: Math.min(step * (i + 1), canvas.width),
+          type,
+          value,
+          width: canvas.width
         }
       }),
     result => {
@@ -146,10 +145,6 @@ function initCharts(): void {
   initCanvasSize(canvasH)
 
   onPaint({
-    l(l, chartsToChange) {
-      if (!showCharts.get()) return
-      startWorkForComponent(canvasL, 'l', (L_MAX * l) / 100, chartsToChange)
-    },
     c(c, chartsToChange) {
       if (!showCharts.get()) return
       startWorkForComponent(canvasC, 'c', c, chartsToChange)
@@ -157,6 +152,10 @@ function initCharts(): void {
     h(h, chartsToChange) {
       if (!showCharts.get()) return
       startWorkForComponent(canvasH, 'h', h, chartsToChange)
+    },
+    l(l, chartsToChange) {
+      if (!showCharts.get()) return
+      startWorkForComponent(canvasL, 'l', (L_MAX * l) / 100, chartsToChange)
     }
   })
 }

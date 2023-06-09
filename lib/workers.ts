@@ -10,7 +10,7 @@ interface StartWork<TaskData extends object, ResultData extends object> {
 
 const TOTAL_WORKERS = navigator.hardwareConcurrency
 
-function anyValue<V>(map: Map<string, V>): V | undefined {
+function anyValue<V>(map: Map<string, V>): undefined | V {
   return map.values().next().value
 }
 

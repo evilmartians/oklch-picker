@@ -1,27 +1,32 @@
-import type { AnyLch } from '../lib/colors.js'
 import type { Color } from 'culori/fn'
-
 import { clampChroma } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { getSpace, build, oklch, lch, Space } from '../lib/colors.js'
-import { showRec2020, showP3, showCharts } from './settings.js'
-import { startPainting, reportFreeze } from './benchmark.js'
-import { benchmarking } from './url.js'
+import {
+  type AnyLch,
+  build,
+  getSpace,
+  lch,
+  oklch,
+  Space
+} from '../lib/colors.js'
 import { debounce } from '../lib/time.js'
+import { reportFreeze, startPainting } from './benchmark.js'
+import { showCharts, showP3, showRec2020 } from './settings.js'
 import { support } from './support.js'
+import { benchmarking } from './url.js'
 
 export interface LchValue {
-  l: number
+  a: number
   c: number
   h: number
-  a: number
+  l: number
 }
 
-type PrevCurrentValue = LchValue | { [key in keyof LchValue]?: undefined }
+type PrevCurrentValue = { [key in keyof LchValue]?: undefined } | LchValue
 
 function randomColor(): LchValue {
-  return { l: 70, c: C_RANDOM, h: Math.round(360 * Math.random()), a: 100 }
+  return { a: 100, c: C_RANDOM, h: Math.round(360 * Math.random()), l: 70 }
 }
 
 function parseHash(): LchValue | undefined {
@@ -29,10 +34,10 @@ function parseHash(): LchValue | undefined {
   if (parts.length === 4) {
     if (parts.every(i => /^\d+(\.\d+)?$/.test(i))) {
       return {
-        l: parseFloat(parts[0]),
+        a: parseFloat(parts[3]),
         c: parseFloat(parts[1]),
         h: parseFloat(parts[2]),
-        a: parseFloat(parts[3])
+        l: parseFloat(parts[0])
       }
     }
   }
@@ -43,7 +48,7 @@ export let current = map<LchValue>(parseHash() || randomColor())
 
 current.subscribe(
   debounce(100, () => {
-    let { l, c, h, a } = current.get()
+    let { a, c, h, l } = current.get()
     let hash = `#${l},${c},${h},${a}`
     if (location.hash !== hash) {
       history.pushState(null, '', `#${l},${c},${h},${a}`)
@@ -65,14 +70,14 @@ interface LchCallback {
 }
 
 interface LchCallbacks {
-  l?: ComponentCallback
-  c?: ComponentCallback
-  h?: ComponentCallback
   alpha?: ComponentCallback
-  lc?: LchCallback
+  c?: ComponentCallback
   ch?: LchCallback
-  lh?: LchCallback
+  h?: ComponentCallback
+  l?: ComponentCallback
+  lc?: LchCallback
   lch?: LchCallback
+  lh?: LchCallback
 }
 
 let changeListeners: LchCallbacks[] = []
@@ -159,7 +164,7 @@ function round3(value: number): number {
 
 function roundValue<V extends Partial<LchValue>>(
   value: V,
-  type: 'oklch' | 'lch'
+  type: 'lch' | 'oklch'
 ): V {
   let rounded = { ...value }
   if (typeof rounded.l !== 'undefined') {
@@ -201,10 +206,10 @@ export function valueToColor(value: LchValue): AnyLch {
 
 export function colorToValue(color: AnyLch): LchValue {
   return {
-    l: (100 * color.l) / L_MAX,
+    a: (color.alpha ?? 1) * 100,
     c: color.c,
     h: color.h ?? 0,
-    a: (color.alpha ?? 1) * 100
+    l: (100 * color.l) / L_MAX
   }
 }
 
@@ -223,10 +228,10 @@ export function setCurrentComponents(parts: Partial<LchValue>): void {
   let value = current.get()
   let rounded = roundValue(parts, COLOR_FN)
   current.set({
-    l: typeof rounded.l === 'undefined' ? value.l : rounded.l,
+    a: value.a,
     c: typeof rounded.c === 'undefined' ? value.c : rounded.c,
     h: typeof rounded.h === 'undefined' ? value.h : rounded.h,
-    a: value.a
+    l: typeof rounded.l === 'undefined' ? value.l : rounded.l
   })
 }
 

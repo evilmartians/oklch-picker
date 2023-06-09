@@ -20,7 +20,7 @@
     "autoprefixer": "^10.4.14",
     "culori": "^3.1.2",
     "delaunator": "^5.0.0",
-    "firebase-tools": "^12.3.0",
+    "firebase-tools": "^12.3.1",
     "jstransformer-markdown-it": "^3.0.0",
     "nanodelay": "^2.0.2",
     "nanostores": "^0.9.1",
@@ -34,7 +34,7 @@
     "vite-plugin-pug-transformer": "^1.0.3"
   },
   "devDependencies": {
-    "@logux/eslint-config": "^50.0.0",
+    "@logux/eslint-config": "^51.0.0",
     "@logux/stylelint-config": "^0.15.1",
     "@size-limit/file": "^8.2.4",
     "@types/culori": "^2.0.0",
@@ -46,6 +46,7 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-perfectionist": "^1.1.0",
     "eslint-plugin-prefer-let": "^3.0.1",
     "eslint-plugin-promise": "^6.1.1",
     "nano-staged": "^0.8.0",

@@ -1,10 +1,9 @@
-import type { Model } from '../../lib/model.js'
-
 import { registerCamera, syncCamerasFrom } from '../../lib/cameras.js'
 import { toggleVisibility } from '../../lib/dom.js'
 import { generateLoader } from '../../lib/loader.js'
-import { getButton } from '../button/index.js'
+import type { Model } from '../../lib/model.js'
 import { url } from '../../stores/url.js'
+import { getButton } from '../button/index.js'
 
 let block = document.querySelector<HTMLDivElement>('.fullmodel')!
 let status = document.querySelector<HTMLDivElement>('.fullmodel_status')!

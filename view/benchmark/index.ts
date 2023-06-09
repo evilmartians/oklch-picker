@@ -13,7 +13,7 @@ let workerMax = getValue('worker-max')
 let workerSum = getValue('worker-sum')
 let paint = getValue('paint')
 
-let unbind: undefined | (() => void)
+let unbind: (() => void) | undefined
 benchmarking.subscribe(enabled => {
   if (enabled) {
     block.classList.add('is-enabled')

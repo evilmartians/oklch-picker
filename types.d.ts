@@ -9,7 +9,7 @@ declare module '*?worker' {
   export default worker
 }
 
-declare const COLOR_FN: 'oklch' | 'lch'
+declare const COLOR_FN: 'lch' | 'oklch'
 declare const LCH: boolean
 declare const L_MAX: number
 declare const L_STEP: number

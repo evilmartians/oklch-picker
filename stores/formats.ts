@@ -1,25 +1,30 @@
-import type { Color, Oklab } from 'culori/fn'
-import type { OutputFormats } from './settings.js'
-import type { AnyLch } from '../lib/colors.js'
-
-import { formatHex8, formatHex, formatRgb, formatCss } from 'culori/fn'
+import {
+  type Color,
+  formatCss,
+  formatHex,
+  formatHex8,
+  formatRgb,
+  type Oklab
+} from 'culori/fn'
 import { computed } from 'nanostores'
 
+import type { AnyLch } from '../lib/colors.js'
 import {
-  toPercent,
-  inRGB,
-  toRgb,
   clean,
-  oklab,
-  lch,
-  lab,
   hsl,
-  p3
+  inRGB,
+  lab,
+  lch,
+  oklab,
+  p3,
+  toPercent,
+  toRgb
 } from '../lib/colors.js'
 import { current, valueToColor } from './current.js'
+import type { OutputFormats } from './settings.js'
 
 function formatOklab(color: Oklab): string {
-  let { l, a, b, alpha } = color
+  let { a, alpha, b, l } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {
     postfix = ` / ${clean(alpha)}`
@@ -28,7 +33,7 @@ function formatOklab(color: Oklab): string {
 }
 
 function toNumbers(color: AnyLch): string {
-  let { l, c, h, alpha } = color
+  let { alpha, c, h, l } = color
   let prefix = `${clean(l)}, ${clean(c)}, ${clean(h ?? 0)}`
   if (typeof alpha !== 'undefined' && alpha < 1) {
     return `${prefix}, ${clean(alpha)}`
@@ -69,15 +74,15 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgba = formatRgb(rgbColor)
     let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
-      'hex/rgba': hasAlpha ? rgba : hex,
       'hex': hasAlpha ? formatHex8(rgbColor) : hex,
-      'rgb': rgba,
+      'hex/rgba': hasAlpha ? rgba : hex,
       'hsl': formatCss(cleanComponents(hsl(rgbColor))),
-      'p3': formatCss(cleanComponents(p3(color))),
-      'lch': formatCss(cleanComponents(lch(color))),
       'lab': formatCss(cleanComponents(lab(color))),
+      'lch': formatCss(cleanComponents(lch(color))),
+      'numbers': toNumbers(color),
       'oklab': formatOklab(oklab(color)),
-      'numbers': toNumbers(color)
+      'p3': formatCss(cleanComponents(p3(color))),
+      'rgb': rgba
     }
   }
 )

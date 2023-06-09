@@ -1,22 +1,22 @@
 enum Priority {
-  Low = 1,
-  High = 2
+  High = 2,
+  Low = 1
 }
 
 const OPERATORS = {
-  '+': Priority.Low,
   '-': Priority.Low,
   '*': Priority.High,
-  '/': Priority.High
+  '/': Priority.High,
+  '+': Priority.Low
 }
 
 type Operator = keyof typeof OPERATORS
 
 const OPERATIONS = {
-  '+': (a: number, b: number) => a + b,
   '-': (a: number, b: number) => b - a,
   '*': (a: number, b: number) => a * b,
-  '/': (a: number, b: number) => b / a
+  '/': (a: number, b: number) => b / a,
+  '+': (a: number, b: number) => a + b
 }
 
 const OPERATORS_PATTERN = /[*+-/]/

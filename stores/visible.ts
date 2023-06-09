@@ -1,55 +1,54 @@
 import type { Color } from 'culori/fn'
-
 import { computed } from 'nanostores'
 
 import {
   fastFormat,
-  inRec2020,
   formatRgb,
-  inRGB,
-  toRgb,
   inP3,
-  rgb
+  inRec2020,
+  inRGB,
+  rgb,
+  toRgb
 } from '../lib/colors.js'
 import { current, valueToColor } from './current.js'
 import { support } from './support.js'
 
 interface VisibleValue {
-  space: 'srgb' | 'p3' | 'rec2020' | 'out'
   color: Color
-  real: string | false
   fallback: string
+  real: false | string
+  space: 'out' | 'p3' | 'rec2020' | 'srgb'
 }
 
 export let visible = computed<VisibleValue, [typeof current, typeof support]>(
   [current, support],
-  (value, { p3, oklch }) => {
+  (value, { oklch, p3 }) => {
     let color: Color = valueToColor(value)
     if (inRGB(color)) {
       let rgbCss = formatRgb(rgb(color))
       if (!oklch) color = rgb(color)
       return {
-        space: 'srgb',
         color,
+        fallback: rgbCss,
         real: rgbCss,
-        fallback: rgbCss
+        space: 'srgb'
       }
     } else {
       let rgbColor = toRgb(color)
       let fallback = formatRgb(rgbColor)
       if (inP3(color)) {
         return {
-          space: 'p3',
           color: p3 && oklch ? color : rgbColor,
+          fallback,
           real: p3 ? fastFormat(color) : false,
-          fallback
+          space: 'p3'
         }
       } else {
         return {
-          space: inRec2020(color) ? 'rec2020' : 'out',
           color: rgbColor,
+          fallback,
           real: false,
-          fallback
+          space: inRec2020(color) ? 'rec2020' : 'out'
         }
       }
     }

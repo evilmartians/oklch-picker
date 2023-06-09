@@ -6,7 +6,6 @@ import config from './config.js'
 config.LCH = config.COLOR_FN !== '"oklch"'
 
 export default defineConfig({
-  define: config,
   build: {
     assetsDir: '.',
     rollupOptions: {
@@ -15,6 +14,7 @@ export default defineConfig({
       }
     }
   },
+  define: config,
   plugins: [
     vitePluginPug({
       pugLocals: config

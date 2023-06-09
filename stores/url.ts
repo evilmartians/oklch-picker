@@ -1,6 +1,6 @@
 import { atom, computed } from 'nanostores'
 
-export type Urls = 'main' | 'bench' | '3d'
+export type Urls = '3d' | 'bench' | 'main'
 
 export let url = atom<Urls>('main')
 export let benchmarking = computed(url, value => value === 'bench')

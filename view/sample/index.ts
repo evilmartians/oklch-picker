@@ -1,5 +1,5 @@
-import { visible } from '../../stores/visible.js'
 import { support } from '../../stores/support.js'
+import { visible } from '../../stores/visible.js'
 
 let sample = document.querySelector<HTMLDivElement>('.sample')!
 let type = document.querySelector<HTMLDivElement>('.sample_reader')!
@@ -7,7 +7,7 @@ let unavailable = document.querySelector<HTMLDivElement>('.sample_unavailable')!
 
 let postfix = support.get().oklch ? ' on this monitor' : ' in this browser'
 
-visible.subscribe(({ space, real, fallback }) => {
+visible.subscribe(({ fallback, real, space }) => {
   sample.classList.toggle('is-srgb', space === 'srgb')
   sample.classList.toggle('is-supported', !!real)
 

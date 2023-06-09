@@ -1,5 +1,5 @@
-import { loading } from '../../stores/loading.js'
 import { accent } from '../../stores/accent.js'
+import { loading } from '../../stores/loading.js'
 
 accent.subscribe(({ main, surface }) => {
   document.body.style.setProperty('--accent', main)
