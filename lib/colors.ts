@@ -103,14 +103,8 @@ function formatP3Css(c: Color): string {
   return formatCss(p3(c))
 }
 
-function fastFormatToLch(color: AnyLch): string {
-  let { alpha, c, h, l } = color
-  let a = alpha ?? 1
-  return `${COLOR_FN}(${(100 * l) / L_MAX}% ${c} ${h} / ${100 * a})`
-}
-
 support.subscribe(value => {
-  fastLchFormat = value.oklch ? fastFormatToLch : formatRgbFast
+  fastLchFormat = value.oklch ? formatLch : formatRgbFast
   canvasFormat = value.p3 ? formatP3Css : formatRgbFast
 })
 
