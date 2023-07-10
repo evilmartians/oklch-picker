@@ -45,6 +45,10 @@
       "prefs extra H"
       "prefs extra .";
   }
+
+  @media (width >= 1230px) and (width < 1320px) {
+    grid-template-columns: 404px 404px 404px;
+  }
 }
 
 .layout_title {

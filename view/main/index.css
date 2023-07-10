@@ -69,8 +69,8 @@ body {
 
 .main_footer {
   padding-bottom: 46px;
-  font-size: 10px;
-  line-height: 16px;
+  font-size: 11.25px;
+  line-height: 18px;
   color: var(--text-secondary);
   text-align: center;
 }
