@@ -4,8 +4,8 @@
 
 .minimodel_button {
   position: absolute;
-  top:  var(--card-top-padding);
   inset-inline-end: var(--card-padding);
+  top:  var(--card-top-padding);
 }
 
 .minimodel_canvas {
