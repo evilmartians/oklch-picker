@@ -160,6 +160,10 @@ export function toPercent(value: number): string {
   return `${clean(100 * value)}%`
 }
 
+export function isHexNotation(value: string): boolean {
+  return /^#?([\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
+}
+
 export enum Space {
   sRGB,
   P3,
