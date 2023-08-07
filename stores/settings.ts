@@ -28,6 +28,7 @@ export let biggestRgb = computed([showP3, showRec2020], (p3, rec2020) => {
 })
 
 export type OutputFormats =
+  | 'figmaP3'
   | 'hex'
   | 'hex/rgba'
   | 'hsl'

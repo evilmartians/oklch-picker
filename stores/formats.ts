@@ -4,7 +4,8 @@ import {
   formatHex,
   formatHex8,
   formatRgb,
-  type Oklab
+  type Oklab,
+  type P3
 } from 'culori/fn'
 import { computed } from 'nanostores'
 
@@ -30,6 +31,14 @@ function formatOklab(color: Oklab): string {
     postfix = ` / ${clean(alpha)}`
   }
   return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)}${postfix})`
+}
+
+function toByte(float: number): number {
+  return Math.round(255 * float)
+}
+
+function figmaP3(color: P3): string {
+  return `${toByte(color.r)} ${toByte(color.g)} ${toByte(color.b)}`
 }
 
 function toNumbers(color: AnyLch): string {
@@ -74,6 +83,7 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgba = formatRgb(rgbColor)
     let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
+      'figmaP3': 'Figma RGB ' + figmaP3(p3(color)),
       'hex': hasAlpha ? formatHex8(rgbColor) : hex,
       'hex/rgba': hasAlpha ? rgba : hex,
       'hsl': formatCss(cleanComponents(hsl(rgbColor))),
