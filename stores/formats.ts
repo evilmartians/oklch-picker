@@ -4,7 +4,8 @@ import {
   formatHex,
   formatHex8,
   formatRgb,
-  type Oklab
+  type Oklab,
+  serializeHex8
 } from 'culori/fn'
 import { computed } from 'nanostores'
 
@@ -74,7 +75,7 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgba = formatRgb(rgbColor)
     let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
-      'figmaP3': 'Figma P3 ' + formatHex8(p3(color)),
+      'figmaP3': 'Figma P3 ' + serializeHex8(p3(color)),
       'hex': hasAlpha ? formatHex8(rgbColor) : hex,
       'hex/rgba': hasAlpha ? rgba : hex,
       'hsl': formatCss(cleanComponents(hsl(rgbColor))),
