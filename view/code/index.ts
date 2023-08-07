@@ -27,7 +27,7 @@ let noteFallback = document.querySelector<HTMLDivElement>(
 
 let format = document.querySelector<HTMLSelectElement>('.code select')!
 
-export function toggle(input: HTMLInputElement, invalid: boolean): void {
+export function toggleInvalid(input: HTMLInputElement, invalid: boolean): void {
   if (invalid) {
     input.setAttribute('aria-invalid', 'true')
   } else {
@@ -43,7 +43,7 @@ function setLch(): void {
   let text = formatLch(valueToColor(value))
   prevValues.set(lchInput, text)
   lchInput.value = text
-  toggle(lchInput, false)
+  toggleInvalid(lchInput, false)
 }
 
 function setRgb(): void {
@@ -62,7 +62,7 @@ function setRgb(): void {
     toggleVisibility(notePaste, !isFallback)
     toggleVisibility(noteFallback, isFallback)
   }
-  toggle(rgbInput, false)
+  toggleInvalid(rgbInput, false)
 }
 
 current.subscribe(() => {
@@ -87,9 +87,9 @@ function listenChanges(input: HTMLInputElement): void {
     let parsed = parseAnything(newValue)
     if (parsed) {
       setCurrentFromColor(parsed)
-      toggle(input, false)
+      toggleInvalid(input, false)
     } else {
-      toggle(input, true)
+      toggleInvalid(input, true)
     }
   }
 
