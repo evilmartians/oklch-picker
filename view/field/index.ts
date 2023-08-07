@@ -22,6 +22,10 @@ if (/iPhone/.test(navigator.userAgent)) {
   }
 }
 
+export function toggleWarning(input: HTMLInputElement, toggle: boolean): void {
+  input.classList.toggle('is-warning', toggle)
+}
+
 function onInput(e: Event): void {
   let input = e.target as HTMLInputElement
   input.removeEventListener('mouseup', onMouseUp)

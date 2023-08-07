@@ -30,6 +30,10 @@
     }
   }
 
+  &.is-warning {
+    background: var(--surface-ui-warning);
+  }
+
   .field.is-options & {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;

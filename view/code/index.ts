@@ -12,6 +12,7 @@ import {
 } from '../../stores/formats.js'
 import { outputFormat, type OutputFormats } from '../../stores/settings.js'
 import { visible } from '../../stores/visible.js'
+import { toggleWarning } from '../field/index.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
 let lchInput = lch.querySelector<HTMLInputElement>('input')!
@@ -45,10 +46,12 @@ function setRgb(): void {
   prevValues.set(rgbInput, output)
   rgbInput.value = output.replace(/^Figma P3 /, '')
   if (type === 'figmaP3') {
+    toggleWarning(rgbInput, true)
     toggleVisibility(noteFigma, true)
     toggleVisibility(notePaste, false)
     toggleVisibility(noteFallback, false)
   } else {
+    toggleWarning(rgbInput, false)
     toggleVisibility(noteFigma, false)
     let isFallback = space !== 'srgb' && srgbFormats.has(type)
     toggleVisibility(notePaste, !isFallback)
