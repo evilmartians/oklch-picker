@@ -1,4 +1,4 @@
-import { toggle } from '../code/index.js'
+import { toggleInvalid } from '../../lib/dom.js'
 
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
@@ -106,10 +106,10 @@ function useSpinButton(input: HTMLInputElement): void {
     if (/[0-9]/.test(input.value.charAt(input.value.length - 1))) {
       let event = new CustomEvent('spin', { detail: { action: type } })
 
-      toggle(input, false)
+      toggleInvalid(input, false)
       input.dispatchEvent(event)
     } else {
-      toggle(input, true)
+      toggleInvalid(input, true)
     }
   }
 
@@ -185,9 +185,9 @@ function useSpinButton(input: HTMLInputElement): void {
 
       if (!input.checkValidity()) {
         input.value = removeByPosition(value, caretPosition - 1)
-        toggle(input, true)
+        toggleInvalid(input, true)
       } else {
-        toggle(input, false)
+        toggleInvalid(input, false)
       }
     }
 

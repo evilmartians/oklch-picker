@@ -120,6 +120,10 @@ export function parseAnything(value: string): Color | undefined {
   return parse(value)
 }
 
+export function forceP3(color: Color): P3 {
+  return { ...rgb(color), mode: 'p3' }
+}
+
 export function toRgb(color: Color): Rgb {
   return rgb(clampChroma(color, COLOR_FN))
 }

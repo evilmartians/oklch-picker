@@ -1,5 +1,5 @@
-import { formatLch, parseAnything } from '../../lib/colors.js'
-import { toggleVisibility } from '../../lib/dom.js'
+import { forceP3, formatLch, parseAnything } from '../../lib/colors.js'
+import { toggleInvalid, toggleVisibility } from '../../lib/dom.js'
 import {
   current,
   setCurrentFromColor,
@@ -26,14 +26,6 @@ let noteFallback = document.querySelector<HTMLDivElement>(
 )!
 
 let format = document.querySelector<HTMLSelectElement>('.code select')!
-
-export function toggleInvalid(input: HTMLInputElement, invalid: boolean): void {
-  if (invalid) {
-    input.setAttribute('aria-invalid', 'true')
-  } else {
-    input.removeAttribute('aria-invalid')
-  }
-}
 
 let prevValues = new Map<HTMLInputElement, string>()
 let locked = new Map<HTMLInputElement, boolean>()
@@ -86,8 +78,11 @@ function listenChanges(input: HTMLInputElement): void {
 
     let parsed = parseAnything(newValue)
     if (parsed) {
-      setCurrentFromColor(parsed)
       toggleInvalid(input, false)
+      if (outputFormat.get() === 'figmaP3') {
+        parsed = forceP3(parsed)
+      }
+      setCurrentFromColor(parsed)
     } else {
       toggleInvalid(input, true)
     }
