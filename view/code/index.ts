@@ -79,7 +79,7 @@ function listenChanges(input: HTMLInputElement): void {
     let parsed = parseAnything(newValue)
     if (parsed) {
       toggleInvalid(input, false)
-      if (outputFormat.get() === 'figmaP3') {
+      if (outputFormat.get() === 'figmaP3' && input === rgbInput) {
         parsed = forceP3(parsed)
       }
       setCurrentFromColor(parsed)
