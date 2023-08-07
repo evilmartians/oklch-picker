@@ -4,8 +4,7 @@ import {
   formatHex,
   formatHex8,
   formatRgb,
-  type Oklab,
-  type P3
+  type Oklab
 } from 'culori/fn'
 import { computed } from 'nanostores'
 
