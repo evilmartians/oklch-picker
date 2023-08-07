@@ -1,4 +1,5 @@
 import { formatLch, parseAnything } from '../../lib/colors.js'
+import { toggleVisibility } from '../../lib/dom.js'
 import {
   current,
   setCurrentFromColor,
@@ -19,6 +20,7 @@ let rgb = document.querySelector<HTMLDivElement>('.code.is-rgb')!
 let rgbInput = rgb.querySelector<HTMLInputElement>('input')!
 
 let notePaste = document.querySelector<HTMLDivElement>('.code_note.is-paste')!
+let noteFigma = document.querySelector<HTMLDivElement>('.code_note.is-figma')!
 let noteFallback = document.querySelector<HTMLDivElement>(
   '.code_note.is-fallback'
 )!
@@ -50,12 +52,15 @@ function setRgb(): void {
   let output = formats.get()[type]
   prevValues.set(rgbInput, output)
   rgbInput.value = output
-  if (space !== 'srgb' && srgbFormats.has(type)) {
-    notePaste.classList.add('is-hidden')
-    noteFallback.classList.remove('is-hidden')
+  if (type === 'figmaP3') {
+    toggleVisibility(noteFigma, true)
+    toggleVisibility(notePaste, false)
+    toggleVisibility(noteFallback, false)
   } else {
-    notePaste.classList.remove('is-hidden')
-    noteFallback.classList.add('is-hidden')
+    toggleVisibility(noteFigma, false)
+    let isFallback = space !== 'srgb' && srgbFormats.has(type)
+    toggleVisibility(notePaste, !isFallback)
+    toggleVisibility(noteFallback, isFallback)
   }
   toggle(rgbInput, false)
 }

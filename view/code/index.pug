@@ -22,6 +22,9 @@
   })
   .code_note.is-paste
     = `Paste HEX, RGBA, or HSL to convert to ${LCH ? 'LCH' : 'OKLCH'}`
-  .code_note.is-fallback.is-hidden
+  .code_note.is-fallback.is-hidden( aria-hidden="true" )
     = `Closest fallback (by chroma) in sRGB`
+  .code_note.is-figma.is-hidden( aria-hidden="true" )
+    = 'Use it in Figma with '
+    a.code_link( href="https://help.figma.com/hc/en-us/articles/360039825114-Manage-color-profiles-in-design-files" ) P3 color profile
   .code_format

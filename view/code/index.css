@@ -6,6 +6,11 @@
   margin-top: 4px;
 }
 
+.code_link {
+  font-weight: bold;
+  color: currentcolor;
+}
+
 .code_note {
   padding-left: 12px;
   margin-top: 4px;
