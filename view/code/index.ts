@@ -51,7 +51,7 @@ function setRgb(): void {
   let type = outputFormat.get()
   let output = formats.get()[type]
   prevValues.set(rgbInput, output)
-  rgbInput.value = output
+  rgbInput.value = output.replace(/^Figma P3 /, '')
   if (type === 'figmaP3') {
     toggleVisibility(noteFigma, true)
     toggleVisibility(notePaste, false)
