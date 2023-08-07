@@ -33,14 +33,6 @@ function formatOklab(color: Oklab): string {
   return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)}${postfix})`
 }
 
-function toByte(float: number): number {
-  return Math.round(255 * float)
-}
-
-function figmaP3(color: P3): string {
-  return `${toByte(color.r)} ${toByte(color.g)} ${toByte(color.b)}`
-}
-
 function toNumbers(color: AnyLch): string {
   let { alpha, c, h, l } = color
   let prefix = `${clean(l)}, ${clean(c)}, ${clean(h ?? 0)}`
@@ -83,7 +75,7 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgba = formatRgb(rgbColor)
     let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
-      'figmaP3': 'Figma P3 ' + figmaP3(p3(color)),
+      'figmaP3': 'Figma P3 ' + formatHex8(p3(color)),
       'hex': hasAlpha ? formatHex8(rgbColor) : hex,
       'hex/rgba': hasAlpha ? rgba : hex,
       'hsl': formatCss(cleanComponents(hsl(rgbColor))),
