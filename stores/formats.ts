@@ -83,7 +83,7 @@ export const formats = computed<FormatsValue, typeof current>(
     let rgba = formatRgb(rgbColor)
     let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
     return {
-      'figmaP3': 'Figma RGB ' + figmaP3(p3(color)),
+      'figmaP3': 'Figma P3 ' + figmaP3(p3(color)),
       'hex': hasAlpha ? formatHex8(rgbColor) : hex,
       'hex/rgba': hasAlpha ? rgba : hex,
       'hsl': formatCss(cleanComponents(hsl(rgbColor))),
