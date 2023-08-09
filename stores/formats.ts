@@ -83,7 +83,7 @@ export const formats = computed<FormatsValue, typeof current>(
       'lch': formatCss(cleanComponents(lch(color))),
       'numbers': toNumbers(color),
       'oklab': formatOklab(oklab(color)),
-      'p3': formatCss(cleanComponents(p3(color), 3)),
+      'p3': formatCss(cleanComponents(p3(color), 4)),
       'rgb': rgba
     }
   }
