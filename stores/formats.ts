@@ -43,13 +43,13 @@ function toNumbers(color: AnyLch): string {
   }
 }
 
-function cleanComponents<Obj extends {}>(color: Obj): Obj {
+function cleanComponents<Obj extends {}>(color: Obj, precision?: number): Obj {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any = {}
   for (let key in color) {
     let value = color[key]
     if (typeof value === 'number' && key !== 'alpha') {
-      result[key] = clean(value)
+      result[key] = clean(value, precision)
     } else {
       result[key] = color[key]
     }
@@ -83,7 +83,7 @@ export const formats = computed<FormatsValue, typeof current>(
       'lch': formatCss(cleanComponents(lch(color))),
       'numbers': toNumbers(color),
       'oklab': formatOklab(oklab(color)),
-      'p3': formatCss(cleanComponents(p3(color))),
+      'p3': formatCss(cleanComponents(p3(color), 3)),
       'rgb': rgba
     }
   }
