@@ -110,32 +110,20 @@ function listenChanges(input: HTMLInputElement): void {
   })
   input.addEventListener('blur', () => {
     locked.set(input, false)
-
-    let value = input.value.trim()
-    let parsed = parseAnything(value)
-
-    let currentFormat = outputFormat.get()
-    let newFormat: OutputFormats | undefined
-
-    if (parsed && isOutputFormat(parsed.mode)) {
-      if (isHexNotation(value)) {
-        newFormat = 'hex/rgba'
-      } else {
-        newFormat = parsed.mode
-      }
-    }
-
-    if (
-      currentFormat !== 'figmaP3' &&
-      newFormat &&
-      newFormat !== currentFormat
-    ) {
-      outputFormat.set(newFormat)
-    }
-
     if (input === lchInput) {
       setLch()
     } else {
+      if (outputFormat.get() !== 'figmaP3') {
+        let value = input.value.trim()
+        if (isHexNotation(value)) {
+          outputFormat.set('hex/rgba')
+        } else {
+          let parsed = parseAnything(value)
+          if (parsed && isOutputFormat(parsed.mode)) {
+            outputFormat.set(parsed.mode)
+          }
+        }
+      }
       setRgb()
     }
   })
