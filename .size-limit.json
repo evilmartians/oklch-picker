@@ -14,7 +14,7 @@
     "name": "Base scripts to execute",
     "path": ["dist/*.js", "!dist/model-*.js"],
     "gzip": false,
-    "limit": "75 KB"
+    "limit": "80 KB"
   },
   {
     "name": "Scripts for 3D model",

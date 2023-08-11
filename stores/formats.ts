@@ -88,3 +88,9 @@ export const formats = computed<FormatsValue, typeof current>(
     }
   }
 )
+
+export const OUTPUT_FORMATS = Object.keys(formats.get())
+
+export function isOutputFormat(format: string): format is OutputFormats {
+  return OUTPUT_FORMATS.includes(format)
+}
