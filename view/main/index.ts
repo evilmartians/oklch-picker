@@ -1,7 +1,11 @@
+import { trackEvent } from '../analytics/index.js'
+
 let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
 
 let emText = document.querySelector<HTMLLinkElement>('.main_link.is-em')!
 let emLogo = document.querySelector<HTMLLinkElement>('.main_logo')!
+
+let links = document.querySelectorAll<HTMLLinkElement>('.main a')
 
 function onScroll(): void {
   document.body.classList.add('is-main-collapsed')
@@ -48,3 +52,12 @@ emLogo.addEventListener('mouseenter', () => {
 emLogo.addEventListener('mouseleave', () => {
   emText.classList.remove('is-hover')
 })
+
+for (let link of links) {
+  let event = 'Open Evil Martians'
+  if (link.href.includes('sitnik')) event = 'Open Sitnik page'
+  if (link.href.includes('romanshamin')) event = 'Open Shamin page'
+  link.addEventListener('click', () => {
+    trackEvent(event)
+  })
+}
