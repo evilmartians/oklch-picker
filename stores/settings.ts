@@ -53,6 +53,6 @@ let unbind3dEvent = show3d.subscribe(value => {
   }
 })
 
-outputFormat.listen(value => {
-  if (value !== 'hex/rgba') trackEvent(`Change output to ${value}`)
+outputFormat.listen(format => {
+  if (format !== 'hex/rgba') trackEvent(`Change output`, { props: { format } })
 })
