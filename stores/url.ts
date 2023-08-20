@@ -41,6 +41,6 @@ url.listen(value => {
 
 url.subscribe(value => {
   if (value === '3d') {
-    trackEvent('Start 3D Fullscreen')
+    trackEvent('Start 3D fullscreen')
   }
 })
