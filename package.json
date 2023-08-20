@@ -10,6 +10,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build -m production",
+    "clean": "rm -Rf ./dist/",
     "build:lch": "LCH=1 vite build -m production && ./lch.sh",
     "test:types": "tsc --noEmit",
     "test:js": "eslint .",

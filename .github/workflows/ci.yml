@@ -48,7 +48,7 @@ jobs:
           projectId: ai-oklch
           channelId: live
       - name: Clean build dir
-        run: rm -Rf ./dist/
+        run: pnpm clean
       - name: Build LCH
         run: pnpm build:lch
       - name: Deploy LCH
