@@ -1,6 +1,8 @@
 import { persistentAtom } from '@nanostores/persistent'
 import { computed } from 'nanostores'
 
+import { trackEvent } from '../view/analytics/index.js'
+
 let encoder = {
   decode(str: string): boolean {
     return str === 'show'
@@ -43,3 +45,16 @@ export let outputFormat = persistentAtom<OutputFormats>(
   'settings:output',
   'hex/rgba'
 )
+
+function tracker(value: boolean): void {
+  if (value) {
+    trackEvent('Enable 3D')
+    unbind3dEvent()
+  }
+}
+let unbind3dEvent = show3d.listen(tracker)
+tracker(show3d.get())
+
+outputFormat.listen(format => {
+  if (format !== 'hex/rgba') trackEvent(`Change output`, { props: { format } })
+})

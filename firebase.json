@@ -24,7 +24,7 @@
           },
           {
             "key": "Content-Security-Policy",
-            "value": "default-src 'self'; frame-ancestors 'none'; img-src 'self' data:;"
+            "value": "default-src 'self'; frame-ancestors 'none'; img-src 'self' data:; connect-src 'self' https://plausible.io;"
           }
         ]
       }
