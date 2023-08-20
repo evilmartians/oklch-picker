@@ -1,7 +1,9 @@
 import Plausible from 'plausible-tracker'
 
-const { trackEvent } = Plausible({
+let { trackEvent, trackPageview } = Plausible({
   domain: COLOR_FN === 'oklch' ? 'oklch.com' : 'lch.oklch.com'
 })
+
+trackPageview()
 
 export { trackEvent }
