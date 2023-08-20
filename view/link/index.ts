@@ -8,6 +8,8 @@ for (let link of links) {
       trackEvent('Open guide')
     })
   } else if (link.classList.contains('is-github')) {
-    trackEvent('Open sources')
+    link.addEventListener('click', () => {
+      trackEvent('Open sources')
+    })
   }
 }
