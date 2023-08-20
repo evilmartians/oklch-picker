@@ -48,11 +48,11 @@ export let outputFormat = persistentAtom<OutputFormats>(
 
 let unbind3dEvent = show3d.subscribe(value => {
   if (value) {
-    trackEvent('3d')
+    trackEvent('Enable 3D')
     unbind3dEvent()
   }
 })
 
 outputFormat.listen(value => {
-  if (value !== 'hex/rgba') trackEvent(value)
+  if (value !== 'hex/rgba') trackEvent(`Change output to ${value}`)
 })
