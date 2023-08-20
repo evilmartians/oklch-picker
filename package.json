@@ -23,7 +23,6 @@
     "autoprefixer": "^10.4.14",
     "culori": "^3.2.0",
     "delaunator": "^5.0.0",
-    "firebase-tools": "^12.4.7",
     "jstransformer-markdown-it": "^3.0.0",
     "nanodelay": "^2.0.2",
     "nanostores": "^0.9.3",
