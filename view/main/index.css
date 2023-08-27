@@ -97,6 +97,11 @@ body {
   fill: var(--surface-ui-regular);
 }
 
+.main_logo-icon {
+  width: 100%;
+  height: 100%;
+}
+
 .main_logo {
   position: absolute;
   bottom: env(safe-area-inset-bottom, 0);
@@ -114,7 +119,54 @@ body {
   }
 }
 
-.main_logo-icon {
-  width: 100%;
-  height: 100%;
+.main_logo::before,
+.main_logo::after {
+  position: absolute;
+  bottom: 8px;
+  display: none;
+  width: 22px;
+  height: 10px;
+  content: "";
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: center top;
+  animation-name: main-blinking;
+  animation-play-state: paused;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.main_logo::before {
+  left: 15px;
+  animation-duration: 4s;
+}
+
+.main_logo::after {
+  right: 15px;
+  animation-duration: 3.2s;
+  animation-delay: 0.9s;
+}
+
+.main_logo:hover::before,
+.main_logo:hover::after {
+  display: block;
+  animation-play-state: running;
+
+  @media (width < 830px) {
+    display: none;
+  }
+}
+
+@keyframes main-blinking {
+  6% {
+    transform: scaleY(0);
+  }
+
+  9% {
+    transform: scaleY(1);
+  }
+
+  12% {
+    transform: scaleY(0);
+  }
 }
