@@ -15,7 +15,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install tools from asdf config
         uses: ai/asdf-cache-action@v1
       - name: Install dependencies
@@ -31,7 +31,7 @@ jobs:
       - test
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Install tools from asdf config
         uses: ai/asdf-cache-action@v1
         with:
