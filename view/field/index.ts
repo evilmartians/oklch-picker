@@ -1,7 +1,15 @@
-import { toggleInvalid } from '../../lib/dom.js'
-
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
+
+export function setValid(input: HTMLInputElement): void {
+  input.removeAttribute('aria-invalid')
+}
+
+export function setInvalid(input: HTMLInputElement, message: string): void {
+  input.setAttribute('aria-invalid', 'true')
+  input.setCustomValidity(message)
+  input.reportValidity()
+}
 
 let originViewport = meta.content
 
@@ -108,12 +116,10 @@ function useSpinButton(input: HTMLInputElement): void {
 
   function changeNotice(type: SpinEvent['detail']['action']): void {
     if (/[0-9]/.test(input.value.charAt(input.value.length - 1))) {
-      let event = new CustomEvent('spin', { detail: { action: type } })
-
-      toggleInvalid(input, false)
-      input.dispatchEvent(event)
+      setValid(input)
+      input.dispatchEvent(new CustomEvent('spin', { detail: { action: type } }))
     } else {
-      toggleInvalid(input, true)
+      setInvalid(input, 'Invalid number')
     }
   }
 
@@ -189,9 +195,9 @@ function useSpinButton(input: HTMLInputElement): void {
 
       if (!input.checkValidity()) {
         input.value = removeByPosition(value, caretPosition - 1)
-        toggleInvalid(input, true)
+        setInvalid(input, 'Invalid number')
       } else {
-        toggleInvalid(input, false)
+        setValid(input)
       }
     }
 

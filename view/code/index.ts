@@ -4,7 +4,7 @@ import {
   isHexNotation,
   parseAnything
 } from '../../lib/colors.js'
-import { toggleInvalid, toggleVisibility } from '../../lib/dom.js'
+import { toggleVisibility } from '../../lib/dom.js'
 import {
   current,
   setCurrentFromColor,
@@ -18,7 +18,7 @@ import {
 } from '../../stores/formats.js'
 import { outputFormat, type OutputFormats } from '../../stores/settings.js'
 import { visible } from '../../stores/visible.js'
-import { toggleWarning } from '../field/index.js'
+import { setInvalid, setValid, toggleWarning } from '../field/index.js'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
 let lchInput = lch.querySelector<HTMLInputElement>('input')!
@@ -42,7 +42,7 @@ function setLch(): void {
   let text = formatLch(valueToColor(value))
   prevValues.set(lchInput, text)
   lchInput.value = text
-  toggleInvalid(lchInput, false)
+  setValid(lchInput)
 }
 
 function setRgb(): void {
@@ -63,7 +63,7 @@ function setRgb(): void {
     toggleVisibility(notePaste, !isFallback)
     toggleVisibility(noteFallback, isFallback)
   }
-  toggleInvalid(rgbInput, false)
+  setValid(rgbInput)
 }
 
 current.subscribe(() => {
@@ -87,13 +87,13 @@ function listenChanges(input: HTMLInputElement): void {
 
     let parsed = parseAnything(newValue)
     if (parsed) {
-      toggleInvalid(input, false)
+      setValid(input)
       if (outputFormat.get() === 'figmaP3' && input === rgbInput) {
         parsed = forceP3(parsed)
       }
       setCurrentFromColor(parsed)
     } else {
-      toggleInvalid(input, true)
+      setInvalid(input, 'Use valid CSS color format')
     }
   }
 

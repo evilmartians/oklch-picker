@@ -8,14 +8,6 @@ export function toggleVisibility(element: HTMLElement, shown: boolean): void {
   }
 }
 
-export function toggleInvalid(input: HTMLInputElement, invalid: boolean): void {
-  if (invalid) {
-    input.setAttribute('aria-invalid', 'true')
-  } else {
-    input.removeAttribute('aria-invalid')
-  }
-}
-
 export function getBorders(): [string, string] {
   let styles = window.getComputedStyle(document.body)
   return [
