@@ -1,5 +1,5 @@
 {
-  "extends": "@logux/eslint-config/esm",
+  "extends": "@logux/eslint-config/ts",
   "overrides": [
     {
       "files": "**/worker.ts",
