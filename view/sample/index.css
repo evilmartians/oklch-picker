@@ -46,7 +46,7 @@
   &::before {
     position: absolute;
     inset: 0;
-    content: "";
+    content: '';
     border-radius: var(--radius);
   }
 }
@@ -82,6 +82,7 @@
   color: var(--text-badge);
   text-transform: capitalize;
   background: var(--surface-badge);
+  border: none;
   border-radius: 8px;
   transform: translateX(-50%);
 }
