@@ -16,7 +16,7 @@
     "test:js": "eslint .",
     "test:css": "stylelint **/*.css",
     "test:build": "pnpm build && size-limit && pnpm build:lch",
-    "test": "pnpm run /^test:/"
+    "test": "FORCE_COLOR=1 pnpm run /^test:/"
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^3.0.5",
