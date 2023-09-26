@@ -45,9 +45,10 @@ let listH = rangeH.querySelector<HTMLDataListElement>('datalist')!
 
 function paint(
   canvas: HTMLCanvasElement,
+  type: 'c' | 'h' | 'l',
   width: number,
   height: number,
-  hasGaps: boolean,
+  sliderStep: number,
   getColor: (x: number) => AnyLch
 ): number[] {
   let ctx = getCleanCtx(canvas)
@@ -55,25 +56,12 @@ function paint(
   let [borderP3, borderRec2020] = getBorders()
   let getSpace = generateGetSpace(showP3.get(), showRec2020.get())
 
-  let step: number
-  let key: 'c' | 'h' | 'l'
-  if (canvas === canvasL) {
-    key = 'l'
-    step = parseFloat(inputL.step)
-  } else if (canvas === canvasC) {
-    key = 'c'
-    step = parseFloat(inputC.step)
-  } else {
-    key = 'h'
-    step = parseFloat(inputH.step)
-  }
-
   let stops: number[] = []
   function addStop(x: number, round: (num: number) => number): void {
     let origin = getColor(x)
-    let value = origin[key] ?? 0
-    if (key === 'l') value = (100 / L_MAX) * value
-    stops.push(round(value / step) * step)
+    let value = origin[type] ?? 0
+    if (type === 'l') value = (100 / L_MAX) * value
+    stops.push(round(value / sliderStep) * sliderStep)
   }
 
   let prevSpace = getSpace(getColor(0))
@@ -115,7 +103,7 @@ function paint(
       if (prevSpace !== Space.Out) {
         addStop(x - 1, Math.floor)
       }
-      if (!hasGaps) {
+      if (type === 'c') {
         return stops
       }
     }
@@ -160,7 +148,9 @@ onPaint({
     let factor = L_MAX / width
     setList(
       listL,
-      paint(canvasL, width, height, true, x => build(x * factor, c, h))
+      paint(canvasL, 'l', width, height, parseFloat(inputL.step), x => {
+        return build(x * factor, c, h)
+      })
     )
   },
   lc(value) {
@@ -169,7 +159,9 @@ onPaint({
     let factor = H_MAX / width
     setList(
       listH,
-      paint(canvasH, width, height, true, x => build(l, c, x * factor))
+      paint(canvasH, 'h', width, height, parseFloat(inputH.step), x => {
+        return build(l, c, x * factor)
+      })
     )
   },
   lh(value) {
@@ -180,7 +172,9 @@ onPaint({
     let factor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / width
     setList(
       listC,
-      paint(canvasC, width, height, false, x => build(l, x * factor, h))
+      paint(canvasC, 'c', width, height, parseFloat(inputC.step), x => {
+        return build(l, x * factor, h)
+      })
     )
   }
 })
