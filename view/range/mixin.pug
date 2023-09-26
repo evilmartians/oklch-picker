@@ -6,8 +6,10 @@ mixin range(type, max, step, defaultValue)
       type="range"
       min="0"
       max=max
-      step=step / 10
+      step=step / 100
       aria-hidden="true"
       value=defaultValue
       tabindex="-1"
+      list=`range_${type}_values`
     )
+    datalist( id=`range_${type}_values` )

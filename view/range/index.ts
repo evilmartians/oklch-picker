@@ -39,17 +39,57 @@ let canvasL = rangeL.querySelector<HTMLCanvasElement>('.range_space')!
 let canvasC = rangeC.querySelector<HTMLCanvasElement>('.range_space')!
 let canvasH = rangeH.querySelector<HTMLCanvasElement>('.range_space')!
 
+let listL = rangeL.querySelector<HTMLDataListElement>('datalist')!
+let listC = rangeC.querySelector<HTMLDataListElement>('datalist')!
+let listH = rangeH.querySelector<HTMLDataListElement>('datalist')!
+
 function paint(
   canvas: HTMLCanvasElement,
   width: number,
   height: number,
   hasGaps: boolean,
   getColor: (x: number) => AnyLch
-): void {
+): number[] {
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
   let [borderP3, borderRec2020] = getBorders()
   let getSpace = generateGetSpace(showP3.get(), showRec2020.get())
+
+  let step: number
+  let key: 'c' | 'h' | 'l'
+  if (canvas === canvasL) {
+    key = 'l'
+    step = parseFloat(inputL.step)
+  } else if (canvas === canvasC) {
+    key = 'c'
+    step = parseFloat(inputC.step)
+  } else {
+    key = 'h'
+    step = parseFloat(inputH.step)
+  }
+
+  let stops: number[] = []
+  function addStop(x: number, space: Space): void {
+    let origin = getColor(x)
+    let value = origin[key] ?? 0
+    if (key === 'l') value = (100 / L_MAX) * value
+
+    let round = Math.round(value / step) * step
+
+    let roundColor: AnyLch
+    if (key === 'l') {
+      roundColor = build(round / (100 / L_MAX), origin.c, origin.h ?? 0)
+    } else if (key === 'c') {
+      roundColor = build(origin.l, round, origin.h ?? 0)
+    } else {
+      roundColor = build(origin.l, origin.c, round)
+    }
+    if (getSpace(roundColor) !== space) {
+      round -= step
+    }
+
+    stops.push(round)
+  }
 
   let prevSpace = getSpace(getColor(0))
   for (let x = 0; x <= width; x++) {
@@ -63,6 +103,15 @@ function paint(
         ctx.fillRect(x, halfHeight, 1, 1)
       }
       if (prevSpace !== space) {
+        if (
+          prevSpace === Space.Out ||
+          (prevSpace === Space.Rec2020 && space === Space.P3) ||
+          (prevSpace === Space.P3 && space === Space.sRGB)
+        ) {
+          addStop(x, space)
+        } else {
+          addStop(x - 1, prevSpace)
+        }
         if (space === Space.P3 && prevSpace !== Space.Rec2020) {
           ctx.fillStyle = borderP3
           ctx.fillRect(x, 0, 1, halfHeight)
@@ -77,13 +126,29 @@ function paint(
           ctx.fillRect(x - 1, 0, 1, halfHeight)
         }
       }
-    } else if (hasGaps) {
-      continue
     } else {
-      return
+      if (prevSpace !== Space.Out) {
+        addStop(x - 1, prevSpace)
+      }
+      if (!hasGaps) {
+        return stops
+      }
     }
     prevSpace = space
   }
+  return stops
+}
+
+function setList(list: HTMLDataListElement, values: number[]): void {
+  list.replaceChildren(
+    ...values.map(value => {
+      let option = document.createElement('option')
+      option.value = String(value)
+        .replace(/(0{5,}\d|9{5,}\d)/, '')
+        .replace(/\.$/, '')
+      return option
+    })
+  )
 }
 
 onCurrentChange({
@@ -108,13 +173,19 @@ onPaint({
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasL)
     let factor = L_MAX / width
-    paint(canvasL, width, height, true, x => build(x * factor, c, h))
+    setList(
+      listL,
+      paint(canvasL, width, height, true, x => build(x * factor, c, h))
+    )
   },
   lc(value) {
     let { c, l } = valueToColor(value)
     let [width, height] = initCanvasSize(canvasH)
     let factor = H_MAX / width
-    paint(canvasH, width, height, true, x => build(l, c, x * factor))
+    setList(
+      listH,
+      paint(canvasH, width, height, true, x => build(l, c, x * factor))
+    )
   },
   lh(value) {
     let color = valueToColor(value)
@@ -122,7 +193,10 @@ onPaint({
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasC)
     let factor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / width
-    paint(canvasC, width, height, false, x => build(l, x * factor, h))
+    setList(
+      listC,
+      paint(canvasC, width, height, false, x => build(l, x * factor, h))
+    )
   }
 })
 
