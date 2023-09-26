@@ -69,26 +69,11 @@ function paint(
   }
 
   let stops: number[] = []
-  function addStop(x: number, space: Space): void {
+  function addStop(x: number, round: (num: number) => number): void {
     let origin = getColor(x)
     let value = origin[key] ?? 0
     if (key === 'l') value = (100 / L_MAX) * value
-
-    let round = Math.round(value / step) * step
-
-    let roundColor: AnyLch
-    if (key === 'l') {
-      roundColor = build(round / (100 / L_MAX), origin.c, origin.h ?? 0)
-    } else if (key === 'c') {
-      roundColor = build(origin.l, round, origin.h ?? 0)
-    } else {
-      roundColor = build(origin.l, origin.c, round)
-    }
-    if (getSpace(roundColor) !== space) {
-      round -= step
-    }
-
-    stops.push(round)
+    stops.push(round(value / step) * step)
   }
 
   let prevSpace = getSpace(getColor(0))
@@ -108,9 +93,9 @@ function paint(
           (prevSpace === Space.Rec2020 && space === Space.P3) ||
           (prevSpace === Space.P3 && space === Space.sRGB)
         ) {
-          addStop(x, space)
+          addStop(x, Math.ceil)
         } else {
-          addStop(x - 1, prevSpace)
+          addStop(x - 1, Math.floor)
         }
         if (space === Space.P3 && prevSpace !== Space.Rec2020) {
           ctx.fillStyle = borderP3
@@ -128,7 +113,7 @@ function paint(
       }
     } else {
       if (prevSpace !== Space.Out) {
-        addStop(x - 1, prevSpace)
+        addStop(x - 1, Math.floor)
       }
       if (!hasGaps) {
         return stops
