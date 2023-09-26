@@ -3,12 +3,14 @@ let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
 export function setValid(input: HTMLInputElement): void {
   input.removeAttribute('aria-invalid')
+  input.setCustomValidity('')
+  // input.reportValidity()
 }
 
 export function setInvalid(input: HTMLInputElement, message: string): void {
   input.setAttribute('aria-invalid', 'true')
   input.setCustomValidity(message)
-  input.reportValidity()
+  // input.reportValidity()
 }
 
 let originViewport = meta.content
@@ -113,6 +115,7 @@ let pinchTimer: number
 function useSpinButton(input: HTMLInputElement): void {
   let increase = input.nextElementSibling as HTMLButtonElement
   let decrease = increase.nextElementSibling as HTMLButtonElement
+  let pattern = new RegExp(input.getAttribute('pattern')!)
 
   function changeNotice(type: SpinEvent['detail']['action']): void {
     if (/[0-9]/.test(input.value.charAt(input.value.length - 1))) {
@@ -193,7 +196,7 @@ function useSpinButton(input: HTMLInputElement): void {
       let value = input.value
       let caretPosition = input.selectionStart!
 
-      if (!input.checkValidity()) {
+      if (!pattern.test(value)) {
         input.value = removeByPosition(value, caretPosition - 1)
         setInvalid(input, 'Invalid number')
       } else {
