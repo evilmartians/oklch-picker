@@ -8,18 +8,18 @@
       "!dist/*.webmanifest",
       "!dist/*.png"
     ],
-    "limit": "65 KB"
+    "limit": "60 KB"
   },
   {
     "name": "Base scripts to execute",
     "path": ["dist/*.js", "!dist/model-*.js"],
     "gzip": false,
-    "limit": "80 KB"
+    "limit": "30 KB"
   },
   {
     "name": "Scripts for 3D model",
     "path": "dist/model-*.js",
     "gzip": false,
-    "limit": "470 KB"
+    "limit": "100 KB"
   }
 ]
