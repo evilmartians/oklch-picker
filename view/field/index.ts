@@ -171,14 +171,6 @@ function useSpinButton(input: HTMLInputElement): void {
         e.preventDefault()
         changeNotice('decrease')
         break
-      case 'Home':
-        e.preventDefault()
-        changeNotice('setMinimum')
-        break
-      case 'End':
-        e.preventDefault()
-        changeNotice('setMaximum')
-        break
     }
   }
 
