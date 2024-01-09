@@ -47,24 +47,20 @@ function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
     text.setAttribute('aria-valuenow', String(angleInRange))
   })
 
-  text.addEventListener('spin', e => {
+  text.addEventListener('spin', (e: SpinEvent) => {
     let { max, min, step } = getInputMeta(text)
 
     let value = computeExpression(text.value)
 
-    switch ((e as SpinEvent).detail.action) {
-      case 'increase':
-        value = value + step
-        break
-      case 'decrease':
-        value = value - step
-        break
-      case 'setMaximum':
-        value = max
-        break
-      case 'setMinimum':
-        value = min
-        break
+    let action = e.detail
+    if (action === 'increase') {
+      value = value + step
+    } else if (action === 'decrease') {
+      value = value - step
+    } else if (action === 'setMaximum') {
+      value = max
+    } else if (action === 'setMinimum') {
+      value = min
     }
 
     let parsedValue = bindedClamp(value, { max, min })

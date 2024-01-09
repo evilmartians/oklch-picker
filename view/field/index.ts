@@ -103,10 +103,10 @@ function removeByPosition(str: string, position: number): string {
   return str.slice(0, position) + str.slice(position + 1)
 }
 
+type SpinAction = 'decrease' | 'increase' | 'setMaximum' | 'setMinimum'
+
 export interface SpinEvent extends Event {
-  detail: {
-    action: 'decrease' | 'increase' | 'setMaximum' | 'setMinimum'
-  }
+  detail?: SpinAction
 }
 
 let currentNotifyCb = (): void => {}
@@ -117,10 +117,10 @@ function useSpinButton(input: HTMLInputElement): void {
   let decrease = increase.nextElementSibling as HTMLButtonElement
   let pattern = new RegExp(input.getAttribute('pattern')!)
 
-  function changeNotice(type: SpinEvent['detail']['action']): void {
+  function changeNotice(type: SpinAction): void {
     if (/[0-9]/.test(input.value.charAt(input.value.length - 1))) {
       setValid(input)
-      input.dispatchEvent(new CustomEvent('spin', { detail: { action: type } }))
+      input.dispatchEvent(new CustomEvent<SpinAction>('spin', { detail: type }))
     } else {
       setInvalid(input, 'Invalid number')
     }
@@ -162,15 +162,12 @@ function useSpinButton(input: HTMLInputElement): void {
   function onKeyPressed(e: KeyboardEvent): void {
     onKeyDown(e)
 
-    switch (e.key) {
-      case 'ArrowUp':
-        e.preventDefault()
-        changeNotice('increase')
-        break
-      case 'ArrowDown':
-        e.preventDefault()
-        changeNotice('decrease')
-        break
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      changeNotice('increase')
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      changeNotice('decrease')
     }
   }
 
