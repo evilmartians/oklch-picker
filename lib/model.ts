@@ -12,7 +12,6 @@ import {
   PlaneGeometry,
   type Renderer,
   Scene,
-  type Shader,
   Vector2,
   Vector3,
   WebGLRenderer
@@ -87,7 +86,7 @@ function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
   let l = new Vector2(0, 1)
   let c = new Vector2(0, 1)
   let h = new Vector2(0, 1)
-  material.onBeforeCompile = (shader: Shader) => {
+  material.onBeforeCompile = shader => {
     shader.uniforms.sliceL = { value: l }
     shader.uniforms.sliceC = { value: c }
     shader.uniforms.sliceH = { value: h }
