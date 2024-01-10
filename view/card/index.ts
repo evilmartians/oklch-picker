@@ -51,16 +51,10 @@ function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
     let { max, min, step } = getInputMeta(text)
 
     let value = computeExpression(text.value)
-
-    let action = e.detail
-    if (action === 'increase') {
+    if (e.detail === 'increase') {
       value = value + step
-    } else if (action === 'decrease') {
+    } else if (e.detail === 'decrease') {
       value = value - step
-    } else if (action === 'setMaximum') {
-      value = max
-    } else if (action === 'setMinimum') {
-      value = min
     }
 
     let parsedValue = bindedClamp(value, { max, min })

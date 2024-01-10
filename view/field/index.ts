@@ -103,7 +103,7 @@ function removeByPosition(str: string, position: number): string {
   return str.slice(0, position) + str.slice(position + 1)
 }
 
-type SpinAction = 'decrease' | 'increase' | 'setMaximum' | 'setMinimum'
+type SpinAction = 'decrease' | 'increase'
 
 export interface SpinEvent extends Event {
   detail?: SpinAction
