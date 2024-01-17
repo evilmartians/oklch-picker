@@ -16,7 +16,7 @@ function separate(
 ): void {
   if (!line) return
   if (line.length > 0) {
-    let prevY = line[0][1]!
+    let prevY = line[0][1]
     let prevX = 0
     for (let [x, y] of line) {
       if (x > prevX + 1) {

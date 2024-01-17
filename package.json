@@ -21,7 +21,7 @@
   "dependencies": {
     "@csstools/postcss-oklab-function": "^3.0.9",
     "@nanostores/persistent": "^0.9.1",
-    "autoprefixer": "^10.4.16",
+    "autoprefixer": "^10.4.17",
     "culori": "^3.3.0",
     "delaunator": "^5.0.0",
     "jstransformer-markdown-it": "^3.0.0",
@@ -40,12 +40,12 @@
   "devDependencies": {
     "@logux/eslint-config": "^52.0.2",
     "@logux/stylelint-config": "^0.18.0",
-    "@size-limit/file": "^11.0.1",
+    "@size-limit/file": "^11.0.2",
     "@types/culori": "^2.0.4",
     "@types/delaunator": "^5.0.2",
     "@types/three": "^0.160.0",
-    "@typescript-eslint/eslint-plugin": "^6.18.1",
-    "@typescript-eslint/parser": "^6.18.1",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
     "eslint": "^8.56.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
@@ -56,7 +56,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.9.0",
-    "size-limit": "^11.0.1",
+    "size-limit": "^11.0.2",
     "stylelint": "^16.1.0",
     "svgo": "^3.2.0",
     "typescript": "^5.3.3"
