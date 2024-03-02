@@ -36,6 +36,7 @@ export type OutputFormats =
   | 'hsl'
   | 'lab'
   | 'lch'
+  | 'lrgb'
   | 'numbers'
   | 'oklab'
   | 'p3'

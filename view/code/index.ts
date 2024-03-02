@@ -50,7 +50,7 @@ function setRgb(): void {
   let type = outputFormat.get()
   let output = formats.get()[type]
   prevValues.set(rgbInput, output)
-  rgbInput.value = output.replace(/^Figma P3 /, '')
+  rgbInput.value = output.replace(/^(Figma P3|Linear RGB) /, '')
   if (type === 'figmaP3') {
     toggleWarning(rgbInput, true)
     toggleVisibility(noteFigma, true)
@@ -137,6 +137,8 @@ outputFormat.listen(value => {
   format.value = value
   if (value === 'numbers') {
     rgb.ariaLabel = `OKLCH ${value}`
+  } else if (value === 'lrgb') {
+    rgb.ariaLabel = `Linear RGB ${value}`
   } else {
     rgb.ariaLabel = `${value} CSS code`
   }

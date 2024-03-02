@@ -4,9 +4,11 @@ import {
   formatCss,
   formatRgb as formatRgbFast,
   type Lch,
+  type Lrgb,
   modeHsl,
   modeLab,
   modeLch,
+  modeLrgb,
   modeOklab,
   modeOklch,
   modeP3,
@@ -26,7 +28,7 @@ import { support } from '../stores/support.js'
 export type { Rgb } from 'culori/fn'
 
 export type AnyLch = Lch | Oklch
-export type AnyRgb = P3 | Rec2020 | Rgb
+export type AnyRgb = Lrgb | P3 | Rec2020 | Rgb
 
 export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
@@ -36,6 +38,7 @@ export let rgb = useMode(modeRgb)
 export let lch = useMode(modeLch)
 export let hsl = useMode(modeHsl)
 export let lab = useMode(modeLab)
+export let lrgb = useMode(modeLrgb)
 export let p3 = useMode(modeP3)
 
 const GAMUT_MIN = -GAMUT_EPSILON

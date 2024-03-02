@@ -9,13 +9,15 @@ import {
 } from 'culori/fn'
 import { computed } from 'nanostores'
 
-import type { AnyLch } from '../lib/colors.js'
 import {
+  type AnyLch,
+  type AnyRgb,
   clean,
   hsl,
   inRGB,
   lab,
   lch,
+  lrgb,
   oklab,
   p3,
   toPercent,
@@ -31,6 +33,14 @@ function formatOklab(color: Oklab): string {
     postfix = ` / ${clean(alpha)}`
   }
   return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)}${postfix})`
+}
+
+function formatVec(color: AnyRgb): string {
+  let { alpha, b, g, r } = color
+  return `vec(${clean(r, 3)}, ${clean(g, 3)}, ${clean(b, 3)}, ${clean(
+    alpha ?? 1,
+    2
+  )})`
 }
 
 function toNumbers(color: AnyLch): string {
@@ -81,6 +91,7 @@ export const formats = computed<FormatsValue, typeof current>(
       'hsl': formatCss(cleanComponents(hsl(rgbColor))),
       'lab': formatCss(cleanComponents(lab(color))),
       'lch': formatCss(cleanComponents(lch(color))),
+      'lrgb': 'Linear RGB ' + formatVec(lrgb(color)),
       'numbers': toNumbers(color),
       'oklab': formatOklab(oklab(color)),
       'p3': formatCss(cleanComponents(p3(color), 4)),
