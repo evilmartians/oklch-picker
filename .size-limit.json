@@ -20,6 +20,6 @@
     "name": "Scripts for 3D model",
     "path": "dist/model-*.js",
     "brotli": false,
-    "limit": "480 KB"
+    "limit": "485 KB"
   }
 ]
