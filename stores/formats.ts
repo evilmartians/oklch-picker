@@ -37,10 +37,8 @@ function formatOklab(color: Oklab): string {
 
 function formatVec(color: AnyRgb): string {
   let { alpha, b, g, r } = color
-  return `vec(${clean(r, 3)}, ${clean(g, 3)}, ${clean(b, 3)}, ${clean(
-    alpha ?? 1,
-    2
-  )})`
+  let a = alpha ?? 1
+  return `vec(${clean(r, 5)}, ${clean(g, 5)}, ${clean(b, 5)}, ${clean(a, 5)})`
 }
 
 function toNumbers(color: AnyLch): string {
