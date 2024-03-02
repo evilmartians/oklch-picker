@@ -132,16 +132,17 @@ function listenChanges(input: HTMLInputElement): void {
 listenChanges(lchInput)
 listenChanges(rgbInput)
 
-format.value = outputFormat.get()
-outputFormat.listen(value => {
+outputFormat.subscribe(value => {
   format.value = value
   if (value === 'numbers') {
-    rgb.ariaLabel = `OKLCH ${value}`
+    rgbInput.ariaLabel = `OKLCH ${value}`
   } else if (value === 'lrgb') {
-    rgb.ariaLabel = `Linear RGB ${value}`
+    rgbInput.ariaLabel = `Linear RGB`
   } else {
-    rgb.ariaLabel = `${value} CSS code`
+    rgbInput.ariaLabel = `${value} CSS code`
   }
+})
+outputFormat.listen(() => {
   setRgb()
 })
 format.addEventListener('change', () => {
