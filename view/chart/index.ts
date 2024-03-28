@@ -101,15 +101,18 @@ function startWorkForComponent(
     chartsToChange,
     messages =>
       messages.map((_, i) => {
-        let step = Math.ceil(canvas.width / messages.length)
+        let step = Math.floor(canvas.width / messages.length)
+        let from = step * i + (i === 0 ? 0 : 1)
+        let to = Math.min(step * (i + 1), canvas.width)
+        if (i === messages.length - 1) to = canvas.width
         return {
           borderP3,
           borderRec2020,
-          from: step * i + (i === 0 ? 0 : 1),
+          from,
           height: canvas.height,
           showP3: showP3.get(),
           showRec2020: showRec2020.get(),
-          to: Math.min(step * (i + 1), canvas.width),
+          to,
           type,
           value,
           width: canvas.width
