@@ -7,7 +7,6 @@ permissions:
   pull-requests: write
   deployments: write
 jobs:
-
   preview:
     name: Preview
     runs-on: ubuntu-latest
@@ -29,15 +28,15 @@ jobs:
         with:
           dependencies-cache: production
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --production --ignore-scripts
+        run: pnpm install --production --ignore-scripts
       - name: Build OKLCH
         run: pnpm build
       - name: Deploy
         id: deploy
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_OKLCH_ACCOUNT }}'
           projectId: ai-oklch
           expires: 30d
       - name: Update deployment status
@@ -51,5 +50,3 @@ jobs:
           env: ${{ steps.deployment.outputs.env }}
           env_url: ${{ steps.deploy.outputs.details_url }}
           deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-
-

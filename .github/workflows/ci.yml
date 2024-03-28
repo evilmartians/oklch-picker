@@ -7,7 +7,6 @@ on:
 permissions:
   contents: read
 jobs:
-
   test:
     name: Test
     runs-on: ubuntu-latest
@@ -19,7 +18,7 @@ jobs:
       - name: Install tools from asdf config
         uses: ai/asdf-cache-action@v1
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --ignore-scripts
+        run: pnpm install --ignore-scripts
       - name: Run tests
         run: pnpm test
 
@@ -37,14 +36,14 @@ jobs:
         with:
           dependencies-cache: production
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --production --ignore-scripts
+        run: pnpm install --production --ignore-scripts
       - name: Build OKLCH
         run: pnpm build
       - name: Deploy OKLCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_OKLCH_ACCOUNT }}"
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_OKLCH_ACCOUNT }}'
           projectId: ai-oklch
           channelId: live
       - name: Clean build dir
@@ -54,7 +53,7 @@ jobs:
       - name: Deploy LCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_LCH_ACCOUNT }}"
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_LCH_ACCOUNT }}'
           projectId: ai-lch
           channelId: live
