@@ -21,7 +21,6 @@ jobs:
         run: pnpm install --ignore-scripts
       - name: Run tests
         run: pnpm test
-
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
