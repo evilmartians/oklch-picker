@@ -9,5 +9,11 @@ export default [
     rules: {
       'import/extensions': 'off'
     }
+  },
+  {
+    files: ['lib/**', 'view/**', 'stores/**'],
+    rules: {
+      'n/no-unsupported-features/node-builtins': 'off'
+    }
   }
 ]
