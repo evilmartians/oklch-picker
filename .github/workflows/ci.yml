@@ -22,12 +22,12 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: 22
+          node-version: 22
           cache: pnpm
       - name: Install dependencies
         run: pnpm install --ignore-scripts
       - name: Run tests
-        run: pnpm test
+        run: node --run test
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -44,11 +44,11 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version-file: 22
+          node-version: 22
       - name: Install dependencies
         run: pnpm install --production --ignore-scripts
       - name: Build OKLCH
-        run: pnpm build
+        run: node --run build
       - name: Deploy OKLCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -57,9 +57,9 @@ jobs:
           projectId: ai-oklch
           channelId: live
       - name: Clean build dir
-        run: pnpm clean
+        run: node --run clean
       - name: Build LCH
-        run: pnpm build:lch
+        run: node --run build:lch
       - name: Deploy LCH
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:

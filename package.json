@@ -15,7 +15,7 @@
     "test:types": "tsc --noEmit",
     "test:js": "eslint .",
     "test:css": "stylelint **/*.css",
-    "test:build": "pnpm build && size-limit && pnpm build:lch",
+    "test:build": "node --run build && size-limit && node --run build:lch",
     "test": "FORCE_COLOR=1 pnpm run /^test:/"
   },
   "dependencies": {
