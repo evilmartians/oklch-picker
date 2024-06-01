@@ -5,6 +5,11 @@ export default [
   { ignores: ['dist/'] },
   ...loguxTsConfig,
   {
+    rules: {
+      'no-control-regex': 'off'
+    }
+  },
+  {
     files: ['**/worker.ts'],
     rules: {
       'import/extensions': 'off'

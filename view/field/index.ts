@@ -62,10 +62,25 @@ function isSpecial(e: KeyboardEvent): boolean {
   return e.ctrlKey || e.shiftKey || e.altKey || e.metaKey
 }
 
+function pressHotkey(code: string): boolean {
+  let input = hotkeys[code]
+  if (input) {
+    input.focus()
+    return true
+  } else {
+    return false
+  }
+}
+
+const NON_ENGLISH_LAYOUT = /^[^\x00-\x7F]$/
+
 function onKeyDown(e: KeyboardEvent): void {
-  if (hotkeys[e.code] && !isSpecial(e)) {
-    e.preventDefault()
-    hotkeys[e.code]?.focus()
+  if (isSpecial(e)) return
+  if (!pressHotkey(e.key.toLowerCase())) {
+    if (NON_ENGLISH_LAYOUT.test(e.key) && /^Key.$/.test(e.code)) {
+      let enKey = e.code.replace(/^Key/, '').toLowerCase()
+      pressHotkey(enKey)
+    }
   }
 }
 
