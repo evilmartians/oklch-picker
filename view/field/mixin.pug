@@ -1,7 +1,7 @@
 mixin field(label, hotkey, opts = {})
-  .field( class=opts.options ? 'is-options' : '' aria-keyshortcuts=hotkey )
+  .field( class=opts.options ? 'is-options' : '' )
     kbd.field_hotkey( aria-hidden )= hotkey
-    input.field_input( aria-label=label )&attributes({ type: 'text', ...opts })
+    input.field_input( aria-label=label aria-keyshortcuts=hotkey )&attributes({ type: 'text', ...opts })
     if (opts.role === 'spinbutton')
       button.field_control.is-increase( tabindex="-1" aria-hidden="true" )
       button.field_control.is-decrease( tabindex="-1" aria-hidden="true" )
