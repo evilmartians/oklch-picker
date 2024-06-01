@@ -2,8 +2,8 @@
 
 Color picker and converter for OKLCH and LCH color space.
 
-* [`oklch.com`](https://oklch.com)
-* [`lch.oklch.com`](https://lch.oklch.com)
+- [`oklch.com`](https://oklch.com)
+- [`lch.oklch.com`](https://lch.oklch.com)
 
 OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 
@@ -16,24 +16,18 @@ OKLCH is a new way to encode colors (like hex, RGBA, or HSL):
 
 Additional links about Oklab and OKLCH:
 
-* [OKLCH in CSS: why we moved from RGB and HSL](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl)
-* [The article by Oklab creator](https://bottosson.github.io/posts/oklab/)
+- [OKLCH in CSS: why we moved from RGB and HSL](https://evilmartians.com/chronicles/oklch-in-css-why-quit-rgb-hsl)
+- [The article by Oklab creator](https://bottosson.github.io/posts/oklab/)
 
 [Unlike HSL]: https://wildbit.com/blog/accessible-palette-stop-using-hsl-for-color-systems
 [with LCH and Lab]: https://bottosson.github.io/posts/oklab/#blending-colors
 [hue shift]: https://lch.oklch.com/#35,55,297,100
 
-
 ## Development
 
 To run a local copy for development:
 
-1. Install correct versions of `Node.js` and `pnpm`. There are two ways:
-	1. With `asdf` version manager:
-		1. Install [`asdf`](https://github.com/asdf-vm/asdf) and asdf plugins for `Node.js` and `pnpm`
-		2. Run `asdf install`
-	2. Manually (check needed versions in `.tool-versions`)
-
+1. Install Node.js and `pnpm`.
 2. Install dependencies:
 
    ```sh
@@ -46,4 +40,4 @@ To run a local copy for development:
    pnpm start
    ```
 
-We recommend to install Prettier and EditorConfig plugins to your text editor.
+We recommend installing Prettier and EditorConfig plugins to your text editor.

@@ -15,8 +15,15 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Install tools from asdf config
-        uses: ai/asdf-cache-action@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 22
+          cache: pnpm
       - name: Install dependencies
         run: pnpm install --ignore-scripts
       - name: Run tests
@@ -30,10 +37,14 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Install tools from asdf config
-        uses: ai/asdf-cache-action@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         with:
-          dependencies-cache: production
+          version: 9
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: 22
       - name: Install dependencies
         run: pnpm install --production --ignore-scripts
       - name: Build OKLCH
