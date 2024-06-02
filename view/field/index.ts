@@ -1,6 +1,8 @@
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
 
+const NON_ENGLISH_LAYOUT = /^[^\x00-\x7F]$/
+
 export function setValid(input: HTMLInputElement): void {
   input.removeAttribute('aria-invalid')
   input.setCustomValidity('')
@@ -62,28 +64,6 @@ function isSpecial(e: KeyboardEvent): boolean {
   return e.ctrlKey || e.shiftKey || e.altKey || e.metaKey
 }
 
-function pressHotkey(code: string): boolean {
-  let input = hotkeys[code]
-  if (input) {
-    input.focus()
-    return true
-  } else {
-    return false
-  }
-}
-
-const NON_ENGLISH_LAYOUT = /^[^\x00-\x7F]$/
-
-function onKeyDown(e: KeyboardEvent): void {
-  if (isSpecial(e)) return
-  if (!pressHotkey(e.key.toLowerCase())) {
-    if (NON_ENGLISH_LAYOUT.test(e.key) && /^Key.$/.test(e.code)) {
-      let enKey = e.code.replace(/^Key/, '').toLowerCase()
-      pressHotkey(enKey)
-    }
-  }
-}
-
 let hotkeys: Partial<Record<string, HTMLInputElement>> = {}
 
 for (let field of fields) {
@@ -94,10 +74,7 @@ for (let field of fields) {
     useSpinButton(input)
   }
 
-  let hotkey = `Key${field
-    .querySelector('kbd')!
-    .innerText.trim()
-    .toUpperCase()}`
+  let hotkey = field.querySelector('kbd')!.innerText.trim().toLowerCase()
   hotkeys[hotkey] = input
 }
 
@@ -105,11 +82,21 @@ function isInput(el: EventTarget | null): el is HTMLInputElement {
   return !!el && (el as Element).tagName === 'INPUT'
 }
 
+function findNextFocus(e: KeyboardEvent): HTMLElement | undefined {
+  let next: HTMLElement | undefined
+  next = hotkeys[e.key.toLowerCase()]
+  if (!next && NON_ENGLISH_LAYOUT.test(e.key) && /^Key.$/.test(e.code)) {
+    let enKey = e.code.replace(/^Key/, '').toLowerCase()
+    next = hotkeys[enKey]
+  }
+  return next
+}
+
 window.addEventListener('keyup', e => {
   if (isSpecial(e)) return
   if (e.target === document.body) {
-    hotkeys[e.code]?.focus()
-  } else if (isInput(e.target) && e.code === 'Escape') {
+    findNextFocus(e)?.focus()
+  } else if (isInput(e.target) && e.key === 'Escape') {
     e.target.blur()
   }
 })
@@ -175,7 +162,12 @@ function useSpinButton(input: HTMLInputElement): void {
   }
 
   function onKeyPressed(e: KeyboardEvent): void {
-    onKeyDown(e)
+    if (isSpecial(e)) return
+    let next = findNextFocus(e)
+    if (next) {
+      e.preventDefault()
+      next.focus()
+    }
 
     if (e.key === 'ArrowUp') {
       e.preventDefault()
