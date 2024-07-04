@@ -130,7 +130,7 @@ body {
   background: var(--accent);
   transform: scaleY(0);
   transform-origin: center top;
-  animation-name: main-blinking;
+  animation-name: --main-blinking;
   animation-play-state: paused;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
@@ -157,7 +157,7 @@ body {
   }
 }
 
-@keyframes main-blinking {
+@keyframes --main-blinking {
   6% {
     transform: scaleY(0);
   }
