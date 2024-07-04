@@ -138,13 +138,13 @@ body {
 
 .main_logo::before {
   left: 15px;
-  animation-duration: 4s;
+  animation-duration: 3.7s;
 }
 
 .main_logo::after {
   right: 15px;
-  animation-duration: 3.2s;
-  animation-delay: 0.9s;
+  animation-duration: 2.9s;
+  animation-delay: 0.7s;
 }
 
 .main_logo:hover::before,
