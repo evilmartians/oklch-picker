@@ -19,7 +19,7 @@
     "test": "FORCE_COLOR=1 pnpm run /^test:/"
   },
   "dependencies": {
-    "@csstools/postcss-oklab-function": "^3.0.16",
+    "@csstools/postcss-oklab-function": "^3.0.17",
     "@nanostores/persistent": "^0.10.1",
     "autoprefixer": "^10.4.19",
     "culori": "^4.0.1",
@@ -28,29 +28,29 @@
     "nanodelay": "^2.0.2",
     "nanostores": "^0.10.3",
     "plausible-tracker": "^0.3.9",
-    "postcss": "^8.4.38",
+    "postcss": "^8.4.39",
     "postcss-media-minmax": "^5.0.0",
     "postcss-mixins": "^10.0.1",
     "postcss-nesting": "^12.1.5",
     "postcss-opacity-percentage": "^2.0.0",
-    "three": "~0.165.0",
-    "vite": "^5.2.12",
+    "three": "~0.166.1",
+    "vite": "^5.3.3",
     "vite-plugin-pug-transformer": "^1.0.5"
   },
   "devDependencies": {
     "@logux/eslint-config": "^53.2.0",
-    "@logux/stylelint-config": "^0.18.0",
+    "@logux/stylelint-config": "^0.19.0",
     "@size-limit/file": "^11.1.4",
-    "@types/culori": "^2.1.0",
+    "@types/culori": "^2.1.1",
     "@types/delaunator": "^5.0.2",
-    "@types/three": "^0.165.0",
-    "eslint": "^9.4.0",
+    "@types/three": "^0.166.0",
+    "eslint": "^9.6.0",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.11.1",
     "size-limit": "^11.1.4",
     "stylelint": "^16.6.1",
     "svgo": "^3.3.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.3"
   },
   "pnpm": {
     "overrides": {
