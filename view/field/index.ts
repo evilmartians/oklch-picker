@@ -1,7 +1,7 @@
+import { convertKey } from '../../lib/hotkeys.js'
+
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
-
-const NON_ENGLISH_LAYOUT = /^[^\x00-\x7F]$/
 
 export function setValid(input: HTMLInputElement): void {
   input.removeAttribute('aria-invalid')
@@ -83,13 +83,9 @@ function isInput(el: EventTarget | null): el is HTMLInputElement {
 }
 
 function findNextFocus(e: KeyboardEvent): HTMLElement | undefined {
-  let next: HTMLElement | undefined
-  next = hotkeys[e.key.toLowerCase()]
-  if (!next && NON_ENGLISH_LAYOUT.test(e.key) && /^Key.$/.test(e.code)) {
-    let enKey = e.code.replace(/^Key/, '').toLowerCase()
-    next = hotkeys[enKey]
-  }
-  return next
+  let key = convertKey(e)
+
+  return hotkeys[key]
 }
 
 window.addEventListener('keyup', e => {
