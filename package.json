@@ -19,7 +19,7 @@
     "test": "FORCE_COLOR=1 pnpm run /^test:/"
   },
   "dependencies": {
-    "@csstools/postcss-oklab-function": "^3.0.17",
+    "@csstools/postcss-oklab-function": "^3.0.19",
     "@nanostores/persistent": "^0.10.1",
     "autoprefixer": "^10.4.19",
     "culori": "^4.0.1",
@@ -34,21 +34,21 @@
     "postcss-nesting": "^12.1.5",
     "postcss-opacity-percentage": "^2.0.0",
     "three": "~0.166.1",
-    "vite": "^5.3.3",
+    "vite": "^5.3.4",
     "vite-plugin-pug-transformer": "^1.0.5"
   },
   "devDependencies": {
-    "@logux/eslint-config": "^53.2.0",
+    "@logux/eslint-config": "^53.2.1",
     "@logux/stylelint-config": "^0.19.0",
     "@size-limit/file": "^11.1.4",
     "@types/culori": "^2.1.1",
-    "@types/delaunator": "^5.0.2",
+    "@types/delaunator": "^5.0.3",
     "@types/three": "^0.166.0",
-    "eslint": "^9.6.0",
+    "eslint": "^9.7.0",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.11.1",
     "size-limit": "^11.1.4",
-    "stylelint": "^16.6.1",
+    "stylelint": "^16.7.0",
     "svgo": "^3.3.2",
     "typescript": "^5.5.3"
   },
