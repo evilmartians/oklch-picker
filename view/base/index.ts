@@ -4,11 +4,8 @@ import { redo, undo } from '../../stores/history.js'
 import { loading } from '../../stores/loading.js'
 
 const IS_MAC = /Mac|iPod|iPhone|iPad/.test(window.navigator.platform)
-
-const HOTKEYS = {
-  redo: IS_MAC ? ['meta+shift+z'] : ['ctrl+shift+z', 'ctrl+y'],
-  undo: IS_MAC ? ['meta+z'] : ['ctrl+z']
-}
+const redoHotkeys = IS_MAC ? ['meta+shift+z'] : ['ctrl+shift+z', 'ctrl+y']
+const undoHotkeys = IS_MAC ? ['meta+z'] : ['ctrl+z']
 
 accent.subscribe(({ main, surface }) => {
   document.body.style.setProperty('--accent', main)
@@ -28,10 +25,10 @@ document.body.addEventListener('mouseup', () => {
 })
 
 document.body.addEventListener('keydown', e => {
-  if (isHotkey(HOTKEYS.redo, e)) {
+  if (isHotkey(redoHotkeys, e)) {
     e.preventDefault()
     redo()
-  } else if (isHotkey(HOTKEYS.undo, e)) {
+  } else if (isHotkey(undoHotkeys, e)) {
     e.preventDefault()
     undo()
   }
