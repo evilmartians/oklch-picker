@@ -1,27 +1,27 @@
-const MODIFIERS = {
-  alt: 'altKey',
-  ctrl: 'ctrlKey',
-  meta: 'metaKey',
-  shift: 'shiftKey'
-} as const
-
-type Modifier = keyof typeof MODIFIERS
+const NON_ENGLISH_LAYOUT = /^[^\x00-\x7F]$/
 
 function compareHotkey(hotkey: string, e: KeyboardEvent): boolean {
-  let keys = hotkey.split('+')
+  let prefix = ''
+  if (e.metaKey) prefix += 'meta+'
+  if (e.ctrlKey) prefix += 'ctrl+'
+  if (e.altKey) prefix += 'alt+'
+  if (e.shiftKey) prefix += 'shift+'
 
-  for (let key of keys) {
-    if (key in MODIFIERS) {
-      let modifier = MODIFIERS[key as Modifier]
-      if (!e[modifier]) {
-        return false
-      }
-    } else if (e.key.toLowerCase() !== key.toLowerCase()) {
-      return false
-    }
+  let code = prefix
+  if (e.key === '+') {
+    code += 'plus'
+  } else {
+    code += e.key.toLowerCase()
   }
 
-  return true
+  let isMatch = code === hotkey
+
+  if (!isMatch && NON_ENGLISH_LAYOUT.test(e.key) && /^Key.$/.test(e.code)) {
+    let enKey = e.code.replace(/^Key/, '').toLowerCase()
+    isMatch = prefix + enKey === hotkey
+  }
+
+  return isMatch
 }
 
 export function isHotkey(hotkeys: string[], e: KeyboardEvent): boolean {
