@@ -1,6 +1,6 @@
 const MODIFIERS = {
   alt: 'altKey',
-  control: 'ctrlKey',
+  ctrl: 'ctrlKey',
   meta: 'metaKey',
   shift: 'shiftKey'
 } as const
