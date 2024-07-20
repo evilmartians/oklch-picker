@@ -1,4 +1,5 @@
 import { accent } from '../../stores/accent.js'
+import { redo, undo } from '../../stores/history.js'
 import { loading } from '../../stores/loading.js'
 
 accent.subscribe(({ main, surface }) => {
@@ -16,4 +17,17 @@ document.body.addEventListener('mousedown', () => {
 
 document.body.addEventListener('mouseup', () => {
   document.body.classList.remove('is-grabbing')
+})
+
+document.body.addEventListener('keydown', e => {
+  if (
+    ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'z') ||
+    ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y')
+  ) {
+    e.preventDefault()
+    redo()
+  } else if (e.key === 'z' && (e.ctrlKey || e.metaKey)) {
+    e.preventDefault()
+    undo()
+  }
 })
