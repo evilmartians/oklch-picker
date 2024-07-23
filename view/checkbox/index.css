@@ -55,7 +55,7 @@
   width: 28px;
   height: 28px;
   content: "";
-  background: oklch(100% 0 0);
+  background: oklch(1 0 0);
   border-radius: 50%;
   transition: transform 150ms;
   transform: translateX(0);

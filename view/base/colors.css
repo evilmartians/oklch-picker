@@ -1,39 +1,39 @@
 :root {
-  --surface-0: oklch(96% 0.005 300);
-  --surface-1: oklch(100% 0 0);
-  --surface-2: oklch(99% 0 0 / 85%);
-  --surface-2-shadow: oklch(0% 0 0 / 6%);
-  --surface-3d: oklch(96% 0.005 300);
-  --surface-ui-regular: oklch(70% 0.05 310 / 18%);
-  --surface-ui-accent: oklch(69% 0.17 286 / 20%);
-  --surface-ui-warning: oklch(70% 0.18 80 / 20%);
-  --surface-ui-danger: oklch(79% 0.18 3 / 20%);
-  --surface-badge: oklch(32% 0 0 / 85%);
-  --text-primary: oklch(0% 0 0);
-  --text-secondary: oklch(54% 0 0);
-  --text-note: oklch(85% 0 0);
-  --text-badge: oklch(100% 0 0);
-  --chess: oklch(94% 0 0);
-  --ui-bg: oklch(70% 0.05 310 / 18%);
-  --ui-border: oklch(70% 0 0 / 20%);
-  --accent: oklch(57% 0.18 286);
-  --danger: oklch(59% 0.23 7);
-  --border-p3: oklch(100% 0 0 / 50%);
-  --border-rec2020: oklch(100% 0 0 / 75%);
+  --surface-0: oklch(0.96 0.005 300);
+  --surface-1: oklch(1 0 0);
+  --surface-2: oklch(0.99 0 0 / 85%);
+  --surface-2-shadow: oklch(0 0 0 / 6%);
+  --surface-3d: oklch(0.96 0.005 300);
+  --surface-ui-regular: oklch(0.7 0.05 310 / 18%);
+  --surface-ui-accent: oklch(0.69 0.17 286 / 20%);
+  --surface-ui-warning: oklch(0.7 0.18 80 / 20%);
+  --surface-ui-danger: oklch(0.79 0.18 3 / 20%);
+  --surface-badge: oklch(0.32 0 0 / 85%);
+  --text-primary: oklch(0 0 0);
+  --text-secondary: oklch(0.54 0 0);
+  --text-note: oklch(0.85 0 0);
+  --text-badge: oklch(1 0 0);
+  --chess: oklch(0.94 0 0);
+  --ui-bg: oklch(0.7 0.05 310 / 18%);
+  --ui-border: oklch(0.7 0 0 / 20%);
+  --accent: oklch(0.57 0.18 286);
+  --danger: oklch(0.59 0.23 7);
+  --border-p3: oklch(1 0 0 / 50%);
+  --border-rec2020: oklch(1 0 0 / 75%);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface-0: oklch(0% 0 0);
-    --surface-1: oklch(29% 0.01 300);
-    --surface-2: oklch(29% 0 0 / 85%);
-    --surface-2-shadow: oklch(0% 0 0 / 40%);
-    --surface-3d: oklch(29% 0.01 300);
-    --text-primary: oklch(100% 0 0);
-    --text-note: oklch(45% 0 0);
-    --chess: oklch(38% 0.01 297);
-    --ui-border: oklch(70% 0 0 / 50%);
-    --border-p3: oklch(0% 0 0 / 30%);
-    --border-rec2020: oklch(0% 0 0 / 50%);
+    --surface-0: oklch(0 0 0);
+    --surface-1: oklch(0.29 0.01 300);
+    --surface-2: oklch(0.29 0 0 / 85%);
+    --surface-2-shadow: oklch(0 0 0 / 40%);
+    --surface-3d: oklch(0.29 0.01 300);
+    --text-primary: oklch(1 0 0);
+    --text-note: oklch(0.45 0 0);
+    --chess: oklch(0.38 0.01 297);
+    --ui-border: oklch(0.7 0 0 / 50%);
+    --border-p3: oklch(0 0 0 / 30%);
+    --border-rec2020: oklch(0 0 0 / 50%);
   }
 }
