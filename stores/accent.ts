@@ -1,23 +1,19 @@
 import { computed } from 'nanostores'
 
-import { build, formatRgb, toRgb } from '../lib/colors.js'
+import { buildForCSS } from '../lib/colors.js'
 import { current } from './current.js'
-
-function clamp(l: number, c: number, h: number, alpha = 1): string {
-  return formatRgb(toRgb(build(l, c, h, alpha)))
-}
 
 export let accent = computed(current, value => {
   let { h } = value
   if (COLOR_FN === 'oklch') {
     return {
-      main: clamp(0.57, 0.18, h),
-      surface: clamp(0.7, 0.17, h, 0.2)
+      main: buildForCSS(0.57, 0.18, h),
+      surface: buildForCSS(0.7, 0.17, h, 0.2)
     }
   } else {
     return {
-      main: clamp(47, 58, h),
-      surface: clamp(63, 55, h, 0.2)
+      main: buildForCSS(47, 58, h),
+      surface: buildForCSS(63, 55, h, 0.2)
     }
   }
 })

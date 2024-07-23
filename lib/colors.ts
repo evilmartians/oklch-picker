@@ -84,6 +84,19 @@ export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
   return { alpha, c, h, l, mode: COLOR_FN }
 }
 
+export function buildForCSS(
+  l: number,
+  c: number,
+  h: number,
+  alpha = 1
+): string {
+  if (support.get().p3) {
+    return formatLch(build(l, c, h, alpha))
+  } else {
+    return formatRgb(toRgb(build(l, c, h, alpha)))
+  }
+}
+
 export let toTarget: (color: Color) => AnyLch
 if (LCH) {
   toTarget = lch
