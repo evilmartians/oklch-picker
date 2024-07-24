@@ -127,9 +127,7 @@ export function forceP3(color: Color): P3 {
   return { ...rgb(color), mode: 'p3' }
 }
 
-export function toRgb(color: Color): Rgb {
-  return toGamut('rgb', COLOR_FN)(color)
-}
+export let toRgb = toGamut('rgb', COLOR_FN)
 
 export function formatRgb(color: Rgb): string {
   let r = Math.round(25500 * color.r) / 100
