@@ -1,5 +1,5 @@
 import type { Color } from 'culori/fn'
-import { clampChroma } from 'culori/fn'
+import { toGamut } from 'culori/fn'
 import { map } from 'nanostores'
 
 import {
@@ -189,7 +189,8 @@ export function setCurrentFromColor(origin: Color): void {
     let originSpace = getSpace(origin)
     let accurate = LCH ? lch(origin) : oklch(origin)
     if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
-      accurate = clampChroma(accurate, COLOR_FN) as AnyLch
+      let rgbAccurate = toGamut('rgb', COLOR_FN)(accurate)
+      accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
     }
     let rounded = roundValue(colorToValue(accurate), COLOR_FN)
     if (getSpace(valueToColor(rounded)) === originSpace) {

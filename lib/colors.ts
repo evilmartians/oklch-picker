@@ -1,5 +1,4 @@
 import {
-  clampChroma,
   type Color,
   formatCss,
   formatRgb as formatRgbFast,
@@ -20,6 +19,7 @@ import {
   type P3,
   type Rec2020,
   type Rgb,
+  toGamut,
   useMode
 } from 'culori/fn'
 
@@ -128,7 +128,7 @@ export function forceP3(color: Color): P3 {
 }
 
 export function toRgb(color: Color): Rgb {
-  return rgb(clampChroma(color, COLOR_FN))
+  return toGamut('rgb', COLOR_FN)(color)
 }
 
 export function formatRgb(color: Rgb): string {
