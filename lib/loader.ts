@@ -25,7 +25,7 @@ export function generateLoader<Result>(
       status.innerText = 'Loading'
       status.style.display = 'none'
       done(result)
-    } catch (e) {
+    } catch {
       started = false
       status.innerText = 'Network error'
     }
