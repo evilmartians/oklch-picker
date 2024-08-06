@@ -48,6 +48,10 @@
   }
 }
 
+.checkbox_input:checked + .checkbox_control > .checkbox_icon::before {
+  opacity: 100%;
+}
+
 .checkbox_icon::after {
   position: absolute;
   top: 2px;
@@ -63,4 +67,8 @@
   .checkbox_input:checked + .checkbox_control > & {
     transform: translateX(24px);
   }
+}
+
+.checkbox_input:checked + .checkbox_control > .checkbox_icon::after {
+  transform: translateX(24px);
 }
