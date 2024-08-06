@@ -21,6 +21,7 @@
   "dependencies": {
     "@csstools/postcss-oklab-function": "^4.0.0",
     "@nanostores/persistent": "^0.10.2",
+    "@texel/color": "^1.0.5",
     "autoprefixer": "^10.4.20",
     "culori": "^4.0.1",
     "delaunator": "^5.0.1",
