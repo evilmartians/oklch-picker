@@ -43,9 +43,9 @@
   opacity: 0%;
   transition: opacity 150ms;
 
-  .checkbox_input:checked + .checkbox_control > & {
+  /* .checkbox_input:checked + .checkbox_control > & {
     opacity: 100%;
-  }
+  } */
 }
 
 .checkbox_input:checked + .checkbox_control > .checkbox_icon::before {
@@ -64,9 +64,9 @@
   transition: transform 150ms;
   transform: translateX(0);
 
-  .checkbox_input:checked + .checkbox_control > & {
+  /* .checkbox_input:checked + .checkbox_control > & {
     transform: translateX(24px);
-  }
+  } */
 }
 
 .checkbox_input:checked + .checkbox_control > .checkbox_icon::after {
