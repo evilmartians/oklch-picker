@@ -17,22 +17,22 @@
   &:hover {
     background: var(--surface-ui-accent);
   }
+}
 
-  &::after {
-    --link-external-size: 16px;
+.link::after {
+  --link-external-size: 16px;
 
-    position: absolute;
-    top: 50%;
-    right: 28px;
-    width: var(--link-external-size);
-    height: var(--link-external-size);
-    content: "";
-    background: url("./external.svg");
-    transform: translateY(-50%);
+  position: absolute;
+  top: 50%;
+  right: 28px;
+  width: var(--link-external-size);
+  height: var(--link-external-size);
+  content: "";
+  background: url("./external.svg");
+  transform: translateY(-50%);
 
-    @media (prefers-color-scheme: dark) {
-      filter: invert(1);
-    }
+  @media (prefers-color-scheme: dark) {
+    filter: invert(1);
   }
 }
 
