@@ -1,10 +1,29 @@
 import { trackEvent } from '../analytics/index.js'
 
-let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
+const DETECT_THRESHOLD = 100
 
-let links = document.querySelectorAll<HTMLAnchorElement>('.main a')
+let main = document.querySelector<HTMLElement>('.main')!
+
+let expand = main.querySelector<HTMLButtonElement>('.main_expand')!
+
+let links = main.querySelectorAll<HTMLAnchorElement>('a')
 
 let mobile = window.matchMedia('(max-width:830px)')
+
+let startY = 0
+
+main.addEventListener('touchstart', event => {
+  startY = event.touches[0].clientY
+})
+
+main.addEventListener('touchend', event => {
+  let endY = event.changedTouches[0].clientY
+  let diff = startY - endY
+
+  if (Math.abs(diff) < DETECT_THRESHOLD) return
+
+  document.body.classList.toggle('is-main-collapsed', diff < 0)
+})
 
 function onScroll(): void {
   document.body.classList.add('is-main-collapsed')
