@@ -29,21 +29,17 @@ expand.addEventListener('click', () => {
   document.body.classList.toggle('is-main-collapsed')
 })
 
-emText.addEventListener('mouseenter', () => {
+const addHoverLogo = (): void => {
   emLogo.classList.add('is-hover')
-})
-
-emText.addEventListener('mouseleave', () => {
+}
+const removeHoverLogo = (): void => {
   emLogo.classList.remove('is-hover')
-})
+}
 
-emText.addEventListener('focus', () => {
-  emLogo.classList.add('is-hover')
-})
-
-emText.addEventListener('blur', () => {
-  emLogo.classList.remove('is-hover')
-})
+emText.addEventListener('mouseenter', addHoverLogo)
+emText.addEventListener('mouseleave', removeHoverLogo)
+emText.addEventListener('focus', addHoverLogo)
+emText.addEventListener('blur', removeHoverLogo)
 
 emLogo.addEventListener('mouseenter', () => {
   emText.classList.add('is-hover')
