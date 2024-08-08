@@ -87,7 +87,7 @@ body {
   }
 }
 
-.main:has(.main_logo:hover) .main_link--em,
+.main:has(.main_logo:hover) .main_link.is-em,
 .main_link:hover {
   color: var(--accent);
   text-decoration: underline;
@@ -109,7 +109,7 @@ body {
   transform: translateX(-50%);
 }
 
-.main:has(.main_link--em:is(:hover, :focus)) .main_logo,
+.main:has(.main_link.is-em:is(:hover, :focus)) .main_logo,
 .main_logo:hover {
   color: var(--accent);
 }
