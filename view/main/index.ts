@@ -4,23 +4,22 @@ let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
 
 let links = document.querySelectorAll<HTMLAnchorElement>('.main a')
 
+let mobile = window.matchMedia('(max-width:830px)')
+
 function onScroll(): void {
   document.body.classList.add('is-main-collapsed')
-  window.removeEventListener('scroll', onScroll)
 }
 
 function init(): void {
-  window.addEventListener('scroll', onScroll)
+  if (mobile.matches) {
+    window.addEventListener('scroll', onScroll, { once: true })
+  } else {
+    window.removeEventListener('scroll', onScroll)
+  }
 }
 
-let mobile = window.matchMedia('(max-width:830px)')
-if (mobile.matches) {
-  init()
-} else {
-  mobile.addEventListener('change', () => {
-    init()
-  })
-}
+init()
+mobile.addEventListener('change', init)
 
 expand.addEventListener('click', () => {
   document.body.classList.toggle('is-main-collapsed')
