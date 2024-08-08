@@ -22,7 +22,11 @@ function changeExpanded(willBeExpanded = false): void {
   document.body.classList.toggle('is-main-collapsed', !isExpanded)
 }
 
-main.addEventListener('touchmove', event => {
+function onTouchStart(event: TouchEvent): void {
+  startY = event.touches[0].clientY
+}
+
+function onTouchMove(event: TouchEvent): void {
   event.preventDefault()
   let endY = event.changedTouches[0].clientY
   let diff = endY - startY
@@ -32,14 +36,9 @@ main.addEventListener('touchmove', event => {
   if (allowPositive || allowNegative) {
     main.style.setProperty('--touch-diff', `${diff}px`)
   }
-})
+}
 
-main.addEventListener('touchstart', event => {
-  event.preventDefault()
-  startY = event.touches[0].clientY
-})
-
-main.addEventListener('touchend', event => {
+function onTouchEnd(event: TouchEvent): void {
   let endY = event.changedTouches[0].clientY
   let diff = startY - endY
 
@@ -48,7 +47,7 @@ main.addEventListener('touchend', event => {
   if (Math.abs(diff) > THRESHOLD) {
     changeExpanded(diff > 0)
   }
-})
+}
 
 function onScroll(): void {
   changeExpanded(false)
@@ -57,8 +56,14 @@ function onScroll(): void {
 function init(): void {
   if (mobile.matches) {
     window.addEventListener('scroll', onScroll, { once: true })
+    main.addEventListener('touchstart', onTouchStart)
+    main.addEventListener('touchmove', onTouchMove)
+    main.addEventListener('touchend', onTouchEnd)
   } else {
     window.removeEventListener('scroll', onScroll)
+    main.removeEventListener('touchstart', onTouchStart)
+    main.removeEventListener('touchmove', onTouchMove)
+    main.removeEventListener('touchend', onTouchEnd)
   }
 }
 
