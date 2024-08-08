@@ -2,7 +2,7 @@ import { trackEvent } from '../analytics/index.js'
 
 let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
 
-let links = document.querySelectorAll<HTMLLinkElement>('.main a')
+let links = document.querySelectorAll<HTMLAnchorElement>('.main a')
 
 function onScroll(): void {
   document.body.classList.add('is-main-collapsed')
