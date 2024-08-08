@@ -1,6 +1,6 @@
 import { trackEvent } from '../analytics/index.js'
 
-const DETECT_THRESHOLD = 100
+const THRESHOLD = 100
 
 let main = document.querySelector<HTMLElement>('.main')!
 
@@ -12,6 +12,16 @@ let mobile = window.matchMedia('(max-width:830px)')
 
 let startY = 0
 
+let isExpanded = expand.ariaExpanded === 'true'
+
+function changeExpanded(willBeExpanded = false): void {
+  if (willBeExpanded === isExpanded) return
+
+  isExpanded = willBeExpanded
+  expand.ariaExpanded = String(isExpanded)
+  document.body.classList.toggle('is-main-collapsed', !isExpanded)
+}
+
 main.addEventListener('touchstart', event => {
   event.preventDefault()
   startY = event.touches[0].clientY
@@ -21,13 +31,13 @@ main.addEventListener('touchend', event => {
   let endY = event.changedTouches[0].clientY
   let diff = startY - endY
 
-  if (Math.abs(diff) < DETECT_THRESHOLD) return
-
-  document.body.classList.toggle('is-main-collapsed', diff < 0)
+  if (Math.abs(diff) > THRESHOLD) {
+    changeExpanded(diff > 0)
+  }
 })
 
 function onScroll(): void {
-  document.body.classList.add('is-main-collapsed')
+  changeExpanded(false)
 }
 
 function init(): void {
@@ -42,7 +52,7 @@ init()
 mobile.addEventListener('change', init)
 
 expand.addEventListener('click', () => {
-  document.body.classList.toggle('is-main-collapsed')
+  changeExpanded(!isExpanded)
 })
 
 for (let link of links) {
