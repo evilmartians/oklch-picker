@@ -13,6 +13,7 @@ let mobile = window.matchMedia('(max-width:830px)')
 let startY = 0
 
 main.addEventListener('touchstart', event => {
+  event.preventDefault()
   startY = event.touches[0].clientY
 })
 
