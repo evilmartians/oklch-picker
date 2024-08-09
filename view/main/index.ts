@@ -1,29 +1,77 @@
 import { trackEvent } from '../analytics/index.js'
 
-let expand = document.querySelector<HTMLButtonElement>('.main_expand')!
+const THRESHOLD = 100
 
-let links = document.querySelectorAll<HTMLAnchorElement>('.main a')
+let main = document.querySelector<HTMLElement>('.main')!
+
+let expand = main.querySelector<HTMLButtonElement>('.main_expand')!
+
+let links = main.querySelectorAll<HTMLAnchorElement>('a')
+
+let mobile = window.matchMedia('(max-width:830px)')
+
+let startY = 0
+
+let isExpanded = expand.ariaExpanded === 'true'
+
+function changeExpanded(shouldExpand = false): void {
+  if (shouldExpand === isExpanded) return
+
+  isExpanded = shouldExpand
+  expand.ariaExpanded = String(isExpanded)
+  document.body.classList.toggle('is-main-collapsed', !isExpanded)
+}
+
+function onTouchStart(event: TouchEvent): void {
+  startY = event.touches[0].clientY
+}
+
+function onTouchMove(event: TouchEvent): void {
+  event.preventDefault()
+  let endY = event.changedTouches[0].clientY
+  let diff = endY - startY
+  let allowPositive = isExpanded && diff > 0
+  let allowNegative = !isExpanded && diff < 0
+
+  if (allowPositive || allowNegative) {
+    main.style.setProperty('--touch-diff', `${diff}px`)
+  }
+}
+
+function onTouchEnd(event: TouchEvent): void {
+  let endY = event.changedTouches[0].clientY
+  let diff = startY - endY
+
+  main.style.removeProperty('--touch-diff')
+
+  if (Math.abs(diff) > THRESHOLD) {
+    changeExpanded(diff > 0)
+  }
+}
 
 function onScroll(): void {
-  document.body.classList.add('is-main-collapsed')
-  window.removeEventListener('scroll', onScroll)
+  changeExpanded(false)
 }
 
 function init(): void {
-  window.addEventListener('scroll', onScroll)
+  if (mobile.matches) {
+    window.addEventListener('scroll', onScroll, { once: true })
+    main.addEventListener('touchstart', onTouchStart)
+    main.addEventListener('touchmove', onTouchMove)
+    main.addEventListener('touchend', onTouchEnd)
+  } else {
+    window.removeEventListener('scroll', onScroll)
+    main.removeEventListener('touchstart', onTouchStart)
+    main.removeEventListener('touchmove', onTouchMove)
+    main.removeEventListener('touchend', onTouchEnd)
+  }
 }
 
-let mobile = window.matchMedia('(max-width:830px)')
-if (mobile.matches) {
-  init()
-} else {
-  mobile.addEventListener('change', () => {
-    init()
-  })
-}
+init()
+mobile.addEventListener('change', init)
 
 expand.addEventListener('click', () => {
-  document.body.classList.toggle('is-main-collapsed')
+  changeExpanded(!isExpanded)
 })
 
 for (let link of links) {

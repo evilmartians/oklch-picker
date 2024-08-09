@@ -59,17 +59,22 @@
   grid-area: main;
 
   @media (width < 830px) {
+    --end-position: calc(287px + env(safe-area-inset-bottom, 0));
+
     position: fixed;
     right: 0;
     bottom: 0;
     left: 0;
     z-index: 10;
-    padding-top: 21px;
+    margin-top: 21px;
     overflow: hidden;
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(min(var(--touch-diff, 0), var(--end-position)));
 
     :is(body.is-main-collapsed) & {
-      transform: translateY(calc(287px + env(safe-area-inset-bottom, 0)));
+      transform: translateY(
+        max(calc(var(--end-position) + var(--touch-diff, 0px)), 0px)
+      );
     }
   }
 }
