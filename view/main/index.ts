@@ -14,10 +14,10 @@ let startY = 0
 
 let isExpanded = expand.ariaExpanded === 'true'
 
-function changeExpanded(willBeExpanded = false): void {
-  if (willBeExpanded === isExpanded) return
+function changeExpanded(shouldExpand = false): void {
+  if (shouldExpand === isExpanded) return
 
-  isExpanded = willBeExpanded
+  isExpanded = shouldExpand
   expand.ariaExpanded = String(isExpanded)
   document.body.classList.toggle('is-main-collapsed', !isExpanded)
 }
