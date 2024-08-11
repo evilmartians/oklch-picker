@@ -21,7 +21,7 @@
     padding-bottom: 450px;
 
     :is(body.is-main-collapsed) & {
-      padding-bottom: calc(450px - 287px);
+      padding-bottom: calc(450px - 297px);
     }
   }
 
@@ -59,7 +59,7 @@
   grid-area: main;
 
   @media (width < 830px) {
-    --end-position: calc(287px + env(safe-area-inset-bottom, 0));
+    --end-position: calc(297px + env(safe-area-inset-bottom, 0));
 
     position: fixed;
     right: 0;
