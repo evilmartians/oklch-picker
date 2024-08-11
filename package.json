@@ -34,7 +34,7 @@
     "postcss-nesting": "^13.0.0",
     "postcss-opacity-percentage": "^2.0.0",
     "three": "~0.167.1",
-    "vite": "^5.3.5",
+    "vite": "^5.4.0",
     "vite-plugin-pug-transformer": "^1.0.5"
   },
   "devDependencies": {
@@ -44,7 +44,7 @@
     "@types/culori": "^2.1.1",
     "@types/delaunator": "^5.0.3",
     "@types/three": "^0.167.1",
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.0",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.11.1",
     "size-limit": "^11.1.4",
