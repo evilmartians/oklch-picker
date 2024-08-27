@@ -20,9 +20,9 @@ interface VisibleValue {
   space: 'out' | 'p3' | 'rec2020' | 'srgb'
 }
 
-export let visible = computed<VisibleValue, [typeof current, typeof support]>(
+export let visible = computed(
   [current, support],
-  (value, { oklch, p3 }) => {
+  (value, { oklch, p3 }): VisibleValue => {
     let color: Color = valueToColor(value)
     if (inRGB(color)) {
       let rgbCss = formatRgb(rgb(color))
