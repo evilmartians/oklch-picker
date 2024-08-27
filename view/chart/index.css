@@ -50,20 +50,20 @@ body {
   background: var(--surface-1);
   mix-blend-mode: difference;
   opacity: 40%;
+}
 
-  .is-x& {
-    right: 0;
-    bottom: var(--chart-line-position);
-    left: 0;
-    height: 1px;
-  }
+.chart_line.is-x::after {
+  right: 0;
+  bottom: var(--chart-line-position);
+  left: 0;
+  height: 1px;
+}
 
-  .is-y& {
-    top: 0;
-    bottom: 0;
-    left: var(--chart-line-position);
-    width: 1px;
-  }
+.chart_line.is-y::after {
+  top: 0;
+  bottom: 0;
+  left: var(--chart-line-position);
+  width: 1px;
 }
 
 .chart_label {
