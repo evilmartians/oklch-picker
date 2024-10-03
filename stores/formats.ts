@@ -68,10 +68,10 @@ function cleanComponents<Obj extends {}>(color: Obj, precision?: number): Obj {
 export type FormatsValue = Record<OutputFormats, string>
 
 export const srgbFormats = new Set<OutputFormats>([
-  'hex/rgba',
   'hex',
-  'rgb',
-  'hsl'
+  'hex/rgba',
+  'hsl',
+  'rgb'
 ])
 
 export const formats = computed<FormatsValue, typeof current>(
