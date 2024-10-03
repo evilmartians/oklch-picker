@@ -5,7 +5,8 @@ import {
   canvasFormat,
   fastFormat,
   generateGetSpace,
-  Space
+  Space,
+  toRgb
 } from '../../lib/colors.js'
 import { getBorders } from '../../lib/dom.js'
 import {
@@ -70,10 +71,15 @@ function paint(
     let space = getSpace(color)
     if (space !== Space.Out) {
       ctx.fillStyle = canvasFormat(color)
-      ctx.fillRect(x, 0, 1, height)
       if (space !== Space.sRGB) {
+        ctx.fillRect(x, halfHeight, 1, halfHeight)
         ctx.fillStyle = space === Space.P3 ? borderP3 : borderRec2020
         ctx.fillRect(x, halfHeight, 1, 1)
+        let fallback = toRgb(color)
+        ctx.fillStyle = fastFormat(fallback)
+        ctx.fillRect(x, 0, 1, halfHeight)
+      } else {
+        ctx.fillRect(x, 0, 1, height)
       }
       if (prevSpace !== space) {
         if (
