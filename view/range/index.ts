@@ -71,15 +71,13 @@ function paint(
     let space = getSpace(color)
     if (space !== Space.Out) {
       ctx.fillStyle = canvasFormat(color)
-      if (space !== Space.sRGB) {
-        ctx.fillRect(x, halfHeight, 1, halfHeight + 1)
-        ctx.fillStyle = space === Space.P3 ? borderP3 : borderRec2020
-        ctx.fillRect(x, halfHeight, 1, 1)
+      if (space === Space.sRGB) {
+        ctx.fillRect(x, 0, 1, height)
+      } else {
+        ctx.fillRect(x, 0, 1, halfHeight)
         let fallback = toRgb(color)
         ctx.fillStyle = fastFormat(fallback)
-        ctx.fillRect(x, 0, 1, halfHeight)
-      } else {
-        ctx.fillRect(x, 0, 1, height)
+        ctx.fillRect(x, halfHeight, 1, halfHeight + 1)
       }
       if (prevSpace !== space) {
         if (
@@ -93,16 +91,16 @@ function paint(
         }
         if (space === Space.P3 && prevSpace !== Space.Rec2020) {
           ctx.fillStyle = borderP3
-          ctx.fillRect(x, 0, 1, halfHeight)
+          ctx.fillRect(x, 0, 1, height)
         } else if (space === Space.sRGB && prevSpace === Space.P3) {
           ctx.fillStyle = borderP3
-          ctx.fillRect(x - 1, 0, 1, halfHeight)
+          ctx.fillRect(x - 1, 0, 1, height)
         } else if (space === Space.Rec2020) {
           ctx.fillStyle = borderRec2020
-          ctx.fillRect(x, 0, 1, halfHeight)
+          ctx.fillRect(x, 0, 1, height)
         } else if (prevSpace === Space.Rec2020) {
           ctx.fillStyle = borderRec2020
-          ctx.fillRect(x - 1, 0, 1, halfHeight)
+          ctx.fillRect(x - 1, 0, 1, height)
         }
       }
     } else {
