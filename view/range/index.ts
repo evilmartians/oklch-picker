@@ -72,7 +72,7 @@ function paint(
     if (space !== Space.Out) {
       ctx.fillStyle = canvasFormat(color)
       if (space !== Space.sRGB) {
-        ctx.fillRect(x, halfHeight, 1, halfHeight)
+        ctx.fillRect(x, halfHeight, 1, halfHeight + 1)
         ctx.fillStyle = space === Space.P3 ? borderP3 : borderRec2020
         ctx.fillRect(x, halfHeight, 1, 1)
         let fallback = toRgb(color)
