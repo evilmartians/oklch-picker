@@ -61,7 +61,7 @@ function onFocus(e: FocusEvent): void {
 }
 
 function isSpecial(e: KeyboardEvent): boolean {
-  return e.ctrlKey || e.shiftKey || e.altKey || e.metaKey
+  return e.ctrlKey || e.altKey || e.metaKey
 }
 
 let hotkeys: Partial<Record<string, HTMLInputElement>> = {}
@@ -104,7 +104,7 @@ function removeByPosition(str: string, position: number): string {
 type SpinAction = 'decrease' | 'increase'
 
 export interface SpinEvent extends Event {
-  detail?: SpinAction
+  detail?: { action: SpinAction; speed: number }
 }
 
 let currentNotifyCb = (): void => {}
@@ -115,10 +115,14 @@ function useSpinButton(input: HTMLInputElement): void {
   let decrease = increase.nextElementSibling as HTMLButtonElement
   let pattern = new RegExp(input.getAttribute('pattern')!)
 
-  function changeNotice(type: SpinAction): void {
+  function changeNotice(type: SpinAction, slow: boolean): void {
     if (/[0-9]/.test(input.value.charAt(input.value.length - 1))) {
       setValid(input)
-      input.dispatchEvent(new CustomEvent<SpinAction>('spin', { detail: type }))
+      input.dispatchEvent(
+        new CustomEvent<SpinEvent['detail']>('spin', {
+          detail: { action: type, speed: slow ? 0.1 : 1 }
+        })
+      )
     } else {
       setInvalid(input, 'Invalid number')
     }
@@ -140,9 +144,9 @@ function useSpinButton(input: HTMLInputElement): void {
 
     currentNotifyCb = () => {
       if (increased) {
-        changeNotice('increase')
+        changeNotice('increase', e.shiftKey)
       } else {
-        changeNotice('decrease')
+        changeNotice('decrease', e.shiftKey)
       }
     }
 
@@ -167,10 +171,10 @@ function useSpinButton(input: HTMLInputElement): void {
 
     if (e.key === 'ArrowUp') {
       e.preventDefault()
-      changeNotice('increase')
+      changeNotice('increase', e.shiftKey)
     } else if (e.key === 'ArrowDown') {
       e.preventDefault()
-      changeNotice('decrease')
+      changeNotice('decrease', e.shiftKey)
     }
   }
 
