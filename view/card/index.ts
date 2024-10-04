@@ -23,19 +23,19 @@ type ClampAngleFn = (
   range: Omit<MetaSpinInput, 'step'>
 ) => number
 
-function clampInRange(useWheel: boolean): ClampAngleFn {
+function clampInRange(useWheel: boolean, precision: number): ClampAngleFn {
   return (value, range) => {
     let angle = useWheel ? cycleByWheel(value, range.max) : value
     let clamped = Math.max(range.min, Math.min(range.max, angle))
 
-    return clean(clamped)
+    return clean(clamped, precision)
   }
 }
 
 function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
   let text = card.querySelector<HTMLInputElement>('[role=spinbutton]')!
-  let bindedClamp = clampInRange(type === 'h')
+  let bindedClamp = clampInRange(type === 'h', type === 'c' ? 4 : 2)
 
   text.addEventListener('change', () => {
     let { max, min } = getInputMeta(text)

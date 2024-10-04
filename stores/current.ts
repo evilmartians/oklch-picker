@@ -158,8 +158,8 @@ function round2(value: number): number {
   return parseFloat(value.toFixed(2))
 }
 
-function round3(value: number): number {
-  return parseFloat(value.toFixed(3))
+function round4(value: number): number {
+  return parseFloat(value.toFixed(4))
 }
 
 function roundValue<V extends Partial<LchValue>>(
@@ -171,7 +171,7 @@ function roundValue<V extends Partial<LchValue>>(
     rounded.l = round2(rounded.l)
   }
   if (typeof rounded.c !== 'undefined') {
-    rounded.c = type === 'oklch' ? round3(rounded.c) : round2(rounded.c)
+    rounded.c = type === 'oklch' ? round4(rounded.c) : round2(rounded.c)
   }
   if (typeof rounded.h !== 'undefined') {
     rounded.h = round2(rounded.h)
