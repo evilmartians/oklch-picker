@@ -109,8 +109,8 @@ body {
   transform: translateX(-50%);
 }
 
-.main:has(.main_link.is-em:is(:hover, :focus)) .main_logo,
-.main_logo:hover {
+.main_logo:hover,
+.main:has(.main_link.is-em:is(:hover, :focus)) .main_logo {
   color: var(--accent);
 }
 
