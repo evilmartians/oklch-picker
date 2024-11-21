@@ -51,7 +51,10 @@ function toNumbers(color: AnyLch): string {
   }
 }
 
-function cleanComponents<Obj extends {}>(color: Obj, precision?: number): Obj {
+function cleanComponents<Obj extends object>(
+  color: Obj,
+  precision?: number
+): Obj {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let result: any = {}
   for (let key in color) {
