@@ -1,7 +1,7 @@
 import { atom } from 'nanostores'
 
-import { debounce } from '../lib/time.js'
-import { current, type LchValue } from './current.js'
+import { debounce } from '../lib/time.ts'
+import { current, type LchValue } from './current.ts'
 
 let undos = atom<LchValue[]>([])
 let redos = atom<LchValue[]>([])

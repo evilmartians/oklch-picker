@@ -1,4 +1,4 @@
-import { convertKey } from '../../lib/hotkeys.js'
+import { convertKey } from '../../lib/hotkeys.ts'
 
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
@@ -108,7 +108,7 @@ export interface SpinEvent extends Event {
 }
 
 let currentNotifyCb = (): void => {}
-let pinchTimer: number
+let pinchTimer: NodeJS.Timeout
 
 function useSpinButton(input: HTMLInputElement): void {
   let increase = input.nextElementSibling as HTMLButtonElement

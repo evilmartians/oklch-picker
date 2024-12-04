@@ -60,10 +60,10 @@ importers:
         version: 0.171.0
       vite:
         specifier: ^6.0.2
-        version: 6.0.2(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49))
+        version: 6.0.2(@types/node@22.10.1)(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49))
       vite-plugin-pug-transformer:
         specifier: ^1.0.5
-        version: 1.0.5(vite@6.0.2(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49)))
+        version: 1.0.5(vite@6.0.2(@types/node@22.10.1)(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49)))
     devDependencies:
       '@logux/eslint-config':
         specifier: ^53.5.1
@@ -80,12 +80,21 @@ importers:
       '@types/delaunator':
         specifier: ^5.0.3
         version: 5.0.3
+      '@types/node':
+        specifier: ^22.10.1
+        version: 22.10.1
       '@types/three':
         specifier: ^0.170.0
         version: 0.170.0
+      better-node-test:
+        specifier: ^0.7.1
+        version: 0.7.1
       eslint:
         specifier: ^9.16.0
         version: 9.16.0(jiti@2.4.1)
+      happy-dom:
+        specifier: ^15.11.7
+        version: 15.11.7
       nano-staged:
         specifier: ^0.8.0
         version: 0.8.0
@@ -551,6 +560,9 @@ packages:
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
 
+  '@types/node@22.10.1':
+    resolution: {integrity: sha512-qKgsUwfHZV2WCWLAnVP1JqnpE6Im6h3Y0+fYgMTasNQ7V++CBX5OT1as0g0f+OyubbFqhf6XVNIsmN4IIhEgGQ==}
+
   '@types/stats.js@0.17.3':
     resolution: {integrity: sha512-pXNfAD3KHOdif9EQXZ9deK82HVNaXP5ZIF5RP2QG6OQFNTaY2YIetfrE9t528vEreGQvEPRDDc8muaoYeK0SxQ==}
 
@@ -715,6 +727,11 @@ packages:
 
   balanced-match@2.0.0:
     resolution: {integrity: sha512-1ugUSr8BHXRnK23KfuYS+gVMC3LB8QGH9W1iGtDPsNWoQbgtXSExkBu2aDR4epiGWZOjZsj6lDl/N/AqqTC3UA==}
+
+  better-node-test@0.7.1:
+    resolution: {integrity: sha512-reijKcA8jO9qlmnYMu2EerjYgltEiatqa5V5+gxY71FHKZPZduJv4Mc0xMj1l9E4kiuCAM6SBS/IPdKksWtcrw==}
+    engines: {node: ^18.19.0 || ^20.0.0 || >=22.0.0}
+    hasBin: true
 
   boolbase@1.0.0:
     resolution: {integrity: sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww==}
@@ -1237,6 +1254,10 @@ packages:
 
   graphemer@1.4.0:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
+
+  happy-dom@15.11.7:
+    resolution: {integrity: sha512-KyrFvnl+J9US63TEzwoiJOQzZBJY7KgBushJA8X61DMbNsH+2ONkDuLDnCnwUiPTF42tLoEmrPyoqbenVA5zrg==}
+    engines: {node: '>=18.0.0'}
 
   has-bigints@1.0.2:
     resolution: {integrity: sha512-tSvCKtBr9lkF0Ex0aQiP9N+OpV4zi2r/Nee5VkRDbaqv35RLYMzbwQfFSZZH0kR+Rd6302UJZ2p/bJCEoR3VoQ==}
@@ -2038,6 +2059,9 @@ packages:
   unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
 
+  undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
+
   update-browserslist-db@1.1.1:
     resolution: {integrity: sha512-R8UzCaa9Az+38REPiJ1tXlImTJXlVfgHZsglwBD/k6nj76ctsH1E3q4doGrukiLQd3sGQYu56r5+lo5r94l29A==}
     hasBin: true
@@ -2099,6 +2123,14 @@ packages:
   void-elements@3.1.0:
     resolution: {integrity: sha512-Dhxzh5HZuiHQhbvTW9AMetFfBHDMYpo23Uo9btPXgdYP+3T5S+p+jgNy7spra+veYhBP2dCSgxR/i2Y02h5/6w==}
     engines: {node: '>=0.10.0'}
+
+  webidl-conversions@7.0.0:
+    resolution: {integrity: sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==}
+    engines: {node: '>=12'}
+
+  whatwg-mimetype@3.0.0:
+    resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
+    engines: {node: '>=12'}
 
   which-boxed-primitive@1.1.0:
     resolution: {integrity: sha512-Ei7Miu/AXe2JJ4iNF5j/UphAgRoma4trE6PtisM09bPygb3egMH3YLW/befsWb1A1AxvNSFidOFTB18XtnIIng==}
@@ -2458,6 +2490,10 @@ snapshots:
 
   '@types/json5@0.0.29': {}
 
+  '@types/node@22.10.1':
+    dependencies:
+      undici-types: 6.20.0
+
   '@types/stats.js@0.17.3': {}
 
   '@types/three@0.170.0':
@@ -2662,6 +2698,8 @@ snapshots:
   balanced-match@1.0.2: {}
 
   balanced-match@2.0.0: {}
+
+  better-node-test@0.7.1: {}
 
   boolbase@1.0.0: {}
 
@@ -3286,6 +3324,12 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   graphemer@1.4.0: {}
+
+  happy-dom@15.11.7:
+    dependencies:
+      entities: 4.5.0
+      webidl-conversions: 7.0.0
+      whatwg-mimetype: 3.0.0
 
   has-bigints@1.0.2: {}
 
@@ -4143,6 +4187,8 @@ snapshots:
       has-symbols: 1.1.0
       which-boxed-primitive: 1.1.0
 
+  undici-types@6.20.0: {}
+
   update-browserslist-db@1.1.1(browserslist@4.24.2):
     dependencies:
       browserslist: 4.24.2
@@ -4155,23 +4201,28 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite-plugin-pug-transformer@1.0.5(vite@6.0.2(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49))):
+  vite-plugin-pug-transformer@1.0.5(vite@6.0.2(@types/node@22.10.1)(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49))):
     dependencies:
       picocolors: 1.1.1
       pug: 3.0.3
-      vite: 6.0.2(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49))
+      vite: 6.0.2(@types/node@22.10.1)(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49))
 
-  vite@6.0.2(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49)):
+  vite@6.0.2(@types/node@22.10.1)(jiti@2.4.1)(sugarss@4.0.1(postcss@8.4.49)):
     dependencies:
       esbuild: 0.24.0
       postcss: 8.4.49
       rollup: 4.28.0
     optionalDependencies:
+      '@types/node': 22.10.1
       fsevents: 2.3.3
       jiti: 2.4.1
       sugarss: 4.0.1(postcss@8.4.49)
 
   void-elements@3.1.0: {}
+
+  webidl-conversions@7.0.0: {}
+
+  whatwg-mimetype@3.0.0: {}
 
   which-boxed-primitive@1.1.0:
     dependencies:

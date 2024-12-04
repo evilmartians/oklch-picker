@@ -16,6 +16,7 @@
     "test:js": "eslint .",
     "test:css": "stylelint **/*.css",
     "test:build": "node --run build && size-limit && node --run build:lch",
+    "test:unit": "bnt",
     "test": "FORCE_COLOR=1 pnpm run /^test:/"
   },
   "dependencies": {
@@ -43,8 +44,11 @@
     "@size-limit/file": "^11.1.6",
     "@types/culori": "^2.1.1",
     "@types/delaunator": "^5.0.3",
+    "@types/node": "^22.10.1",
     "@types/three": "^0.170.0",
+    "better-node-test": "^0.7.1",
     "eslint": "^9.16.0",
+    "happy-dom": "^15.11.7",
     "nano-staged": "^0.8.0",
     "simple-git-hooks": "^2.11.1",
     "size-limit": "^11.1.6",

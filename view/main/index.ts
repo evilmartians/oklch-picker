@@ -1,4 +1,4 @@
-import { trackEvent } from '../analytics/index.js'
+import { trackEvent } from '../analytics/index.ts'
 
 const THRESHOLD = 100
 

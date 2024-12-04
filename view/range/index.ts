@@ -1,4 +1,4 @@
-import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
+import { getCleanCtx, initCanvasSize } from '../../lib/canvas.ts'
 import {
   type AnyLch,
   build,
@@ -7,16 +7,16 @@ import {
   generateGetSpace,
   Space,
   toRgb
-} from '../../lib/colors.js'
-import { getBorders } from '../../lib/dom.js'
+} from '../../lib/colors.ts'
+import { getBorders } from '../../lib/dom.ts'
 import {
   current,
   onCurrentChange,
   onPaint,
   valueToColor
-} from '../../stores/current.js'
-import { showP3, showRec2020 } from '../../stores/settings.js'
-import { visible } from '../../stores/visible.js'
+} from '../../stores/current.ts'
+import { showP3, showRec2020 } from '../../stores/settings.ts'
+import { visible } from '../../stores/visible.ts'
 
 function initRange(
   type: 'a' | 'c' | 'h' | 'l'

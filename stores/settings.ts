@@ -1,7 +1,7 @@
 import { persistentAtom } from '@nanostores/persistent'
 import { computed } from 'nanostores'
 
-import { trackEvent } from '../view/analytics/index.js'
+import { trackEvent } from '../view/analytics/index.ts'
 
 let encoder = {
   decode(str: string): boolean {

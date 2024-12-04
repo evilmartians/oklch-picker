@@ -5,8 +5,8 @@ import {
   showCharts,
   showP3,
   showRec2020
-} from '../../stores/settings.js'
-import { getCheckbox, onChange } from '../checkbox/index.js'
+} from '../../stores/settings.ts'
+import { getCheckbox, onChange } from '../checkbox/index.ts'
 
 function init(store: WritableAtom<boolean>, checkbox: HTMLInputElement): void {
   store.subscribe(show => {

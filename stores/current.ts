@@ -10,12 +10,12 @@ import {
   parseAnything,
   Space,
   toRgb
-} from '../lib/colors.js'
-import { debounce } from '../lib/time.js'
-import { reportFreeze, startPainting } from './benchmark.js'
-import { outputFormat, showCharts, showP3, showRec2020 } from './settings.js'
-import { support } from './support.js'
-import { benchmarking } from './url.js'
+} from '../lib/colors.ts'
+import { debounce } from '../lib/time.ts'
+import { reportFreeze, startPainting } from './benchmark.ts'
+import { outputFormat, showCharts, showP3, showRec2020 } from './settings.ts'
+import { support } from './support.ts'
+import { benchmarking } from './url.ts'
 
 export interface LchValue {
   a: number
@@ -46,21 +46,6 @@ function parseHash(): LchValue | undefined {
 }
 
 export let current = map<LchValue>(parseHash() || randomColor())
-
-current.subscribe(
-  debounce(100, () => {
-    let { a, c, h, l } = current.get()
-    let hash = `#${l},${c},${h},${a}`
-    if (location.hash !== hash) {
-      history.pushState(null, '', `#${l},${c},${h},${a}`)
-    }
-  })
-)
-
-window.addEventListener('hashchange', () => {
-  let color = parseHash()
-  if (color) current.set(color)
-})
 
 interface ComponentCallback {
   (value: number, chartsToChange: number): void
@@ -270,6 +255,21 @@ showCharts.listen(show => {
       runListeners(paintListeners, {})
     }, 400)
   }
+})
+
+current.subscribe(
+  debounce(100, () => {
+    let { a, c, h, l } = current.get()
+    let hash = `#${l},${c},${h},${a}`
+    if (location.hash !== hash) {
+      history.pushState(null, '', `#${l},${c},${h},${a}`)
+    }
+  })
+)
+
+window.addEventListener('hashchange', () => {
+  let color = parseHash()
+  if (color) current.set(color)
 })
 
 let media = window.matchMedia('(prefers-color-scheme: dark)')

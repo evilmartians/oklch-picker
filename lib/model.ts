@@ -18,9 +18,9 @@ import {
 } from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-import { current, type LchValue } from '../stores/current.js'
-import { biggestRgb, type RgbMode } from '../stores/settings.js'
-import { type AnyRgb, build, rgb, toTarget } from './colors.js'
+import { current, type LchValue } from '../stores/current.ts'
+import { biggestRgb, type RgbMode } from '../stores/settings.ts'
+import { type AnyRgb, build, rgb, toTarget } from './colors.ts'
 
 ColorManagement.enabled = false
 

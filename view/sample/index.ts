@@ -1,7 +1,7 @@
-import { lch, oklch } from '../../lib/colors.js'
-import { colorToValue, current } from '../../stores/current.js'
-import { support } from '../../stores/support.js'
-import { visible } from '../../stores/visible.js'
+import { lch, oklch } from '../../lib/colors.ts'
+import { colorToValue, current } from '../../stores/current.ts'
+import { support } from '../../stores/support.ts'
+import { visible } from '../../stores/visible.ts'
 
 let sample = document.querySelector<HTMLDivElement>('.sample')!
 let type = document.querySelector<HTMLDivElement>('.sample_reader')!

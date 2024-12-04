@@ -5,9 +5,9 @@ import {
   type Pixel,
   type Rgb,
   Space
-} from '../../lib/colors.js'
-import { generateGetSeparator, paintPixel } from '../../lib/paint.js'
-import { support } from '../../stores/support.js'
+} from '../../lib/colors.ts'
+import { generateGetSeparator, paintPixel } from '../../lib/paint.ts'
+import { support } from '../../stores/support.ts'
 
 function separate(
   pixels: ImageData,

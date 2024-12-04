@@ -1,15 +1,15 @@
-import { formatLch, isHexNotation, parseAnything } from '../../lib/colors.js'
-import { toggleVisibility } from '../../lib/dom.js'
-import { current, setCurrent, valueToColor } from '../../stores/current.js'
+import { formatLch, isHexNotation, parseAnything } from '../../lib/colors.ts'
+import { toggleVisibility } from '../../lib/dom.ts'
+import { current, setCurrent, valueToColor } from '../../stores/current.ts'
 import {
   formats,
   type FormatsValue,
   isOutputFormat,
   srgbFormats
-} from '../../stores/formats.js'
-import { outputFormat, type OutputFormats } from '../../stores/settings.js'
-import { visible } from '../../stores/visible.js'
-import { setInvalid, setValid, toggleWarning } from '../field/index.js'
+} from '../../stores/formats.ts'
+import { outputFormat, type OutputFormats } from '../../stores/settings.ts'
+import { visible } from '../../stores/visible.ts'
+import { setInvalid, setValid, toggleWarning } from '../field/index.ts'
 
 let lch = document.querySelector<HTMLDivElement>('.code.is-lch')!
 let lchInput = lch.querySelector<HTMLInputElement>('input')!

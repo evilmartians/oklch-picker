@@ -1,6 +1,6 @@
 import { atom, computed } from 'nanostores'
 
-import { trackEvent } from '../view/analytics/index.js'
+import { trackEvent } from '../view/analytics/index.ts'
 
 export type Urls = '3d' | 'bench' | 'main'
 

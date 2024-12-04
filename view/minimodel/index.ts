@@ -1,9 +1,9 @@
-import { registerCamera, syncCamerasFrom } from '../../lib/cameras.js'
-import { generateLoader } from '../../lib/loader.js'
-import type { Model } from '../../lib/model.js'
-import { show3d } from '../../stores/settings.js'
-import { url } from '../../stores/url.js'
-import { getButton } from '../button/index.js'
+import { registerCamera, syncCamerasFrom } from '../../lib/cameras.ts'
+import { generateLoader } from '../../lib/loader.ts'
+import type { Model } from '../../lib/model.ts'
+import { show3d } from '../../stores/settings.ts'
+import { url } from '../../stores/url.ts'
+import { getButton } from '../button/index.ts'
 
 let status = document.querySelector<HTMLDivElement>('.minimodel_status')!
 let canvas = document.querySelector<HTMLCanvasElement>('.minimodel_canvas')!
@@ -14,7 +14,7 @@ getButton('3d')?.addEventListener('click', () => {
 
 let load = generateLoader(
   status,
-  () => import('../../lib/model.js'),
+  () => import('../../lib/model.ts'),
   url.get() === '3d' ? 0 : 400
 )
 

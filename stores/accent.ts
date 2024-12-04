@@ -1,7 +1,7 @@
 import { computed } from 'nanostores'
 
-import { buildForCSS } from '../lib/colors.js'
-import { current } from './current.js'
+import { buildForCSS } from '../lib/colors.ts'
+import { current } from './current.ts'
 
 export let accent = computed(current, value => {
   let { h } = value

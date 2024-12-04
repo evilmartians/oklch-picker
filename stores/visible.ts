@@ -9,9 +9,9 @@ import {
   inRGB,
   rgb,
   toRgb
-} from '../lib/colors.js'
-import { current, valueToColor } from './current.js'
-import { support } from './support.js'
+} from '../lib/colors.ts'
+import { current, valueToColor } from './current.ts'
+import { support } from './support.ts'
 
 interface VisibleValue {
   color: Color

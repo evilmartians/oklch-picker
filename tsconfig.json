@@ -1,15 +1,15 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "allowJs": true,
     "target": "es2018",
     "module": "esnext",
     "strict": true,
     "noEmit": true
   },
-  "include": [
-    "**/*.ts"
-  ]
+  "include": ["**/*.ts", "**/*.js"]
 }

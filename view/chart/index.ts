@@ -1,12 +1,12 @@
-import { getCleanCtx, initCanvasSize } from '../../lib/canvas.js'
-import { parse, rgb } from '../../lib/colors.js'
-import { getBorders } from '../../lib/dom.js'
-import { prepareWorkers } from '../../lib/workers.js'
-import { reportFreeze, reportPaint } from '../../stores/benchmark.js'
-import { onPaint, setCurrentComponents } from '../../stores/current.js'
-import { showCharts, showP3, showRec2020 } from '../../stores/settings.js'
-import type { PaintData, PaintedData } from './worker.js'
-import PaintWorker from './worker.js?worker'
+import { getCleanCtx, initCanvasSize } from '../../lib/canvas.ts'
+import { parse, rgb } from '../../lib/colors.ts'
+import { getBorders } from '../../lib/dom.ts'
+import { prepareWorkers } from '../../lib/workers.ts'
+import { reportFreeze, reportPaint } from '../../stores/benchmark.ts'
+import { onPaint, setCurrentComponents } from '../../stores/current.ts'
+import { showCharts, showP3, showRec2020 } from '../../stores/settings.ts'
+import type { PaintData, PaintedData } from './worker.ts'
+import PaintWorker from './worker.ts?worker'
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!

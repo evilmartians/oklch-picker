@@ -1,6 +1,6 @@
-import { toggleVisibility } from '../../lib/dom.js'
-import { show3d } from '../../stores/settings.js'
-import { url } from '../../stores/url.js'
+import { toggleVisibility } from '../../lib/dom.ts'
+import { show3d } from '../../stores/settings.ts'
+import { url } from '../../stores/url.ts'
 
 let layout = document.querySelector<HTMLDivElement>('.layout')!
 let card3d = document.querySelector<HTMLDivElement>('.layout_3d')!

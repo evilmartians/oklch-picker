@@ -1,5 +1,5 @@
-import { getLastBenchmarkColor, lastBenchmark } from '../../stores/benchmark.js'
-import { benchmarking } from '../../stores/url.js'
+import { getLastBenchmarkColor, lastBenchmark } from '../../stores/benchmark.ts'
+import { benchmarking } from '../../stores/url.ts'
 
 let block = document.querySelector<HTMLDivElement>('.benchmark')!
 

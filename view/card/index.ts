@@ -1,8 +1,8 @@
-import { clean } from '../../lib/colors.js'
-import { computeExpression, cycleByWheel, parseValue } from '../../lib/math.js'
-import { current, onCurrentChange } from '../../stores/current.js'
-import { showCharts, showRec2020 } from '../../stores/settings.js'
-import type { SpinEvent } from '../field/index.js'
+import { clean } from '../../lib/colors.ts'
+import { computeExpression, cycleByWheel, parseValue } from '../../lib/math.ts'
+import { current, onCurrentChange } from '../../stores/current.ts'
+import { showCharts, showRec2020 } from '../../stores/settings.ts'
+import type { SpinEvent } from '../field/index.ts'
 
 interface MetaSpinInput {
   max: number

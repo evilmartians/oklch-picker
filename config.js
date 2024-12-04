@@ -33,4 +33,6 @@ if (process.env.LCH) {
   }
 }
 
+config.LCH = config.COLOR_FN !== '"oklch"'
+
 export default config

@@ -1,4 +1,4 @@
-import { trackEvent } from '../analytics/index.js'
+import { trackEvent } from '../analytics/index.ts'
 
 let links = document.querySelectorAll<HTMLAnchorElement>('.link')
 

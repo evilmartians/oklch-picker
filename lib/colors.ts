@@ -24,7 +24,7 @@ import {
   useMode
 } from 'culori/fn'
 
-import { support } from '../stores/support.js'
+import { support } from '../stores/support.ts'
 
 export type { Rgb } from 'culori/fn'
 
@@ -144,11 +144,13 @@ export function isHexNotation(value: string): boolean {
   return /^#?([\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
 }
 
-export enum Space {
-  sRGB,
-  P3,
-  Rec2020,
-  Out
+export type Space = number
+
+export const Space = {
+  Out: 3,
+  P3: 1,
+  Rec2020: 2,
+  sRGB: 0
 }
 
 let getProxyColor: (color: Color) => Color

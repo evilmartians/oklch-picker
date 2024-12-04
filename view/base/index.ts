@@ -1,7 +1,7 @@
-import { isHotkey } from '../../lib/hotkeys.js'
-import { accent } from '../../stores/accent.js'
-import { redo, undo } from '../../stores/history.js'
-import { loading } from '../../stores/loading.js'
+import { isHotkey } from '../../lib/hotkeys.ts'
+import { accent } from '../../stores/accent.ts'
+import { redo, undo } from '../../stores/history.ts'
+import { loading } from '../../stores/loading.ts'
 
 const IS_MAC = /Mac|iPod|iPhone|iPad/.test(window.navigator.platform)
 const REDO_HOTKEYS = IS_MAC ? ['meta+shift+z'] : ['ctrl+shift+z', 'ctrl+y']

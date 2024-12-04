@@ -1,15 +1,15 @@
-import { registerCamera, syncCamerasFrom } from '../../lib/cameras.js'
-import { toggleVisibility } from '../../lib/dom.js'
-import { generateLoader } from '../../lib/loader.js'
-import type { Model } from '../../lib/model.js'
-import { url } from '../../stores/url.js'
-import { getButton } from '../button/index.js'
+import { registerCamera, syncCamerasFrom } from '../../lib/cameras.ts'
+import { toggleVisibility } from '../../lib/dom.ts'
+import { generateLoader } from '../../lib/loader.ts'
+import type { Model } from '../../lib/model.ts'
+import { url } from '../../stores/url.ts'
+import { getButton } from '../button/index.ts'
 
 let block = document.querySelector<HTMLDivElement>('.fullmodel')!
 let status = document.querySelector<HTMLDivElement>('.fullmodel_status')!
 let canvas = document.querySelector<HTMLCanvasElement>('.fullmodel_canvas')!
 
-let load = generateLoader(status, () => import('../../lib/model.js'))
+let load = generateLoader(status, () => import('../../lib/model.ts'))
 
 getButton('close3d')?.addEventListener('click', () => {
   url.set('main')

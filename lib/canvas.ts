@@ -1,4 +1,4 @@
-import { support } from '../stores/support.js'
+import { support } from '../stores/support.ts'
 
 export function getCleanCtx(
   canvas: HTMLCanvasElement

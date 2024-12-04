@@ -1,4 +1,4 @@
-import { current, toOtherValue } from '../../stores/current.js'
+import { current, toOtherValue } from '../../stores/current.ts'
 
 let other = document.querySelector<HTMLAnchorElement>(
   '.mode a:not(.is-current)'

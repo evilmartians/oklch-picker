@@ -1,7 +1,7 @@
 import { formatHex, type Oklch } from 'culori/fn'
 import { map } from 'nanostores'
 
-import { benchmarking } from './url.js'
+import { benchmarking } from './url.ts'
 
 export let lastBenchmark = map({
   freezeMax: 0,

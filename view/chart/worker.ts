@@ -1,5 +1,5 @@
-import type { Rgb } from '../../lib/colors.js'
-import { paintCH, paintCL, paintLH } from './paint.js'
+import type { Rgb } from '../../lib/colors.ts'
+import { paintCH, paintCL, paintLH } from './paint.ts'
 
 export type PaintData = {
   borderP3: Rgb

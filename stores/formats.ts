@@ -22,9 +22,9 @@ import {
   p3,
   toPercent,
   toRgb
-} from '../lib/colors.js'
-import { current, valueToColor } from './current.js'
-import type { OutputFormats } from './settings.js'
+} from '../lib/colors.ts'
+import { current, valueToColor } from './current.ts'
+import type { OutputFormats } from './settings.ts'
 
 function formatOklab(color: Oklab): string {
   let { a, alpha, b, l } = color

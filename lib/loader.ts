@@ -1,6 +1,6 @@
 import { delay } from 'nanodelay'
 
-import { loading } from '../stores/loading.js'
+import { loading } from '../stores/loading.ts'
 
 export function generateLoader<Result>(
   status: HTMLDivElement,
