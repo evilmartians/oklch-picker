@@ -159,28 +159,50 @@ function round2(value: number): number {
 }
 
 function round4(value: number): number {
+  if (typeof value !== 'number') {
+    throw new TypeError(`Expected a number but received ${typeof value}`);
+  }
+
   return parseFloat(value.toFixed(4))
 }
 
-function roundValue<V extends Partial<LchValue>>(
-  value: V,
-  type: 'lch' | 'oklch'
-): V {
-  let rounded = { ...value }
-  if (typeof rounded.l !== 'undefined') {
-    rounded.l = round2(rounded.l)
+
+function incrementalRoundValue(value: LchValue, COLOR_FN: string): LchValue {
+  const maxIterations = 6;
+
+  for (let i = 0; i <= maxIterations; i++) {
+    let precision = i === 0 ? 0 : Math.min(i, maxIterations);
+    let roundedValue: LchValue = {
+      a: round2(value.a),
+      c: round2(value.c),
+      h: round2(value.h),
+      l: round2(value.l),
+    };
+
+    roundedValue.l = parseFloat(roundedValue.l.toFixed(precision));
+    roundedValue.c = parseFloat(roundedValue.c.toFixed(precision));
+    roundedValue.h = parseFloat(roundedValue.h.toFixed(precision));
+    roundedValue.a = parseFloat(roundedValue.a.toFixed(precision));
+
+    if (isMatch(roundedValue)) {
+      return roundedValue;
+    }
   }
-  if (typeof rounded.c !== 'undefined') {
-    rounded.c = type === 'oklch' ? round4(rounded.c) : round2(rounded.c)
-  }
-  if (typeof rounded.h !== 'undefined') {
-    rounded.h = round2(rounded.h)
-  }
-  if (typeof rounded.a !== 'undefined') {
-    rounded.a = round2(rounded.a)
-  }
-  return rounded
+
+  return value;
 }
+
+function isMatch(value: LchValue): boolean {
+  let color = valueToColor(value);
+  let rgb = toRgb(color);
+
+  return (
+    rgb.r >= 0 && rgb.r <= 255 &&
+    rgb.g >= 0 && rgb.g <= 255 &&
+    rgb.b >= 0 && rgb.b <= 255
+  );
+}
+
 
 export function setCurrentFromColor(origin: Color): void {
   if (origin.mode === COLOR_FN) {
@@ -192,7 +214,7 @@ export function setCurrentFromColor(origin: Color): void {
       let rgbAccurate = toRgb(accurate)
       accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
     }
-    let rounded = roundValue(colorToValue(accurate), COLOR_FN)
+    let rounded = incrementalRoundValue(colorToValue(accurate), COLOR_FN)
     if (getSpace(valueToColor(rounded)) === originSpace) {
       current.set(rounded)
     } else {
@@ -222,12 +244,17 @@ export function toOtherValue(from: LchValue): LchValue {
   } else {
     to.l *= 100
   }
-  return roundValue(to, LCH ? 'oklch' : 'lch')
+  return {
+    a: round4(to.a),
+    c: round4(to.c),
+    h: round4(to.h),
+    l: round4(to.l)
+  }
 }
 
 export function setCurrentComponents(parts: Partial<LchValue>): void {
   let value = current.get()
-  let rounded = roundValue(parts, COLOR_FN)
+  let rounded = incrementalRoundValue({ ...value, ...parts }, COLOR_FN)
   current.set({
     a: value.a,
     c: typeof rounded.c === 'undefined' ? value.c : rounded.c,
