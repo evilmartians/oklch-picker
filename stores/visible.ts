@@ -4,10 +4,9 @@ import { computed } from 'nanostores'
 import {
   fastFormat,
   formatRgb,
-  inP3,
-  inRec2020,
-  inRGB,
+  getSpace,
   rgb,
+  Space,
   toRgb
 } from '../lib/colors.ts'
 import { current, valueToColor } from './current.ts'
@@ -24,7 +23,8 @@ export let visible = computed(
   [current, support],
   (value, { oklch, p3 }): VisibleValue => {
     let color: Color = valueToColor(value)
-    if (inRGB(color)) {
+    let space = getSpace(color)
+    if (space === Space.sRGB) {
       let rgbCss = formatRgb(rgb(color))
       if (!oklch) color = rgb(color)
       return {
@@ -36,7 +36,7 @@ export let visible = computed(
     } else {
       let rgbColor = toRgb(color)
       let fallback = formatRgb(rgbColor)
-      if (inP3(color)) {
+      if (space === Space.P3) {
         return {
           color: p3 && oklch ? color : rgbColor,
           fallback,
@@ -48,7 +48,7 @@ export let visible = computed(
           color: rgbColor,
           fallback,
           real: false,
-          space: inRec2020(color) ? 'rec2020' : 'out'
+          space: space === Space.Rec2020 ? 'rec2020' : 'out'
         }
       }
     }

@@ -177,6 +177,15 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
     if (parsed.mode === COLOR_FN) {
       current.set(colorToValue(parsed as AnyLch))
     } else {
+      if (
+        parsed.mode === 'rgb' &&
+        parsed.r === 1 &&
+        parsed.g === 1 &&
+        parsed.b === 1
+      ) {
+        current.set({ a: (parsed.alpha ?? 1) * 100, c: 0, h: 0, l: 100 })
+        return true
+      }
       let originSpace = getSpace(parsed)
       let accurate = LCH ? lch(parsed) : oklch(parsed)
       if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {

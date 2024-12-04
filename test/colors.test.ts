@@ -59,4 +59,13 @@ test('correctly works with colors on the edges of sRGB', () => {
     l: 96.79827203267874
   })
   deepStrictEqual(visible.get().space, 'srgb')
+
+  setCurrent('#ffffff')
+  deepStrictEqual(current.get(), {
+    a: 100,
+    c: 0,
+    h: 0,
+    l: 100
+  })
+  deepStrictEqual(visible.get().space, 'srgb')
 })

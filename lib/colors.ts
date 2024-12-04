@@ -162,7 +162,10 @@ if (LCH) {
 
 export function getSpace(color: Color): Space {
   let proxyColor = getProxyColor(color)
-  if (inRGB(proxyColor)) {
+  // Hot fix until https://github.com/Evercoder/culori/issues/249 is fixed
+  if (color.mode === 'oklch' && color.l === 1 && color.c === 0) {
+    return Space.sRGB
+  } else if (inRGB(proxyColor)) {
     return Space.sRGB
   } else if (inP3(proxyColor)) {
     return Space.P3
