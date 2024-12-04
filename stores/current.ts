@@ -1,18 +1,19 @@
-import type { Color } from 'culori/fn'
 import { map } from 'nanostores'
 
 import {
   type AnyLch,
   build,
+  forceP3,
   getSpace,
   lch,
   oklch,
+  parseAnything,
   Space,
   toRgb
 } from '../lib/colors.js'
 import { debounce } from '../lib/time.js'
 import { reportFreeze, startPainting } from './benchmark.js'
-import { showCharts, showP3, showRec2020 } from './settings.js'
+import { outputFormat, showCharts, showP3, showRec2020 } from './settings.js'
 import { support } from './support.js'
 import { benchmarking } from './url.js'
 
@@ -182,22 +183,31 @@ function roundValue<V extends Partial<LchValue>>(
   return rounded
 }
 
-export function setCurrentFromColor(origin: Color): void {
-  if (origin.mode === COLOR_FN) {
-    current.set(colorToValue(origin as AnyLch))
-  } else {
-    let originSpace = getSpace(origin)
-    let accurate = LCH ? lch(origin) : oklch(origin)
-    if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
-      let rgbAccurate = toRgb(accurate)
-      accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
+export function setCurrent(code: string, isRgbInput = false): boolean {
+  let parsed = parseAnything(code)
+  if (parsed) {
+    if (outputFormat.get() === 'figmaP3' && isRgbInput) {
+      parsed = forceP3(parsed)
     }
-    let rounded = roundValue(colorToValue(accurate), COLOR_FN)
-    if (getSpace(valueToColor(rounded)) === originSpace) {
-      current.set(rounded)
+    if (parsed.mode === COLOR_FN) {
+      current.set(colorToValue(parsed as AnyLch))
     } else {
-      current.set(colorToValue(accurate))
+      let originSpace = getSpace(parsed)
+      let accurate = LCH ? lch(parsed) : oklch(parsed)
+      if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
+        let rgbAccurate = toRgb(accurate)
+        accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
+      }
+      let rounded = roundValue(colorToValue(accurate), COLOR_FN)
+      if (getSpace(valueToColor(rounded)) === originSpace) {
+        current.set(rounded)
+      } else {
+        current.set(colorToValue(accurate))
+      }
     }
+    return true
+  } else {
+    return false
   }
 }
 

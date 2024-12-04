@@ -1,15 +1,6 @@
-import {
-  forceP3,
-  formatLch,
-  isHexNotation,
-  parseAnything
-} from '../../lib/colors.js'
+import { formatLch, isHexNotation, parseAnything } from '../../lib/colors.js'
 import { toggleVisibility } from '../../lib/dom.js'
-import {
-  current,
-  setCurrentFromColor,
-  valueToColor
-} from '../../stores/current.js'
+import { current, setCurrent, valueToColor } from '../../stores/current.js'
 import {
   formats,
   type FormatsValue,
@@ -85,14 +76,7 @@ function listenChanges(input: HTMLInputElement): void {
     if (newValue === prevValues.get(input)) return
     prevValues.set(input, newValue)
 
-    let parsed = parseAnything(newValue)
-    if (parsed) {
-      setValid(input)
-      if (outputFormat.get() === 'figmaP3' && input === rgbInput) {
-        parsed = forceP3(parsed)
-      }
-      setCurrentFromColor(parsed)
-    } else {
+    if (!setCurrent(newValue, input === rgbInput)) {
       setInvalid(input, 'Use valid CSS color format')
     }
   }
