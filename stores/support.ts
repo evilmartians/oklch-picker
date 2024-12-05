@@ -10,10 +10,12 @@ export let support = map<SupportValue>({
   p3: false
 })
 
-if (CSS.supports('color', 'color(display-p3 1 1 1)')) {
-  let media = window.matchMedia('(color-gamut:p3)')
-  support.set({ oklch: true, p3: media.matches })
-  media.addEventListener('change', () => {
-    support.setKey('p3', media.matches)
-  })
+if (typeof window !== 'undefined') {
+  if (CSS.supports('color', 'color(display-p3 1 1 1)')) {
+    let media = window.matchMedia('(color-gamut:p3)')
+    support.set({ oklch: true, p3: media.matches })
+    media.addEventListener('change', () => {
+      support.setKey('p3', media.matches)
+    })
+  }
 }
