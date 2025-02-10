@@ -1,3 +1,4 @@
+import { formatHex8 } from 'culori/fn'
 import { map } from 'nanostores'
 
 import {
@@ -187,13 +188,18 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
         return true
       }
       let originSpace = getSpace(parsed)
+      let originHex = formatHex8(parsed)
       let accurate = LCH ? lch(parsed) : oklch(parsed)
       if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
         let rgbAccurate = toRgb(accurate)
         accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
       }
       let rounded = roundValue(colorToValue(accurate), COLOR_FN)
-      if (getSpace(valueToColor(rounded)) === originSpace) {
+      let roundedColor = valueToColor(rounded)
+      let roundedSpace = getSpace(roundedColor)
+      let roundedHex = formatHex8(roundedColor)
+
+      if (roundedSpace === originSpace && originHex === roundedHex) {
         current.set(rounded)
       } else {
         current.set(colorToValue(accurate))
