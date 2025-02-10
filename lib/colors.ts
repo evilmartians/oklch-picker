@@ -42,7 +42,20 @@ export let lab = useMode(modeLab)
 export let lrgb = useMode(modeLrgb)
 export let p3 = useMode(modeP3)
 
-export const inRGB = inGamut('rgb')
+const COLOR_SPACE_GAP = 0.0001
+
+// Dirty fix of https://github.com/Evercoder/culori/issues/249
+export function inRGB(color: Color): boolean {
+  let check = rgb(color)
+  return (
+    check.r >= -COLOR_SPACE_GAP &&
+    check.r <= 1 + COLOR_SPACE_GAP &&
+    check.g >= -COLOR_SPACE_GAP &&
+    check.g <= 1 + COLOR_SPACE_GAP &&
+    check.b >= -COLOR_SPACE_GAP &&
+    check.b <= 1 + COLOR_SPACE_GAP
+  )
+}
 export const inP3 = inGamut('p3')
 export const inRec2020 = inGamut('rec2020')
 
@@ -162,10 +175,7 @@ if (LCH) {
 
 export function getSpace(color: Color): Space {
   let proxyColor = getProxyColor(color)
-  // Hot fix until https://github.com/Evercoder/culori/issues/249 is fixed
-  if (color.mode === 'oklch' && color.l === 1 && color.c === 0) {
-    return Space.sRGB
-  } else if (inRGB(proxyColor)) {
+  if (inRGB(proxyColor)) {
     return Space.sRGB
   } else if (inP3(proxyColor)) {
     return Space.P3
