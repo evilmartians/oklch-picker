@@ -29,32 +29,37 @@ test('correctly works with colors on the edges of sRGB', () => {
   setCurrent('#00ff00')
   deepStrictEqual(current.get(), {
     a: 100,
-    c: 0.2948272403370167,
-    h: 142.49533888780996,
-    l: 86.64396115356693
+    c: 0.294827,
+    h: 142.4953,
+    l: 86.644
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
   setCurrent('#0000ff')
   deepStrictEqual(current.get(), {
     a: 100,
-    c: 0.31321437166460125,
-    h: 264.052020638055,
-    l: 45.201371838534286
+    c: 0.313214,
+    h: 264.052,
+    l: 45.2014
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
   setCurrent('#00ffff')
   deepStrictEqual(current.get(), {
     a: 100,
-    c: 0.15455001106436891,
-    h: 194.76894793196382,
-    l: 90.53992300557677
+    c: 0.15455,
+    h: 194.7689,
+    l: 90.5399
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
   setCurrent('#ff00ff')
-  deepStrictEqual(current.get(), { a: 100, c: 0.3225, h: 328.36, l: 70.17 })
+  deepStrictEqual(current.get(), {
+    a: 100,
+    c: 0.3225,
+    h: 328.36,
+    l: 70.17
+  })
   deepStrictEqual(visible.get().space, 'srgb')
 
   setCurrent('#ffff00')

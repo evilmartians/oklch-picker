@@ -149,7 +149,11 @@ function round4(value: number): number {
   return parseFloat(value.toFixed(4))
 }
 
-function roundValue<V extends Partial<LchValue>>(
+function round6(value: number): number {
+  return parseFloat(value.toFixed(6))
+}
+
+function aggressiveRoundValue<V extends Partial<LchValue>>(
   value: V,
   type: 'lch' | 'oklch'
 ): V {
@@ -165,6 +169,26 @@ function roundValue<V extends Partial<LchValue>>(
   }
   if (typeof rounded.a !== 'undefined') {
     rounded.a = round2(rounded.a)
+  }
+  return rounded
+}
+
+function preciseRoundValue<V extends Partial<LchValue>>(
+  value: V,
+  type: 'lch' | 'oklch'
+): V {
+  let rounded = { ...value }
+  if (typeof rounded.l !== 'undefined') {
+    rounded.l = round4(rounded.l)
+  }
+  if (typeof rounded.c !== 'undefined') {
+    rounded.c = type === 'oklch' ? round6(rounded.c) : round4(rounded.c)
+  }
+  if (typeof rounded.h !== 'undefined') {
+    rounded.h = round4(rounded.h)
+  }
+  if (typeof rounded.a !== 'undefined') {
+    rounded.a = round4(rounded.a)
   }
   return rounded
 }
@@ -188,21 +212,34 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
         return true
       }
       let originSpace = getSpace(parsed)
-      let originHex = formatHex8(parsed)
+
+      function isPreciseEnough(value: LchValue): boolean {
+        let color = valueToColor(value)
+        if (originSpace !== getSpace(color)) {
+          return false
+        } else if (formatHex8(color) !== formatHex8(parsed)) {
+          return false
+        } else {
+          return true
+        }
+      }
+
       let accurate = LCH ? lch(parsed) : oklch(parsed)
       if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
         let rgbAccurate = toRgb(accurate)
         accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
       }
-      let rounded = roundValue(colorToValue(accurate), COLOR_FN)
-      let roundedColor = valueToColor(rounded)
-      let roundedSpace = getSpace(roundedColor)
-      let roundedHex = formatHex8(roundedColor)
+      let aggressive = aggressiveRoundValue(colorToValue(accurate), COLOR_FN)
 
-      if (roundedSpace === originSpace && originHex === roundedHex) {
-        current.set(rounded)
+      if (isPreciseEnough(aggressive)) {
+        current.set(aggressive)
       } else {
-        current.set(colorToValue(accurate))
+        let precise = preciseRoundValue(colorToValue(accurate), COLOR_FN)
+        if (isPreciseEnough(precise)) {
+          current.set(precise)
+        } else {
+          current.set(colorToValue(accurate))
+        }
       }
     }
     return true
@@ -232,12 +269,12 @@ export function toOtherValue(from: LchValue): LchValue {
   } else {
     to.l *= 100
   }
-  return roundValue(to, LCH ? 'oklch' : 'lch')
+  return aggressiveRoundValue(to, LCH ? 'oklch' : 'lch')
 }
 
 export function setCurrentComponents(parts: Partial<LchValue>): void {
   let value = current.get()
-  let rounded = roundValue(parts, COLOR_FN)
+  let rounded = aggressiveRoundValue(parts, COLOR_FN)
   current.set({
     a: value.a,
     c: typeof rounded.c === 'undefined' ? value.c : rounded.c,
