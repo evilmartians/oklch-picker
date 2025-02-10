@@ -10,7 +10,6 @@ import {
   MeshBasicMaterial,
   PerspectiveCamera,
   PlaneGeometry,
-  type Renderer,
   Scene,
   Vector2,
   Vector3,
@@ -150,7 +149,7 @@ function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
 function initScene(
   canvas: HTMLCanvasElement,
   fullControl: boolean
-): [Scene, Camera, Renderer, OrbitControls] {
+): [Scene, Camera, WebGLRenderer, OrbitControls] {
   let canvasWidth = canvas.clientWidth
   let canvasHeight = canvas.clientHeight
 
