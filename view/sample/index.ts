@@ -1,6 +1,5 @@
 import { lch, oklch } from '../../lib/colors.ts'
 import { colorToValue, current } from '../../stores/current.ts'
-import { support } from '../../stores/support.ts'
 import { visible } from '../../stores/visible.ts'
 
 let sample = document.querySelector<HTMLDivElement>('.sample')!
@@ -10,8 +9,6 @@ let fallbackNote = document.querySelector<HTMLButtonElement>(
   '.sample_fallback .sample_note'
 )!
 
-let postfix = support.get().oklch ? ' on this monitor' : ' in this browser'
-
 visible.subscribe(({ fallback, real, space }) => {
   sample.classList.toggle('is-srgb', space === 'srgb')
   sample.classList.toggle('is-supported', !!real)
@@ -19,9 +16,9 @@ visible.subscribe(({ fallback, real, space }) => {
   if (real) {
     unavailable.innerText = ''
   } else if (space === 'p3') {
-    unavailable.innerText = 'P3 is unavailable' + postfix
+    unavailable.innerText = 'P3 is unavailable on this monitor'
   } else if (space === 'rec2020') {
-    unavailable.innerText = 'Rec2020 is unavailable' + postfix
+    unavailable.innerText = 'Rec2020 is unavailable on this monitor'
   } else if (space === 'out') {
     unavailable.innerText = 'Unavailable on any device'
   }

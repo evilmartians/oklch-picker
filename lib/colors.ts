@@ -83,13 +83,11 @@ if (LCH) {
   toTarget = oklch
 }
 
-export let fastLchFormat: (c: AnyLch) => string = formatRgbFast
-
 export let canvasFormat: (c: AnyLch) => string = formatRgbFast
 
 export function fastFormat(color: Color): string {
   if (color.mode === COLOR_FN) {
-    return fastLchFormat(color)
+    return formatLch(color)
   } else {
     return formatRgbFast(color)
   }
@@ -99,7 +97,6 @@ function formatP3Css(c: Color): string {
 }
 
 support.subscribe(value => {
-  fastLchFormat = value.oklch ? formatLch : formatRgbFast
   canvasFormat = value.p3 ? formatP3Css : formatRgbFast
 })
 

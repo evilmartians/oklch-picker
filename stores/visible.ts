@@ -21,12 +21,11 @@ interface VisibleValue {
 
 export let visible = computed(
   [current, support],
-  (value, { oklch, p3, rec2020 }): VisibleValue => {
-    let color: Color = valueToColor(value)
+  (value, { p3, rec2020 }): VisibleValue => {
+    let color = valueToColor(value)
     let space = getSpace(color)
     if (space === Space.sRGB) {
       let rgbCss = formatRgb(rgb(color))
-      if (!oklch) color = rgb(color)
       return {
         color,
         fallback: rgbCss,
@@ -38,14 +37,14 @@ export let visible = computed(
       let fallback = formatRgb(rgbColor)
       if (space === Space.P3) {
         return {
-          color: p3 && oklch ? color : rgbColor,
+          color: p3 ? color : rgbColor,
           fallback,
           real: p3 ? fastFormat(color) : false,
           space: 'p3'
         }
       } else if (space === Space.Rec2020) {
         return {
-          color: rec2020 && oklch ? color : rgbColor,
+          color: rec2020 ? color : rgbColor,
           fallback,
           real: rec2020 ? fastFormat(color) : false,
           space: 'rec2020'
