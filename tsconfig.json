@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
+    "erasableSyntaxOnly": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,

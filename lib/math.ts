@@ -1,13 +1,11 @@
-enum Priority {
-  High = 2,
-  Low = 1
-}
+const HIGH_PRIORITY = 2
+const LOW_PRIORITY = 1
 
 const OPERATORS = {
-  '-': Priority.Low,
-  '*': Priority.High,
-  '/': Priority.High,
-  '+': Priority.Low
+  '-': LOW_PRIORITY,
+  '*': HIGH_PRIORITY,
+  '/': HIGH_PRIORITY,
+  '+': LOW_PRIORITY
 }
 
 type Operator = keyof typeof OPERATORS
