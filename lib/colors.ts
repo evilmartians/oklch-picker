@@ -109,6 +109,9 @@ export function parseAnything(value: string): Color | undefined {
   if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(value)) {
     value = value.replace(/^[\w-]+:\s*/, '')
   }
+  if (/^\s*[\d.]+%?\s+[\d.]+\s+[\d.]+\s*$/.test(value)) {
+    value = `${COLOR_FN}(${value})`
+  }
   return parse(value)
 }
 
