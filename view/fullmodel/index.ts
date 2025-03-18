@@ -17,7 +17,7 @@ getButton('close3d')?.addEventListener('click', () => {
 
 let model: Model | undefined
 
-url.subscribe(async value => {
+url.subscribe(value => {
   toggleVisibility(block, value === '3d')
   if (value === '3d') {
     if (!model) {

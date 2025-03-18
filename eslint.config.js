@@ -6,6 +6,7 @@ export default [
   ...loguxTsConfig,
   {
     rules: {
+      '@typescript-eslint/no-unsafe-type-assertion': 'off',
       'no-control-regex': 'off'
     }
   },

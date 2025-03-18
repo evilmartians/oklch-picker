@@ -62,10 +62,10 @@ export function prepareWorkers<
     busy.add(type)
     let finished = 0
     let workers = available.splice(0, started)
-    let messages = prepare(Array(workers.length).fill(undefined))
+    let messages = prepare(Array(workers.length).fill(undefined) as undefined[])
 
     for (let [i, worker] of workers.entries()) {
-      worker.onmessage = e => {
+      worker.onmessage = (e: MessageEvent<ResultData>) => {
         onResult(e.data)
         available.push(worker)
 

@@ -11,6 +11,8 @@ export let support = map<SupportValue>({
 })
 
 if (typeof window !== 'undefined') {
+  // The is no types for CSS.supports yet
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
   if (CSS.supports('color', 'color(display-p3 1 1 1)')) {
     let mediaP3 = window.matchMedia('(color-gamut:p3)')
     let media2020 = window.matchMedia('(color-gamut:rec2020)')
