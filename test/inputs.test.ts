@@ -5,7 +5,7 @@ import { test } from 'node:test'
 
 import { current, setCurrent } from '../stores/current.ts'
 
-test('understand CSS declaration', () => {
+test('understands CSS declaration', () => {
   setCurrent('color: oklch(80% 0.1 195);')
   deepStrictEqual(current.get(), { a: 100, c: 0.1, h: 195, l: 80 })
 
@@ -13,7 +13,7 @@ test('understand CSS declaration', () => {
   deepStrictEqual(current.get(), { a: 100, c: 0.2577, h: 29.23, l: 62.8 })
 })
 
-test('understand hex without #', () => {
+test('understands hex without #', () => {
   setCurrent('f00')
   deepStrictEqual(current.get(), { a: 100, c: 0.2577, h: 29.23, l: 62.8 })
 
