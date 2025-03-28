@@ -31,7 +31,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/cloudflare'
     needs:
       - test
     steps:
@@ -50,20 +50,20 @@ jobs:
       - name: Build OKLCH
         run: node --run build
       - name: Deploy OKLCH
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: cloudflare/wrangler-action@v3
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_OKLCH_ACCOUNT }}'
-          projectId: ai-oklch
-          channelId: live
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/ --project-name=oklch
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Clean build dir
         run: node --run clean
       - name: Build LCH
         run: node --run build:lch
       - name: Deploy LCH
-        uses: FirebaseExtended/action-hosting-deploy@v0
+        uses: cloudflare/wrangler-action@v3
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_LCH_ACCOUNT }}'
-          projectId: ai-lch
-          channelId: live
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/ --project-name=lch
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
