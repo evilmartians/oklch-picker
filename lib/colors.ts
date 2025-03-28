@@ -136,9 +136,9 @@ export function formatLch(color: AnyLch): string {
   let { alpha, c, h, l } = color
   let postfix = ''
   if (typeof alpha !== 'undefined' && alpha < 1) {
-    postfix = ` / ${toPercent(alpha)}`
+    postfix = ` / ${clean(100 * alpha)}%`
   }
-  return `${COLOR_FN}(${toPercent(l / L_MAX)} ${c} ${h}${postfix})`
+  return `${COLOR_FN}(${clean(l / L_MAX)} ${c} ${h}${postfix})`
 }
 
 // Hack to avoid ,999999 because of float bug implementation
@@ -147,10 +147,6 @@ export function clean(value: number, precision = 2): number {
     Math.round(parseFloat((value * 10 ** precision).toFixed(precision))) /
     10 ** precision
   )
-}
-
-export function toPercent(value: number): string {
-  return `${clean(100 * value)}%`
 }
 
 export function isHexNotation(value: string): boolean {

@@ -20,7 +20,6 @@ import {
   lrgb,
   oklab,
   p3,
-  toPercent,
   toRgb
 } from '../lib/colors.ts'
 import { current, valueToColor } from './current.ts'
@@ -32,7 +31,7 @@ function formatOklab(color: Oklab): string {
   if (typeof alpha !== 'undefined' && alpha < 1) {
     postfix = ` / ${clean(alpha)}`
   }
-  return `oklab(${toPercent(l)} ${clean(a)} ${clean(b)}${postfix})`
+  return `oklab(${clean(l)} ${clean(a)} ${clean(b)}${postfix})`
 }
 
 function formatVec(color: AnyRgb): string {
