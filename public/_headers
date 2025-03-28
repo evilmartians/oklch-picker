@@ -1,0 +1,16 @@
+/*
+  X-Frame-Options: DENY;
+  X-Content-Type-Options: nosniff;
+  Content-Security-Policy: default-src 'self'; frame-ancestors 'none'; img-src 'self' data:; connect-src 'self' https://plausible.io;
+
+/**/*.js
+  Cache-Control: public, max-age=31536000, immutable;
+
+/**/*.css
+  Cache-Control: public, max-age=31536000, immutable;
+
+/**/*.woff2
+  Cache-Control: public, max-age=31536000, immutable;
+
+/**/*.svg
+  Cache-Control: public, max-age=31536000, immutable;
