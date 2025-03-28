@@ -37,6 +37,14 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
+      - name: Notify about new deployment
+        uses: bobheadxi/deployments@v1
+        if: github.ref != 'refs/heads/main'
+        id: status
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: preview-${{ github.event.pull_request.number }}
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -50,12 +58,21 @@ jobs:
       - name: Build OKLCH
         run: node --run build
       - name: Deploy OKLCH
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist/ --project-name=oklch
-          gitHubToken: ${{ secrets.DEPLOYMENT_TOKEN }}
+      - name: Update deployment status
+        uses: bobheadxi/deployments@v1
+        if: github.ref != 'refs/heads/main'
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          env_url: ${{ steps.deploy.outputs.deployment-url }}
+          deployment_id: ${{ steps.status.outputs.deployment_id }}
       - name: Clean build dir
         if: github.ref == 'refs/heads/main'
         run: node --run clean
