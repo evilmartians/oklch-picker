@@ -55,15 +55,17 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist/ --project-name=oklch
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          gitHubToken: ${{ secrets.DEPLOYMENT_TOKEN }}
       - name: Clean build dir
+        if: github.ref == 'refs/heads/main'
         run: node --run clean
       - name: Build LCH
+        if: github.ref == 'refs/heads/main'
         run: node --run build:lch
       - name: Deploy LCH
+        if: github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist/ --project-name=lch
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
