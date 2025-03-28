@@ -31,7 +31,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/cloudflare'
+    # if: github.ref == 'refs/heads/main'
     needs:
       - test
     steps:
