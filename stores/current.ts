@@ -35,11 +35,13 @@ function parseHash(): LchValue | undefined {
   let parts = location.hash.slice(1).split(',')
   if (parts.length === 4) {
     if (parts.every(i => /^\d+(\.\d+)?$/.test(i))) {
+      let l = parseFloat(parts[0])
+      if (l > 1) l /= 100 // We use 0-100 before
       return {
         a: parseFloat(parts[3]),
         c: parseFloat(parts[1]),
         h: parseFloat(parts[2]),
-        l: parseFloat(parts[0])
+        l
       }
     }
   }
