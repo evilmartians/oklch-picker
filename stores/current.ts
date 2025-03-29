@@ -161,7 +161,7 @@ function aggressiveRoundValue<V extends Partial<LchValue>>(
 ): V {
   let rounded = { ...value }
   if (typeof rounded.l !== 'undefined') {
-    rounded.l = type === 'oklch' ? round4(rounded.l) : round2(rounded.l)
+    rounded.l = round4(rounded.l)
   }
   if (typeof rounded.c !== 'undefined') {
     rounded.c = type === 'oklch' ? round4(rounded.c) : round2(rounded.c)

@@ -35,7 +35,7 @@ function clampInRange(useWheel: boolean, precision: number): ClampAngleFn {
 function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
   let card = document.querySelector<HTMLDivElement>(`.card.is-${type}`)!
   let text = card.querySelector<HTMLInputElement>('[role=spinbutton]')!
-  let bindedClamp = clampInRange(type === 'h', type === 'c' ? 4 : 2)
+  let bindedClamp = clampInRange(type === 'h', type === 'h' ? 2 : 4)
 
   text.addEventListener('change', () => {
     let { max, min } = getInputMeta(text)
