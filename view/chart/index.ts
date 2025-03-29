@@ -31,7 +31,7 @@ onPaint({
     document.body.style.setProperty('--chart-h', `${(100 * h) / H_MAX}%`)
   },
   l(l) {
-    document.body.style.setProperty('--chart-l', `${l}%`)
+    document.body.style.setProperty('--chart-l', `${(100 * l) / L_MAX}%`)
   }
 })
 
@@ -51,12 +51,12 @@ function setComponentsFromSpace(
   } else if (space.parentElement!.classList.contains('is-c')) {
     setCurrentComponents({
       h: (H_MAX * x) / rect.width,
-      l: (100 * y) / rect.height
+      l: (L_MAX * y) / rect.height
     })
   } else if (space.parentElement!.classList.contains('is-h')) {
     setCurrentComponents({
       c: (getMaxC() * y) / rect.height,
-      l: (100 * x) / rect.width
+      l: (L_MAX * x) / rect.width
     })
   }
 }
@@ -158,7 +158,7 @@ function initCharts(): void {
     },
     l(l, chartsToChange) {
       if (!showCharts.get()) return
-      startWorkForComponent(canvasL, 'l', (L_MAX * l) / 100, chartsToChange)
+      startWorkForComponent(canvasL, 'l', l, chartsToChange)
     }
   })
 }

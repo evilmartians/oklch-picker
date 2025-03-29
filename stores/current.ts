@@ -28,7 +28,7 @@ export interface LchValue {
 type PrevCurrentValue = { [key in keyof LchValue]?: undefined } | LchValue
 
 function randomColor(): LchValue {
-  return { a: 100, c: C_RANDOM, h: Math.round(360 * Math.random()), l: 70 }
+  return { a: 100, c: C_RANDOM, h: Math.round(360 * Math.random()), l: 0.7 }
 }
 
 function parseHash(): LchValue | undefined {
@@ -159,7 +159,7 @@ function aggressiveRoundValue<V extends Partial<LchValue>>(
 ): V {
   let rounded = { ...value }
   if (typeof rounded.l !== 'undefined') {
-    rounded.l = round2(rounded.l)
+    rounded.l = type === 'oklch' ? round4(rounded.l) : round2(rounded.l)
   }
   if (typeof rounded.c !== 'undefined') {
     rounded.c = type === 'oklch' ? round4(rounded.c) : round2(rounded.c)
@@ -179,7 +179,7 @@ function preciseRoundValue<V extends Partial<LchValue>>(
 ): V {
   let rounded = { ...value }
   if (typeof rounded.l !== 'undefined') {
-    rounded.l = round4(rounded.l)
+    rounded.l = type === 'oklch' ? round6(rounded.l) : round4(rounded.l)
   }
   if (typeof rounded.c !== 'undefined') {
     rounded.c = type === 'oklch' ? round6(rounded.c) : round4(rounded.c)
@@ -208,7 +208,7 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
         parsed.g === 1 &&
         parsed.b === 1
       ) {
-        current.set({ a: (parsed.alpha ?? 1) * 100, c: 0, h: 0, l: 100 })
+        current.set({ a: (parsed.alpha ?? 1) * 100, c: 0, h: 0, l: 1 })
         return true
       }
       let originSpace = getSpace(parsed)
@@ -249,7 +249,7 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
 }
 
 export function valueToColor(value: LchValue): AnyLch {
-  return build((L_MAX * value.l) / 100, value.c, value.h, value.a / 100)
+  return build(value.l * L_MAX_COLOR, value.c, value.h, value.a / 100)
 }
 
 export function colorToValue(color: AnyLch): LchValue {
@@ -257,7 +257,7 @@ export function colorToValue(color: AnyLch): LchValue {
     a: (color.alpha ?? 1) * 100,
     c: color.c,
     h: color.h ?? 0,
-    l: (100 * color.l) / L_MAX
+    l: color.l / L_MAX_COLOR
   }
 }
 

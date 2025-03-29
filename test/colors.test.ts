@@ -22,7 +22,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0.2577,
     h: 29.23,
-    l: 62.8
+    l: 0.628
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
@@ -31,7 +31,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0.294827,
     h: 142.4953,
-    l: 86.644
+    l: 0.86644
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
@@ -40,7 +40,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0.313214,
     h: 264.052,
-    l: 45.2014
+    l: 0.452014
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
@@ -49,7 +49,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0.15455,
     h: 194.7689,
-    l: 90.5399
+    l: 0.905399
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
@@ -58,7 +58,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0.3225,
     h: 328.36,
-    l: 70.17
+    l: 0.7017
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
@@ -67,7 +67,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0.211,
     h: 109.77,
-    l: 96.8
+    l: 0.968
   })
   deepStrictEqual(visible.get().space, 'srgb')
 
@@ -76,7 +76,7 @@ test('correctly works with colors on the edges of sRGB', () => {
     a: 100,
     c: 0,
     h: 0,
-    l: 100
+    l: 1
   })
   deepStrictEqual(visible.get().space, 'srgb')
 })

@@ -14,6 +14,7 @@ declare module '*?worker' {
 declare const COLOR_FN: 'lch' | 'oklch'
 declare const LCH: boolean
 declare const L_MAX: number
+declare const L_MAX_COLOR: number
 declare const L_STEP: number
 declare const C_MAX: number
 declare const C_MAX_REC2020: number

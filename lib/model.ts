@@ -44,7 +44,7 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
           if (to.h) {
             colors.push(edgeRgb.r, edgeRgb.g, edgeRgb.b)
             coordinates.push(
-              new Vector3(to.l / L_MAX, to.c / (C_MAX * 2), to.h / 360)
+              new Vector3(to.l / L_MAX_COLOR, to.c / (C_MAX * 2), to.h / 360)
             )
           }
         }
@@ -127,7 +127,7 @@ function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
   if ('array' in bottom.attributes.position) {
     let bottomSteps = bottom.attributes.position.array.length / 6
     for (let i = 0; i <= bottomSteps; i += 1) {
-      let lchL = (L_MAX * i) / bottomSteps
+      let lchL = (L_MAX_COLOR * i) / bottomSteps
       let rgbL = rgb(build(lchL, 0, 0)).r
       bottomColors.push(rgbL, rgbL, rgbL, rgbL, rgbL, rgbL)
     }
@@ -140,7 +140,7 @@ function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
   scene.add(bottomMesh)
 
   return color => {
-    l.set(0, 0.01 * -color.l + 0.5)
+    l.set(0, -color.l + 0.5)
     c.set(0, (0.5 * -color.c) / C_MAX + 0.5)
     h.set(0, 0.0028 * color.h - (color.h > 350 ? 0.51 : 0.5))
   }

@@ -61,7 +61,6 @@ function paint(
   function addStop(x: number, round: (num: number) => number): void {
     let origin = getColor(x)
     let value = origin[type] ?? 0
-    if (type === 'l') value = (100 / L_MAX) * value
     stops.push(round(value / sliderStep) * sliderStep)
   }
 
@@ -149,7 +148,7 @@ onPaint({
     let c = color.c
     let h = color.h ?? 0
     let [width, height] = initCanvasSize(canvasL)
-    let factor = L_MAX / width
+    let factor = L_MAX_COLOR / width
     setList(
       listL,
       paint(canvasL, 'l', width, height, parseFloat(inputL.step), x => {

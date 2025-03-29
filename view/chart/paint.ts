@@ -124,7 +124,7 @@ export function paintCL(
   borderP3: Rgb,
   borderRec2020: Rgb
 ): ImageData {
-  let lFactor = L_MAX / width
+  let lFactor = L_MAX_COLOR / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
 
   return paint(
@@ -165,7 +165,7 @@ export function paintCH(
     showRec2020,
     borderP3,
     borderRec2020,
-    (x, y) => build(l, y * cFactor, x * hFactor)
+    (x, y) => build(L_MAX_COLOR * l, y * cFactor, x * hFactor)
   )
 }
 
@@ -181,7 +181,7 @@ export function paintLH(
   borderRec2020: Rgb
 ): ImageData {
   let hFactor = H_MAX / width
-  let lFactor = L_MAX / height
+  let lFactor = L_MAX_COLOR / height
 
   return paint(
     height,

@@ -10,7 +10,7 @@ mixin card(type)
           type: 'text',
           role: 'spinbutton',
           'aria-valuemin': 0,
-          'aria-valuemax': 100,
+          'aria-valuemax': 1,
           pattern: '^[0-9+\\/*.\\-]+$',
           inputmode: 'decimal',
           step: L_STEP
@@ -18,7 +18,7 @@ mixin card(type)
       .card_chart
         .card_size
           +chart('h', 'c', 'l')
-      +range('l', 100, L_STEP, 70)
+      +range('l', 1, L_STEP, 70)
 
     else if type === 'c'
       h2.card_title Chroma
