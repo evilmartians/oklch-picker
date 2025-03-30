@@ -28,7 +28,7 @@ jobs:
         run: node --run test
 
   check-permissions:
-    name: Check PR Author Permissions
+    name: Check Author Permissions
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
@@ -58,8 +58,8 @@ jobs:
             echo "write_access=false" >> "$GITHUB_OUTPUT"
           fi
 
-  deploy:
-    name: Deploy
+  preview:
+    name: Preview Deploy
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -68,7 +68,7 @@ jobs:
       - test
       - check-permissions
     if: |
-      github.ref == 'refs/heads/main' ||
+      github.event_name == 'pull_request' &&
       needs.check-permissions.outputs.write_access == 'true'
     steps:
       - name: Checkout the repository
@@ -92,11 +92,39 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist/ --project-name=oklch
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    needs:
+      - test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 23
+      - name: Install dependencies
+        run: pnpm install --production --ignore-scripts
+      - name: Build OKLCH
+        run: node --run build
+      - name: Deploy OKLCH
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/ --project-name=oklch
       - name: Re-build LCH
-        if: github.ref == 'refs/heads/main'
         run: node --run clean && node --run build:lch
       - name: Deploy LCH
-        if: github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
