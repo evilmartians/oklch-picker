@@ -26,6 +26,38 @@ jobs:
         run: pnpm install --ignore-scripts
       - name: Run tests
         run: node --run test
+
+  check-permissions:
+    name: Check PR Author Permissions
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    if: github.event_name == 'pull_request'
+    outputs:
+      has_write_access: ${{ steps.check.outputs.has_write_access }}
+    steps:
+      - name: Check permission level
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          REPO_OWNER: ${{ github.repository_owner }}
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          PERMISSION=$(curl -sSL \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GITHUB_TOKEN" \
+            "https://api.github.com/repos/$REPO_OWNER/$REPO_NAME/collaborators/$PR_AUTHOR/permission" \
+            | jq -r '.permission')
+
+          echo "Permission level: $PERMISSION"
+
+          if [[ "$PERMISSION" == "admin" || "$PERMISSION" == "write" ]]; then
+            echo "write_access=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "write_access=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
@@ -34,6 +66,10 @@ jobs:
       deployments: write
     needs:
       - test
+      - check-permissions
+    if: |
+      github.ref == 'refs/heads/main' ||
+      needs.check-permissions.outputs.write_access == 'true'
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
