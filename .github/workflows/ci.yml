@@ -4,9 +4,6 @@ on:
     branches:
       - main
   pull_request:
-permissions:
-  contents: read
-  deployments: write
 jobs:
   test:
     name: Test
@@ -32,7 +29,9 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      deployments: write
     needs:
       - test
     steps:
@@ -51,17 +50,17 @@ jobs:
       - name: Build OKLCH
         run: node --run build
       - name: Deploy OKLCH
-        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist/ --project-name=oklch
-      - name: Clean build dir
-        run: node --run clean
-      - name: Build LCH
-        run: node --run build:lch
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Re-build LCH
+        if: github.ref == 'refs/heads/main'
+        run: node --run clean && node --run build:lch
       - name: Deploy LCH
+        if: github.ref == 'refs/heads/main'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
