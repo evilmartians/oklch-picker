@@ -34,9 +34,9 @@ jobs:
       pull-requests: read
     if: github.event_name == 'pull_request'
     outputs:
-      has_write_access: ${{ steps.check.outputs.has_write_access }}
+      write_access: ${{ steps.check.outputs.write_access }}
     steps:
-      - name: Check permission level
+      - name: Check permissions
         id: check
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
