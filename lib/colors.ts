@@ -138,7 +138,7 @@ export function formatLch(color: AnyLch): string {
   if (typeof alpha !== 'undefined' && alpha < 1) {
     postfix = ` / ${clean(100 * alpha)}%`
   }
-  return `${COLOR_FN}(${clean(l / L_MAX)} ${c} ${h}${postfix})`
+  return `${COLOR_FN}(${clean(l / L_MAX, 4)} ${c} ${h}${postfix})`
 }
 
 // Hack to avoid ,999999 because of float bug implementation
