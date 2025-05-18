@@ -61,6 +61,10 @@
       "markdown-it@<12.3.2": ">=12.3.2",
       "protobufjs@<6.11.3": ">=6.11.3",
       "got@<11.8.5": ">=11.8.5"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "simple-git-hooks"
+    ]
   }
 }
