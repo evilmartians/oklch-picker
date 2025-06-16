@@ -1,14 +1,19 @@
-import Plausible from 'plausible-tracker'
+import { Plausible } from 'plausible-client'
 
-let trackEvent: ReturnType<typeof Plausible>['trackEvent']
+let trackEvent: (...args: Parameters<Plausible['trackEvent']>) => void
 
 if (process.env.NODE_ENV === 'production') {
-  let tracker = Plausible({
+  let tracker = new Plausible({
+    apiHost: 'https://plausible.io',
     domain: COLOR_FN === 'oklch' ? 'oklch.com' : 'lch.oklch.com'
   })
 
-  tracker.trackPageview()
-  trackEvent = tracker.trackEvent
+  trackEvent = (...args) => {
+    tracker.trackEvent(...args).catch((e: unknown) => {
+      throw e
+    })
+  }
+  trackEvent('pageview')
 } else {
   trackEvent = () => {}
 }
