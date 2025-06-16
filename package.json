@@ -28,7 +28,7 @@
     "jstransformer-markdown-it": "^3.0.0",
     "nanodelay": "^2.0.2",
     "nanostores": "^1.0.1",
-    "plausible-tracker": "^0.3.9",
+    "plausible-client": "^1.1.0",
     "postcss": "^8.5.3",
     "postcss-media-minmax": "^5.0.0",
     "postcss-mixins": "^11.0.3",

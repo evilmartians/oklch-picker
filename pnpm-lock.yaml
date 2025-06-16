@@ -37,9 +37,9 @@ importers:
       nanostores:
         specifier: ^1.0.1
         version: 1.0.1
-      plausible-tracker:
-        specifier: ^0.3.9
-        version: 0.3.9
+      plausible-client:
+        specifier: ^1.1.0
+        version: 1.1.0
       postcss:
         specifier: ^8.5.3
         version: 8.5.3
@@ -1569,9 +1569,8 @@ packages:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
 
-  plausible-tracker@0.3.9:
-    resolution: {integrity: sha512-hMhneYm3GCPyQon88SZrVJx+LlqhM1kZFQbuAgXPoh/Az2YvO1B6bitT9qlhpiTdJlsT5lsr3gPmzoVjb5CDXA==}
-    engines: {node: '>=10'}
+  plausible-client@1.1.0:
+    resolution: {integrity: sha512-iP2Y31w3qgWvI1B+CIwq9jrkPyoU1t/IEiy+zWfK1wFTfUTwDbbugPC+EzxFsDwJaRceGZ1kame4Ug0u2SAhYw==}
 
   postcss-js@4.0.1:
     resolution: {integrity: sha512-dDLF8pEO191hJMtlHFPRa8xsizHaM82MLfNkUHdUtVEV3tgTp5oj+8qbEqYM57SLfc74KSbw//4SeJma2LRVIw==}
@@ -3309,7 +3308,7 @@ snapshots:
 
   picomatch@4.0.2: {}
 
-  plausible-tracker@0.3.9: {}
+  plausible-client@1.1.0: {}
 
   postcss-js@4.0.1(postcss@8.5.3):
     dependencies:
