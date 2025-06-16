@@ -1,4 +1,4 @@
-import Plausible from 'plausible-tracker'
+import { Plausible } from 'plausible-client'
 
 let trackEvent: ReturnType<typeof Plausible>['trackEvent']
 
@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
     domain: COLOR_FN === 'oklch' ? 'oklch.com' : 'lch.oklch.com'
   })
 
-  tracker.trackPageview()
+  tracker.sendEvent('pageview')
   trackEvent = tracker.trackEvent
 } else {
   trackEvent = () => {}
