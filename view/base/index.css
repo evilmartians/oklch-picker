@@ -47,6 +47,11 @@ select {
   }
 }
 
+::selection {
+  color: var(--selection-text);
+  background: var(--accent);
+}
+
 body.is-loading * {
   &, &::before, &::after {
     transition: none !important;

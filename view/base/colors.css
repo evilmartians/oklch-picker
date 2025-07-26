@@ -20,6 +20,7 @@
   --danger: oklch(0.59 0.23 7);
   --border-p3: oklch(1 0 0 / 50%);
   --border-rec2020: oklch(1 0 0 / 75%);
+  --selection-text: oklch(1 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
