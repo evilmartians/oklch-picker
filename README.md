@@ -41,3 +41,5 @@ To run a local copy for development:
    ```
 
 We recommend installing Prettier and EditorConfig plugins to your text editor.
+
+We are using [`pincact`](https://github.com/suzuki-shunsuke/pinact) to pin GitHub actions. To update them run `pinact run --update`.
