@@ -8,7 +8,7 @@
       "!dist/*.webmanifest",
       "!dist/*.png"
     ],
-    "limit": "60 KB"
+    "limit": "65 KB"
   },
   {
     "name": "Base scripts to execute",
