@@ -1,7 +1,10 @@
+import { formatLch } from '../../lib/colors.ts'
 import { isHotkey } from '../../lib/hotkeys.ts'
 import { accent } from '../../stores/accent.ts'
+import { current, valueToColor } from '../../stores/current.ts'
 import { redo, undo } from '../../stores/history.ts'
 import { loading } from '../../stores/loading.ts'
+import simpleLogo from './simple.svg?url'
 
 // The only way to detect Mac is using old API
 // eslint-disable-next-line @typescript-eslint/no-deprecated
@@ -35,3 +38,16 @@ document.body.addEventListener('keydown', e => {
     undo()
   }
 })
+
+if (COLOR_FN === 'oklch') {
+  let iconLink = document.querySelector<HTMLLinkElement>(
+    'link[rel="icon"][type="image/svg+xml"]'
+  )
+  current.subscribe(value => {
+    let colorLogo = simpleLogo.replace('%23000', formatLch(valueToColor(value)))
+    if (value.l > 0.9) {
+      colorLogo = colorLogo.replace('%23fff', '%23000')
+    }
+    iconLink?.setAttribute('href', colorLogo)
+  })
+}

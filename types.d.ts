@@ -11,6 +11,11 @@ declare module '*?worker' {
   export default worker
 }
 
+declare module '*.svg?url' {
+  let image: string
+  export default image
+}
+
 declare const COLOR_FN: 'lch' | 'oklch'
 declare const LCH: boolean
 declare const L_MAX: number
