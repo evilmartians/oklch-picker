@@ -46,6 +46,7 @@
     "@types/delaunator": "^5.0.3",
     "@types/node": "^24.1.0",
     "@types/three": "^0.178.1",
+    "actions-up": "^1.4.1",
     "better-node-test": "^0.7.1",
     "eslint": "^9.32.0",
     "happy-dom": "^18.0.1",
