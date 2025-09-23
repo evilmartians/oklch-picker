@@ -1,6 +1,27 @@
 .title {
+  padding-inline: 72px;
+  position: relative;
+}
+
+.title_text {
   padding: 28px 0;
   font-size: 17.5px;
   line-height: 20px;
   text-align: center;
+}
+
+.title_source {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: var(--surface-1);
+
+  &:hover,
+  &:focus-visible {
+    background: var(--surface-ui-accent);
+  }
 }
