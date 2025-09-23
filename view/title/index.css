@@ -1,5 +1,5 @@
 .title {
-  padding-inline: 72px;
+  padding-inline: 12px;
   position: relative;
 }
 
@@ -13,7 +13,7 @@
 .title_source {
   position: absolute;
   top: 50%;
-  left: 0;
+  right: 0;
   width: 48px;
   height: 48px;
   transform: translateY(-50%);
@@ -23,5 +23,19 @@
   &:hover,
   &:focus-visible {
     background: var(--surface-ui-accent);
+  }
+
+  @media (width < 830px) {
+    right: -50px;
+  }
+
+  @media (width < 560px) {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    & > svg {
+      filter: invert(1);
+    }
   }
 }

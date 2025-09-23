@@ -11,13 +11,13 @@
 
   @media (width < 830px) {
     grid-template:
-      "title"
-      "L"
-      "C"
-      "H"
-      "extra"
-      "prefs"
-      "links";
+      'title'
+      'L'
+      'C'
+      'H'
+      'extra'
+      'prefs'
+      'links';
     padding-bottom: 450px;
 
     :is(body.is-main-collapsed) & {
@@ -27,23 +27,23 @@
 
   @media (width >= 830px) and (width < 1230px) {
     grid-template:
-      "title title"
-      "main  links"
-      "main  prefs"
-      "main  ."
-      "L     C"
-      "extra H";
+      'title title'
+      'main  links'
+      'main  prefs'
+      'main  .'
+      'L     C'
+      'extra H';
     padding-bottom: 28px;
   }
 
   @media (width >= 1230px) {
     grid-template:
-      "title title title"
-      "main  L     C"
-      "main  extra H"
-      "links extra H"
-      "prefs extra H"
-      "prefs extra .";
+      'title title title'
+      'main  L     C'
+      'main  extra H'
+      'links extra H'
+      'prefs extra H'
+      'prefs extra .';
   }
 
   @media (width >= 1230px) and (width < 1320px) {
@@ -85,6 +85,17 @@
   grid-area: links;
   grid-template-columns: 1fr;
   gap: 4px;
+}
+
+.layout_l,
+.layout_c,
+.layout_h,
+.layout_extra,
+.layout_prefs,
+.layout_links {
+  @media (width > 404px) and (width <= 830px) {
+    width: calc(var(--card-width) + var(--card-padding) + var(--card-padding));
+  }
 }
 
 .layout_l {
