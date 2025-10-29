@@ -1,6 +1,9 @@
+import { setPersistentEngine } from '@nanostores/persistent'
 import { Window } from 'happy-dom'
 
 import config from '../config.js'
+
+setPersistentEngine({}, { addEventListener() {}, removeEventListener() {} })
 
 for (let key in config) {
   if (
