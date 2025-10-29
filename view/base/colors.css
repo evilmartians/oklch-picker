@@ -17,7 +17,7 @@
   --ui-bg: oklch(0.7 0.05 310 / 18%);
   --ui-border: oklch(0.7 0 0 / 20%);
   --accent: oklch(0.57 0.18 286);
-  --danger: oklch(0.59 0.23 7);
+  --danger: oklch(0.45 0.18 7);
   --border-p3: oklch(1 0 0 / 50%);
   --border-rec2020: oklch(1 0 0 / 75%);
   --selection-text: oklch(1 0 0);
@@ -34,6 +34,7 @@
     --text-note: oklch(0.45 0 0);
     --chess: oklch(0.38 0.01 297);
     --ui-border: oklch(0.7 0 0 / 50%);
+    --danger: oklch(0.79 0.12 7);
     --border-p3: oklch(0 0 0 / 30%);
     --border-rec2020: oklch(0 0 0 / 50%);
   }
