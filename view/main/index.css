@@ -1,15 +1,12 @@
 body {
   --main-padding: 32px;
-
-  @media (width >= 1320px) {
-    --main-padding: 72px;
-  }
 }
 
 .main {
   position: relative;
   width: var(--card-width);
-  padding: 24px var(--main-padding) env(safe-area-inset-bottom, 0) var(--main-padding);
+  min-height: calc(var(--card-max-height) - var(--card-top-padding));
+  padding: var(--card-top-padding) var(--main-padding) 0 var(--main-padding);
   background: var(--surface-1);
   border-radius: 36px;
 
@@ -17,7 +14,7 @@ body {
     box-sizing: border-box;
     width: 100%;
     padding-top: 0;
-    padding-bottom: calc(140px + env(safe-area-inset-bottom, 0));
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
     border-radius: 36px 36px 0 0;
     box-shadow:
       0 0 2px var(--surface-2-shadow),
@@ -28,6 +25,15 @@ body {
       backdrop-filter: blur(24px);
     }
   }
+}
+
+.main_title {
+  height: 40px;
+  margin: 0 0 12px;
+  font: inherit;
+  font-size: 17.5px;
+  font-weight: bold;
+  line-height: 40px;
 }
 
 .main_expand {
@@ -62,7 +68,17 @@ body {
   margin-bottom: 24px;
 }
 
+.main_row:not(.main_row--sample) {
+  @media (width < 600px) {
+    display: none;
+  }
+}
+
 .main_row--sample {
+  @media (width < 600px) {
+    margin-bottom: 0;
+  }
+
   :is(body.is-main-collapsed) & {
     margin-bottom: calc(24px + env(safe-area-inset-bottom, 0));
   }

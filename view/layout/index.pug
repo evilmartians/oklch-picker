@@ -7,20 +7,15 @@ h1.contest-page-title Guess the 2026 Pantone Color of the Year
 
 .layout
   .layout_entry
-    .contest-info-panel#contest-info-panel
+    section.card.is-entry
+      h2.card_title My contact info
       .contest-form-wrapper
-        h3.contest-info-title Your Entry
         .contest_form_row
           label.contest_label Your Name:
             input.contest_input#contest-name(type="text" placeholder="Enter your name" required autocomplete="name")
         .contest_form_row
           label.contest_label Contact Info (email or phone):
             input.contest_input#contest-contact(type="text" placeholder="email@example.com or phone" required autocomplete="email tel")
-      .contest_success#contest-success-msg
-        h3 Entry Submitted!
-        p Thank you for participating!
-        .contest_submitted_info#contest-submitted-info
-        button.reset-button#reset-contest(type="button") Next Person
 
   include ../main/index.pug
 
@@ -36,13 +31,9 @@ h1.contest-page-title Guess the 2026 Pantone Color of the Year
     +card('a')
 
 .bottom-buttons
-  button.bottom-btn.see-past-btn#see-past-btn(type="button")
-    .btn-line See
-    .btn-line Past
-  button.bottom-btn.submit-btn#contest-submit-bottom(type="button")
-    .btn-line Submit
-    .btn-line Guess
-  button.bottom-btn.admin-btn#admin-button(type="button") Admin
+  button.bottom-btn.see-past-btn#see-past-btn(type="button") See previous years' colors
+  button.bottom-btn.submit-btn#contest-submit-bottom(type="button") Submit your guess for 2026
+  button.bottom-btn.admin-btn#admin-button(type="button") This button is for Spice
 
 .password-modal#password-modal
   .password-overlay
@@ -53,3 +44,10 @@ h1.contest-page-title Guess the 2026 Pantone Color of the Year
     .password-actions
       button.password-cancel#password-cancel Cancel
       button.password-submit#password-submit Login
+
+.success-modal#success-modal
+  .success-panel
+    h2 Entry Submitted!
+    p Thank you for participating!
+    .success-details#success-details
+    button.success-dismiss#success-dismiss Yay! I'm gonna win! I wonder what the prize is?

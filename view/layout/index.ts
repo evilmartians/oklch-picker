@@ -118,3 +118,4 @@ if (seePastBtn) {
     window.location.href = '/reports/pantone-colors-of-the-year.html'
   })
 }
+

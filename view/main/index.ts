@@ -84,10 +84,12 @@ expand.addEventListener('click', () => {
 let nameInput = document.querySelector<HTMLInputElement>('#contest-name')
 let contactInput = document.querySelector<HTMLInputElement>('#contest-contact')
 let submitBtn = document.querySelector<HTMLButtonElement>('#contest-submit-bottom')
-let successDiv = document.querySelector<HTMLDivElement>('#contest-success-msg')
-let submittedInfo = document.querySelector<HTMLDivElement>('#contest-submitted-info')
 let contestFormWrapper = document.querySelector<HTMLDivElement>('.contest-form-wrapper')
-let resetBtn = document.querySelector<HTMLButtonElement>('#reset-contest')
+
+// Full-screen success modal elements
+let successModal = document.querySelector<HTMLDivElement>('#success-modal')
+let successDetails = document.querySelector<HTMLDivElement>('#success-details')
+let successDismiss = document.querySelector<HTMLButtonElement>('#success-dismiss')
 
 function updateButtonColor(): void {
   try {
@@ -141,7 +143,7 @@ updateButtonColor()
 // Start with form visible
 
 if (submitBtn) {
-  let originalButtonText = submitBtn.textContent || 'Submit Guess'
+  let originalButtonHTML = submitBtn.innerHTML
 
   submitBtn.addEventListener('click', async () => {
     try {
@@ -173,55 +175,46 @@ if (submitBtn) {
 
       // Reset button state
       submitBtn.disabled = false
-      submitBtn.textContent = originalButtonText
+      submitBtn.innerHTML = originalButtonHTML
 
       if (!success) {
         alert('There was an error submitting your entry. Please try again.')
         return
       }
 
-      if (submittedInfo) {
-        submittedInfo.innerHTML = `
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Contact:</strong> ${contact}</p>
-        <p><strong>Your color:</strong> OKLCH(${guessedColorValue.l.toFixed(2)} ${guessedColorValue.c.toFixed(3)} ${guessedColorValue.h.toFixed(1)})</p>
-        <p style="margin-top: 12px; font-style: italic;">Returning to form in 3 seconds...</p>
-      `
+      // Show full-screen success modal with submitted color as background
+      if (successModal && successDetails) {
+        let colorCSS = buildForCSS(guessedColorValue.l, guessedColorValue.c, guessedColorValue.h, 1)
+        successModal.style.setProperty('--submitted-color', colorCSS)
+        successDetails.innerHTML = `
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Contact:</strong> ${contact}</p>
+        `
+        successModal.classList.add('is-visible')
       }
-
-      contestFormWrapper?.classList.add('is-hidden')
-      successDiv?.classList.add('is-visible')
-      submitBtn?.classList.add('is-hidden')
 
       // Clear the form inputs
       if (nameInput) nameInput.value = ''
       if (contactInput) contactInput.value = ''
-
-      // After 3 seconds, hide success, show form, and set random color
-      setTimeout(() => {
-        // Generate new random color for next person
-        let newRandomColor = randomColor()
-        current.set(newRandomColor)
-        primerColor.set(newRandomColor)
-
-        contestFormWrapper?.classList.remove('is-hidden')
-        successDiv?.classList.remove('is-visible')
-        submitBtn?.classList.remove('is-hidden')
-      }, 3000)
     } catch (e) {
       console.error('Error submitting entry:', e)
       submitBtn.disabled = false
-      submitBtn.textContent = originalButtonText
+      submitBtn.innerHTML = originalButtonHTML
       alert('There was an error submitting your entry. Please try again.')
     }
   })
 }
 
-if (resetBtn) {
-  resetBtn.addEventListener('click', () => {
-    contestFormWrapper?.classList.remove('is-hidden')
-    successDiv?.classList.remove('is-visible')
-    submitBtn?.classList.remove('is-hidden')
+// Dismiss button handler for success modal
+if (successDismiss) {
+  successDismiss.addEventListener('click', () => {
+    // Generate new random color for next person
+    let newRandomColor = randomColor()
+    current.set(newRandomColor)
+    primerColor.set(newRandomColor)
+
+    // Hide the modal
+    successModal?.classList.remove('is-visible')
   })
 }
 
