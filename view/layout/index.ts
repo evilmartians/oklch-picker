@@ -1,5 +1,6 @@
+import { adminLogin } from '../../lib/contest-api.ts'
 import { toggleVisibility } from '../../lib/dom.ts'
-import { showAdminPanel } from '../../stores/contest.ts'
+import { loadServerEntries, showAdminPanel } from '../../stores/contest.ts'
 import { show3d } from '../../stores/settings.ts'
 import { url } from '../../stores/url.ts'
 import { current } from '../../stores/current.ts'
@@ -18,6 +19,7 @@ url.subscribe(value => {
 // Admin button password protection with custom modal
 let adminButton = document.querySelector<HTMLButtonElement>('#admin-button')
 let passwordModal = document.querySelector<HTMLDivElement>('#password-modal')
+let emailInput = document.querySelector<HTMLInputElement>('#email-input')
 let passwordInput = document.querySelector<HTMLInputElement>('#password-input')
 let passwordSubmit = document.querySelector<HTMLButtonElement>('#password-submit')
 let passwordCancel = document.querySelector<HTMLButtonElement>('#password-cancel')
@@ -25,22 +27,46 @@ let passwordOverlay = document.querySelector<HTMLDivElement>('.password-overlay'
 
 function showPasswordModal(): void {
   passwordModal?.classList.add('is-visible')
-  passwordInput?.focus()
+  emailInput?.focus()
+  if (emailInput) emailInput.value = ''
   if (passwordInput) passwordInput.value = ''
 }
 
 function hidePasswordModal(): void {
   passwordModal?.classList.remove('is-visible')
+  if (emailInput) emailInput.value = ''
   if (passwordInput) passwordInput.value = ''
 }
 
-function checkPassword(): void {
+async function checkPassword(): Promise<void> {
+  let email = emailInput?.value || ''
   let password = passwordInput?.value || ''
-  if (password === 'spiceknows') {
+
+  if (!email || !password) {
+    alert('Please enter both email and password')
+    return
+  }
+
+  // Disable button while logging in
+  if (passwordSubmit) {
+    passwordSubmit.disabled = true
+    passwordSubmit.textContent = 'Logging in...'
+  }
+
+  let result = await adminLogin(email, password)
+
+  if (passwordSubmit) {
+    passwordSubmit.disabled = false
+    passwordSubmit.textContent = 'Login'
+  }
+
+  if (result.success) {
     hidePasswordModal()
     showAdminPanel.set(true)
+    // Load entries from server after successful login
+    loadServerEntries()
   } else {
-    alert('Incorrect password')
+    alert(result.error || 'Login failed')
     passwordInput?.focus()
   }
 }
@@ -52,6 +78,14 @@ if (adminButton) {
 passwordSubmit?.addEventListener('click', checkPassword)
 passwordCancel?.addEventListener('click', hidePasswordModal)
 passwordOverlay?.addEventListener('click', hidePasswordModal)
+
+emailInput?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    passwordInput?.focus()
+  } else if (e.key === 'Escape') {
+    hidePasswordModal()
+  }
+})
 
 passwordInput?.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {

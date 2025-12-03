@@ -7,6 +7,8 @@ import { current } from '../../stores/current.ts'
 import {
   contest,
   exportEntries,
+  loadServerEntries,
+  loadingEntries,
   resetContest,
   setPantoneColor,
   showAdminPanel
@@ -21,6 +23,7 @@ let entriesContainer = $<HTMLDivElement>('#entries-container')
 let exportBtn = $<HTMLButtonElement>('#export-entries')
 let clearBtn = $<HTMLButtonElement>('#clear-all-data')
 let closeBtn = $<HTMLButtonElement>('#admin-close')
+let refreshBtn = $<HTMLButtonElement>('#refresh-entries')
 
 console.log('Admin panel initialized:', {
   modal: !!modal,
@@ -183,6 +186,25 @@ clearBtn?.addEventListener('click', () => {
 
 closeBtn?.addEventListener('click', () => {
   showAdminPanel.set(false)
+})
+
+refreshBtn?.addEventListener('click', async () => {
+  if (refreshBtn) {
+    refreshBtn.disabled = true
+    refreshBtn.textContent = 'Loading...'
+  }
+  await loadServerEntries()
+  if (refreshBtn) {
+    refreshBtn.disabled = false
+    refreshBtn.textContent = 'Refresh'
+  }
+})
+
+// Update loading state
+loadingEntries.subscribe(loading => {
+  if (entriesContainer && loading) {
+    entriesContainer.innerHTML = '<p class="no-entries">Loading entries...</p>'
+  }
 })
 
 $$('.admin-overlay').forEach(overlay => {

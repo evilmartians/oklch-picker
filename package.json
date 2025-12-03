@@ -22,6 +22,7 @@
   "dependencies": {
     "@csstools/postcss-oklab-function": "^4.0.12",
     "@nanostores/persistent": "^1.2.0",
+    "@supabase/supabase-js": "^2.47.0",
     "autoprefixer": "^10.4.21",
     "culori": "^4.0.2",
     "delaunator": "^5.0.1",

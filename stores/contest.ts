@@ -1,7 +1,12 @@
 import { persistentMap } from '@nanostores/persistent'
-import { atom, map } from 'nanostores'
+import { atom } from 'nanostores'
 
 import type { AnyLch } from '../lib/colors.ts'
+import {
+  fetchAndDecryptEntries,
+  getDecryptionKey,
+  submitEntryToServer
+} from '../lib/contest-api.ts'
 
 export interface ColorData {
   alpha: number
@@ -53,34 +58,72 @@ export let showContestForm = atom<boolean>(false)
 export let showAdminPanel = atom<boolean>(false)
 export let primerColor = atom<AnyLch | null>(null)
 
-export function submitEntry(
+// Submission status
+export let submitting = atom<boolean>(false)
+export let submitError = atom<string | null>(null)
+
+// Admin state
+export let adminPassword = atom<string | null>(null)
+export let loadingEntries = atom<boolean>(false)
+
+export async function submitEntry(
   name: string,
   guessedColor: AnyLch,
   contact: string,
   primerColorValue: AnyLch
-): void {
-  let state = contest.get()
-  let entry: ContestEntry = {
-    contact,
-    guessedColor: {
-      alpha: guessedColor.alpha ?? 1,
-      c: guessedColor.c,
-      h: guessedColor.h ?? 0,
-      l: guessedColor.l
-    },
-    name: name.trim(),
-    primerColor: {
-      alpha: primerColorValue.alpha ?? 1,
-      c: primerColorValue.c,
-      h: primerColorValue.h ?? 0,
-      l: primerColorValue.l
-    },
-    timestamp: Date.now()
+): Promise<boolean> {
+  submitting.set(true)
+  submitError.set(null)
+
+  let guessedColorData: ColorData = {
+    alpha: guessedColor.alpha ?? 1,
+    c: guessedColor.c,
+    h: guessedColor.h ?? 0,
+    l: guessedColor.l
   }
-  contest.set({
-    ...state,
-    entries: [...state.entries, entry]
-  })
+
+  let primerColorData: ColorData = {
+    alpha: primerColorValue.alpha ?? 1,
+    c: primerColorValue.c,
+    h: primerColorValue.h ?? 0,
+    l: primerColorValue.l
+  }
+
+  let result = await submitEntryToServer(
+    name.trim(),
+    contact,
+    guessedColorData,
+    primerColorData
+  )
+
+  submitting.set(false)
+
+  if (!result.success) {
+    submitError.set(result.error || 'Unknown error')
+    return false
+  }
+
+  return true
+}
+
+// Load entries from server (admin only)
+export async function loadServerEntries(): Promise<void> {
+  loadingEntries.set(true)
+
+  try {
+    let decryptionKey = getDecryptionKey()
+    let entries = await fetchAndDecryptEntries(decryptionKey)
+
+    let state = contest.get()
+    contest.set({
+      ...state,
+      entries
+    })
+  } catch (e) {
+    console.error('Failed to load entries:', e)
+  } finally {
+    loadingEntries.set(false)
+  }
 }
 
 export function setPantoneColor(color: AnyLch): void {

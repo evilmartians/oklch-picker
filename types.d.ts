@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 declare function postMessage(message: object, transfer?: Transferable[]): void
 
 interface ViteWorker extends Worker {

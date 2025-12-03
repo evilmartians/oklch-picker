@@ -304,6 +304,7 @@
   font-weight: 600;
 }
 
+.email-input,
 .password-input {
   box-sizing: border-box;
   width: 100%;
@@ -316,6 +317,7 @@
   border-radius: 6px;
 }
 
+.email-input:focus,
 .password-input:focus {
   outline: none;
   border-color: var(--accent);
@@ -354,4 +356,10 @@
 
 .password-submit:hover {
   filter: brightness(1.1);
+}
+
+.password-submit:disabled {
+  cursor: not-allowed;
+  opacity: 60%;
+  filter: none;
 }

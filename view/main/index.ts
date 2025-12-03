@@ -1,6 +1,6 @@
 import { buildForCSS } from '../../lib/colors.ts'
 import { current, randomColor } from '../../stores/current.ts'
-import { contest, primerColor, submitEntry } from '../../stores/contest.ts'
+import { primerColor, submitEntry, submitting } from '../../stores/contest.ts'
 
 const THRESHOLD = 100
 
@@ -141,7 +141,9 @@ updateButtonColor()
 // Start with form visible
 
 if (submitBtn) {
-  submitBtn.addEventListener('click', () => {
+  let originalButtonText = submitBtn.textContent || 'Submit Guess'
+
+  submitBtn.addEventListener('click', async () => {
     try {
       let name = nameInput?.value.trim() || ''
       let contact = contactInput?.value.trim() || ''
@@ -158,7 +160,25 @@ if (submitBtn) {
         primerColorValue = guessedColorValue
       }
 
-      submitEntry(name, guessedColorValue, contact, primerColorValue)
+      // Show loading state
+      submitBtn.disabled = true
+      submitBtn.textContent = 'Submitting...'
+
+      let success = await submitEntry(
+        name,
+        guessedColorValue,
+        contact,
+        primerColorValue
+      )
+
+      // Reset button state
+      submitBtn.disabled = false
+      submitBtn.textContent = originalButtonText
+
+      if (!success) {
+        alert('There was an error submitting your entry. Please try again.')
+        return
+      }
 
       if (submittedInfo) {
         submittedInfo.innerHTML = `
@@ -190,6 +210,8 @@ if (submitBtn) {
       }, 3000)
     } catch (e) {
       console.error('Error submitting entry:', e)
+      submitBtn.disabled = false
+      submitBtn.textContent = originalButtonText
       alert('There was an error submitting your entry. Please try again.')
     }
   })

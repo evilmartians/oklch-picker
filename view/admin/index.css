@@ -79,6 +79,38 @@
   overflow-y: auto;
 }
 
+.entries-header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.entries-header h3 {
+  margin: 0;
+}
+
+.button-small {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--surface-ui-regular);
+  border: 1px solid var(--ui-border);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.button-small:hover {
+  background: var(--surface-ui-accent);
+}
+
+.button-small:disabled {
+  cursor: not-allowed;
+  opacity: 60%;
+}
+
 .entries-container {
   display: flex;
   flex-direction: column;
