@@ -187,6 +187,18 @@ export function initCanvas(
 ): Model {
   let [scene, camera, renderer, controls] = initScene(canvas, fullscreen)
 
+  // Handle canvas resize (fixes Safari CSS timing issue where dimensions are 0 on init)
+  let resizeObserver = new ResizeObserver(() => {
+    let width = canvas.clientWidth
+    let height = canvas.clientHeight
+    if (width > 0 && height > 0) {
+      ;(camera as PerspectiveCamera).aspect = width / height
+      ;(camera as PerspectiveCamera).updateProjectionMatrix()
+      renderer.setSize(width, height)
+    }
+  })
+  resizeObserver.observe(canvas)
+
   function animate(): void {
     if (model.started) requestAnimationFrame(animate)
     controls.update()
