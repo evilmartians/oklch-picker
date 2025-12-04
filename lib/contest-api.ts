@@ -8,14 +8,24 @@ const SUBMISSION_KEY = 'contest-2026-oklch-picker'
 
 export interface SubmitResult {
   success: boolean
+  entryId?: string
+  editToken?: string
   error?: string
+}
+
+function generateEditToken(): string {
+  let bytes = new Uint8Array(32)
+  crypto.getRandomValues(bytes)
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('')
 }
 
 export async function submitEntryToServer(
   name: string,
   contact: string,
   guessedColor: ColorData,
-  primerColor: ColorData
+  primerColor: ColorData,
+  existingEntryId?: string,
+  existingEditToken?: string
 ): Promise<SubmitResult> {
   try {
     // Encrypt PII
@@ -38,14 +48,38 @@ export async function submitEntryToServer(
       salt
     }
 
-    let { error } = await supabase.from('contest_entries').insert(entry)
+    if (existingEntryId && existingEditToken) {
+      // Update existing entry - must match both ID and edit token
+      let { error } = await supabase
+        .from('contest_entries')
+        .update(entry)
+        .eq('id', existingEntryId)
+        .eq('edit_token', existingEditToken)
 
-    if (error) {
-      console.error('Supabase insert error:', error)
-      return { success: false, error: error.message }
+      if (error) {
+        console.error('Supabase update error:', error)
+        return { success: false, error: error.message }
+      }
+
+      return { success: true, entryId: existingEntryId, editToken: existingEditToken }
+    } else {
+      // Insert new entry with edit token
+      let editToken = generateEditToken()
+      entry.edit_token = editToken
+
+      let { data, error } = await supabase
+        .from('contest_entries')
+        .insert(entry)
+        .select('id')
+        .single()
+
+      if (error) {
+        console.error('Supabase insert error:', error)
+        return { success: false, error: error.message }
+      }
+
+      return { success: true, entryId: data?.id, editToken }
     }
-
-    return { success: true }
   } catch (e) {
     console.error('Submit error:', e)
     return { success: false, error: String(e) }

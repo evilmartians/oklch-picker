@@ -31,7 +31,7 @@ body {
   height: 40px;
   margin: 0 0 12px;
   font: inherit;
-  font-size: 17.5px;
+  font-size: 1.375rem;
   font-weight: bold;
   line-height: 40px;
 }
@@ -181,7 +181,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
+  font-size: 1.1rem;
   font-weight: 500;
   color: var(--text-color);
 }
@@ -189,7 +189,7 @@ body {
 .contest_input {
   padding: 10px 12px;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 1rem;
   color: var(--text-color);
   background: var(--field-back);
   border: 2px solid oklch(0.7 0 0 / 40%);

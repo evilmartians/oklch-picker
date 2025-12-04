@@ -34,4 +34,5 @@ export interface DbContestEntryInsert {
   primer_color_h: number
   primer_color_alpha: number
   salt: string
+  edit_token?: string
 }

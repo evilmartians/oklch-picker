@@ -14,6 +14,7 @@
   left: 0;
   width: calc(var(--card-width) + 2 * var(--card-padding));
   height: 100%;
+  font-size: 1.375rem;
   cursor: grab;
   image-rendering: crisp-edges;
 

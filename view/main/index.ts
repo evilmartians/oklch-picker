@@ -1,6 +1,6 @@
 import { buildForCSS } from '../../lib/colors.ts'
 import { current, randomColor } from '../../stores/current.ts'
-import { primerColor, submitEntry, submitting } from '../../stores/contest.ts'
+import { clearCurrentEntry, primerColor, submitEntry, submitting } from '../../stores/contest.ts'
 
 const THRESHOLD = 100
 
@@ -90,6 +90,10 @@ let contestFormWrapper = document.querySelector<HTMLDivElement>('.contest-form-w
 let successModal = document.querySelector<HTMLDivElement>('#success-modal')
 let successDetails = document.querySelector<HTMLDivElement>('#success-details')
 let successDismiss = document.querySelector<HTMLButtonElement>('#success-dismiss')
+
+// Store submitted values for edit functionality
+let lastSubmittedName = ''
+let lastSubmittedContact = ''
 
 function updateButtonColor(): void {
   try {
@@ -182,6 +186,10 @@ if (submitBtn) {
         return
       }
 
+      // Store values for potential edit
+      lastSubmittedName = name
+      lastSubmittedContact = contact
+
       // Show full-screen success modal with submitted color as background
       if (successModal && successDetails) {
         let colorCSS = buildForCSS(guessedColorValue.l, guessedColorValue.c, guessedColorValue.h, 1)
@@ -192,10 +200,6 @@ if (submitBtn) {
         `
         successModal.classList.add('is-visible')
       }
-
-      // Clear the form inputs
-      if (nameInput) nameInput.value = ''
-      if (contactInput) contactInput.value = ''
     } catch (e) {
       console.error('Error submitting entry:', e)
       submitBtn.disabled = false
@@ -205,15 +209,36 @@ if (submitBtn) {
   })
 }
 
-// Dismiss button handler for success modal
+// Success modal button handlers
+let successEdit = document.querySelector<HTMLButtonElement>('#success-edit')
+
 if (successDismiss) {
   successDismiss.addEventListener('click', () => {
-    // Generate new random color for next person
+    // Clear form and generate new random color for next person
+    if (nameInput) nameInput.value = ''
+    if (contactInput) contactInput.value = ''
+    lastSubmittedName = ''
+    lastSubmittedContact = ''
+
+    // Clear the entry ID so next submission creates a new entry
+    clearCurrentEntry()
+
     let newRandomColor = randomColor()
     current.set(newRandomColor)
     primerColor.set(newRandomColor)
 
     // Hide the modal
+    successModal?.classList.remove('is-visible')
+  })
+}
+
+if (successEdit) {
+  successEdit.addEventListener('click', () => {
+    // Restore form values so they can edit and resubmit
+    if (nameInput) nameInput.value = lastSubmittedName
+    if (contactInput) contactInput.value = lastSubmittedContact
+
+    // Close modal - color is already preserved
     successModal?.classList.remove('is-visible')
   })
 }

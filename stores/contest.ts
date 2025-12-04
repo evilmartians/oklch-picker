@@ -61,6 +61,8 @@ export let primerColor = atom<AnyLch | null>(null)
 // Submission status
 export let submitting = atom<boolean>(false)
 export let submitError = atom<string | null>(null)
+export let currentEntryId = atom<string | null>(null)
+export let currentEditToken = atom<string | null>(null)
 
 // Admin state
 export let adminPassword = atom<string | null>(null)
@@ -89,11 +91,17 @@ export async function submitEntry(
     l: primerColorValue.l
   }
 
+  // Pass existing entry ID and token to update instead of create
+  let existingId = currentEntryId.get()
+  let existingToken = currentEditToken.get()
+
   let result = await submitEntryToServer(
     name.trim(),
     contact,
     guessedColorData,
-    primerColorData
+    primerColorData,
+    existingId ?? undefined,
+    existingToken ?? undefined
   )
 
   submitting.set(false)
@@ -103,7 +111,20 @@ export async function submitEntry(
     return false
   }
 
+  // Store the entry ID and edit token for potential updates
+  if (result.entryId) {
+    currentEntryId.set(result.entryId)
+  }
+  if (result.editToken) {
+    currentEditToken.set(result.editToken)
+  }
+
   return true
+}
+
+export function clearCurrentEntry(): void {
+  currentEntryId.set(null)
+  currentEditToken.set(null)
 }
 
 // Load entries from server (admin only)
