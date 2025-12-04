@@ -2,89 +2,11 @@ import { buildForCSS } from '../../lib/colors.ts'
 import { current, randomColor } from '../../stores/current.ts'
 import { clearCurrentEntry, primerColor, submitEntry, submitting } from '../../stores/contest.ts'
 
-const THRESHOLD = 100
-
-let main = document.querySelector<HTMLElement>('.main')!
-
-let expand = main.querySelector<HTMLButtonElement>('.main_expand')!
-
-let mobile = window.matchMedia('(max-width:830px)')
-
-let startY = 0
-
-// Start expanded on mobile for contest
-let isExpanded = expand.ariaExpanded === 'true' || mobile.matches
-
-function changeExpanded(shouldExpand = false): void {
-  if (shouldExpand === isExpanded) return
-
-  isExpanded = shouldExpand
-  expand.ariaExpanded = String(isExpanded)
-  document.body.classList.toggle('is-main-collapsed', !isExpanded)
-}
-
-function onTouchStart(event: TouchEvent): void {
-  startY = event.touches[0].clientY
-}
-
-function onTouchMove(event: TouchEvent): void {
-  event.preventDefault()
-  let endY = event.changedTouches[0].clientY
-  let diff = endY - startY
-  let allowPositive = isExpanded && diff > 0
-  let allowNegative = !isExpanded && diff < 0
-
-  if (allowPositive || allowNegative) {
-    main.style.setProperty('--touch-diff', `${diff}px`)
-  }
-}
-
-function onTouchEnd(event: TouchEvent): void {
-  let endY = event.changedTouches[0].clientY
-  let diff = startY - endY
-
-  main.style.removeProperty('--touch-diff')
-
-  if (Math.abs(diff) > THRESHOLD) {
-    changeExpanded(diff > 0)
-  }
-}
-
-function onScroll(): void {
-  changeExpanded(false)
-}
-
-function init(): void {
-  if (mobile.matches) {
-    // Removed scroll collapse - keep panel visible for contest use
-    // window.addEventListener('scroll', onScroll, { once: true })
-    main.addEventListener('touchstart', onTouchStart)
-    main.addEventListener('touchmove', onTouchMove)
-    main.addEventListener('touchend', onTouchEnd)
-  } else {
-    // window.removeEventListener('scroll', onScroll)
-    main.removeEventListener('touchstart', onTouchStart)
-    main.removeEventListener('touchmove', onTouchMove)
-    main.removeEventListener('touchend', onTouchEnd)
-  }
-}
-
-init()
-mobile.addEventListener('change', init)
-
-// Ensure panel starts expanded on mobile
-if (mobile.matches) {
-  changeExpanded(true)
-}
-
-expand.addEventListener('click', () => {
-  changeExpanded(!isExpanded)
-})
-
 let nameInput = document.querySelector<HTMLInputElement>('#contest-name')
 let contactInput = document.querySelector<HTMLInputElement>('#contest-contact')
 let submitBtn = document.querySelector<HTMLButtonElement>('#contest-submit-bottom')
 let contestFormWrapper = document.querySelector<HTMLDivElement>('.contest-form-wrapper')
+let bottomButtons = document.querySelector<HTMLDivElement>('.bottom-buttons')
 
 // Full-screen success modal elements
 let successModal = document.querySelector<HTMLDivElement>('#success-modal')
@@ -95,20 +17,30 @@ let successDismiss = document.querySelector<HTMLButtonElement>('#success-dismiss
 let lastSubmittedName = ''
 let lastSubmittedContact = ''
 
-function updateButtonColor(): void {
+function updateColors(): void {
   try {
+    let color = current.get()
+    let colorCSS = buildForCSS(color.l, color.c, color.h, 1)
+
+    // Update page background
+    document.body.style.setProperty('--current-color', colorCSS)
+
+    // Update submit button
     if (submitBtn) {
-      let color = current.get()
-      let colorCSS = buildForCSS(color.l, color.c, color.h, 1)
       submitBtn.style.setProperty('--current-color', colorCSS)
     }
+
+    // Update bottom buttons container for mobile
+    if (bottomButtons) {
+      bottomButtons.style.setProperty('--current-color', colorCSS)
+    }
   } catch (e) {
-    console.error('Error updating button color:', e)
+    console.error('Error updating colors:', e)
   }
 }
 
 current.subscribe(() => {
-  updateButtonColor()
+  updateColors()
 })
 
 // Check for saved state first, then set color
@@ -142,7 +74,7 @@ if (!hasRestoredColor) {
   primerColor.set(initialColor)
 }
 
-updateButtonColor()
+updateColors()
 
 // Start with form visible
 

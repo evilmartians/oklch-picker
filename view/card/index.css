@@ -15,7 +15,7 @@ body {
   position: relative;
   width: var(--card-width);
   padding: var(--card-top-padding) var(--card-padding) var(--card-padding);
-  background: var(--current-surface);
+  background: var(--surface-1);
   border-radius: 36px;
 
   @media (width <= 404px) {

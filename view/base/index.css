@@ -25,10 +25,11 @@ button {
 
 body {
   --current-surface: var(--surface-0);
+  --current-color: oklch(0.7 0.1 250);
 
   line-height: 16px;
   color: var(--text-primary);
-  background: var(--current-surface);
+  background: var(--current-color);
   -webkit-tap-highlight-color: oklch(0 0 0 / 0%);
 }
 

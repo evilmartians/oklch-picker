@@ -3,9 +3,15 @@ include ../field/mixin.pug
 include ../card/mixin.pug
 include ../link/mixin.pug
 
-h1.contest-page-title Guess the 2026 Pantone Color of the Year
-
 .layout
+  .layout_header
+    section.card.is-header
+      h1.contest-page-title Guess the 2026 Pantone Color of the Year
+      ol.contest-instructions
+        li Enter your name and contact info
+        li Use the Hue, Chroma, and Lightness sliders to set your color. Narrow screens will need to scroll down to see all 3 sliders.
+        li Use the buttons at the bottom to see previous years' colors and to submit your guess.
+
   .layout_entry
     section.card.is-entry
       h2.card_title My contact info
@@ -31,6 +37,7 @@ h1.contest-page-title Guess the 2026 Pantone Color of the Year
     +card('a')
 
 .bottom-buttons
+  h3.bottom-buttons-title Do you like your color?
   button.bottom-btn.see-past-btn#see-past-btn(type="button") See previous years' colors
   button.bottom-btn.submit-btn#contest-submit-bottom(type="button") Submit your guess for 2026
   button.bottom-btn.admin-btn#admin-button(type="button") This button is for Spice
