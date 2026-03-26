@@ -10,5 +10,5 @@ mixin field(label, hotkey, opts = {})
         select.field_select( aria-label=opts.optionsLabel )
           for value, key in opts.options
             option( value=key )= value
-        .field_button
+        .field_button( aria-hidden="true" )
           include ./down.svg
