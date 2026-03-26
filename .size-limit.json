@@ -14,12 +14,12 @@
     "name": "Base scripts to execute",
     "path": ["dist/*.js", "!dist/model-*.js"],
     "brotli": false,
-    "limit": "90 KB"
+    "limit": "95 KB"
   },
   {
     "name": "Scripts for 3D model",
     "path": "dist/model-*.js",
     "brotli": false,
-    "limit": "500 KB"
+    "limit": "535 KB"
   }
 ]

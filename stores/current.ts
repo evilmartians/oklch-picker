@@ -48,7 +48,7 @@ function parseHash(): LchValue | undefined {
   return undefined
 }
 
-export let current = map<LchValue>(parseHash() || randomColor())
+export let current = map(parseHash() || randomColor())
 
 interface ComponentCallback {
   (value: number, chartsToChange: number): void

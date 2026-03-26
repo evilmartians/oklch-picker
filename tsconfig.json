@@ -3,14 +3,15 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "erasableSyntaxOnly": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "allowJs": true,
-    "target": "es2018",
+    "target": "ES2024",
     "module": "esnext",
     "strict": true,
     "noEmit": true
   },
-  "include": ["**/*.ts", "**/*.js"]
+  "include": ["**/*.ts", "**/*.js"],
+  "exclude": ["dist/*"]
 }

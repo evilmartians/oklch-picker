@@ -6,8 +6,6 @@ import { redo, undo } from '../../stores/history.ts'
 import { loading } from '../../stores/loading.ts'
 import simpleLogo from './simple.svg?url'
 
-// The only way to detect Mac is using old API
-// eslint-disable-next-line @typescript-eslint/no-deprecated
 const IS_MAC = /Mac|iPod|iPhone|iPad/.test(window.navigator.platform)
 const REDO_HOTKEYS = IS_MAC ? ['meta+shift+z'] : ['ctrl+shift+z', 'ctrl+y']
 const UNDO_HOTKEYS = IS_MAC ? ['meta+z'] : ['ctrl+z']

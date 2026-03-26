@@ -15,7 +15,7 @@ import {
   Vector3,
   WebGLRenderer
 } from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 import { current, type LchValue } from '../stores/current.ts'
 import { biggestRgb, type RgbMode } from '../stores/settings.ts'

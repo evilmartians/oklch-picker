@@ -72,36 +72,33 @@ function cleanComponents<Obj extends object>(
 
 export type FormatsValue = Record<OutputFormats, string>
 
-export const srgbFormats = new Set<OutputFormats>([
+export let srgbFormats = new Set<OutputFormats>([
   'hex',
   'hex/rgba',
   'hsl',
   'rgb'
 ])
 
-export const formats = computed<FormatsValue, typeof current>(
-  current,
-  value => {
-    let color: AnyLch = valueToColor(value)
-    let rgbColor: Color = inRGB(color) ? color : toRgb(color)
-    let hex = formatHex(rgbColor)
-    let rgba = formatRgb(rgbColor)
-    let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
-    return {
-      'figmaP3': 'Figma P3 ' + serializeHex8(p3(color)),
-      'hex': hasAlpha ? formatHex8(rgbColor) : hex,
-      'hex/rgba': hasAlpha ? rgba : hex,
-      'hsl': formatCss(cleanComponents(hsl(rgbColor))),
-      'lab': formatCss(cleanComponents(lab(color))),
-      'lch': formatCss(cleanComponents(lch(color))),
-      'lrgb': 'Linear RGB ' + formatVec(lrgb(color)),
-      'numbers': toNumbers(color),
-      'oklab': formatOklab(oklab(color)),
-      'p3': formatCss(cleanComponents(p3(color), 4)),
-      'rgb': rgba
-    }
-  }
-)
+export let formats = computed(current, value => {
+  let color: AnyLch = valueToColor(value)
+  let rgbColor: Color = inRGB(color) ? color : toRgb(color)
+  let hex = formatHex(rgbColor)
+  let rgba = formatRgb(rgbColor)
+  let hasAlpha = typeof color.alpha !== 'undefined' && color.alpha < 1
+  return {
+    'figmaP3': 'Figma P3 ' + serializeHex8(p3(color)),
+    'hex': hasAlpha ? formatHex8(rgbColor) : hex,
+    'hex/rgba': hasAlpha ? rgba : hex,
+    'hsl': formatCss(cleanComponents(hsl(rgbColor))),
+    'lab': formatCss(cleanComponents(lab(color))),
+    'lch': formatCss(cleanComponents(lch(color))),
+    'lrgb': 'Linear RGB ' + formatVec(lrgb(color)),
+    'numbers': toNumbers(color),
+    'oklab': formatOklab(oklab(color)),
+    'p3': formatCss(cleanComponents(p3(color), 4)),
+    'rgb': rgba
+  } as FormatsValue
+})
 
 export const OUTPUT_FORMATS = Object.keys(formats.get())
 

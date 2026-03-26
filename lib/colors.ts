@@ -56,8 +56,8 @@ export function inRGB(color: Color): boolean {
     check.b <= 1 + COLOR_SPACE_GAP
   )
 }
-export const inP3 = inGamut('p3')
-export const inRec2020 = inGamut('rec2020')
+export let inP3 = inGamut('p3')
+export let inRec2020 = inGamut('rec2020')
 
 export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
   return { alpha, c, h, l, mode: COLOR_FN }
@@ -157,7 +157,7 @@ export type Space = number
 
 // Hack for enum without enum
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const Space = {
+export let Space = {
   Out: 3,
   P3: 1,
   Rec2020: 2,
