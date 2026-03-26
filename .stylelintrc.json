@@ -1,0 +1,17 @@
+{
+  "extends": "@logux/stylelint-config",
+  "ignoreFiles": ["**/*", "!**/*.css", "!**/*.pcss", "dist/**/*"],
+  "rules": {
+    "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla"],
+    "alpha-value-notation": "percentage",
+    "color-named": "never"
+  },
+  "overrides": [
+    {
+      "files": ["view/range/index.css"],
+      "rules": {
+        "nesting-selector-no-missing-scoping-root": null
+      }
+    }
+  ]
+}

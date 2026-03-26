@@ -14,7 +14,7 @@
     "build:lch": "LCH=1 vite build -m production && ./lch.sh",
     "test:types": "tsc --noEmit",
     "test:js": "eslint .",
-    "test:css": "stylelint **/*.css",
+    "test:css": "stylelint .",
     "test:build": "node --run build && size-limit && node --run build:lch",
     "test:unit": "bnt",
     "test": "FORCE_COLOR=1 pnpm run /^test:/"
@@ -26,6 +26,7 @@
     "culori": "^4.0.2",
     "delaunator": "^5.1.0",
     "jstransformer-markdown-it": "^3.0.0",
+    "lightningcss": "^1.32.0",
     "nanodelay": "^2.0.2",
     "nanostores": "^1.2.0",
     "plausible-client": "^2.0.0",

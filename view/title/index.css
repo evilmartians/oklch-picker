@@ -1,6 +1,6 @@
 .title {
-  padding-inline: 12px;
   position: relative;
+  padding-inline: 12px;
 }
 
 .title_text {
@@ -16,9 +16,9 @@
   right: 0;
   width: 48px;
   height: 48px;
-  transform: translateY(-50%);
-  border-radius: 50%;
   background: var(--surface-1);
+  border-radius: 50%;
+  transform: translateY(-50%);
 
   &:hover,
   &:focus-visible {

@@ -82,8 +82,8 @@ body {
 
   &:focus {
     text-decoration: none;
-    border-radius: 2px;
     outline-offset: 2px;
+    border-radius: 2px;
   }
 }
 
@@ -126,9 +126,9 @@ body {
   transform: scaleY(0);
   transform-origin: center top;
   animation-name: --main-blinking;
-  animation-play-state: paused;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  animation-play-state: paused;
 }
 
 .main_logo::before {

@@ -13,9 +13,9 @@
   cursor: pointer;
 
   .checkbox_input:focus + & {
-    border-radius: 20px;
     outline: var(--accent) solid 3px;
     outline-offset: 3px;
+    border-radius: 20px;
   }
 
   .checkbox_input:not(:focus-visible):focus + & {
@@ -57,8 +57,8 @@
   content: "";
   background: oklch(1 0 0);
   border-radius: 50%;
-  transition: transform 150ms;
   transform: translateX(0);
+  transition: transform 150ms;
 }
 
 .checkbox:has(.checkbox_input:checked) .checkbox_icon::after {
