@@ -1,6 +1,6 @@
 import loguxTsConfig from '@logux/eslint-config/ts'
+import type { Linter } from 'eslint'
 
-/** @type {import('eslint').Linter.Config[]} */
 export default [
   { ignores: ['dist/'] },
   ...loguxTsConfig,
@@ -22,4 +22,4 @@ export default [
       'n/no-unsupported-features/node-builtins': 'off'
     }
   }
-]
+] satisfies Linter.Config[]

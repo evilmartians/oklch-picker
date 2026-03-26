@@ -1,6 +1,6 @@
+import { Features } from 'lightningcss'
 import { defineConfig } from 'vite'
 import vitePluginPug from 'vite-plugin-pug-transformer'
-import { Features } from 'lightningcss'
 
 import config from './config.js'
 
