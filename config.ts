@@ -16,7 +16,9 @@ let config = {
 
   L_MAX: 1,
   L_MAX_COLOR: 1,
-  L_STEP: 0.01
+  L_STEP: 0.01,
+
+  LCH: false
 }
 
 if (process.env.LCH) {

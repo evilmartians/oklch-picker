@@ -1,4 +1,4 @@
-import './set-globals.js'
+import './set-globals.ts'
 
 import { deepStrictEqual } from 'node:assert'
 import { test } from 'node:test'

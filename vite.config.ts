@@ -2,7 +2,7 @@ import { Features } from 'lightningcss'
 import { defineConfig } from 'vite'
 import vitePluginPug from 'vite-plugin-pug-transformer'
 
-import config from './config.js'
+import config from './config.ts'
 
 let allFeatures = 0
 for (let feature in Features) {
