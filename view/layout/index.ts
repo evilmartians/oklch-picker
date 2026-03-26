@@ -7,7 +7,6 @@ let card3d = document.querySelector<HTMLDivElement>('.layout_3d')!
 
 show3d.subscribe(enabled => {
   card3d.classList.toggle('is-shown', enabled)
-  card3d.setAttribute('aria-hidden', (!enabled).toString())
 })
 
 url.subscribe(value => {
