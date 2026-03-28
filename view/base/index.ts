@@ -1,4 +1,5 @@
 import { formatLch } from '../../lib/colors.ts'
+import { isInput } from '../../lib/dom.ts'
 import { isHotkey } from '../../lib/hotkeys.ts'
 import { accent } from '../../stores/accent.ts'
 import { current, valueToColor } from '../../stores/current.ts'
@@ -28,12 +29,14 @@ document.body.addEventListener('mouseup', () => {
 })
 
 document.body.addEventListener('keydown', e => {
-  if (isHotkey(REDO_HOTKEYS, e)) {
-    e.preventDefault()
-    redo()
-  } else if (isHotkey(UNDO_HOTKEYS, e)) {
-    e.preventDefault()
-    undo()
+  if (!isInput(e.target)) {
+    if (isHotkey(REDO_HOTKEYS, e)) {
+      e.preventDefault()
+      redo()
+    } else if (isHotkey(UNDO_HOTKEYS, e)) {
+      e.preventDefault()
+      undo()
+    }
   }
 })
 

@@ -1,3 +1,4 @@
+import { isInput } from '../../lib/dom.ts'
 import { convertKey } from '../../lib/hotkeys.ts'
 
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
@@ -71,10 +72,6 @@ for (let field of fields) {
 
   let hotkey = field.querySelector('kbd')!.innerText.trim().toLowerCase()
   hotkeys[hotkey] = input
-}
-
-function isInput(el: EventTarget | null): el is HTMLInputElement {
-  return !!el && (el as Element).tagName === 'INPUT'
 }
 
 function findNextFocus(e: KeyboardEvent): HTMLElement | undefined {

@@ -15,3 +15,7 @@ export function getBorders(): [string, string] {
     styles.getPropertyValue('--border-rec2020') || '#fff'
   ]
 }
+
+export function isInput(el: EventTarget | null): el is HTMLInputElement {
+  return !!el && (el as Element).tagName === 'INPUT'
+}
