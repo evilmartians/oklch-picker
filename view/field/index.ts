@@ -38,11 +38,6 @@ export function toggleWarning(input: HTMLInputElement, toggle: boolean): void {
   input.classList.toggle('is-warning', toggle)
 }
 
-function onInput(e: Event): void {
-  let input = e.target as HTMLInputElement
-  input.removeEventListener('mouseup', onMouseUp)
-}
-
 // The hack to prevent loosing selected text on click
 function onMouseUp(e: MouseEvent): void {
   e.preventDefault()
@@ -185,8 +180,8 @@ function useSpinButton(input: HTMLInputElement): void {
     decrease.removeEventListener('mouseleave', onDispose)
   }
 
-  function onFieldInput(e: Event): void {
-    onInput(e)
+  function onInput(e: Event): void {
+    input.removeEventListener('mouseup', onMouseUp)
 
     if (e instanceof InputEvent) {
       let value = input.value
@@ -207,6 +202,6 @@ function useSpinButton(input: HTMLInputElement): void {
   decrease.addEventListener('mousedown', onPressed)
 
   input.addEventListener('keydown', onKeyPressed)
-  input.addEventListener('input', onFieldInput)
+  input.addEventListener('input', onInput)
   input.addEventListener('blur', onDispose)
 }
