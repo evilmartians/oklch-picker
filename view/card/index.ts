@@ -2,7 +2,7 @@ import { clean } from '../../lib/colors.ts'
 import { computeExpression, cycleByWheel, parseValue } from '../../lib/math.ts'
 import { current, onCurrentChange } from '../../stores/current.ts'
 import { showCharts, showRec2020 } from '../../stores/settings.ts'
-import type { SpinEvent } from '../field/index.ts'
+import { setInvalid, type SpinEvent } from '../field/index.ts'
 
 interface MetaSpinInput {
   max: number
@@ -41,10 +41,21 @@ function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
     let { max, min } = getInputMeta(text)
 
     let computedExpression = computeExpression(text.value)
+
+    if (Number.isNaN(computedExpression)) {
+      setInvalid(text, 'Invalid expression')
+      return
+    }
+
+    let prevValue = current.get()[type]
     let angleInRange = bindedClamp(computedExpression, { max, min })
 
     current.setKey(type, angleInRange)
     text.setAttribute('aria-valuenow', String(angleInRange))
+
+    if (angleInRange === prevValue && text.value !== String(angleInRange)) {
+      text.value = String(angleInRange)
+    }
   })
 
   text.addEventListener('spin', (e: SpinEvent) => {

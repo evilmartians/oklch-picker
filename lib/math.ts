@@ -25,8 +25,16 @@ export function parseValue(n: number | string): number {
   return isNaN(parsedValue) ? 0 : parsedValue
 }
 
+function trimTrailingOperators(str: string): string {
+  while (OPERATORS_PATTERN.test(str.charAt(str.length - 1))) {
+    str = str.slice(0, -1)
+  }
+
+  return str
+}
+
 function checkPriority(a: Operator, b: Operator): boolean {
-  return OPERATORS[a] <= OPERATORS[b]
+  return OPERATORS[a] >= OPERATORS[b]
 }
 
 function toPostfix(str: string): string[] {
@@ -42,10 +50,11 @@ function toPostfix(str: string): string[] {
         continue
       }
 
-      let topElement = stack[stack.length - 1] as Operator
       let currentPicked = current as Operator
 
-      while (stack.length > 0 && checkPriority(topElement, currentPicked)) {
+      while (stack.length > 0) {
+        let topElement = stack[stack.length - 1] as Operator
+        if (!checkPriority(topElement, currentPicked)) break
         result.push(stack.pop()!)
       }
       stack.push(current)
@@ -69,6 +78,7 @@ function toPostfix(str: string): string[] {
 }
 
 export function computeExpression(str: string): number {
+  str = trimTrailingOperators(str.replace(/\s+/g, ''))
   let firstCh = str.charAt(0)
 
   if (!OPERATORS_PATTERN.test(str) || OPERATORS_PATTERN.test(firstCh)) {
