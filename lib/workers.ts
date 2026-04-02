@@ -75,7 +75,7 @@ export function prepareWorkers<
           startPending(lastPending.get(type) ?? anyValue(lastPending))
           onFinal()
         }
-      })
+      }, { once: true })
       worker.postMessage(messages[i])
     }
   }
