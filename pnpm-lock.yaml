@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@colordx/core':
+        specifier: ^5.0.2
+        version: 5.0.2
       '@csstools/postcss-oklab-function':
         specifier: ^5.0.2
         version: 5.0.2(postcss@8.5.8)
@@ -149,6 +152,9 @@ packages:
 
   '@cacheable/utils@2.4.1':
     resolution: {integrity: sha512-eiFgzCbIneyMlLOmNG4g9xzF7Hv3Mga4LjxjcSC/ues6VYq2+gUbQI8JqNuw/ZM8tJIeIaBGpswAsqV2V7ApgA==}
+
+  '@colordx/core@5.0.2':
+    resolution: {integrity: sha512-rQAOi9QmDymEbs021rstydG9qaskMVnf4f8fY37dWbsrdyWJ+yYSJmXYILrtZNJulIu5ju5M9jsQRde9LRNBSw==}
 
   '@csstools/color-helpers@6.0.2':
     resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
@@ -1732,6 +1738,8 @@ snapshots:
     dependencies:
       hashery: 1.5.1
       keyv: 5.6.0
+
+  '@colordx/core@5.0.2': {}
 
   '@csstools/color-helpers@6.0.2': {}
 
