@@ -18,7 +18,7 @@ export function prepareWorkers<
   TaskData extends object,
   ResultData extends object
 >(WorkerClass: ViteWorker): StartWork<TaskData, ResultData> {
-  let available = new Array<ViteWorker>(TOTAL_WORKERS)
+  let available = Array.from<ViteWorker>({ length: TOTAL_WORKERS })
   for (let i = 0; i < available.length; i++) {
     available[i] = new WorkerClass()
   }
@@ -65,7 +65,7 @@ export function prepareWorkers<
     let messages = prepare(Array(workers.length).fill(undefined) as undefined[])
 
     for (let [i, worker] of workers.entries()) {
-      worker.onmessage = (e: MessageEvent<ResultData>) => {
+      worker.addEventListener('message', (e: MessageEvent<ResultData>) => {
         onResult(e.data)
         available.push(worker)
 
@@ -75,7 +75,7 @@ export function prepareWorkers<
           startPending(lastPending.get(type) ?? anyValue(lastPending))
           onFinal()
         }
-      }
+      })
       worker.postMessage(messages[i])
     }
   }

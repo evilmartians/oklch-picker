@@ -46,7 +46,7 @@ body {
 .chart_line::after {
   position: absolute;
   z-index: 2;
-  content: "";
+  content: '';
   background: var(--surface-1);
   mix-blend-mode: difference;
   opacity: 40%;

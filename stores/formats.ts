@@ -54,19 +54,19 @@ function cleanComponents<Obj extends object>(
   color: Obj,
   precision?: number
 ): Obj {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   let result: any = {}
   for (let key in color) {
     let value = color[key]
     if (typeof value === 'number' && key !== 'alpha') {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // oxlint-disable-next-line typescript/no-unsafe-member-access
       result[key] = clean(value, precision)
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // oxlint-disable-next-line typescript/no-unsafe-member-access
       result[key] = color[key]
     }
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  // oxlint-disable-next-line typescript/no-unsafe-return
   return result
 }
 

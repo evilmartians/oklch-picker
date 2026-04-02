@@ -156,7 +156,7 @@ export function isHexNotation(value: string): boolean {
 export type Space = number
 
 // Hack for enum without enum
-// eslint-disable-next-line @typescript-eslint/no-redeclare
+// oxlint-disable-next-line typescript/no-redeclare
 export let Space = {
   Out: 3,
   P3: 1,

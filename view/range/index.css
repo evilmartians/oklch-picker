@@ -18,7 +18,7 @@ body {
 .range.is-a::before {
   position: absolute;
   inset: 0;
-  content: "";
+  content: '';
   background: linear-gradient(to right, var(--range-a-from), var(--range-a-to));
   border-radius: var(--radius);
 }
@@ -41,11 +41,11 @@ body {
   background:
     linear-gradient(var(--range-color), var(--range-color)),
     repeating-conic-gradient(
-      from 45deg,
-      var(--chess) 0% 25%,
-      var(--surface-1) 0% 50%
-    )
-    50% / 5.5px 5.5px;
+        from 45deg,
+        var(--chess) 0% 25%,
+        var(--surface-1) 0% 50%
+      )
+      50% / 5.5px 5.5px;
   border: 4px solid oklch(1 0 0);
   border-radius: 1px;
   border-radius: 0;

@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export function debounce<Args extends any[]>(
   wait: number,
   callback: (...args: Args) => void

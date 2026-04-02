@@ -37,7 +37,7 @@
 .checkbox_icon::before {
   position: absolute;
   inset: 0;
-  content: "";
+  content: '';
   background: var(--accent);
   border-radius: 16px;
   opacity: 0%;
@@ -54,7 +54,7 @@
   left: 2px;
   width: 28px;
   height: 28px;
-  content: "";
+  content: '';
   background: oklch(1 0 0);
   border-radius: 50%;
   transform: translateX(0);

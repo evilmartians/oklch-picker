@@ -8,7 +8,7 @@ const FLOAT_POINT_ERROR = 1e-10
 function computes(input: string, expected: number): void {
   let actual = computeExpression(input)
 
-  if (Math.abs(actual - expected) < FLOAT_POINT_ERROR) return;
+  if (Math.abs(actual - expected) < FLOAT_POINT_ERROR) return
 
   throw new AssertionError({
     actual,

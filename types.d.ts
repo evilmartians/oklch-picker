@@ -2,7 +2,7 @@ declare function postMessage(message: object, transfer?: Transferable[]): void
 
 interface ViteWorker extends Worker {
   // Type hacks can be messy
-  // eslint-disable-next-line @typescript-eslint/no-misused-new
+  // oxlint-disable-next-line typescript/no-misused-new
   new (): ViteWorker
 }
 

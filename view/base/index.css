@@ -1,18 +1,20 @@
-@import url("./reset.css");
-@import url("./colors.css");
+@import url('./reset.css');
+@import url('./colors.css');
 
 @font-face {
-  font-family: "Martian Mono";
+  font-family: 'Martian Mono';
   font-weight: 100 800;
   font-stretch: 75% 112.5%;
-  src: url(./MartianMono-1.0.0.woff2) format("woff2");
+  src: url(./MartianMono-1.0.0.woff2) format('woff2');
   font-display: swap;
 }
 
 :root {
   --radius: 12px;
-  --opacity-pattern:
-    repeating-conic-gradient(var(--chess) 0% 25%, var(--surface-1) 0% 50%)
+  --opacity-pattern: repeating-conic-gradient(
+      var(--chess) 0% 25%,
+      var(--surface-1) 0% 50%
+    )
     50% / 8px 8px;
   --unavailable-border: 1px dashed oklch(0.6 0.05 310 / 40%);
 }
@@ -20,7 +22,7 @@
 body,
 kbd,
 button {
-  font-family: "Martian Mono", monospace;
+  font-family: 'Martian Mono', monospace;
   font-size: 15px;
   font-stretch: 112.5%;
 }
@@ -53,7 +55,9 @@ select {
 }
 
 body.is-loading * {
-  &, &::before, &::after {
+  &,
+  &::before,
+  &::after {
     transition: none !important;
     animation-duration: 0.001s !important;
   }

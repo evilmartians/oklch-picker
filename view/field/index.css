@@ -16,7 +16,7 @@
   border: none;
   border-radius: var(--radius);
 
-  &[role="spinbutton"] {
+  &[role='spinbutton'] {
     padding-inline-end: 23px;
     text-align: right;
   }
@@ -65,7 +65,7 @@
   width: 12px;
   height: 12px;
   margin-left: -6px;
-  content: "";
+  content: '';
   background: var(--surface-1);
   border-radius: 0 0 6px 6px;
 
@@ -81,7 +81,7 @@
   width: 6px;
   height: 6px;
   margin-left: -3px;
-  content: "";
+  content: '';
   background: url(./decrease.svg);
 
   @media (prefers-color-scheme: dark) {
