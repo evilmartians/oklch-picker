@@ -298,13 +298,13 @@ export function generateGetPixel(
       return (x, y) => {
         let color = getColor(x, y)
         oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
-        let lr = LIN_BUF[0]!
-        let lg = LIN_BUF[1]!
-        let lb = LIN_BUF[2]!
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
         linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-        let pr = P3_BUF[0]!
-        let pg = P3_BUF[1]!
-        let pb = P3_BUF[2]!
+        let pr = P3_BUF[0]
+        let pg = P3_BUF[1]
+        let pb = P3_BUF[2]
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * pr),
@@ -317,7 +317,7 @@ export function generateGetPixel(
           pixel[0] = Space.P3
         } else {
           linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0]!, REC_BUF[1]!, REC_BUF[2]!)) {
+          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
             pixel[0] = Space.Rec2020
           }
         }
@@ -333,24 +333,24 @@ export function generateGetPixel(
           color.c,
           color.h ?? 0
         )
-        let lr = LIN_BUF[0]!
-        let lg = LIN_BUF[1]!
-        let lb = LIN_BUF[2]!
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
         let pixel: Pixel = [
           Space.Out,
-          Math.floor(255 * SRGB_BUF[0]!),
-          Math.floor(255 * SRGB_BUF[1]!),
-          Math.floor(255 * SRGB_BUF[2]!)
+          Math.floor(255 * SRGB_BUF[0]),
+          Math.floor(255 * SRGB_BUF[1]),
+          Math.floor(255 * SRGB_BUF[2])
         ]
         if (inGamutEps(lr, lg, lb)) {
           pixel[0] = Space.sRGB
         } else {
           linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-          if (inGamutEps(P3_BUF[0]!, P3_BUF[1]!, P3_BUF[2]!)) {
+          if (inGamutEps(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
             pixel[0] = Space.P3
           } else {
             linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-            if (inGamutEps(REC_BUF[0]!, REC_BUF[1]!, REC_BUF[2]!)) {
+            if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
               pixel[0] = Space.Rec2020
             }
           }
@@ -363,13 +363,13 @@ export function generateGetPixel(
       return (x, y) => {
         let color = getColor(x, y)
         oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
-        let lr = LIN_BUF[0]!
-        let lg = LIN_BUF[1]!
-        let lb = LIN_BUF[2]!
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
         linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-        let pr = P3_BUF[0]!
-        let pg = P3_BUF[1]!
-        let pb = P3_BUF[2]!
+        let pr = P3_BUF[0]
+        let pg = P3_BUF[1]
+        let pb = P3_BUF[2]
         let pixel: Pixel = [
           Space.Out,
           Math.floor(255 * pr),
@@ -393,20 +393,20 @@ export function generateGetPixel(
           color.c,
           color.h ?? 0
         )
-        let lr = LIN_BUF[0]!
-        let lg = LIN_BUF[1]!
-        let lb = LIN_BUF[2]!
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
         let pixel: Pixel = [
           Space.Out,
-          Math.floor(255 * SRGB_BUF[0]!),
-          Math.floor(255 * SRGB_BUF[1]!),
-          Math.floor(255 * SRGB_BUF[2]!)
+          Math.floor(255 * SRGB_BUF[0]),
+          Math.floor(255 * SRGB_BUF[1]),
+          Math.floor(255 * SRGB_BUF[2])
         ]
         if (inGamutEps(lr, lg, lb)) {
           pixel[0] = Space.sRGB
         } else {
           linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-          if (inGamutEps(P3_BUF[0]!, P3_BUF[1]!, P3_BUF[2]!)) {
+          if (inGamutEps(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
             pixel[0] = Space.P3
           }
         }
@@ -418,21 +418,21 @@ export function generateGetPixel(
       return (x, y) => {
         let color = getColor(x, y)
         oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
-        let lr = LIN_BUF[0]!
-        let lg = LIN_BUF[1]!
-        let lb = LIN_BUF[2]!
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
         linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
         let pixel: Pixel = [
           Space.Out,
-          Math.floor(255 * P3_BUF[0]!),
-          Math.floor(255 * P3_BUF[1]!),
-          Math.floor(255 * P3_BUF[2]!)
+          Math.floor(255 * P3_BUF[0]),
+          Math.floor(255 * P3_BUF[1]),
+          Math.floor(255 * P3_BUF[2])
         ]
         if (inGamutEps(lr, lg, lb)) {
           pixel[0] = Space.sRGB
         } else {
           linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0]!, REC_BUF[1]!, REC_BUF[2]!)) {
+          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
             pixel[0] = Space.Rec2020
           }
         }
@@ -448,20 +448,20 @@ export function generateGetPixel(
           color.c,
           color.h ?? 0
         )
-        let lr = LIN_BUF[0]!
-        let lg = LIN_BUF[1]!
-        let lb = LIN_BUF[2]!
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
         let pixel: Pixel = [
           Space.Out,
-          Math.floor(255 * SRGB_BUF[0]!),
-          Math.floor(255 * SRGB_BUF[1]!),
-          Math.floor(255 * SRGB_BUF[2]!)
+          Math.floor(255 * SRGB_BUF[0]),
+          Math.floor(255 * SRGB_BUF[1]),
+          Math.floor(255 * SRGB_BUF[2])
         ]
         if (inGamutEps(lr, lg, lb)) {
           pixel[0] = Space.sRGB
         } else {
           linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0]!, REC_BUF[1]!, REC_BUF[2]!)) {
+          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
             pixel[0] = Space.Rec2020
           }
         }
@@ -472,15 +472,15 @@ export function generateGetPixel(
     return (x, y) => {
       let color = getColor(x, y)
       oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
-      let lr = LIN_BUF[0]!
-      let lg = LIN_BUF[1]!
-      let lb = LIN_BUF[2]!
+      let lr = LIN_BUF[0]
+      let lg = LIN_BUF[1]
+      let lb = LIN_BUF[2]
       linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
       let pixel: Pixel = [
         Space.Out,
-        Math.floor(255 * P3_BUF[0]!),
-        Math.floor(255 * P3_BUF[1]!),
-        Math.floor(255 * P3_BUF[2]!)
+        Math.floor(255 * P3_BUF[0]),
+        Math.floor(255 * P3_BUF[1]),
+        Math.floor(255 * P3_BUF[2])
       ]
       if (inGamutEps(lr, lg, lb)) {
         pixel[0] = Space.sRGB
@@ -491,9 +491,9 @@ export function generateGetPixel(
     return (x, y) => {
       let color = getColor(x, y)
       oklchToRgbChannelsInto(SRGB_BUF, color.l, color.c, color.h ?? 0)
-      let sr = SRGB_BUF[0]!
-      let sg = SRGB_BUF[1]!
-      let sb = SRGB_BUF[2]!
+      let sr = SRGB_BUF[0]
+      let sg = SRGB_BUF[1]
+      let sb = SRGB_BUF[2]
       let pixel: Pixel = [
         Space.Out,
         Math.floor(255 * sr),
