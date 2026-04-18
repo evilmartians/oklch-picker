@@ -2,6 +2,12 @@ import { ok } from 'node:assert'
 import { test } from 'node:test'
 
 import {
+  oklchToLinear,
+  oklchToRgbChannels
+} from '@colordx/core'
+import { linearToP3Channels } from '@colordx/core/plugins/p3'
+import { linearToRec2020Channels } from '@colordx/core/plugins/rec2020'
+import {
   modeLrgb,
   modeOklch,
   modeP3,
@@ -9,12 +15,6 @@ import {
   modeRgb,
   useMode
 } from 'culori/fn'
-import {
-  oklchToLinear,
-  oklchToRgbChannels
-} from '@colordx/core'
-import { linearToP3Channels } from '@colordx/core/plugins/p3'
-import { linearToRec2020Channels } from '@colordx/core/plugins/rec2020'
 
 let toRgb = useMode(modeRgb)
 let toLrgb = useMode(modeLrgb)
@@ -34,27 +34,31 @@ const CASES: [l: number, c: number, h: number][] = [
 ]
 
 // Actual max diff between colordx and culori is ~1e-8 (floating-point noise only)
-function close(a: number, b: number): boolean {
-  return Math.abs(a - b) <= 1e-6
+function close(
+  actual: [number, number, number],
+  ref: { b: number, g: number, r: number },
+  label: string
+): void {
+  let [r, g, b] = actual
+  let eps = 1e-6
+  ok(Math.abs(r - ref.r) <= eps, `R mismatch at ${label}: colordx=${r} culori=${ref.r}`)
+  ok(Math.abs(g - ref.g) <= eps, `G mismatch at ${label}: colordx=${g} culori=${ref.g}`)
+  ok(Math.abs(b - ref.b) <= eps, `B mismatch at ${label}: colordx=${b} culori=${ref.b}`)
 }
 
 test('oklchToRgbChannels matches culori rgb conversion', () => {
   for (let [l, c, h] of CASES) {
     let [r, g, b] = oklchToRgbChannels(l, c, h)
-    let ref = toRgb({ mode: 'oklch', l, c, h })
-    ok(close(r, ref.r), `R mismatch at L=${l} C=${c} H=${h}: colordx=${r} culori=${ref.r}`)
-    ok(close(g, ref.g), `G mismatch at L=${l} C=${c} H=${h}: colordx=${g} culori=${ref.g}`)
-    ok(close(b, ref.b), `B mismatch at L=${l} C=${c} H=${h}: colordx=${b} culori=${ref.b}`)
+    let ref = toRgb({ c, h, l, mode: 'oklch' })
+    close([r, g, b], ref, `L=${l} C=${c} H=${h}`)
   }
 })
 
 test('oklchToLinear matches culori linear sRGB conversion', () => {
   for (let [l, c, h] of CASES) {
     let [lr, lg, lb] = oklchToLinear(l, c, h)
-    let ref = toLrgb({ mode: 'oklch', l, c, h })
-    ok(close(lr, ref.r), `R mismatch at L=${l} C=${c} H=${h}: colordx=${lr} culori=${ref.r}`)
-    ok(close(lg, ref.g), `G mismatch at L=${l} C=${c} H=${h}: colordx=${lg} culori=${ref.g}`)
-    ok(close(lb, ref.b), `B mismatch at L=${l} C=${c} H=${h}: colordx=${lb} culori=${ref.b}`)
+    let ref = toLrgb({ c, h, l, mode: 'oklch' })
+    close([lr, lg, lb], ref, `L=${l} C=${c} H=${h}`)
   }
 })
 
@@ -62,10 +66,8 @@ test('linearToP3Channels matches culori P3 conversion', () => {
   for (let [l, c, h] of CASES) {
     let [lr, lg, lb] = oklchToLinear(l, c, h)
     let [pr, pg, pb] = linearToP3Channels(lr, lg, lb)
-    let ref = toP3({ mode: 'lrgb', r: lr, g: lg, b: lb })
-    ok(close(pr, ref.r), `R mismatch at L=${l} C=${c} H=${h}: colordx=${pr} culori=${ref.r}`)
-    ok(close(pg, ref.g), `G mismatch at L=${l} C=${c} H=${h}: colordx=${pg} culori=${ref.g}`)
-    ok(close(pb, ref.b), `B mismatch at L=${l} C=${c} H=${h}: colordx=${pb} culori=${ref.b}`)
+    let ref = toP3({ b: lb, g: lg, mode: 'lrgb', r: lr })
+    close([pr, pg, pb], ref, `L=${l} C=${c} H=${h}`)
   }
 })
 
@@ -73,9 +75,7 @@ test('linearToRec2020Channels matches culori Rec2020 conversion', () => {
   for (let [l, c, h] of CASES) {
     let [lr, lg, lb] = oklchToLinear(l, c, h)
     let [rr, rg, rb] = linearToRec2020Channels(lr, lg, lb)
-    let ref = toRec2020({ mode: 'lrgb', r: lr, g: lg, b: lb })
-    ok(close(rr, ref.r), `R mismatch at L=${l} C=${c} H=${h}: colordx=${rr} culori=${ref.r}`)
-    ok(close(rg, ref.g), `G mismatch at L=${l} C=${c} H=${h}: colordx=${rg} culori=${ref.g}`)
-    ok(close(rb, ref.b), `B mismatch at L=${l} C=${c} H=${h}: colordx=${rb} culori=${ref.b}`)
+    let ref = toRec2020({ b: lb, g: lg, mode: 'lrgb', r: lr })
+    close([rr, rg, rb], ref, `L=${l} C=${c} H=${h}`)
   }
 })
