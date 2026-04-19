@@ -10,6 +10,16 @@ interface StartWork<TaskData extends object, ResultData extends object> {
 
 const TOTAL_WORKERS = navigator.hardwareConcurrency
 
+let pendingWorkers = 0
+let idleResolvers: (() => void)[] = []
+
+export function waitForWorkersIdle(): Promise<void> {
+  if (pendingWorkers === 0) return Promise.resolve()
+  return new Promise<void>(resolve => {
+    idleResolvers.push(resolve)
+  })
+}
+
 function anyValue<V>(map: Map<string, V>): undefined | V {
   return map.values().next().value
 }
@@ -70,12 +80,20 @@ export function prepareWorkers<
         available.push(worker)
 
         finished += 1
+        pendingWorkers -= 1
+        if (pendingWorkers === 0 && idleResolvers.length > 0) {
+          let toResolve = idleResolvers
+          idleResolvers = []
+          for (let resolve of toResolve) resolve()
+        }
+
         if (finished === started) {
           busy.delete(type)
           startPending(lastPending.get(type) ?? anyValue(lastPending))
           onFinal()
         }
       }, { once: true })
+      pendingWorkers += 1
       worker.postMessage(messages[i])
     }
   }
