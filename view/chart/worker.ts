@@ -22,7 +22,7 @@ export type PaintedData = {
 }
 
 onmessage = (e: MessageEvent<PaintData>) => {
-  let start = Date.now()
+  let start = performance.now()
 
   let image: ImageData
   if (e.data.type === 'l') {
@@ -66,7 +66,7 @@ onmessage = (e: MessageEvent<PaintData>) => {
   let message: PaintedData = {
     from: e.data.from,
     pixels: image.data.buffer,
-    time: Date.now() - start,
+    time: performance.now() - start,
     width: image.width
   }
   postMessage(message, [image.data.buffer])

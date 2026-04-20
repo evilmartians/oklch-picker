@@ -20,7 +20,54 @@
 
 .benchmark_value {
   display: inline-block;
-  min-width: 37px;
+  min-width: 52px;
   font-weight: 400;
+  font-variant-numeric: tabular-nums;
   text-align: right;
 }
+
+.benchmark_batch {
+  padding-top: 10px;
+  margin-top: 10px;
+  border-top: 1px solid oklch(1 0 0 / 30%);
+}
+
+.benchmark_run {
+  padding: 2px 8px;
+  font: inherit;
+  color: inherit;
+  background: oklch(1 0 0 / 15%);
+  border: 1px solid oklch(1 0 0 / 40%);
+}
+
+.benchmark_status {
+  margin-left: 8px;
+}
+
+.benchmark_table {
+  margin-top: 8px;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.benchmark_table th,
+.benchmark_table td {
+  padding: 2px 0 2px 10px;
+  text-align: right;
+}
+
+.benchmark_table tbody th {
+  text-align: left;
+}
+
+.benchmark_table tbody td {
+  font-weight: 400;
+}
+
+.benchmark_table th:first-child,
+.benchmark_table td:first-child {
+  padding-left: 0;
+}
+
+.benchmark_table th:nth-child(1) { width: 110px; }
+.benchmark_table th:nth-child(n+2) { width: 56px; }
