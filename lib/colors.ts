@@ -50,6 +50,7 @@ export let lrgb = useMode(modeLrgb)
 export let p3 = useMode(modeP3)
 
 const COLOR_SPACE_GAP = 0.0001
+const RENDER_GAP = 1e-7
 
 // Dirty fix of https://github.com/Evercoder/culori/issues/249
 export function inRGB(color: Color): boolean {
@@ -249,12 +250,12 @@ export interface GetColor {
 
 function inGamutEps(r: number, g: number, b: number): boolean {
   return (
-    r >= -COLOR_SPACE_GAP &&
-    r <= 1 + COLOR_SPACE_GAP &&
-    g >= -COLOR_SPACE_GAP &&
-    g <= 1 + COLOR_SPACE_GAP &&
-    b >= -COLOR_SPACE_GAP &&
-    b <= 1 + COLOR_SPACE_GAP
+    r >= -RENDER_GAP &&
+    r <= 1 + RENDER_GAP &&
+    g >= -RENDER_GAP &&
+    g <= 1 + RENDER_GAP &&
+    b >= -RENDER_GAP &&
+    b <= 1 + RENDER_GAP
   )
 }
 
