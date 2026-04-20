@@ -9,7 +9,7 @@
     padding: 8px 10px;
     font-size: 12px;
     font-weight: 200;
-    color: oklch(1 0 0);
+    color: var(--popup-text);
     background: var(--benchmark-color);
   }
 }
@@ -29,15 +29,22 @@
 .benchmark_batch {
   padding-top: 10px;
   margin-top: 10px;
-  border-top: 1px solid oklch(1 0 0 / 30%);
+  border-top: 1px solid var(--popup-button);
 }
 
 .benchmark_run {
-  padding: 2px 8px;
+  padding: 6px 10px;
   font: inherit;
+  font-weight: 400;
   color: inherit;
-  background: oklch(1 0 0 / 15%);
-  border: 1px solid oklch(1 0 0 / 40%);
+  background: var(--popup-button);
+  border: none;
+  border-radius: 8px;
+
+  &:hover {
+    color: var(--benchmark-color);
+    background: var(--popup-text);
+  }
 }
 
 .benchmark_status {
@@ -45,9 +52,12 @@
 }
 
 .benchmark_table {
-  margin-top: 8px;
   table-layout: fixed;
   border-collapse: collapse;
+}
+
+.benchmark_table th {
+  font-weight: 200;
 }
 
 .benchmark_table th,
@@ -69,5 +79,10 @@
   padding-left: 0;
 }
 
-.benchmark_table th:nth-child(1) { width: 110px; }
-.benchmark_table th:nth-child(n+2) { width: 56px; }
+.benchmark_table th:nth-child(1) {
+  width: 110px;
+}
+
+.benchmark_table th:nth-child(n + 2) {
+  width: 56px;
+}
