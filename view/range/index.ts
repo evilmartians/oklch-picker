@@ -11,6 +11,7 @@ import {
 import { getBorders } from '../../lib/dom.ts'
 import {
   current,
+  type LchValue,
   onCurrentChange,
   onPaint,
   valueToColor
@@ -142,43 +143,75 @@ onCurrentChange({
   }
 })
 
+function paintChStrip(value: LchValue): void {
+  let color = valueToColor(value)
+  let c = color.c
+  let h = color.h ?? 0
+  let [width, height] = initCanvasSize(canvasL)
+  let factor = L_MAX_COLOR / width
+  setList(
+    listL,
+    paint(canvasL, 'l', width, height, parseFloat(inputL.step), x => {
+      return build(x * factor, c, h)
+    })
+  )
+}
+
+function paintLcStrip(value: LchValue): void {
+  let { c, l } = valueToColor(value)
+  let [width, height] = initCanvasSize(canvasH)
+  let factor = H_MAX / width
+  setList(
+    listH,
+    paint(canvasH, 'h', width, height, parseFloat(inputH.step), x => {
+      return build(l, c, x * factor)
+    })
+  )
+}
+
+function paintLhStrip(value: LchValue): void {
+  let color = valueToColor(value)
+  let l = color.l
+  let h = color.h ?? 0
+  let [width, height] = initCanvasSize(canvasC)
+  let factor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / width
+  setList(
+    listC,
+    paint(canvasC, 'c', width, height, parseFloat(inputC.step), x => {
+      return build(l, x * factor, h)
+    })
+  )
+}
+
+let pending: { ch?: LchValue; lc?: LchValue; lh?: LchValue } = {}
+let rafScheduled = false
+
+function scheduleStripPaint(
+  key: 'ch' | 'lc' | 'lh',
+  value: LchValue
+): void {
+  pending[key] = value
+  if (rafScheduled) return
+  rafScheduled = true
+  requestAnimationFrame(() => {
+    rafScheduled = false
+    let batch = pending
+    pending = {}
+    if (batch.ch) paintChStrip(batch.ch)
+    if (batch.lc) paintLcStrip(batch.lc)
+    if (batch.lh) paintLhStrip(batch.lh)
+  })
+}
+
 onPaint({
   ch(value) {
-    let color = valueToColor(value)
-    let c = color.c
-    let h = color.h ?? 0
-    let [width, height] = initCanvasSize(canvasL)
-    let factor = L_MAX_COLOR / width
-    setList(
-      listL,
-      paint(canvasL, 'l', width, height, parseFloat(inputL.step), x => {
-        return build(x * factor, c, h)
-      })
-    )
+    scheduleStripPaint('ch', value)
   },
   lc(value) {
-    let { c, l } = valueToColor(value)
-    let [width, height] = initCanvasSize(canvasH)
-    let factor = H_MAX / width
-    setList(
-      listH,
-      paint(canvasH, 'h', width, height, parseFloat(inputH.step), x => {
-        return build(l, c, x * factor)
-      })
-    )
+    scheduleStripPaint('lc', value)
   },
   lh(value) {
-    let color = valueToColor(value)
-    let l = color.l
-    let h = color.h ?? 0
-    let [width, height] = initCanvasSize(canvasC)
-    let factor = (showRec2020.get() ? C_MAX_REC2020 : C_MAX) / width
-    setList(
-      listC,
-      paint(canvasC, 'c', width, height, parseFloat(inputC.step), x => {
-        return build(l, x * factor, h)
-      })
-    )
+    scheduleStripPaint('lh', value)
   }
 })
 

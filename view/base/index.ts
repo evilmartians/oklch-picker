@@ -1,6 +1,7 @@
 import { formatLch } from '../../lib/colors.ts'
 import { isInput } from '../../lib/dom.ts'
 import { isHotkey } from '../../lib/hotkeys.ts'
+import { debounce } from '../../lib/time.ts'
 import { accent } from '../../stores/accent.ts'
 import { current, valueToColor } from '../../stores/current.ts'
 import { redo, undo } from '../../stores/history.ts'
@@ -44,11 +45,16 @@ if (COLOR_FN === 'oklch') {
   let iconLink = document.querySelector<HTMLLinkElement>(
     'link[rel="icon"][type="image/svg+xml"]'
   )
-  current.subscribe(value => {
-    let colorLogo = simpleLogo.replace('%23000', formatLch(valueToColor(value)))
-    if (value.l > 0.9) {
-      colorLogo = colorLogo.replace('%23fff', '%23000')
-    }
-    iconLink?.setAttribute('href', colorLogo)
-  })
+  current.subscribe(
+    debounce(300, value => {
+      let colorLogo = simpleLogo.replace(
+        '%23000',
+        formatLch(valueToColor(value))
+      )
+      if (value.l > 0.9) {
+        colorLogo = colorLogo.replace('%23fff', '%23000')
+      }
+      iconLink?.setAttribute('href', colorLogo)
+    })
+  )
 }
