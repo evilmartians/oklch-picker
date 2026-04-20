@@ -23,8 +23,15 @@
           th
           th median
           th p95
+      -
+        const ROWS = [
+          { id: 'paint', label: 'Paint' },
+          { id: 'wmax', label: 'Worker max' },
+          { id: 'wsum', label: 'Worker sum' },
+          { id: 'fsum', label: 'Freeze sum' }
+        ]
       tbody
-        each row in [{ id: 'paint', label: 'Paint' }, { id: 'wmax', label: 'Worker max' }, { id: 'wsum', label: 'Worker sum' }, { id: 'fsum', label: 'Freeze sum' }]
+        each row in ROWS
           tr
             th= row.label
             td(class=`is-stat-${row.id}-median`) —

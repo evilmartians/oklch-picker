@@ -1,10 +1,10 @@
 import { waitForWorkersIdle } from '../../lib/workers.ts'
 import {
-  clearHistory,
-  computeStats,
+  clearBenchmarkHistory,
+  computeBenchmarkStats,
   flushCurrentFrame,
   type FrameRecord,
-  getHistory,
+  getBenchmarkHistory,
   getLastBenchmarkColor,
   lastBenchmark
 } from '../../stores/benchmark.ts'
@@ -59,7 +59,7 @@ function renderStats(history: readonly FrameRecord[]): void {
     return
   }
   for (let c of statCells) {
-    let s = computeStats(history.map(r => r[c.key]))
+    let s = computeBenchmarkStats(history.map(r => r[c.key]))
     c.median.innerText = fmt(s.median)
     c.p95.innerText = fmt(s.p95)
   }
@@ -81,18 +81,18 @@ async function driveFrame(t: number): Promise<void> {
 
 async function runBatch(): Promise<void> {
   runBtn.disabled = true
-  clearHistory()
+  clearBenchmarkHistory()
   resetStats()
 
   for (let i = 0; i < BATCH_N; i++) {
     status.innerText = `${i + 1} / ${BATCH_N}`
     await driveFrame((i + 1) / BATCH_N)
-    if (i + 1 === WARMUP_N) clearHistory()
+    if (i + 1 === WARMUP_N) clearBenchmarkHistory()
   }
 
   flushCurrentFrame()
-  renderStats(getHistory())
-  status.innerText = `done (${getHistory().length})`
+  renderStats(getBenchmarkHistory())
+  status.innerText = `done (${getBenchmarkHistory().length})`
   runBtn.disabled = false
 }
 

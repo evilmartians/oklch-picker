@@ -69,18 +69,18 @@ export function reportFreeze(cb: () => void): void {
   lastBenchmark.set({ ...current })
 }
 
-export function clearHistory(): void {
+export function clearBenchmarkHistory(): void {
   history = []
   current = emptyFrame()
   hasPending = false
   lastBenchmark.set(emptyFrame())
 }
 
-export function getHistory(): readonly FrameRecord[] {
+export function getBenchmarkHistory(): readonly FrameRecord[] {
   return history
 }
 
-export function computeStats(values: number[]): {
+export function computeBenchmarkStats(values: number[]): {
   median: number
   p95: number
 } {
