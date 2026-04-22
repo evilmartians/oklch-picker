@@ -1,5 +1,7 @@
+import { colordx } from '@colordx/core'
+
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.ts'
-import { parse, rgb } from '../../lib/colors.ts'
+import { type Rgb, toCuloriRgb } from '../../lib/colors.ts'
 import { getBorders } from '../../lib/dom.ts'
 import { prepareWorkers } from '../../lib/workers.ts'
 import { reportFreeze, reportPaint } from '../../stores/benchmark.ts'
@@ -85,6 +87,10 @@ initEvents(canvasH)
 
 let startWork = prepareWorkers<PaintData, PaintedData>(PaintWorker)
 
+function parseBorder(css: string): Rgb {
+  return toCuloriRgb(colordx(css).toRgb())
+}
+
 function startWorkForComponent(
   canvas: HTMLCanvasElement,
   type: 'c' | 'h' | 'l',
@@ -92,8 +98,8 @@ function startWorkForComponent(
   chartsToChange: number
 ): void {
   let [cssP3, cssRec2020] = getBorders()
-  let borderP3 = rgb(parse(cssP3)!)
-  let borderRec2020 = rgb(parse(cssRec2020)!)
+  let borderP3 = parseBorder(cssP3)
+  let borderRec2020 = parseBorder(cssRec2020)
 
   let parts: [ImageData, number][] = []
   startWork(

@@ -1,4 +1,4 @@
-import { formatHex, type Oklch } from 'culori/fn'
+import { colordx } from '@colordx/core'
 import { map } from 'nanostores'
 
 import { benchmarking } from './url.ts'
@@ -101,6 +101,5 @@ export function getLastBenchmarkColor(): string {
   let worstRate = Math.max(freezeSum / MAX_FREEZE, paint / MAX_PAINT)
   let hue = BEST_HUE - (BEST_HUE - WORST_HUE) * worstRate
   if (hue < WORST_HUE) hue = WORST_HUE
-  let oklch: Oklch = { c: 0.11, h: hue, l: 0.57, mode: 'oklch' }
-  return formatHex(oklch)
+  return colordx({ c: 0.11, h: hue, l: 0.57 }).toHex()
 }

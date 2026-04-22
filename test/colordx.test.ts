@@ -2,12 +2,18 @@ import { ok } from 'node:assert'
 import { test } from 'node:test'
 
 import {
+  lchToLinearSrgb,
+  lchToRgbChannels,
   oklchToLinear,
   oklchToRgbChannels
 } from '@colordx/core'
-import { linearToP3Channels } from '@colordx/core/plugins/p3'
-import { linearToRec2020Channels } from '@colordx/core/plugins/rec2020'
+import { lchToP3Channels, linearToP3Channels } from '@colordx/core/plugins/p3'
 import {
+  lchToRec2020Channels,
+  linearToRec2020Channels
+} from '@colordx/core/plugins/rec2020'
+import {
+  modeLch,
   modeLrgb,
   modeOklch,
   modeP3,
@@ -21,6 +27,7 @@ let toLrgb = useMode(modeLrgb)
 let toP3 = useMode(modeP3)
 let toRec2020 = useMode(modeRec2020)
 useMode(modeOklch)
+useMode(modeLch)
 
 // Sample OKLCH values covering sRGB, P3, Rec2020, and out-of-gamut
 const CASES: [l: number, c: number, h: number][] = [
@@ -76,6 +83,49 @@ test('linearToRec2020Channels matches culori Rec2020 conversion', () => {
     let [lr, lg, lb] = oklchToLinear(l, c, h)
     let [rr, rg, rb] = linearToRec2020Channels(lr, lg, lb)
     let ref = toRec2020({ b: lb, g: lg, mode: 'lrgb', r: lr })
+    close([rr, rg, rb], ref, `L=${l} C=${c} H=${h}`)
+  }
+})
+
+// CIE LCH (D50) sample values covering sRGB, P3, Rec2020, and out-of-gamut
+const LCH_CASES: [l: number, c: number, h: number][] = [
+  [50, 0, 0], // achromatic
+  [50, 10, 180], // low chroma — sRGB
+  [60, 50, 145], // mid green — P3
+  [60, 80, 145], // high chroma green — Rec2020
+  [50, 120, 30], // out of Rec2020
+  [0, 0, 0], // black
+  [100, 0, 0] // white
+]
+
+test('lchToRgbChannels matches culori rgb(lch) conversion', () => {
+  for (let [l, c, h] of LCH_CASES) {
+    let [r, g, b] = lchToRgbChannels(l, c, h)
+    let ref = toRgb({ c, h, l, mode: 'lch' as const })
+    close([r, g, b], ref, `L=${l} C=${c} H=${h}`)
+  }
+})
+
+test('lchToLinearSrgb matches culori lrgb(lch) conversion', () => {
+  for (let [l, c, h] of LCH_CASES) {
+    let [lr, lg, lb] = lchToLinearSrgb(l, c, h)
+    let ref = toLrgb({ c, h, l, mode: 'lch' as const })
+    close([lr, lg, lb], ref, `L=${l} C=${c} H=${h}`)
+  }
+})
+
+test('lchToP3Channels matches culori p3(lch) conversion', () => {
+  for (let [l, c, h] of LCH_CASES) {
+    let [pr, pg, pb] = lchToP3Channels(l, c, h)
+    let ref = toP3({ c, h, l, mode: 'lch' as const })
+    close([pr, pg, pb], ref, `L=${l} C=${c} H=${h}`)
+  }
+})
+
+test('lchToRec2020Channels matches culori rec2020(lch) conversion', () => {
+  for (let [l, c, h] of LCH_CASES) {
+    let [rr, rg, rb] = lchToRec2020Channels(l, c, h)
+    let ref = toRec2020({ c, h, l, mode: 'lch' as const })
     close([rr, rg, rb], ref, `L=${l} C=${c} H=${h}`)
   }
 })

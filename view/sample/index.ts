@@ -1,4 +1,5 @@
-import { lch, oklch } from '../../lib/colors.ts'
+import { colordx } from '@colordx/core'
+
 import { colorToValue, current } from '../../stores/current.ts'
 import { visible } from '../../stores/visible.ts'
 
@@ -31,6 +32,17 @@ visible.subscribe(({ fallback, real, space }) => {
 
 fallbackNote.addEventListener('click', () => {
   let fallback = visible.get().fallback
-  let color = COLOR_FN === 'lch' ? lch(fallback) : oklch(fallback)
-  current.set(colorToValue(color!))
+  let color =
+    COLOR_FN === 'lch'
+      ? colordx(fallback).toLch()
+      : colordx(fallback).toOklch()
+  current.set(
+    colorToValue({
+      alpha: color.alpha,
+      c: color.c,
+      h: color.h,
+      l: color.l,
+      mode: COLOR_FN
+    })
+  )
 })
