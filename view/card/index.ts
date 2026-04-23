@@ -2,6 +2,7 @@ import { clean } from '../../lib/colors.ts'
 import { computeExpression, cycleByWheel, parseValue } from '../../lib/math.ts'
 import { current, onCurrentChange } from '../../stores/current.ts'
 import { showCharts, showRec2020 } from '../../stores/settings.ts'
+import { setSpinbuttonValue, syncSpinbuttonAria } from '../field/aria.ts'
 import { setInvalid, type SpinEvent } from '../field/index.ts'
 
 interface MetaSpinInput {
@@ -37,6 +38,8 @@ function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
   let text = card.querySelector<HTMLInputElement>('[role=spinbutton]')!
   let bindedClamp = clampInRange(type === 'h', type === 'h' ? 2 : 4)
 
+  syncSpinbuttonAria(text)
+
   text.addEventListener('change', () => {
     let { max, min } = getInputMeta(text)
 
@@ -51,11 +54,12 @@ function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
     let angleInRange = bindedClamp(computedExpression, { max, min })
 
     current.setKey(type, angleInRange)
-    text.setAttribute('aria-valuenow', String(angleInRange))
 
     if (angleInRange === prevValue && text.value !== String(angleInRange)) {
       text.value = String(angleInRange)
     }
+
+    syncSpinbuttonAria(text)
   })
 
   text.addEventListener('spin', (e: SpinEvent) => {
@@ -71,7 +75,7 @@ function initInput(type: 'a' | 'c' | 'h' | 'l'): HTMLInputElement {
     let parsedValue = bindedClamp(value, { max, min })
 
     current.setKey(type, parsedValue)
-    text.setAttribute('aria-valuenow', String(parsedValue))
+    setSpinbuttonValue(text, parsedValue)
   })
 
   return text
@@ -84,16 +88,16 @@ let textA = initInput('a')
 
 onCurrentChange({
   alpha(value) {
-    textA.value = String(value)
+    setSpinbuttonValue(textA, value)
   },
   c(value) {
-    textC.value = String(value)
+    setSpinbuttonValue(textC, value)
   },
   h(value) {
-    textH.value = String(value)
+    setSpinbuttonValue(textH, value)
   },
   l(value) {
-    textL.value = String(value)
+    setSpinbuttonValue(textL, value)
   }
 })
 
