@@ -1,5 +1,6 @@
 import { isInput } from '../../lib/dom.ts'
 import { convertKey } from '../../lib/hotkeys.ts'
+import { syncSpinbuttonAria } from './aria.ts'
 
 let fields = document.querySelectorAll<HTMLDivElement>('.field')
 let meta = document.querySelector<HTMLMetaElement>('meta[name=viewport]')!
@@ -192,7 +193,7 @@ function useSpinButton(input: HTMLInputElement): void {
       }
     }
 
-    input.setAttribute('aria-valuenow', input.value)
+    syncSpinbuttonAria(input)
   }
 
   increase.addEventListener('mousedown', onPressed)
