@@ -3,7 +3,12 @@ import './set-globals.ts'
 import { deepStrictEqual, ok } from 'node:assert'
 import { test } from 'node:test'
 
-import { build, generateGetPixel, Space } from '../lib/colors.ts'
+import {
+  build,
+  generateGetPixel,
+  generateGetSpace,
+  Space
+} from '../lib/colors.ts'
 import { current, setCurrent } from '../stores/current.ts'
 import { formats } from '../stores/formats.ts'
 import { visible } from '../stores/visible.ts'
@@ -125,6 +130,47 @@ test('generateGetPixel out-of-gamut is Space.Out in all modes', () => {
       for (let p3Support of [false, true]) {
         let [space] = generateGetPixel(() => outOfGamut, showP3, showRec2020, p3Support)(0, 0)
         deepStrictEqual(space, Space.Out, `expected Out for showP3=${showP3} showRec2020=${showRec2020} p3Support=${p3Support}`)
+      }
+    }
+  }
+})
+
+test('generateGetSpace classifies each gamut level per support flags', () => {
+  let srgb = build(0.7, 0.15, 30) // inside sRGB
+  let p3Only = build(0.6, 0.22, 145) // outside sRGB, inside P3
+  let rec2020Only = build(0.6, 0.26, 145) // outside P3, inside Rec2020
+  let out = build(0.5, 0.4, 30) // outside Rec2020
+
+  for (let showP3 of [false, true]) {
+    for (let showRec2020 of [false, true]) {
+      let getSpace = generateGetSpace(showP3, showRec2020)
+      let tag = `showP3=${showP3} showRec2020=${showRec2020}`
+
+      deepStrictEqual(getSpace(srgb), Space.sRGB, `sRGB, ${tag}`)
+      deepStrictEqual(getSpace(out), Space.Out, `out, ${tag}`)
+
+      // P3-only: P3 when shown, else Out (Rec2020 contains P3 so if only rec2020 is on, falls through to Rec2020)
+      if (showP3) {
+        deepStrictEqual(getSpace(p3Only), Space.P3, `p3-only, ${tag}`)
+      } else if (showRec2020) {
+        deepStrictEqual(getSpace(p3Only), Space.Rec2020, `p3-only, ${tag}`)
+      } else {
+        deepStrictEqual(getSpace(p3Only), Space.Out, `p3-only, ${tag}`)
+      }
+
+      // Rec2020-only: Rec2020 when shown, else Out (regardless of P3 flag)
+      if (showRec2020) {
+        deepStrictEqual(
+          getSpace(rec2020Only),
+          Space.Rec2020,
+          `rec2020-only, ${tag}`
+        )
+      } else {
+        deepStrictEqual(
+          getSpace(rec2020Only),
+          Space.Out,
+          `rec2020-only, ${tag}`
+        )
       }
     }
   }

@@ -228,7 +228,7 @@ export function generateGetSpace(
       if (inRGB(proxyColor)) {
         return Space.sRGB
       } else if (inRec2020(proxyColor)) {
-        return Space.P3
+        return Space.Rec2020
       } else {
         return Space.Out
       }
