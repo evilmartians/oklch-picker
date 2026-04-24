@@ -40,21 +40,26 @@ export function toggleWarning(input: HTMLInputElement, toggle: boolean): void {
   input.classList.toggle('is-warning', toggle)
 }
 
-// The hack to prevent loosing selected text on click
-function onMouseUp(e: MouseEvent): void {
-  e.preventDefault()
-  let input = e.target as HTMLInputElement
-  input.removeEventListener('mouseup', onMouseUp)
+function focusAndSelect(input: HTMLInputElement): void {
+  let wasFocused = document.activeElement === input
+  input.focus()
+  if (!wasFocused) {
+    input.select()
+  }
 }
 
-function onFocus(e: FocusEvent): void {
-  let input = e.target as HTMLInputElement
-  input.select()
+function onFieldMouseDown(e: MouseEvent): void {
+  if (e.button !== 0) return
+  let input = e.currentTarget as HTMLInputElement
+  if (document.activeElement === input) return
 
-  input.addEventListener('mouseup', onMouseUp)
-  setTimeout(() => {
-    input.addEventListener('mouseup', onMouseUp)
-  }, 500)
+  e.preventDefault()
+  focusAndSelect(input)
+}
+
+function onFieldBlur(e: FocusEvent): void {
+  let input = e.target as HTMLInputElement
+  input.setSelectionRange(input.value.length, input.value.length)
 }
 
 function isSpecial(e: KeyboardEvent): boolean {
@@ -65,7 +70,8 @@ let hotkeys: Partial<Record<string, HTMLInputElement>> = {}
 
 for (let field of fields) {
   let input = field.querySelector<HTMLInputElement>('input')!
-  input.addEventListener('focus', onFocus)
+  input.addEventListener('mousedown', onFieldMouseDown)
+  input.addEventListener('blur', onFieldBlur)
 
   if (input.getAttribute('role') === 'spinbutton') {
     useSpinButton(input)
@@ -75,7 +81,7 @@ for (let field of fields) {
   hotkeys[hotkey] = input
 }
 
-function findNextFocus(e: KeyboardEvent): HTMLElement | undefined {
+function findNextFocus(e: KeyboardEvent): HTMLInputElement | undefined {
   let key = convertKey(e)
 
   return hotkeys[key]
@@ -84,7 +90,10 @@ function findNextFocus(e: KeyboardEvent): HTMLElement | undefined {
 window.addEventListener('keyup', e => {
   if (isSpecial(e)) return
   if (e.target === document.body) {
-    findNextFocus(e)?.focus()
+    let next = findNextFocus(e)
+    if (next) {
+      focusAndSelect(next)
+    }
   } else if (isInput(e.target) && e.key === 'Escape') {
     e.target.blur()
   }
@@ -159,7 +168,7 @@ function useSpinButton(input: HTMLInputElement): void {
     let next = findNextFocus(e)
     if (next) {
       e.preventDefault()
-      next.focus()
+      focusAndSelect(next)
     }
 
     if (e.key === 'ArrowUp') {
@@ -179,8 +188,6 @@ function useSpinButton(input: HTMLInputElement): void {
   }
 
   function onInput(e: Event): void {
-    input.removeEventListener('mouseup', onMouseUp)
-
     if (e instanceof InputEvent) {
       let value = input.value
       let caretPosition = input.selectionStart!
