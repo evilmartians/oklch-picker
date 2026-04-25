@@ -85,4 +85,9 @@
   border: none;
   border-radius: 8px;
   transform: translateX(-50%);
+
+  &:hover {
+    color: var(--surface-badge);
+    background: var(--text-badge);
+  }
 }
