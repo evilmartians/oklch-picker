@@ -1,0 +1,41 @@
+name: Clean Preview
+on:
+  workflow_run:
+    workflows:
+      - Close Preview
+    types:
+      - completed
+permissions:
+  contents: read
+jobs:
+  clean:
+    name: Clean
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: read
+      actions: read
+      deployments: write
+    steps:
+      - name: Download PR number from prepare step
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: preview-id
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./untrusted/
+      - name: Extract PR number
+        run: |
+          PR_NUMBER=$(cat ./untrusted/preview-id)
+          if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+            echo "Invalid preview-id: $PR_NUMBER"
+            exit 1
+          fi
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+      - name: Disable deploy at GitHub
+        continue-on-error: true
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
+        with:
+          step: delete-env
+          token: ${{ secrets.GITHUB_TOKEN }}
+          env: preview-${{ env.PR_NUMBER }}
