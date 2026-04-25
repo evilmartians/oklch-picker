@@ -16,11 +16,10 @@
     "test": "FORCE_COLOR=1 pnpm run /^test:/"
   },
   "dependencies": {
-    "@colordx/core": "^5.4.1",
+    "@colordx/core": "^5.4.2",
     "@csstools/postcss-oklab-function": "^5.0.3",
     "@nanostores/persistent": "^1.3.3",
     "autoprefixer": "^10.5.0",
-    "culori": "^4.0.2",
     "delaunator": "^5.1.0",
     "jstransformer-markdown-it": "^3.0.0",
     "lightningcss": "^1.32.0",
@@ -46,6 +45,7 @@
     "@types/three": "^0.184.0",
     "actions-up": "^1.14.1",
     "better-node-test": "^0.8.4",
+    "culori": "^4.0.2",
     "happy-dom": "^20.9.0",
     "multiocular": "^0.8.2",
     "nano-staged": "^1.0.2",

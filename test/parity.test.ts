@@ -1,6 +1,13 @@
 import './set-globals.ts'
 
-import { modeLrgb, modeP3, modeRec2020, modeRgb, useMode } from 'culori/fn'
+import {
+  modeLrgb,
+  modeOklch,
+  modeP3,
+  modeRec2020,
+  modeRgb,
+  useMode
+} from 'culori/fn'
 import { deepStrictEqual, ok } from 'node:assert'
 import { test } from 'node:test'
 
@@ -8,15 +15,28 @@ import {
   build,
   generateGetPixel,
   type GetColor,
+  type Lch,
   type Pixel,
   Space
 } from '../lib/colors.ts'
 
 // Culori baseline — uses linear channel checks to match colordx's gamut logic
+useMode(modeOklch)
 let culoriRgb = useMode(modeRgb)
 let culoriLrgb = useMode(modeLrgb)
 let culoriP3 = useMode(modeP3)
 let culoriRec2020 = useMode(modeRec2020)
+
+// Picker's Lch is tagless; culori's mode converters need `mode: 'oklch'`.
+function toCulori(color: Lch): {
+  alpha: number
+  c: number
+  h: number
+  l: number
+  mode: 'oklch'
+} {
+  return { alpha: color.alpha, c: color.c, h: color.h, l: color.l, mode: 'oklch' }
+}
 
 const EPS = 0.0001
 function inLinearGamut(r: number, g: number, b: number): boolean {
@@ -30,7 +50,7 @@ function culoriGenerateGetPixel(
   p3Support: boolean
 ): (x: number, y: number) => Pixel {
   return (x, y) => {
-    let color = getColor(x, y)
+    let color = toCulori(getColor(x, y))
     let lrgb = culoriLrgb(color)
     let p3 = culoriP3(color)
     let rec2020 = culoriRec2020(color)
@@ -59,7 +79,7 @@ const C_MAX = 0.4
 const BOUNDARY_SKIP = 0.0001
 
 function isNearBoundary(l: number, c: number, h: number): boolean {
-  let color = build(l, c, h)
+  let color = toCulori(build(l, c, h))
   let lrgb = culoriLrgb(color)
   let p3Color = culoriP3(color)
   let rec2020Color = culoriRec2020(color)

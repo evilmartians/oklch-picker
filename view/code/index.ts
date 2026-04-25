@@ -1,4 +1,8 @@
-import { formatLch, isHexNotation, parseAnything } from '../../lib/colors.ts'
+import {
+  inputFormat,
+  isHexNotation,
+  toNativeString
+} from '../../lib/colors.ts'
 import { toggleVisibility } from '../../lib/dom.ts'
 import { current, setCurrent, valueToColor } from '../../stores/current.ts'
 import {
@@ -30,7 +34,7 @@ let locked = new Map<HTMLInputElement, boolean>()
 
 function setLch(): void {
   let value = current.get()
-  let text = formatLch(valueToColor(value))
+  let text = toNativeString(valueToColor(value))
   prevValues.set(lchInput, text)
   lchInput.value = text
   setValid(lchInput)
@@ -76,7 +80,9 @@ function listenChanges(input: HTMLInputElement): void {
     if (newValue === prevValues.get(input)) return
     prevValues.set(input, newValue)
 
-    if (!setCurrent(newValue, input === rgbInput)) {
+    if (setCurrent(newValue, input === rgbInput)) {
+      setValid(input)
+    } else {
       setInvalid(input, 'Use valid CSS color format')
     }
   }
@@ -102,9 +108,9 @@ function listenChanges(input: HTMLInputElement): void {
         if (isHexNotation(value)) {
           outputFormat.set('hex/rgba')
         } else {
-          let parsed = parseAnything(value)
-          if (parsed && isOutputFormat(parsed.mode)) {
-            outputFormat.set(parsed.mode)
+          let parsed = inputFormat(value)
+          if (parsed && isOutputFormat(parsed)) {
+            outputFormat.set(parsed)
           }
         }
       }

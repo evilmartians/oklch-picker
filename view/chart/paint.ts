@@ -3,15 +3,21 @@ import {
   generateGetPixel,
   type GetColor,
   type Pixel,
-  type Rgb,
   Space
 } from '../../lib/colors.ts'
 import { generateGetSeparator, paintPixel } from '../../lib/paint.ts'
 import { support } from '../../stores/support.ts'
 
+export interface BorderColor {
+  alpha: number
+  b: number
+  g: number
+  r: number
+}
+
 function separate(
   pixels: ImageData,
-  color: Rgb,
+  color: BorderColor,
   line: [number, number][] | undefined
 ): void {
   if (!line) return
@@ -27,7 +33,7 @@ function separate(
         pixels.data[pos] = Math.round(color.r * 255)
         pixels.data[pos + 1] = Math.round(color.g * 255)
         pixels.data[pos + 2] = Math.round(color.b * 255)
-        pixels.data[pos + 3] = Math.round((color.alpha ?? 1) * 255)
+        pixels.data[pos + 3] = Math.round(color.alpha * 255)
       }
       prevX = x
       prevY = y
@@ -43,8 +49,8 @@ function paint(
   block: number,
   showP3: boolean,
   showRec2020: boolean,
-  borderP3: Rgb,
-  borderRec2020: Rgb,
+  borderP3: BorderColor,
+  borderRec2020: BorderColor,
   getColor: GetColor
 ): ImageData {
   let getPixel = generateGetPixel(
@@ -121,8 +127,8 @@ export function paintCL(
   h: number,
   showP3: boolean,
   showRec2020: boolean,
-  borderP3: Rgb,
-  borderRec2020: Rgb
+  borderP3: BorderColor,
+  borderRec2020: BorderColor
 ): ImageData {
   let lFactor = L_MAX_COLOR / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
@@ -149,8 +155,8 @@ export function paintCH(
   l: number,
   showP3: boolean,
   showRec2020: boolean,
-  borderP3: Rgb,
-  borderRec2020: Rgb
+  borderP3: BorderColor,
+  borderRec2020: BorderColor
 ): ImageData {
   let hFactor = H_MAX / width
   let cFactor = (showRec2020 ? C_MAX_REC2020 : C_MAX) / height
@@ -177,8 +183,8 @@ export function paintLH(
   c: number,
   showP3: boolean,
   showRec2020: boolean,
-  borderP3: Rgb,
-  borderRec2020: Rgb
+  borderP3: BorderColor,
+  borderRec2020: BorderColor
 ): ImageData {
   let hFactor = H_MAX / width
   let lFactor = L_MAX_COLOR / height

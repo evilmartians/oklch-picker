@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@colordx/core':
-        specifier: ^5.4.1
-        version: 5.4.1
+        specifier: ^5.4.2
+        version: 5.4.2
       '@csstools/postcss-oklab-function':
         specifier: ^5.0.3
         version: 5.0.3(postcss@8.5.10)
@@ -20,9 +20,6 @@ importers:
       autoprefixer:
         specifier: ^10.5.0
         version: 10.5.0(postcss@8.5.10)
-      culori:
-        specifier: ^4.0.2
-        version: 4.0.2
       delaunator:
         specifier: ^5.1.0
         version: 5.1.0
@@ -93,6 +90,9 @@ importers:
       better-node-test:
         specifier: ^0.8.4
         version: 0.8.4
+      culori:
+        specifier: ^4.0.2
+        version: 4.0.2
       happy-dom:
         specifier: ^20.9.0
         version: 20.9.0
@@ -153,8 +153,8 @@ packages:
   '@cacheable/utils@2.4.1':
     resolution: {integrity: sha512-eiFgzCbIneyMlLOmNG4g9xzF7Hv3Mga4LjxjcSC/ues6VYq2+gUbQI8JqNuw/ZM8tJIeIaBGpswAsqV2V7ApgA==}
 
-  '@colordx/core@5.4.1':
-    resolution: {integrity: sha512-J6wPkrci9gao7mABevY/12hOZsyVrgaTUPE92rfH2AVW4ZuRZi1wD3lgqGWBGSvAjE24HSGBp4UoKvbYPlCLCA==}
+  '@colordx/core@5.4.2':
+    resolution: {integrity: sha512-oC//VDid7CrDg+iXE/8RBq1s+MP+EFh5ggJOkpM9+ZathjC736A67Yg9LMAQULQ1blj9E0m0g8PubOu1/HniaQ==}
 
   '@csstools/color-helpers@6.0.2':
     resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
@@ -1736,7 +1736,7 @@ snapshots:
       hashery: 1.5.1
       keyv: 5.6.0
 
-  '@colordx/core@5.4.1': {}
+  '@colordx/core@5.4.2': {}
 
   '@csstools/color-helpers@6.0.2': {}
 

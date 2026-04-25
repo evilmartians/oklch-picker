@@ -1,12 +1,12 @@
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.ts'
 import {
-  type AnyLch,
   build,
   canvasFormat,
-  fastFormat,
   generateGetSpace,
+  type Lch,
   Space,
-  toRgb
+  toNativeString,
+  toRgbString
 } from '../../lib/colors.ts'
 import { getBorders } from '../../lib/dom.ts'
 import {
@@ -51,7 +51,7 @@ function paint(
   width: number,
   height: number,
   sliderStep: number,
-  getColor: (x: number) => AnyLch
+  getColor: (x: number) => Lch
 ): number[] {
   let ctx = getCleanCtx(canvas)
   let halfHeight = Math.floor(height / 2)
@@ -75,8 +75,7 @@ function paint(
         ctx.fillRect(x, 0, 1, height)
       } else {
         ctx.fillRect(x, 0, 1, halfHeight)
-        let fallback = toRgb(color)
-        ctx.fillStyle = fastFormat(fallback)
+        ctx.fillStyle = toRgbString(color)
         ctx.fillRect(x, halfHeight, 1, halfHeight + 1)
       }
       if (prevSpace !== space) {
@@ -239,8 +238,14 @@ function setRangeColor(): void {
 
 visible.subscribe(({ color }) => {
   setRangeColor()
-  rangeA.style.setProperty('--range-a-from', fastFormat({ ...color, alpha: 0 }))
-  rangeA.style.setProperty('--range-a-to', fastFormat({ ...color, alpha: 1 }))
+  rangeA.style.setProperty(
+    '--range-a-from',
+    toNativeString({ ...color, alpha: 0 })
+  )
+  rangeA.style.setProperty(
+    '--range-a-to',
+    toNativeString({ ...color, alpha: 1 })
+  )
 })
 
 showRec2020.subscribe(show => {

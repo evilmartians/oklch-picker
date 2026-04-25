@@ -1,4 +1,4 @@
-import { formatLch } from '../../lib/colors.ts'
+import { toNativeString } from '../../lib/colors.ts'
 import { isInput } from '../../lib/dom.ts'
 import { isHotkey } from '../../lib/hotkeys.ts'
 import { debounce } from '../../lib/time.ts'
@@ -49,7 +49,7 @@ if (COLOR_FN === 'oklch') {
     debounce(300, value => {
       let colorLogo = simpleLogo.replace(
         '%23000',
-        formatLch(valueToColor(value))
+        toNativeString(valueToColor(value))
       )
       if (value.l > 0.9) {
         colorLogo = colorLogo.replace('%23fff', '%23000')

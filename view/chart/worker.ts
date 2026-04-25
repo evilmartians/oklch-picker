@@ -1,9 +1,8 @@
-import type { Rgb } from '../../lib/colors.ts'
-import { paintCH, paintCL, paintLH } from './paint.ts'
+import { type BorderColor, paintCH, paintCL, paintLH } from './paint.ts'
 
 export type PaintData = {
-  borderP3: Rgb
-  borderRec2020: Rgb
+  borderP3: BorderColor
+  borderRec2020: BorderColor
   from: number
   height: number
   showP3: boolean

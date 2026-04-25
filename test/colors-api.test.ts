@@ -11,9 +11,10 @@ import {
   inRGB,
   parseAnything,
   Space,
-  toHex8,
-  toRgb
+  toHex,
+  toNativeString
 } from '../lib/colors.ts'
+import { colorToValue } from '../stores/current.ts'
 
 function spaceFor(input: string): Space {
   let parsed = parseAnything(input)
@@ -68,8 +69,63 @@ test('inRGB / inP3 / inRec2020 at gamut boundaries (h=145)', () => {
   deepStrictEqual(inRec2020(srgbColor), true)
 })
 
-test('toRgb gamut-maps out-of-sRGB to in-gamut and preserves hex output', () => {
-  // Known hex targets were captured from current culori pipeline.
+test('parseAnything returns finite h for achromatic inputs (no NaN)', () => {
+  for (let input of [
+    '#000000',
+    '#ffffff',
+    '#808080',
+    '#333',
+    'rgb(128, 128, 128)',
+    'oklch(0.5 0 0)',
+    'oklch(0 0 0)',
+    'oklch(1 0 0)'
+  ]) {
+    let color = parseAnything(input)
+    if (!color) throw new Error(`unparseable: ${input}`)
+    ok(
+      Number.isFinite(color.h),
+      `${input}: h must be finite, got ${color.h}`
+    )
+    ok(
+      Number.isFinite(color.l),
+      `${input}: l must be finite, got ${color.l}`
+    )
+    ok(
+      Number.isFinite(color.c),
+      `${input}: c must be finite, got ${color.c}`
+    )
+  }
+})
+
+test('colorToValue preserves finite h and l for achromatic inputs', () => {
+  for (let input of ['#000000', '#ffffff', '#808080']) {
+    let color = parseAnything(input)
+    if (!color) throw new Error(`unparseable: ${input}`)
+    let value = colorToValue(color)
+    ok(Number.isFinite(value.h), `${input}: value.h must be finite`)
+    ok(Number.isFinite(value.l), `${input}: value.l must be finite`)
+  }
+})
+
+test('toNativeString on achromatic inputs produces valid CSS (no "NaN")', () => {
+  for (let input of ['#000000', '#ffffff', '#808080']) {
+    let color = parseAnything(input)
+    if (!color) throw new Error(`unparseable: ${input}`)
+    let css = toNativeString(color)
+    ok(!css.includes('NaN'), `${input}: CSS must not contain NaN, got ${css}`)
+  }
+})
+
+test('native-input parseAnything preserves typed precision', () => {
+  // OKLCH build: native format is oklch()
+  let c = parseAnything('oklch(0.628 0.2577 29.23)')
+  if (!c) throw new Error('unparseable')
+  deepStrictEqual(c.l, 0.628)
+  deepStrictEqual(c.c, 0.2577)
+  deepStrictEqual(c.h, 29.23)
+})
+
+test('toHex gamut-maps out-of-sRGB colors via CSS Color 4 chroma reduction', () => {
   let cases: { hex: string; input: string }[] = [
     { hex: '#c30000', input: 'oklch(0.5 0.5 30)' },
     { hex: '#14c000', input: 'oklch(0.7 0.4 140)' },
@@ -79,10 +135,6 @@ test('toRgb gamut-maps out-of-sRGB to in-gamut and preserves hex output', () => 
   for (let { hex, input } of cases) {
     let parsed = parseAnything(input)
     if (!parsed) throw new Error(`unparseable: ${input}`)
-    let mapped = toRgb(parsed)
-    ok(inRGB(mapped), `${input} should map into sRGB`)
-    // 8-digit hex, drop the alpha byte
-    let actualHex = toHex8(mapped).slice(0, 7)
-    deepStrictEqual(actualHex, hex, `hex mismatch for ${input}`)
+    deepStrictEqual(toHex(parsed), hex, `hex mismatch for ${input}`)
   }
 })
