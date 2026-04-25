@@ -1,0 +1,79 @@
+name: Deploy Preview
+on:
+  workflow_run:
+    workflows:
+      - Prepare Preview
+    types:
+      - completed
+permissions:
+  contents: read
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: read
+      actions: read
+      pull-requests: read
+      deployments: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Download preview build
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: preview-build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: ./untrusted/
+      - name: Extract PR number
+        run: |
+          PR_NUMBER=$(cat ./untrusted/preview-id)
+          if ! [[ "$PR_NUMBER" =~ ^[0-9]+$ ]]; then
+            echo "Invalid preview-id: $PR_NUMBER"
+            exit 1
+          fi
+          echo "PR_NUMBER=$PR_NUMBER" >> $GITHUB_ENV
+      - name: Check preview label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LABELS=$(gh pr view "$PR_NUMBER" \
+            --repo "$GITHUB_REPOSITORY" \
+            --json labels --jq '.labels[].name')
+          if ! echo "$LABELS" | grep -qx 'preview'; then
+            echo "PR #$PR_NUMBER does not have 'preview' label, skipping deploy"
+            exit 1
+          fi
+      - name: Move build into place
+        run: |
+          rm -rf dist
+          mv ./untrusted/dist ./dist
+      - name: Notify about new deployment
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
+        id: status
+        with:
+          step: start
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.workflow_run.head_commit.id }}
+          env: preview-${{ env.PR_NUMBER }}
+      - name: Deploy preview to Firebase
+        id: firebase
+        uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0.10.0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_OKLCH_ACCOUNT }}'
+          projectId: ai-oklch
+          channelId: pr-${{ env.PR_NUMBER }}
+          expires: 7d
+      - name: Update deployment status
+        uses: bobheadxi/deployments@648679e8e4915b27893bd7dbc35cb504dc915bc8 # v1.5.0
+        if: always()
+        with:
+          step: finish
+          token: ${{ secrets.GITHUB_TOKEN }}
+          status: ${{ job.status }}
+          env: ${{ steps.status.outputs.env }}
+          env_url: ${{ steps.firebase.outputs.details_url }}
+          deployment_id: ${{ steps.status.outputs.deployment_id }}
