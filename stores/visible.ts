@@ -1,7 +1,8 @@
-import type { Color } from 'culori/fn'
 import { computed } from 'nanostores'
 
 import {
+  type AnyLch,
+  type AnyRgb,
   fastFormat,
   formatRgb,
   getSpace,
@@ -13,7 +14,7 @@ import { current, valueToColor } from './current.ts'
 import { support } from './support.ts'
 
 interface VisibleValue {
-  color: Color
+  color: AnyLch | AnyRgb
   fallback: string
   real: false | string
   space: 'out' | 'p3' | 'rec2020' | 'srgb'

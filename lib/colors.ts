@@ -1,25 +1,33 @@
 import {
+  type AnyColor,
+  Colordx,
+  extend,
+  lchToLinearAndSrgbInto,
+  lchToLinearSrgbInto,
   oklchToLinearAndSrgbInto,
   oklchToLinearInto,
-  oklchToRgbChannelsInto
+  oklchToRgbChannelsInto,
+  toHexByte
 } from '@colordx/core'
-import { linearToP3ChannelsInto } from '@colordx/core/plugins/p3'
-import { linearToRec2020ChannelsInto } from '@colordx/core/plugins/rec2020'
+import labPlugin from '@colordx/core/plugins/lab'
+import lchPlugin from '@colordx/core/plugins/lch'
+import p3Plugin, {
+  inGamutP3,
+  linearToP3ChannelsInto
+} from '@colordx/core/plugins/p3'
+import rec2020Plugin, {
+  inGamutRec2020,
+  linearToRec2020ChannelsInto
+} from '@colordx/core/plugins/rec2020'
 import {
   type Color,
   formatCss,
   formatRgb as formatRgbFast,
-  inGamut,
   type Lch,
   type Lrgb,
-  modeHsl,
-  modeLab,
   modeLch,
-  modeLrgb,
-  modeOklab,
   modeOklch,
   modeP3,
-  modeRec2020,
   modeRgb,
   modeXyz65,
   type Oklch,
@@ -27,7 +35,6 @@ import {
   type P3,
   type Rec2020,
   type Rgb,
-  toGamut,
   useMode
 } from 'culori/fn'
 
@@ -35,19 +42,16 @@ import { support } from '../stores/support.ts'
 
 export type { Rgb } from 'culori/fn'
 
+extend([p3Plugin, rec2020Plugin, lchPlugin, labPlugin])
+
 export type AnyLch = Lch | Oklch
 export type AnyRgb = Lrgb | P3 | Rec2020 | Rgb
 
-export let rec2020 = useMode(modeRec2020)
 export let oklch = useMode(modeOklch)
-export let oklab = useMode(modeOklab)
-export let xyz65 = useMode(modeXyz65)
+let xyz65 = useMode(modeXyz65)
 export let rgb = useMode(modeRgb)
 export let lch = useMode(modeLch)
-export let hsl = useMode(modeHsl)
-export let lab = useMode(modeLab)
-export let lrgb = useMode(modeLrgb)
-export let p3 = useMode(modeP3)
+let p3 = useMode(modeP3)
 
 const COLOR_SPACE_GAP = 0.0001
 const RENDER_GAP = 1e-7
@@ -64,8 +68,21 @@ export function inRGB(color: Color): boolean {
     check.b <= 1 + COLOR_SPACE_GAP
   )
 }
-export let inP3 = inGamut('p3')
-export let inRec2020 = inGamut('rec2020')
+// colordx discriminates CIE LCH from OKLCH by `colorSpace: 'lch'`.
+// Culori-shape lch objects don't have it — add at the boundary.
+function asAnyColor(color: Color): AnyColor {
+  if (color.mode === 'lch') {
+    return { ...color, colorSpace: 'lch' } as unknown as AnyColor
+  }
+  return color as AnyColor
+}
+
+export function inP3(color: Color): boolean {
+  return inGamutP3(asAnyColor(color))
+}
+export function inRec2020(color: Color): boolean {
+  return inGamutRec2020(asAnyColor(color))
+}
 
 export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
   return { alpha, c, h, l, mode: COLOR_FN }
@@ -127,7 +144,26 @@ export function forceP3(color: Color): P3 {
   return { ...rgb(color), mode: 'p3' }
 }
 
-export let toRgb = toGamut('rgb', COLOR_FN)
+// Wrap colordx RGB bytes (0..255) in culori's rgb shape (channels in 0..1).
+// Drop when view/chart + worker consume colordx-native color objects.
+export function toCuloriRgb(c: {
+  alpha: number
+  b: number
+  g: number
+  r: number
+}): Rgb {
+  return {
+    alpha: c.alpha,
+    b: c.b / 255,
+    g: c.g / 255,
+    mode: 'rgb',
+    r: c.r / 255
+  }
+}
+
+export function toRgb(color: Color): Rgb {
+  return toCuloriRgb(Colordx.toGamutSrgb(asAnyColor(color))._rawRgb())
+}
 
 export function formatRgb(color: Rgb): string {
   let r = Math.round(25500 * color.r) / 100
@@ -157,6 +193,13 @@ export function clean(value: number, precision = 2): number {
   )
 }
 
+// Wrapper over colordx's toHex8 for culori-shaped inputs (rgb channels in [0, 1]).
+// Drop once parseAnything returns colordx-native color objects.
+export function toHex8(color: Color): string {
+  let c = rgb(color)
+  return `#${toHexByte(c.r * 255)}${toHexByte(c.g * 255)}${toHexByte(c.b * 255)}${toHexByte((c.alpha ?? 1) * 255)}`
+}
+
 export function isHexNotation(value: string): boolean {
   return /^#?([\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
 }
@@ -180,12 +223,11 @@ if (LCH) {
 }
 
 export function getSpace(color: Color): Space {
-  let proxyColor = getProxyColor(color)
-  if (inRGB(proxyColor)) {
+  if (inRGB(getProxyColor(color))) {
     return Space.sRGB
-  } else if (inP3(proxyColor)) {
+  } else if (inP3(color)) {
     return Space.P3
-  } else if (inRec2020(proxyColor)) {
+  } else if (inRec2020(color)) {
     return Space.Rec2020
   } else {
     return Space.Out
@@ -200,12 +242,11 @@ export function generateGetSpace(
 ): GetSpace {
   if (showP3 && showRec2020) {
     return color => {
-      let proxyColor = getProxyColor(color)
-      if (inRGB(proxyColor)) {
+      if (inRGB(getProxyColor(color))) {
         return Space.sRGB
-      } else if (inP3(proxyColor)) {
+      } else if (inP3(color)) {
         return Space.P3
-      } else if (inRec2020(proxyColor)) {
+      } else if (inRec2020(color)) {
         return Space.Rec2020
       } else {
         return Space.Out
@@ -213,10 +254,9 @@ export function generateGetSpace(
     }
   } else if (showP3 && !showRec2020) {
     return color => {
-      let proxyColor = getProxyColor(color)
-      if (inRGB(proxyColor)) {
+      if (inRGB(getProxyColor(color))) {
         return Space.sRGB
-      } else if (inP3(proxyColor)) {
+      } else if (inP3(color)) {
         return Space.P3
       } else {
         return Space.Out
@@ -224,10 +264,9 @@ export function generateGetSpace(
     }
   } else if (!showP3 && showRec2020) {
     return color => {
-      let proxyColor = getProxyColor(color)
-      if (inRGB(proxyColor)) {
+      if (inRGB(getProxyColor(color))) {
         return Space.sRGB
-      } else if (inRec2020(proxyColor)) {
+      } else if (inRec2020(color)) {
         return Space.P3
       } else {
         return Space.Out
@@ -271,23 +310,71 @@ export function generateGetPixel(
   p3Support: boolean
 ): GetPixel {
   if (LCH) {
+    if (p3Support && (showP3 || showRec2020)) {
+      return (x, y) => {
+        let color = getColor(x, y)
+        lchToLinearSrgbInto(LIN_BUF, color.l, color.c, color.h ?? 0)
+        let lr = LIN_BUF[0]
+        let lg = LIN_BUF[1]
+        let lb = LIN_BUF[2]
+        linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
+        let pr = P3_BUF[0]
+        let pg = P3_BUF[1]
+        let pb = P3_BUF[2]
+        let pixel: Pixel = [
+          Space.Out,
+          Math.floor(255 * pr),
+          Math.floor(255 * pg),
+          Math.floor(255 * pb)
+        ]
+        if (inGamutEps(lr, lg, lb)) {
+          pixel[0] = Space.sRGB
+        } else if (showP3 && inGamutEps(pr, pg, pb)) {
+          pixel[0] = Space.P3
+        } else if (showRec2020) {
+          linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
+          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+            pixel[0] = Space.Rec2020
+          }
+        }
+        return pixel
+      }
+    }
     return (x, y) => {
       let color = getColor(x, y)
-      let proxyColor = getProxyColor(color)
-      let displayColor =
-        p3Support && (showP3 || showRec2020) ? p3(proxyColor) : rgb(proxyColor)
+      lchToLinearAndSrgbInto(
+        LIN_BUF,
+        SRGB_BUF,
+        color.l,
+        color.c,
+        color.h ?? 0
+      )
+      let lr = LIN_BUF[0]
+      let lg = LIN_BUF[1]
+      let lb = LIN_BUF[2]
       let pixel: Pixel = [
         Space.Out,
-        Math.floor(255 * displayColor.r),
-        Math.floor(255 * displayColor.g),
-        Math.floor(255 * displayColor.b)
+        Math.floor(255 * SRGB_BUF[0]),
+        Math.floor(255 * SRGB_BUF[1]),
+        Math.floor(255 * SRGB_BUF[2])
       ]
-      if (inRGB(proxyColor)) {
+      if (inGamutEps(lr, lg, lb)) {
         pixel[0] = Space.sRGB
-      } else if (showP3 && inP3(proxyColor)) {
-        pixel[0] = Space.P3
-      } else if (showRec2020 && inRec2020(proxyColor)) {
-        pixel[0] = Space.Rec2020
+      } else if (showP3) {
+        linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
+        if (inGamutEps(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
+          pixel[0] = Space.P3
+        } else if (showRec2020) {
+          linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
+          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+            pixel[0] = Space.Rec2020
+          }
+        }
+      } else if (showRec2020) {
+        linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
+        if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+          pixel[0] = Space.Rec2020
+        }
       }
       return pixel
     }

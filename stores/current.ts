@@ -1,4 +1,3 @@
-import { formatHex8 } from 'culori/fn'
 import { map } from 'nanostores'
 
 import {
@@ -10,6 +9,7 @@ import {
   oklch,
   parseAnything,
   Space,
+  toHex8,
   toRgb
 } from '../lib/colors.ts'
 import { debounce } from '../lib/time.ts'
@@ -213,13 +213,15 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
         current.set({ a: (parsed.alpha ?? 1) * 100, c: 0, h: 0, l: 1 })
         return true
       }
-      let originSpace = getSpace(parsed)
+      // Alias to preserve TS narrowing of `parsed` inside the isPreciseEnough closure.
+      let originColor = parsed
+      let originSpace = getSpace(originColor)
 
       function isPreciseEnough(value: LchValue): boolean {
         let color = valueToColor(value)
         if (originSpace !== getSpace(color)) {
           return false
-        } else if (formatHex8(color) !== formatHex8(parsed)) {
+        } else if (toHex8(color) !== toHex8(originColor)) {
           return false
         } else {
           return true
