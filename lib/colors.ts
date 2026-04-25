@@ -165,6 +165,17 @@ export function toRgb(color: Color): Rgb {
   return toCuloriRgb(Colordx.toGamutSrgb(asAnyColor(color))._rawRgb())
 }
 
+export function toRgbClipped(color: Color): Rgb {
+  let c = rgb(color)
+  return {
+    alpha: c.alpha,
+    b: Math.min(1, Math.max(0, c.b)),
+    g: Math.min(1, Math.max(0, c.g)),
+    mode: 'rgb',
+    r: Math.min(1, Math.max(0, c.r))
+  }
+}
+
 export function formatRgb(color: Rgb): string {
   let r = Math.round(25500 * color.r) / 100
   let g = Math.round(25500 * color.g) / 100

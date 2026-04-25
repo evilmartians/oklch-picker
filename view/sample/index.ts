@@ -10,7 +10,7 @@ let fallbackNote = document.querySelector<HTMLButtonElement>(
   '.sample_fallback .sample_note'
 )!
 
-visible.subscribe(({ fallback, real, space }) => {
+visible.subscribe(({ fallback, fallbackBrowsers, real, space }) => {
   sample.classList.toggle('is-srgb', space === 'srgb')
   sample.classList.toggle('is-supported', !!real)
 
@@ -27,15 +27,18 @@ visible.subscribe(({ fallback, real, space }) => {
   type.innerText = `${space} space`
 
   sample.style.setProperty('--sample-real', real || 'transparent')
-  sample.style.setProperty('--sample-fallback', fallback)
+  sample.style.setProperty(
+    '--sample-fallback',
+    fallback === fallbackBrowsers
+      ? fallback
+      : `linear-gradient(to right, ${fallbackBrowsers} 50%, ${fallback} 50%)`
+  )
 })
 
 fallbackNote.addEventListener('click', () => {
   let fallback = visible.get().fallback
   let color =
-    COLOR_FN === 'lch'
-      ? colordx(fallback).toLch()
-      : colordx(fallback).toOklch()
+    COLOR_FN === 'lch' ? colordx(fallback).toLch() : colordx(fallback).toOklch()
   current.set(
     colorToValue({
       alpha: color.alpha,
