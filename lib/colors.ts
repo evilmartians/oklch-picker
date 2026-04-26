@@ -164,6 +164,18 @@ export function toRgbString(color: Lch): string {
   return srgbDx(color).toRgbString({ legacy: true })
 }
 
+function clampToByte(n: number): number {
+  return Math.round(255 * Math.min(1, Math.max(0, n)))
+}
+
+// Naive per-channel sRGB clipping — what some browsers actually do as a
+// fallback, in contrast to toRgbString's spec-correct chroma reduction.
+export function toRgbClippedString(color: Lch): string {
+  let { alpha, b, g, r } = toSrgb(color)
+  let head = `${clampToByte(r)}, ${clampToByte(g)}, ${clampToByte(b)}`
+  return alpha < 1 ? `rgba(${head}, ${alpha})` : `rgb(${head})`
+}
+
 export function toHslString(color: Lch): string {
   return srgbDx(color).toHslString()
 }

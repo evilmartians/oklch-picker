@@ -5,6 +5,7 @@ import {
   type Lch,
   Space,
   toNativeString,
+  toRgbClippedString,
   toRgbString
 } from '../lib/colors.ts'
 import { current, valueToColor } from './current.ts'
@@ -34,15 +35,23 @@ export let visible = computed(
 
     if (space === Space.sRGB) {
       let css = toRgbString(color)
-      return { color, fallback: css, real: css, space: name }
+      return {
+        color,
+        fallback: css,
+        fallbackBrowsers: css,
+        real: css,
+        space: name
+      }
     }
 
     let fallback = toRgbString(color)
+    let fallbackBrowsers = toRgbClippedString(color)
     let canShow =
       (space === Space.P3 && p3) || (space === Space.Rec2020 && rec2020)
     return {
       color,
       fallback,
+      fallbackBrowsers,
       real: canShow ? toNativeString(color) : false,
       space: name
     }
