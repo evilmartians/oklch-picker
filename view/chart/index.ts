@@ -1,12 +1,12 @@
 import { colordx } from '@colordx/core'
 
 import { getCleanCtx, initCanvasSize } from '../../lib/canvas.ts'
-import { type Rgb, toCuloriRgb } from '../../lib/colors.ts'
 import { getBorders } from '../../lib/dom.ts'
 import { prepareWorkers } from '../../lib/workers.ts'
 import { reportFreeze, reportPaint } from '../../stores/benchmark.ts'
 import { onPaint, setCurrentComponents } from '../../stores/current.ts'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.ts'
+import type { BorderColor } from './paint.ts'
 import type { PaintData, PaintedData } from './worker.ts'
 import PaintWorker from './worker.ts?worker'
 
@@ -87,8 +87,14 @@ initEvents(canvasH)
 
 let startWork = prepareWorkers<PaintData, PaintedData>(PaintWorker)
 
-function parseBorder(css: string): Rgb {
-  return toCuloriRgb(colordx(css).toRgb())
+function parseBorderColor(css: string): BorderColor {
+  let c = colordx(css).toRgb()
+  return {
+    alpha: c.alpha,
+    b: c.b / 255,
+    g: c.g / 255,
+    r: c.r / 255
+  }
 }
 
 function startWorkForComponent(
@@ -98,8 +104,8 @@ function startWorkForComponent(
   chartsToChange: number
 ): void {
   let [cssP3, cssRec2020] = getBorders()
-  let borderP3 = parseBorder(cssP3)
-  let borderRec2020 = parseBorder(cssRec2020)
+  let borderP3 = parseBorderColor(cssP3)
+  let borderRec2020 = parseBorderColor(cssRec2020)
 
   let parts: [ImageData, number][] = []
   startWork(

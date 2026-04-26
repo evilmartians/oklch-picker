@@ -1,16 +1,14 @@
 import { map } from 'nanostores'
 
 import {
-  type AnyLch,
   build,
-  forceP3,
   getSpace,
-  lch,
-  oklch,
+  interpretAsP3,
+  type Lch,
   parseAnything,
   Space,
   toHex8,
-  toRgb
+  toOtherLch
 } from '../lib/colors.ts'
 import { debounce } from '../lib/time.ts'
 import { reportFreeze, startPainting } from './benchmark.ts'
@@ -198,52 +196,30 @@ function preciseRoundValue<V extends Partial<LchValue>>(
 export function setCurrent(code: string, isRgbInput = false): boolean {
   let parsed = parseAnything(code)
   if (parsed) {
+    let originColor = parsed
     if (outputFormat.get() === 'figmaP3' && isRgbInput) {
-      parsed = forceP3(parsed)
+      originColor = interpretAsP3(parsed)
     }
-    if (parsed.mode === COLOR_FN) {
-      current.set(colorToValue(parsed as AnyLch))
+
+    let originSpace = getSpace(originColor)
+
+    function isPreciseEnough(value: LchValue): boolean {
+      let color = valueToColor(value)
+      if (toHex8(color) !== toHex8(originColor)) return false
+      // Don't let hue rounding push an sRGB primary out of sRGB.
+      // The reverse — P3-edge snapping into sRGB — is intentional.
+      return originSpace !== Space.sRGB || getSpace(color) === Space.sRGB
+    }
+
+    let aggressive = aggressiveRoundValue(colorToValue(originColor), COLOR_FN)
+    if (isPreciseEnough(aggressive)) {
+      current.set(aggressive)
     } else {
-      if (
-        parsed.mode === 'rgb' &&
-        parsed.r === 1 &&
-        parsed.g === 1 &&
-        parsed.b === 1
-      ) {
-        current.set({ a: (parsed.alpha ?? 1) * 100, c: 0, h: 0, l: 1 })
-        return true
-      }
-      // Alias to preserve TS narrowing of `parsed` inside the isPreciseEnough closure.
-      let originColor = parsed
-      let originSpace = getSpace(originColor)
-
-      function isPreciseEnough(value: LchValue): boolean {
-        let color = valueToColor(value)
-        if (originSpace !== getSpace(color)) {
-          return false
-        } else if (toHex8(color) !== toHex8(originColor)) {
-          return false
-        } else {
-          return true
-        }
-      }
-
-      let accurate = LCH ? lch(parsed) : oklch(parsed)
-      if (originSpace === Space.sRGB && getSpace(accurate) !== Space.sRGB) {
-        let rgbAccurate = toRgb(accurate)
-        accurate = LCH ? lch(rgbAccurate) : oklch(rgbAccurate)
-      }
-      let aggressive = aggressiveRoundValue(colorToValue(accurate), COLOR_FN)
-
-      if (isPreciseEnough(aggressive)) {
-        current.set(aggressive)
+      let precise = preciseRoundValue(colorToValue(originColor), COLOR_FN)
+      if (isPreciseEnough(precise)) {
+        current.set(precise)
       } else {
-        let precise = preciseRoundValue(colorToValue(accurate), COLOR_FN)
-        if (isPreciseEnough(precise)) {
-          current.set(precise)
-        } else {
-          current.set(colorToValue(accurate))
-        }
+        current.set(colorToValue(originColor))
       }
     }
     return true
@@ -252,28 +228,30 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
   }
 }
 
-export function valueToColor(value: LchValue): AnyLch {
+export function valueToColor(value: LchValue): Lch {
   return build(value.l * L_MAX_COLOR, value.c, value.h, value.a / 100)
 }
 
-export function colorToValue(color: AnyLch): LchValue {
+export function colorToValue(color: Lch): LchValue {
   return {
-    a: (color.alpha ?? 1) * 100,
+    a: color.alpha * 100,
     c: color.c,
-    h: color.h ?? 0,
+    h: color.h,
     l: color.l / L_MAX_COLOR
   }
 }
 
 export function toOtherValue(from: LchValue): LchValue {
-  let color = valueToColor(from)
-  let to = colorToValue(LCH ? oklch(color) : lch(color))
-  if (!LCH) {
-    to.l /= 100
-  } else {
-    to.l *= 100
-  }
-  return aggressiveRoundValue(to, LCH ? 'oklch' : 'lch')
+  let other = toOtherLch(valueToColor(from))
+  return aggressiveRoundValue(
+    {
+      a: other.alpha * 100,
+      c: other.c,
+      h: other.h,
+      l: LCH ? other.l : other.l / 100
+    },
+    LCH ? 'oklch' : 'lch'
+  )
 }
 
 export function setCurrentComponents(parts: Partial<LchValue>): void {

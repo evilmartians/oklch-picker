@@ -1,9 +1,12 @@
 import {
   type AnyColor,
   Colordx,
+  colordx,
   extend,
+  getFormat,
   lchToLinearAndSrgbInto,
   lchToLinearSrgbInto,
+  lchToRgbChannelsInto,
   oklchToLinearAndSrgbInto,
   oklchToLinearInto,
   oklchToRgbChannelsInto,
@@ -19,73 +22,39 @@ import rec2020Plugin, {
   inGamutRec2020,
   linearToRec2020ChannelsInto
 } from '@colordx/core/plugins/rec2020'
-import {
-  type Color,
-  formatCss,
-  formatRgb as formatRgbFast,
-  type Lch,
-  type Lrgb,
-  modeLch,
-  modeOklch,
-  modeP3,
-  modeRgb,
-  modeXyz65,
-  type Oklch,
-  parse as originParse,
-  type P3,
-  type Rec2020,
-  type Rgb,
-  useMode
-} from 'culori/fn'
 
 import { support } from '../stores/support.ts'
 
-export type { Rgb } from 'culori/fn'
-
 extend([p3Plugin, rec2020Plugin, lchPlugin, labPlugin])
 
-export type AnyLch = Lch | Oklch
-export type AnyRgb = Lrgb | P3 | Rec2020 | Rgb
+// Scale matches the picker's build:
+//   OKLCH build: l ∈ [0, 1],   c ∈ [0, ~0.4], h ∈ [0, 360)
+//   LCH   build: l ∈ [0, 100], c ∈ [0, ~150], h ∈ [0, 360)
+export interface Lch {
+  alpha: number
+  c: number
+  h: number
+  l: number
+}
 
-export let oklch = useMode(modeOklch)
-let xyz65 = useMode(modeXyz65)
-export let rgb = useMode(modeRgb)
-export let lch = useMode(modeLch)
-let p3 = useMode(modeP3)
-
+// Tolerance for setCurrent's round-trip: a 4-dp OKLCH can drift ~4.4e-4
+// in linear sRGB; this accepts such drift as still-in-gamut.
 const COLOR_SPACE_GAP = 0.0001
+// Tighter tolerance for the pixel-render hot path; kills the CL-chart
+// spike at L ≈ 0.
 const RENDER_GAP = 1e-7
 
-// Dirty fix of https://github.com/Evercoder/culori/issues/249
-export function inRGB(color: Color): boolean {
-  let check = rgb(color)
-  return (
-    check.r >= -COLOR_SPACE_GAP &&
-    check.r <= 1 + COLOR_SPACE_GAP &&
-    check.g >= -COLOR_SPACE_GAP &&
-    check.g <= 1 + COLOR_SPACE_GAP &&
-    check.b >= -COLOR_SPACE_GAP &&
-    check.b <= 1 + COLOR_SPACE_GAP
-  )
-}
-// colordx discriminates CIE LCH from OKLCH by `colorSpace: 'lch'`.
-// Culori-shape lch objects don't have it — add at the boundary.
-function asAnyColor(color: Color): AnyColor {
-  if (color.mode === 'lch') {
-    return { ...color, colorSpace: 'lch' } as unknown as AnyColor
-  }
-  return color as AnyColor
-}
+export const Space = {
+  Out: 0,
+  P3: 2,
+  Rec2020: 3,
+  sRGB: 1
+} as const
 
-export function inP3(color: Color): boolean {
-  return inGamutP3(asAnyColor(color))
-}
-export function inRec2020(color: Color): boolean {
-  return inGamutRec2020(asAnyColor(color))
-}
+export type Space = (typeof Space)[keyof typeof Space]
 
-export function build(l: number, c: number, h: number, alpha = 1): AnyLch {
-  return { alpha, c, h, l, mode: COLOR_FN }
+export function build(l: number, c: number, h: number, alpha = 1): Lch {
+  return { alpha, c, h, l }
 }
 
 export function buildForCSS(
@@ -94,106 +63,210 @@ export function buildForCSS(
   h: number,
   alpha = 1
 ): string {
-  if (support.get().p3) {
-    return formatLch(build(l, c, h, alpha))
-  } else {
-    return formatRgb(toRgb(build(l, c, h, alpha)))
+  return toNativeString(build(l, c, h, alpha))
+}
+
+function toDx(color: Lch): AnyColor {
+  if (LCH) {
+    return {
+      alpha: color.alpha,
+      c: color.c,
+      colorSpace: 'lch' as const,
+      h: color.h,
+      l: color.l
+    } as AnyColor
   }
+  return color as AnyColor
 }
 
-export let toTarget: (color: Color) => AnyLch
-if (LCH) {
-  toTarget = lch
-} else {
-  toTarget = oklch
+// colordx's `toLch`/`toOklch` round to 4 dp by default. For lossless
+// round-trips the picker needs the unrounded values — 15 dp is effectively
+// raw at IEEE 754 double precision.
+const RAW_PRECISION = 15
+
+function toCanonical(dx: Colordx): Lch {
+  let r = LCH ? dx.toLch(RAW_PRECISION) : dx.toOklch(RAW_PRECISION)
+  return { alpha: r.alpha, c: r.c, h: r.h, l: r.l }
 }
 
-export let canvasFormat: (c: AnyLch) => string = formatRgbFast
-
-export function fastFormat(color: Color): string {
-  if (color.mode === COLOR_FN) {
-    return formatLch(color)
-  } else {
-    return formatRgbFast(color)
+function preprocess(value: string): string {
+  let v = value.trim().replace(/\s*;\s*$/, '')
+  if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(v)) {
+    v = v.replace(/^[\w-]+:\s*/, '')
   }
-}
-function formatP3Css(c: Color): string {
-  return formatCss(p3(c))
+  if (/^\s*[\d.]+%?\s+[\d.]+\s+[\d.]+\s*$/.test(v)) {
+    v = `${COLOR_FN}(${v})`
+  }
+  return v
 }
 
+export function inputFormat(value: string): string | undefined {
+  return getFormat(preprocess(value))
+}
+
+export function parseAnything(value: string): Lch | undefined {
+  let cleaned = preprocess(value)
+  let format = getFormat(cleaned)
+  if (!format) return undefined
+  let dx = colordx(cleaned)
+  // Round per component (not via colordx's uniform precision arg) because
+  // hue picks up atan2 noise above 4 dp while L/C stay clean to 6 dp.
+  if (format === COLOR_FN) {
+    let r = LCH ? dx.toLch(RAW_PRECISION) : dx.toOklch(RAW_PRECISION)
+    let lcDp = LCH ? 4 : 6
+    return {
+      alpha: r.alpha,
+      c: parseFloat(r.c.toFixed(lcDp)),
+      h: parseFloat(r.h.toFixed(4)),
+      l: parseFloat(r.l.toFixed(lcDp))
+    }
+  }
+  return toCanonical(dx)
+}
+
+// Reinterpret sRGB bytes as Display-P3 channels (Figma's hex P3 mode).
+export function interpretAsP3(color: Lch): Lch {
+  let rgb = colordx(toDx(color)).toRgb()
+  return toCanonical(
+    colordx({
+      alpha: rgb.alpha,
+      b: rgb.b / 255,
+      colorSpace: 'display-p3' as const,
+      g: rgb.g / 255,
+      r: rgb.r / 255
+    })
+  )
+}
+
+// OKLCH build → LCH coords; LCH build → OKLCH coords.
+export function toOtherLch(color: Lch): Lch {
+  let dx = colordx(toDx(color))
+  let other = LCH ? dx.toOklch(RAW_PRECISION) : dx.toLch(RAW_PRECISION)
+  return { alpha: other.alpha, c: other.c, h: other.h, l: other.l }
+}
+
+// sRGB-bound formats gamut-map first; wide-gamut formats preserve the original.
+const PICKER_PRECISION = 2
+
+function srgbDx(color: Lch): Colordx {
+  return Colordx.toGamutSrgb(toDx(color))
+}
+
+export function toHex(color: Lch): string {
+  return srgbDx(color).toHex()
+}
+
+export function toHex8(color: Lch): string {
+  return srgbDx(color).toHex8()
+}
+
+export function toRgbString(color: Lch): string {
+  return srgbDx(color).toRgbString({ legacy: true })
+}
+
+function clampToByte(n: number): number {
+  return Math.round(255 * Math.min(1, Math.max(0, n)))
+}
+
+// Naive per-channel sRGB clipping — what some browsers actually do as a
+// fallback, in contrast to toRgbString's spec-correct chroma reduction.
+export function toRgbClippedString(color: Lch): string {
+  let { alpha, b, g, r } = toSrgb(color)
+  let head = `${clampToByte(r)}, ${clampToByte(g)}, ${clampToByte(b)}`
+  return alpha < 1 ? `rgba(${head}, ${alpha})` : `rgb(${head})`
+}
+
+export function toHslString(color: Lch): string {
+  return srgbDx(color).toHslString()
+}
+
+export function toOklabString(color: Lch): string {
+  return colordx(toDx(color)).toOklabString(PICKER_PRECISION)
+}
+
+export function toOklchString(color: Lch): string {
+  return colordx(toDx(color)).toOklchString(PICKER_PRECISION)
+}
+
+export function toLabString(color: Lch): string {
+  return colordx(toDx(color)).toLabString()
+}
+
+export function toLchString(color: Lch): string {
+  return colordx(toDx(color)).toLchString()
+}
+
+export function toP3String(color: Lch): string {
+  return colordx(toDx(color)).toP3String()
+}
+
+export function toNativeString(color: Lch): string {
+  return LCH ? toLchString(color) : toOklchString(color)
+}
+
+// 6 dp covers the picker's max stored precision; the toFixed/parseFloat
+// dance strips FP noise from the LCH-mode L scaling (0.628 * 100 = 62.80…1).
+function trimNoise(n: number): string {
+  return String(parseFloat(n.toFixed(6)))
+}
+
+// Renders the store value verbatim so field, store, and URL stay in sync.
+export function valueToNativeString(value: {
+  a: number
+  c: number
+  h: number
+  l: number
+}): string {
+  let l = LCH ? value.l * L_MAX_COLOR : value.l
+  let head = `${COLOR_FN}(${trimNoise(l)} ${trimNoise(value.c)} ${trimNoise(value.h)}`
+  return value.a < 100 ? `${head} / ${trimNoise(value.a)}%)` : `${head})`
+}
+
+// Canvas fillStyle hot path: needs sub-byte/sub-2dp precision so range
+// strips render as smooth gradients, not banded steps. Picks the highest
+// precision format the user's display supports.
+let canvasFormatter: (color: Lch) => string = toRgbString
 support.subscribe(value => {
-  canvasFormat = value.p3 ? formatP3Css : formatRgbFast
+  canvasFormatter = value.p3 ? toP3String : toRgbString
 })
-
-export function parse(value: string): Color | undefined {
-  return originParse(value.trim())
+export function canvasFormat(color: Lch): string {
+  return canvasFormatter(color)
 }
 
-export function parseAnything(value: string): Color | undefined {
-  value = value.replace(/\s*;\s*$/, '')
-  if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(value)) {
-    value = value.replace(/^[\w-]+:\s*/, '')
-  }
-  if (/^\s*[\d.]+%?\s+[\d.]+\s+[\d.]+\s*$/.test(value)) {
-    value = `${COLOR_FN}(${value})`
-  }
-  return parse(value)
+// Hex of raw P3 channels — Figma's wide-gamut export, not sRGB-clamped.
+export function toFigmaP3Hex(color: Lch): string {
+  let p3 = colordx(toDx(color)).toP3()
+  return `#${toHexByte(p3.r * 255)}${toHexByte(p3.g * 255)}${toHexByte(p3.b * 255)}${toHexByte(p3.alpha * 255)}`
 }
 
-export function forceP3(color: Color): P3 {
-  return { ...rgb(color), mode: 'p3' }
-}
-
-// Wrap colordx RGB bytes (0..255) in culori's rgb shape (channels in 0..1).
-// Drop when view/chart + worker consume colordx-native color objects.
-export function toCuloriRgb(c: {
+export function toLinearSrgb(color: Lch): {
   alpha: number
   b: number
   g: number
   r: number
-}): Rgb {
-  return {
-    alpha: c.alpha,
-    b: c.b / 255,
-    g: c.g / 255,
-    mode: 'rgb',
-    r: c.r / 255
-  }
-}
-
-export function toRgb(color: Color): Rgb {
-  return toCuloriRgb(Colordx.toGamutSrgb(asAnyColor(color))._rawRgb())
-}
-
-export function toRgbClipped(color: Color): Rgb {
-  let c = rgb(color)
-  return {
-    alpha: c.alpha,
-    b: Math.min(1, Math.max(0, c.b)),
-    g: Math.min(1, Math.max(0, c.g)),
-    mode: 'rgb',
-    r: Math.min(1, Math.max(0, c.r))
-  }
-}
-
-export function formatRgb(color: Rgb): string {
-  let r = Math.round(25500 * color.r) / 100
-  let g = Math.round(25500 * color.g) / 100
-  let b = Math.round(25500 * color.b) / 100
-  if (typeof color.alpha !== 'undefined' && color.alpha < 1) {
-    return `rgba(${r}, ${g}, ${b}, ${color.alpha})`
+} {
+  let buf = new Float64Array(3)
+  if (LCH) {
+    lchToLinearSrgbInto(buf, color.l, color.c, color.h)
   } else {
-    return `rgb(${r}, ${g}, ${b})`
+    oklchToLinearInto(buf, color.l, color.c, color.h)
   }
+  return { alpha: color.alpha, b: buf[2], g: buf[1], r: buf[0] }
 }
 
-export function formatLch(color: AnyLch): string {
-  let { alpha, c, h, l } = color
-  let postfix = ''
-  if (typeof alpha !== 'undefined' && alpha < 1) {
-    postfix = ` / ${clean(100 * alpha)}%`
+export function toSrgb(color: Lch): {
+  alpha: number
+  b: number
+  g: number
+  r: number
+} {
+  let raw = colordx(toDx(color))._rawRgb()
+  return {
+    alpha: raw.alpha,
+    b: raw.b / 255,
+    g: raw.g / 255,
+    r: raw.r / 255
   }
-  return `${COLOR_FN}(${clean(l / L_MAX, 4)} ${c} ${h}${postfix})`
 }
 
 // Hack to avoid ,999999 because of float bug implementation
@@ -204,48 +277,43 @@ export function clean(value: number, precision = 2): number {
   )
 }
 
-// Wrapper over colordx's toHex8 for culori-shaped inputs (rgb channels in [0, 1]).
-// Drop once parseAnything returns colordx-native color objects.
-export function toHex8(color: Color): string {
-  let c = rgb(color)
-  return `#${toHexByte(c.r * 255)}${toHexByte(c.g * 255)}${toHexByte(c.b * 255)}${toHexByte((c.alpha ?? 1) * 255)}`
-}
-
 export function isHexNotation(value: string): boolean {
   return /^#?([\da-f]{3}|[\da-f]{4}|[\da-f]{6}|[\da-f]{8})$/i.test(value)
 }
 
-export type Space = number
-
-// Hack for enum without enum
-// oxlint-disable-next-line typescript/no-redeclare
-export let Space = {
-  Out: 3,
-  P3: 1,
-  Rec2020: 2,
-  sRGB: 0
+// Picker-specific tolerance lets rounded OKLCH values still classify as sRGB
+// through setCurrent's round-trip.
+export function inRGB(color: Lch): boolean {
+  let raw = colordx(toDx(color))._rawRgb()
+  let r = raw.r / 255
+  let g = raw.g / 255
+  let b = raw.b / 255
+  return (
+    r >= -COLOR_SPACE_GAP &&
+    r <= 1 + COLOR_SPACE_GAP &&
+    g >= -COLOR_SPACE_GAP &&
+    g <= 1 + COLOR_SPACE_GAP &&
+    b >= -COLOR_SPACE_GAP &&
+    b <= 1 + COLOR_SPACE_GAP
+  )
 }
 
-let getProxyColor: (color: Color) => Color
-if (LCH) {
-  getProxyColor = xyz65
-} else {
-  getProxyColor = rgb
+export function inP3(color: Lch): boolean {
+  return inGamutP3(toDx(color))
 }
 
-export function getSpace(color: Color): Space {
-  if (inRGB(getProxyColor(color))) {
-    return Space.sRGB
-  } else if (inP3(color)) {
-    return Space.P3
-  } else if (inRec2020(color)) {
-    return Space.Rec2020
-  } else {
-    return Space.Out
-  }
+export function inRec2020(color: Lch): boolean {
+  return inGamutRec2020(toDx(color))
 }
 
-export type GetSpace = typeof getSpace
+export function getSpace(color: Lch): Space {
+  if (inRGB(color)) return Space.sRGB
+  if (inP3(color)) return Space.P3
+  if (inRec2020(color)) return Space.Rec2020
+  return Space.Out
+}
+
+export type GetSpace = (color: Lch) => Space
 
 export function generateGetSpace(
   showP3: boolean,
@@ -253,52 +321,39 @@ export function generateGetSpace(
 ): GetSpace {
   if (showP3 && showRec2020) {
     return color => {
-      if (inRGB(getProxyColor(color))) {
-        return Space.sRGB
-      } else if (inP3(color)) {
-        return Space.P3
-      } else if (inRec2020(color)) {
-        return Space.Rec2020
-      } else {
-        return Space.Out
-      }
+      if (inRGB(color)) return Space.sRGB
+      if (inP3(color)) return Space.P3
+      if (inRec2020(color)) return Space.Rec2020
+      return Space.Out
     }
-  } else if (showP3 && !showRec2020) {
-    return color => {
-      if (inRGB(getProxyColor(color))) {
-        return Space.sRGB
-      } else if (inP3(color)) {
-        return Space.P3
-      } else {
-        return Space.Out
-      }
-    }
-  } else if (!showP3 && showRec2020) {
-    return color => {
-      if (inRGB(getProxyColor(color))) {
-        return Space.sRGB
-      } else if (inRec2020(color)) {
-        return Space.P3
-      } else {
-        return Space.Out
-      }
-    }
-  } else {
-    return color => (inRGB(color) ? Space.sRGB : Space.Out)
   }
+  if (showP3) {
+    return color => {
+      if (inRGB(color)) return Space.sRGB
+      if (inP3(color)) return Space.P3
+      return Space.Out
+    }
+  }
+  if (showRec2020) {
+    return color => {
+      if (inRGB(color)) return Space.sRGB
+      if (inRec2020(color)) return Space.Rec2020
+      return Space.Out
+    }
+  }
+  return color => (inRGB(color) ? Space.sRGB : Space.Out)
+}
+
+// CSS Color 4 chroma reduction; also snaps sub-byte fp noise (colordx 5.4.2+).
+export function mapSrgb(color: Lch): Lch {
+  return toCanonical(Colordx.toGamutSrgb(toDx(color)))
 }
 
 export type Pixel = [Space, number, number, number]
+export type GetPixel = (x: number, y: number) => Pixel
+export type GetColor = (x: number, y: number) => Lch
 
-export interface GetPixel {
-  (x: number, y: number): Pixel
-}
-
-export interface GetColor {
-  (x: number, y: number): AnyLch
-}
-
-function inGamutEps(r: number, g: number, b: number): boolean {
+function inRenderGap(r: number, g: number, b: number): boolean {
   return (
     r >= -RENDER_GAP &&
     r <= 1 + RENDER_GAP &&
@@ -314,17 +369,23 @@ const SRGB_BUF = new Float64Array(3)
 const P3_BUF = new Float64Array(3)
 const REC_BUF = new Float64Array(3)
 
+let toLinearInto = LCH ? lchToLinearSrgbInto : oklchToLinearInto
+let toLinearAndSrgbInto = LCH
+  ? lchToLinearAndSrgbInto
+  : oklchToLinearAndSrgbInto
+let toSrgbInto = LCH ? lchToRgbChannelsInto : oklchToRgbChannelsInto
+
 export function generateGetPixel(
   getColor: GetColor,
   showP3: boolean,
   showRec2020: boolean,
   p3Support: boolean
 ): GetPixel {
-  if (LCH) {
-    if (p3Support && (showP3 || showRec2020)) {
+  if (showP3 && showRec2020) {
+    if (p3Support) {
       return (x, y) => {
         let color = getColor(x, y)
-        lchToLinearSrgbInto(LIN_BUF, color.l, color.c, color.h ?? 0)
+        toLinearInto(LIN_BUF, color.l, color.c, color.h)
         let lr = LIN_BUF[0]
         let lg = LIN_BUF[1]
         let lb = LIN_BUF[2]
@@ -338,13 +399,13 @@ export function generateGetPixel(
           Math.floor(255 * pg),
           Math.floor(255 * pb)
         ]
-        if (inGamutEps(lr, lg, lb)) {
+        if (inRenderGap(lr, lg, lb)) {
           pixel[0] = Space.sRGB
-        } else if (showP3 && inGamutEps(pr, pg, pb)) {
+        } else if (inRenderGap(pr, pg, pb)) {
           pixel[0] = Space.P3
-        } else if (showRec2020) {
+        } else {
           linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+          if (inRenderGap(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
             pixel[0] = Space.Rec2020
           }
         }
@@ -353,13 +414,7 @@ export function generateGetPixel(
     }
     return (x, y) => {
       let color = getColor(x, y)
-      lchToLinearAndSrgbInto(
-        LIN_BUF,
-        SRGB_BUF,
-        color.l,
-        color.c,
-        color.h ?? 0
-      )
+      toLinearAndSrgbInto(LIN_BUF, SRGB_BUF, color.l, color.c, color.h)
       let lr = LIN_BUF[0]
       let lg = LIN_BUF[1]
       let lb = LIN_BUF[2]
@@ -369,34 +424,27 @@ export function generateGetPixel(
         Math.floor(255 * SRGB_BUF[1]),
         Math.floor(255 * SRGB_BUF[2])
       ]
-      if (inGamutEps(lr, lg, lb)) {
+      if (inRenderGap(lr, lg, lb)) {
         pixel[0] = Space.sRGB
-      } else if (showP3) {
+      } else {
         linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-        if (inGamutEps(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
+        if (inRenderGap(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
           pixel[0] = Space.P3
-        } else if (showRec2020) {
+        } else {
           linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+          if (inRenderGap(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
             pixel[0] = Space.Rec2020
           }
-        }
-      } else if (showRec2020) {
-        linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-        if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
-          pixel[0] = Space.Rec2020
         }
       }
       return pixel
     }
   }
-
-  // OKLCH mode: fast low-level channel functions from colordx
-  if (showP3 && showRec2020) {
+  if (showP3) {
     if (p3Support) {
       return (x, y) => {
         let color = getColor(x, y)
-        oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
+        toLinearInto(LIN_BUF, color.l, color.c, color.h)
         let lr = LIN_BUF[0]
         let lg = LIN_BUF[1]
         let lb = LIN_BUF[2]
@@ -410,113 +458,42 @@ export function generateGetPixel(
           Math.floor(255 * pg),
           Math.floor(255 * pb)
         ]
-        if (inGamutEps(lr, lg, lb)) {
+        if (inRenderGap(lr, lg, lb)) {
           pixel[0] = Space.sRGB
-        } else if (inGamutEps(pr, pg, pb)) {
+        } else if (inRenderGap(pr, pg, pb)) {
           pixel[0] = Space.P3
-        } else {
-          linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
-            pixel[0] = Space.Rec2020
-          }
-        }
-        return pixel
-      }
-    } else {
-      return (x, y) => {
-        let color = getColor(x, y)
-        oklchToLinearAndSrgbInto(
-          LIN_BUF,
-          SRGB_BUF,
-          color.l,
-          color.c,
-          color.h ?? 0
-        )
-        let lr = LIN_BUF[0]
-        let lg = LIN_BUF[1]
-        let lb = LIN_BUF[2]
-        let pixel: Pixel = [
-          Space.Out,
-          Math.floor(255 * SRGB_BUF[0]),
-          Math.floor(255 * SRGB_BUF[1]),
-          Math.floor(255 * SRGB_BUF[2])
-        ]
-        if (inGamutEps(lr, lg, lb)) {
-          pixel[0] = Space.sRGB
-        } else {
-          linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-          if (inGamutEps(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
-            pixel[0] = Space.P3
-          } else {
-            linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-            if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
-              pixel[0] = Space.Rec2020
-            }
-          }
         }
         return pixel
       }
     }
-  } else if (showP3 && !showRec2020) {
-    if (p3Support) {
-      return (x, y) => {
-        let color = getColor(x, y)
-        oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
-        let lr = LIN_BUF[0]
-        let lg = LIN_BUF[1]
-        let lb = LIN_BUF[2]
+    return (x, y) => {
+      let color = getColor(x, y)
+      toLinearAndSrgbInto(LIN_BUF, SRGB_BUF, color.l, color.c, color.h)
+      let lr = LIN_BUF[0]
+      let lg = LIN_BUF[1]
+      let lb = LIN_BUF[2]
+      let pixel: Pixel = [
+        Space.Out,
+        Math.floor(255 * SRGB_BUF[0]),
+        Math.floor(255 * SRGB_BUF[1]),
+        Math.floor(255 * SRGB_BUF[2])
+      ]
+      if (inRenderGap(lr, lg, lb)) {
+        pixel[0] = Space.sRGB
+      } else {
         linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-        let pr = P3_BUF[0]
-        let pg = P3_BUF[1]
-        let pb = P3_BUF[2]
-        let pixel: Pixel = [
-          Space.Out,
-          Math.floor(255 * pr),
-          Math.floor(255 * pg),
-          Math.floor(255 * pb)
-        ]
-        if (inGamutEps(lr, lg, lb)) {
-          pixel[0] = Space.sRGB
-        } else if (inGamutEps(pr, pg, pb)) {
+        if (inRenderGap(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
           pixel[0] = Space.P3
         }
-        return pixel
       }
-    } else {
-      return (x, y) => {
-        let color = getColor(x, y)
-        oklchToLinearAndSrgbInto(
-          LIN_BUF,
-          SRGB_BUF,
-          color.l,
-          color.c,
-          color.h ?? 0
-        )
-        let lr = LIN_BUF[0]
-        let lg = LIN_BUF[1]
-        let lb = LIN_BUF[2]
-        let pixel: Pixel = [
-          Space.Out,
-          Math.floor(255 * SRGB_BUF[0]),
-          Math.floor(255 * SRGB_BUF[1]),
-          Math.floor(255 * SRGB_BUF[2])
-        ]
-        if (inGamutEps(lr, lg, lb)) {
-          pixel[0] = Space.sRGB
-        } else {
-          linearToP3ChannelsInto(P3_BUF, lr, lg, lb)
-          if (inGamutEps(P3_BUF[0], P3_BUF[1], P3_BUF[2])) {
-            pixel[0] = Space.P3
-          }
-        }
-        return pixel
-      }
+      return pixel
     }
-  } else if (!showP3 && showRec2020) {
+  }
+  if (showRec2020) {
     if (p3Support) {
       return (x, y) => {
         let color = getColor(x, y)
-        oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
+        toLinearInto(LIN_BUF, color.l, color.c, color.h)
         let lr = LIN_BUF[0]
         let lg = LIN_BUF[1]
         let lb = LIN_BUF[2]
@@ -527,50 +504,44 @@ export function generateGetPixel(
           Math.floor(255 * P3_BUF[1]),
           Math.floor(255 * P3_BUF[2])
         ]
-        if (inGamutEps(lr, lg, lb)) {
+        if (inRenderGap(lr, lg, lb)) {
           pixel[0] = Space.sRGB
         } else {
           linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
-            pixel[0] = Space.Rec2020
-          }
-        }
-        return pixel
-      }
-    } else {
-      return (x, y) => {
-        let color = getColor(x, y)
-        oklchToLinearAndSrgbInto(
-          LIN_BUF,
-          SRGB_BUF,
-          color.l,
-          color.c,
-          color.h ?? 0
-        )
-        let lr = LIN_BUF[0]
-        let lg = LIN_BUF[1]
-        let lb = LIN_BUF[2]
-        let pixel: Pixel = [
-          Space.Out,
-          Math.floor(255 * SRGB_BUF[0]),
-          Math.floor(255 * SRGB_BUF[1]),
-          Math.floor(255 * SRGB_BUF[2])
-        ]
-        if (inGamutEps(lr, lg, lb)) {
-          pixel[0] = Space.sRGB
-        } else {
-          linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
-          if (inGamutEps(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+          if (inRenderGap(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
             pixel[0] = Space.Rec2020
           }
         }
         return pixel
       }
     }
-  } else if (p3Support) {
     return (x, y) => {
       let color = getColor(x, y)
-      oklchToLinearInto(LIN_BUF, color.l, color.c, color.h ?? 0)
+      toLinearAndSrgbInto(LIN_BUF, SRGB_BUF, color.l, color.c, color.h)
+      let lr = LIN_BUF[0]
+      let lg = LIN_BUF[1]
+      let lb = LIN_BUF[2]
+      let pixel: Pixel = [
+        Space.Out,
+        Math.floor(255 * SRGB_BUF[0]),
+        Math.floor(255 * SRGB_BUF[1]),
+        Math.floor(255 * SRGB_BUF[2])
+      ]
+      if (inRenderGap(lr, lg, lb)) {
+        pixel[0] = Space.sRGB
+      } else {
+        linearToRec2020ChannelsInto(REC_BUF, lr, lg, lb)
+        if (inRenderGap(REC_BUF[0], REC_BUF[1], REC_BUF[2])) {
+          pixel[0] = Space.Rec2020
+        }
+      }
+      return pixel
+    }
+  }
+  if (p3Support) {
+    return (x, y) => {
+      let color = getColor(x, y)
+      toLinearInto(LIN_BUF, color.l, color.c, color.h)
       let lr = LIN_BUF[0]
       let lg = LIN_BUF[1]
       let lb = LIN_BUF[2]
@@ -581,28 +552,27 @@ export function generateGetPixel(
         Math.floor(255 * P3_BUF[1]),
         Math.floor(255 * P3_BUF[2])
       ]
-      if (inGamutEps(lr, lg, lb)) {
+      if (inRenderGap(lr, lg, lb)) {
         pixel[0] = Space.sRGB
       }
       return pixel
     }
-  } else {
-    return (x, y) => {
-      let color = getColor(x, y)
-      oklchToRgbChannelsInto(SRGB_BUF, color.l, color.c, color.h ?? 0)
-      let sr = SRGB_BUF[0]
-      let sg = SRGB_BUF[1]
-      let sb = SRGB_BUF[2]
-      let pixel: Pixel = [
-        Space.Out,
-        Math.floor(255 * sr),
-        Math.floor(255 * sg),
-        Math.floor(255 * sb)
-      ]
-      if (inGamutEps(sr, sg, sb)) {
-        pixel[0] = Space.sRGB
-      }
-      return pixel
+  }
+  return (x, y) => {
+    let color = getColor(x, y)
+    toSrgbInto(SRGB_BUF, color.l, color.c, color.h)
+    let sr = SRGB_BUF[0]
+    let sg = SRGB_BUF[1]
+    let sb = SRGB_BUF[2]
+    let pixel: Pixel = [
+      Space.Out,
+      Math.floor(255 * sr),
+      Math.floor(255 * sg),
+      Math.floor(255 * sb)
+    ]
+    if (inRenderGap(sr, sg, sb)) {
+      pixel[0] = Space.sRGB
     }
+    return pixel
   }
 }

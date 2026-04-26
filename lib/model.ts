@@ -19,7 +19,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 import { current, type LchValue } from '../stores/current.ts'
 import { biggestRgb, type RgbMode } from '../stores/settings.ts'
-import { type AnyRgb, build, rgb, toTarget } from './colors.ts'
+import { colordx } from '@colordx/core'
+
+import { build, type Lch, toSrgb } from './colors.ts'
 
 ColorManagement.enabled = false
 
@@ -31,6 +33,24 @@ function onGamutEdge(r: number, g: number, b: number): boolean {
   return r === 0 || g === 0 || b === 0 || r > 0.99 || g > 0.99 || b > 0.99
 }
 
+function rgbEdgeToCanonical(
+  r: number,
+  g: number,
+  b: number,
+  mode: RgbMode
+): Lch {
+  let dx
+  if (mode === 'rgb') {
+    dx = colordx({ alpha: 1, b: b * 255, g: g * 255, r: r * 255 })
+  } else if (mode === 'p3') {
+    dx = colordx({ alpha: 1, b, colorSpace: 'display-p3', g, r })
+  } else {
+    dx = colordx({ alpha: 1, b, colorSpace: 'rec2020', g, r })
+  }
+  let { alpha, c, h, l } = LCH ? dx.toLch(15) : dx.toOklch(15)
+  return { alpha, c, h, l }
+}
+
 function getModelData(mode: RgbMode): [Vector3[], number[]] {
   let coordinates: Vector3[] = []
   let colors: number[] = []
@@ -39,10 +59,9 @@ function getModelData(mode: RgbMode): [Vector3[], number[]] {
     for (let y = 0; y <= 1; y += 0.01) {
       for (let z = 0; z <= 1; z += 0.01) {
         if (onGamutEdge(x, y, z)) {
-          let edgeRgb: AnyRgb = { b: z, g: y, mode, r: x }
-          let to = toTarget(edgeRgb)
+          let to = rgbEdgeToCanonical(x, y, z, mode)
           if (to.h) {
-            colors.push(edgeRgb.r, edgeRgb.g, edgeRgb.b)
+            colors.push(x, y, z)
             coordinates.push(
               new Vector3(to.l / L_MAX_COLOR, to.c / (C_MAX * 2), to.h / 360)
             )
@@ -128,7 +147,7 @@ function generateMesh(scene: Scene, mode: RgbMode): UpdateSlice {
     let bottomSteps = bottom.attributes.position.array.length / 6
     for (let i = 0; i <= bottomSteps; i += 1) {
       let lchL = (L_MAX_COLOR * i) / bottomSteps
-      let rgbL = rgb(build(lchL, 0, 0)).r
+      let rgbL = toSrgb(build(lchL, 0, 0)).r
       bottomColors.push(rgbL, rgbL, rgbL, rgbL, rgbL, rgbL)
     }
   }
