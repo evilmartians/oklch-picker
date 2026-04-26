@@ -3,10 +3,10 @@ import { map } from 'nanostores'
 import {
   build,
   getSpace,
-  inputFormat,
   interpretAsP3,
   type Lch,
   parseAnything,
+  Space,
   toHex8,
   toOtherLch
 } from '../lib/colors.ts'
@@ -201,28 +201,25 @@ export function setCurrent(code: string, isRgbInput = false): boolean {
       originColor = interpretAsP3(parsed)
     }
 
-    // Native input: store as parsed (preserves user's typed precision).
-    if (inputFormat(code) === COLOR_FN) {
-      current.set(colorToValue(originColor))
+    let originSpace = getSpace(originColor)
+
+    function isPreciseEnough(value: LchValue): boolean {
+      let color = valueToColor(value)
+      if (toHex8(color) !== toHex8(originColor)) return false
+      // Don't let hue rounding push an sRGB primary out of sRGB.
+      // The reverse — P3-edge snapping into sRGB — is intentional.
+      return originSpace !== Space.sRGB || getSpace(color) === Space.sRGB
+    }
+
+    let aggressive = aggressiveRoundValue(colorToValue(originColor), COLOR_FN)
+    if (isPreciseEnough(aggressive)) {
+      current.set(aggressive)
     } else {
-      let originSpace = getSpace(originColor)
-
-      function isPreciseEnough(value: LchValue): boolean {
-        let color = valueToColor(value)
-        if (originSpace !== getSpace(color)) return false
-        return toHex8(color) === toHex8(originColor)
-      }
-
-      let aggressive = aggressiveRoundValue(colorToValue(originColor), COLOR_FN)
-      if (isPreciseEnough(aggressive)) {
-        current.set(aggressive)
+      let precise = preciseRoundValue(colorToValue(originColor), COLOR_FN)
+      if (isPreciseEnough(precise)) {
+        current.set(precise)
       } else {
-        let precise = preciseRoundValue(colorToValue(originColor), COLOR_FN)
-        if (isPreciseEnough(precise)) {
-          current.set(precise)
-        } else {
-          current.set(colorToValue(originColor))
-        }
+        current.set(colorToValue(originColor))
       }
     }
     return true

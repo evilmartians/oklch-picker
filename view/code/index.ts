@@ -1,10 +1,10 @@
 import {
   inputFormat,
   isHexNotation,
-  toNativeString
+  valueToNativeString
 } from '../../lib/colors.ts'
 import { toggleVisibility } from '../../lib/dom.ts'
-import { current, setCurrent, valueToColor } from '../../stores/current.ts'
+import { current, setCurrent } from '../../stores/current.ts'
 import {
   formats,
   type FormatsValue,
@@ -34,7 +34,7 @@ let locked = new Map<HTMLInputElement, boolean>()
 
 function setLch(): void {
   let value = current.get()
-  let text = toNativeString(valueToColor(value))
+  let text = valueToNativeString(value)
   prevValues.set(lchInput, text)
   lchInput.value = text
   setValid(lchInput)

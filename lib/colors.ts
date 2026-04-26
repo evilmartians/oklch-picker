@@ -109,11 +109,17 @@ export function parseAnything(value: string): Lch | undefined {
   let format = getFormat(cleaned)
   if (!format) return undefined
   let dx = colordx(cleaned)
-  // Native input: default precision preserves the user's typed digits.
-  // Other formats: raw precision so isPreciseEnough's hex round-trip stays exact.
+  // Round per component (not via colordx's uniform precision arg) because
+  // hue picks up atan2 noise above 4 dp while L/C stay clean to 6 dp.
   if (format === COLOR_FN) {
-    let r = LCH ? dx.toLch() : dx.toOklch()
-    return { alpha: r.alpha, c: r.c, h: r.h, l: r.l }
+    let r = LCH ? dx.toLch(RAW_PRECISION) : dx.toOklch(RAW_PRECISION)
+    let lcDp = LCH ? 4 : 6
+    return {
+      alpha: r.alpha,
+      c: parseFloat(r.c.toFixed(lcDp)),
+      h: parseFloat(r.h.toFixed(4)),
+      l: parseFloat(r.l.toFixed(lcDp))
+    }
   }
   return toCanonical(dx)
 }
@@ -184,6 +190,24 @@ export function toP3String(color: Lch): string {
 
 export function toNativeString(color: Lch): string {
   return LCH ? toLchString(color) : toOklchString(color)
+}
+
+// 6 dp covers the picker's max stored precision; the toFixed/parseFloat
+// dance strips FP noise from the LCH-mode L scaling (0.628 * 100 = 62.80…1).
+function trimNoise(n: number): string {
+  return String(parseFloat(n.toFixed(6)))
+}
+
+// Renders the store value verbatim so field, store, and URL stay in sync.
+export function valueToNativeString(value: {
+  a: number
+  c: number
+  h: number
+  l: number
+}): string {
+  let l = LCH ? value.l * L_MAX_COLOR : value.l
+  let head = `${COLOR_FN}(${trimNoise(l)} ${trimNoise(value.c)} ${trimNoise(value.h)}`
+  return value.a < 100 ? `${head} / ${trimNoise(value.a)}%)` : `${head})`
 }
 
 // Canvas fillStyle hot path: needs sub-byte/sub-2dp precision so range
