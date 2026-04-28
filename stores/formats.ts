@@ -1,26 +1,38 @@
-import { colordx, oklchToLinear, toHexByte } from '@colordx/core'
 import { computed } from 'nanostores'
 
-import { clean } from '../lib/colors.ts'
+import {
+  clean,
+  toFigmaP3Hex,
+  toHex,
+  toHex8,
+  toHslString,
+  toLabString,
+  toLchString,
+  toLinearSrgb,
+  toOklabString,
+  toP3String,
+  toRgbString
+} from '../lib/colors.ts'
 import { current, valueToColor } from './current.ts'
 import type { OutputFormats } from './settings.ts'
 
-function formatVec(r: number, g: number, b: number, alpha: number): string {
-  return `vec(${clean(r, 5)}, ${clean(g, 5)}, ${clean(b, 5)}, ${clean(alpha, 5)})`
+function formatLrgb(color: {
+  alpha: number
+  b: number
+  g: number
+  r: number
+}): string {
+  return `Linear RGB vec(${clean(color.r, 5)}, ${clean(color.g, 5)}, ${clean(color.b, 5)}, ${clean(color.alpha, 5)})`
 }
 
-function toNumbers(l: number, c: number, h: number, alpha: number): string {
-  let prefix = `${clean(l)}, ${clean(c)}, ${clean(h)}`
-  if (alpha < 1) return `${prefix}, ${clean(alpha)}`
-  return prefix
-}
-
-// Hex of the raw P3 channels (Figma's wide-gamut export format).
-// Channels are 0..1 (P3Color scale); colordx's toHex8 only covers sRGB.
-function figmaP3Hex(
-  color: { r: number; g: number; b: number; alpha: number }
+function formatNumbers(
+  l: number,
+  c: number,
+  h: number,
+  alpha: number
 ): string {
-  return `#${toHexByte(color.r * 255)}${toHexByte(color.g * 255)}${toHexByte(color.b * 255)}${toHexByte(color.alpha * 255)}`
+  let prefix = `${clean(l)}, ${clean(c)}, ${clean(h)}`
+  return alpha < 1 ? `${prefix}, ${clean(alpha)}` : prefix
 }
 
 export type FormatsValue = Record<OutputFormats, string>
@@ -33,33 +45,20 @@ export let srgbFormats = new Set<OutputFormats>([
 ])
 
 export let formats = computed(current, value => {
-  let oklch = valueToColor(value)
-  let l = oklch.l
-  let c = oklch.c
-  let h = oklch.h ?? 0
-  let alpha = oklch.alpha ?? 1
-  let hasAlpha = alpha < 1
-
-  let dx =
-    COLOR_FN === 'lch'
-      ? colordx({ alpha, c, colorSpace: 'lch', h, l })
-      : colordx({ alpha, c, h, l })
-  let mapped = dx.mapSrgb()
-  let rgbString = mapped.toRgbString({ legacy: true })
-  let [lr, lg, lb] = oklchToLinear(l, c, h)
-
+  let color = valueToColor(value)
+  let hasAlpha = color.alpha < 1
   return {
-    'figmaP3': 'Figma P3 ' + figmaP3Hex(dx.toP3()),
-    'hex': hasAlpha ? mapped.toHex8() : mapped.toHex(),
-    'hex/rgba': hasAlpha ? rgbString : mapped.toHex(),
-    'hsl': mapped.toHslString(),
-    'lab': dx.toLabString(),
-    'lch': dx.toLchString(),
-    'lrgb': 'Linear RGB ' + formatVec(lr, lg, lb, alpha),
-    'numbers': toNumbers(l, c, h, alpha),
-    'oklab': dx.toOklabString(2),
-    'p3': dx.toP3String(),
-    'rgb': rgbString
+    'figmaP3': 'Figma P3 ' + toFigmaP3Hex(color),
+    'hex': hasAlpha ? toHex8(color) : toHex(color),
+    'hex/rgba': hasAlpha ? toRgbString(color) : toHex(color),
+    'hsl': toHslString(color),
+    'lab': toLabString(color),
+    'lch': toLchString(color),
+    'lrgb': formatLrgb(toLinearSrgb(color)),
+    'numbers': formatNumbers(color.l, color.c, color.h, color.alpha),
+    'oklab': toOklabString(color),
+    'p3': toP3String(color),
+    'rgb': toRgbString(color)
   } as FormatsValue
 })
 
