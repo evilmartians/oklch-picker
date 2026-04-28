@@ -10,12 +10,16 @@ export default defineConfig({
       rules: {
         'typescript/no-unsafe-type-assertion': 'off'
       }
+    },
+    {
+      files: ['lib/colors.ts'],
+      rules: {
+        'no-underscore-dangle': 'off'
+      }
     }
   ],
   rules: {
     'import/default': 'off',
-    'no-control-regex': 'off',
-    // TODO: remove on next @logux/oxc-configs release
-    'unicorn/require-post-message-target-origin': 'off'
+    'no-control-regex': 'off'
   }
 })
