@@ -11,6 +11,9 @@ importers:
       '@colordx/core':
         specifier: ^5.4.2
         version: 5.4.2
+      '@colordx/gpu':
+        specifier: ^0.1.1
+        version: 0.1.1
       '@csstools/postcss-oklab-function':
         specifier: ^5.0.3
         version: 5.0.3(postcss@8.5.12)
@@ -58,10 +61,10 @@ importers:
         version: 0.184.0
       vite:
         specifier: ^8.0.10
-        version: 8.0.10(@types/node@25.6.0)(jiti@2.6.1)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3)
+        version: 8.0.10(@types/node@25.6.0)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3)
       vite-plugin-pug-transformer:
         specifier: ^1.0.8
-        version: 1.0.8(vite@8.0.10(@types/node@25.6.0)(jiti@2.6.1)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3))
+        version: 1.0.8(vite@8.0.10(@types/node@25.6.0)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3))
     devDependencies:
       '@logux/oxc-configs':
         specifier: ^0.4.0
@@ -71,7 +74,7 @@ importers:
         version: 1.0.1(stylelint@17.9.1(typescript@6.0.3))
       '@size-limit/file':
         specifier: ^12.1.0
-        version: 12.1.0(size-limit@12.1.0(jiti@2.6.1))
+        version: 12.1.0(size-limit@12.1.0)
       '@types/delaunator':
         specifier: ^5.0.3
         version: 5.0.3
@@ -107,7 +110,7 @@ importers:
         version: 2.13.1
       size-limit:
         specifier: ^12.1.0
-        version: 12.1.0(jiti@2.6.1)
+        version: 12.1.0
       stylelint:
         specifier: ^17.9.1
         version: 17.9.1(typescript@6.0.3)
@@ -149,6 +152,9 @@ packages:
 
   '@colordx/core@5.4.2':
     resolution: {integrity: sha512-oC//VDid7CrDg+iXE/8RBq1s+MP+EFh5ggJOkpM9+ZathjC736A67Yg9LMAQULQ1blj9E0m0g8PubOu1/HniaQ==}
+
+  '@colordx/gpu@0.1.1':
+    resolution: {integrity: sha512-lTot01810UMN7rR5qxjNkdzgdXcxIoBcTsp0VXehV8VCTlCkn6quflS3jcZQG1If4d57qmu1/1ty/LvtQNGIVQ==}
 
   '@csstools/color-helpers@6.0.2':
     resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
@@ -1044,10 +1050,6 @@ packages:
   isexe@2.0.0:
     resolution: {integrity: sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==}
 
-  jiti@2.6.1:
-    resolution: {integrity: sha512-ekilCSN1jwRvIbgeg/57YFh8qQDNbwDb9xT/qu2DAHbFFZUicIl4ygVaAvzveMhMVr3LnpSKTNnwt8PoOfmKhQ==}
-    hasBin: true
-
   js-stringify@1.0.2:
     resolution: {integrity: sha512-rtS5ATOo2Q5k1G+DADISilDA6lv79zIiwFd6CcjuIxGKLFm5C+RLImRscVap9k55i+MOZwgliw+NejvkLuGD5g==}
 
@@ -1725,6 +1727,8 @@ snapshots:
 
   '@colordx/core@5.4.2': {}
 
+  '@colordx/gpu@0.1.1': {}
+
   '@csstools/color-helpers@6.0.2': {}
 
   '@csstools/css-calc@3.2.0(@csstools/css-parser-algorithms@4.0.0(@csstools/css-tokenizer@4.0.0))(@csstools/css-tokenizer@4.0.0)':
@@ -2001,9 +2005,9 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@size-limit/file@12.1.0(size-limit@12.1.0(jiti@2.6.1))':
+  '@size-limit/file@12.1.0(size-limit@12.1.0)':
     dependencies:
-      size-limit: 12.1.0(jiti@2.6.1)
+      size-limit: 12.1.0
 
   '@tweenjs/tween.js@23.1.3': {}
 
@@ -2458,9 +2462,6 @@ snapshots:
 
   isexe@2.0.0: {}
 
-  jiti@2.6.1:
-    optional: true
-
   js-stringify@1.0.2: {}
 
   js-tokens@4.0.0: {}
@@ -2860,15 +2861,13 @@ snapshots:
 
   simple-git-hooks@2.13.1: {}
 
-  size-limit@12.1.0(jiti@2.6.1):
+  size-limit@12.1.0:
     dependencies:
       bytes-iec: 3.1.1
       lilconfig: 3.1.3
       nanospinner: 1.2.2
       picocolors: 1.1.1
       tinyglobby: 0.2.16
-    optionalDependencies:
-      jiti: 2.6.1
 
   slash@5.1.0: {}
 
@@ -3033,13 +3032,13 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite-plugin-pug-transformer@1.0.8(vite@8.0.10(@types/node@25.6.0)(jiti@2.6.1)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3)):
+  vite-plugin-pug-transformer@1.0.8(vite@8.0.10(@types/node@25.6.0)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3)):
     dependencies:
       picocolors: 1.1.1
       pug: 3.0.4
-      vite: 8.0.10(@types/node@25.6.0)(jiti@2.6.1)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3)
+      vite: 8.0.10(@types/node@25.6.0)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3)
 
-  vite@8.0.10(@types/node@25.6.0)(jiti@2.6.1)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3):
+  vite@8.0.10(@types/node@25.6.0)(sugarss@5.0.1(postcss@8.5.12))(yaml@2.8.3):
     dependencies:
       lightningcss: 1.32.0
       picomatch: 4.0.4
@@ -3049,7 +3048,6 @@ snapshots:
     optionalDependencies:
       '@types/node': 25.6.0
       fsevents: 2.3.3
-      jiti: 2.6.1
       sugarss: 5.0.1(postcss@8.5.12)
       yaml: 2.8.3
 

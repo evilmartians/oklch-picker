@@ -1,4 +1,3 @@
-import { waitForWorkersIdle } from '../../lib/workers.ts'
 import {
   clearBenchmarkHistory,
   computeBenchmarkStats,
@@ -71,7 +70,6 @@ async function driveFrame(t: number): Promise<void> {
     h: (t * 360 * 3) % 360,
     l: 0.2 + 0.6 * t
   })
-  await waitForWorkersIdle()
   await new Promise(resolve => {
     requestAnimationFrame(() => {
       resolve(null)

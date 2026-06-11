@@ -1,14 +1,19 @@
 import { colordx } from '@colordx/core'
+import { type ChartRenderer, createChartRenderer } from '@colordx/gpu'
 
-import { getCleanCtx, initCanvasSize } from '../../lib/canvas.ts'
+import { initCanvasSize } from '../../lib/canvas.ts'
 import { getBorders } from '../../lib/dom.ts'
-import { prepareWorkers } from '../../lib/workers.ts'
-import { reportFreeze, reportPaint } from '../../stores/benchmark.ts'
+import { reportPaint } from '../../stores/benchmark.ts'
 import { onPaint, setCurrentComponents } from '../../stores/current.ts'
 import { showCharts, showP3, showRec2020 } from '../../stores/settings.ts'
-import type { BorderColor } from './paint.ts'
-import type { PaintData, PaintedData } from './worker.ts'
-import PaintWorker from './worker.ts?worker'
+import { support } from '../../stores/support.ts'
+
+interface BorderColor {
+  alpha: number
+  b: number
+  g: number
+  r: number
+}
 
 let chartL = document.querySelector<HTMLDivElement>('.chart.is-l')!
 let chartC = document.querySelector<HTMLDivElement>('.chart.is-c')!
@@ -85,8 +90,6 @@ initEvents(canvasL)
 initEvents(canvasC)
 initEvents(canvasH)
 
-let startWork = prepareWorkers<PaintData, PaintedData>(PaintWorker)
-
 function parseBorderColor(css: string): BorderColor {
   let c = colordx(css).toRgb()
   return {
@@ -97,61 +100,36 @@ function parseBorderColor(css: string): BorderColor {
   }
 }
 
-function startWorkForComponent(
-  canvas: HTMLCanvasElement,
-  type: 'c' | 'h' | 'l',
-  value: number,
-  chartsToChange: number
-): void {
-  let [cssP3, cssRec2020] = getBorders()
-  let borderP3 = parseBorderColor(cssP3)
-  let borderRec2020 = parseBorderColor(cssRec2020)
+// Charts are painted on the GPU (@colordx/gpu): one WebGL2 draw per chart,
+// shader math generated from colordx's constants and parity-tested against
+// @colordx/core.
+let renderers: Partial<Record<'c' | 'h' | 'l', ChartRenderer>> = {}
 
-  let parts: [ImageData, number][] = []
-  startWork(
-    type,
-    chartsToChange,
-    messages =>
-      messages.map((_, i) => {
-        let step = Math.floor(canvas.width / messages.length)
-        let from = step * i + (i === 0 ? 0 : 1)
-        let to = Math.min(step * (i + 1), canvas.width)
-        if (i === messages.length - 1) to = canvas.width
-        return {
-          borderP3,
-          borderRec2020,
-          from,
-          height: canvas.height,
-          showP3: showP3.get(),
-          showRec2020: showRec2020.get(),
-          to,
-          type,
-          value,
-          width: canvas.width
-        }
-      }),
-    result => {
-      reportFreeze(() => {
-        parts.push([
-          new ImageData(
-            new Uint8ClampedArray(result.pixels),
-            result.width,
-            canvas.height
-          ),
-          result.from
-        ])
-      })
-      reportPaint(result.time)
-    },
-    () => {
-      reportFreeze(() => {
-        let ctx = getCleanCtx(canvas)
-        for (let [image, from] of parts) {
-          ctx.putImageData(image, from, 0)
-        }
-      })
-    }
-  )
+// Which slice plane each chart shows: the L chart varies H×C, the C chart
+// varies H×L, the H chart varies L×C.
+const CHART_PLANES = { c: 'lh', h: 'cl', l: 'ch' } as const
+
+function paintChart(type: 'c' | 'h' | 'l', value: number): void {
+  let renderer = renderers[type]
+  if (!renderer) return
+
+  let [cssP3, cssRec2020] = getBorders()
+  let p3 = parseBorderColor(cssP3)
+  let rec2020 = parseBorderColor(cssRec2020)
+
+  let start = performance.now()
+  let painted = renderer.paint({
+    borderP3: [p3.r, p3.g, p3.b, p3.alpha],
+    borderRec2020: [rec2020.r, rec2020.g, rec2020.b, rec2020.alpha],
+    p3Output: support.get().p3,
+    plane: CHART_PLANES[type],
+    showP3: showP3.get(),
+    showRec2020: showRec2020.get(),
+    value: type === 'l' ? L_MAX_COLOR * value : value,
+    xMax: type === 'h' ? L_MAX_COLOR : H_MAX,
+    yMax: type === 'c' ? L_MAX_COLOR : getMaxC()
+  })
+  if (painted) reportPaint(performance.now() - start)
 }
 
 function initCharts(): void {
@@ -159,18 +137,25 @@ function initCharts(): void {
   initCanvasSize(canvasC)
   initCanvasSize(canvasH)
 
+  let model = LCH ? ('lch' as const) : ('oklch' as const)
+  renderers = {
+    c: createChartRenderer(canvasC, { model }) ?? undefined,
+    h: createChartRenderer(canvasH, { model }) ?? undefined,
+    l: createChartRenderer(canvasL, { model }) ?? undefined
+  }
+
   onPaint({
-    c(c, chartsToChange) {
+    c(c) {
       if (!showCharts.get()) return
-      startWorkForComponent(canvasC, 'c', c, chartsToChange)
+      paintChart('c', c)
     },
-    h(h, chartsToChange) {
+    h(h) {
       if (!showCharts.get()) return
-      startWorkForComponent(canvasH, 'h', h, chartsToChange)
+      paintChart('h', h)
     },
-    l(l, chartsToChange) {
+    l(l) {
       if (!showCharts.get()) return
-      startWorkForComponent(canvasL, 'l', l, chartsToChange)
+      paintChart('l', l)
     }
   })
 }
