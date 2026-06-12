@@ -18,8 +18,6 @@ function getValue(id: string): HTMLElement {
 
 let freezeMax = getValue('freeze-max')
 let freezeSum = getValue('freeze-sum')
-let workerMax = getValue('worker-max')
-let workerSum = getValue('worker-sum')
 let paint = getValue('paint')
 
 let runBtn = block.querySelector<HTMLButtonElement>('.benchmark_run')!
@@ -31,8 +29,7 @@ const WARMUP_N = 10
 let statCells = (
   [
     ['paint', 'paint'],
-    ['wmax', 'workerMax'],
-    ['wsum', 'workerSum'],
+    ['fmax', 'freezeMax'],
     ['fsum', 'freezeSum']
   ] as [string, keyof FrameRecord][]
 ).map(([id, key]) => ({
@@ -107,8 +104,6 @@ benchmarking.subscribe(enabled => {
       block.style.setProperty('--benchmark-color', getLastBenchmarkColor())
       freezeMax.innerText = fmt(result.freezeMax)
       freezeSum.innerText = fmt(result.freezeSum)
-      workerMax.innerText = fmt(result.workerMax)
-      workerSum.innerText = fmt(result.workerSum)
       paint.innerText = fmt(result.paint)
     })
   } else {

@@ -12,8 +12,8 @@ importers:
         specifier: ^5.4.2
         version: 5.4.2
       '@colordx/gpu':
-        specifier: ^0.1.1
-        version: 0.1.1
+        specifier: ^0.2.0
+        version: 0.2.0
       '@csstools/postcss-oklab-function':
         specifier: ^5.0.3
         version: 5.0.3(postcss@8.5.12)
@@ -153,8 +153,8 @@ packages:
   '@colordx/core@5.4.2':
     resolution: {integrity: sha512-oC//VDid7CrDg+iXE/8RBq1s+MP+EFh5ggJOkpM9+ZathjC736A67Yg9LMAQULQ1blj9E0m0g8PubOu1/HniaQ==}
 
-  '@colordx/gpu@0.1.1':
-    resolution: {integrity: sha512-lTot01810UMN7rR5qxjNkdzgdXcxIoBcTsp0VXehV8VCTlCkn6quflS3jcZQG1If4d57qmu1/1ty/LvtQNGIVQ==}
+  '@colordx/gpu@0.2.0':
+    resolution: {integrity: sha512-bE6uIkTL71H8WW+EKgPOOJbrE0N3WeSzeYhTJ3iJ3OJY1x3LeDJjUJFIAY+I4b1MouuOYScCGZNtHOMYJ4SCtg==}
 
   '@csstools/color-helpers@6.0.2':
     resolution: {integrity: sha512-LMGQLS9EuADloEFkcTBR3BwV/CGHV7zyDxVRtVDTwdI2Ca4it0CCVTT9wCkxSgokjE5Ho41hEPgb8OEUwoXr6Q==}
@@ -1727,7 +1727,7 @@ snapshots:
 
   '@colordx/core@5.4.2': {}
 
-  '@colordx/gpu@0.1.1': {}
+  '@colordx/gpu@0.2.0': {}
 
   '@csstools/color-helpers@6.0.2': {}
 

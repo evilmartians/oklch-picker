@@ -11,33 +11,29 @@ import {
   lastBenchmark
 } from '../stores/benchmark.ts'
 
-function frame(freezeSum: number, paint: number): {
+function record(freezeSum: number): {
   freezeMax: number
   freezeSum: number
   paint: number
-  workerMax: number
-  workerSum: number
 } {
   return {
     freezeMax: freezeSum,
     freezeSum,
-    paint,
-    workerMax: 0,
-    workerSum: 0
+    paint: 0
   }
 }
 
 test('getLastBenchmarkColor maps perf to hue', () => {
-  lastBenchmark.set(frame(0, 0))
+  lastBenchmark.set(record(0))
   deepStrictEqual(getLastBenchmarkColor(), '#418954')
 
-  lastBenchmark.set(frame(1, 50))
-  deepStrictEqual(getLastBenchmarkColor(), '#4b884c')
+  lastBenchmark.set(record(1))
+  deepStrictEqual(getLastBenchmarkColor(), '#48884f')
 
-  lastBenchmark.set(frame(15, 500))
+  lastBenchmark.set(record(15))
   deepStrictEqual(getLastBenchmarkColor(), '#8c7616')
 
-  lastBenchmark.set(frame(40, 1200))
+  lastBenchmark.set(record(40))
   deepStrictEqual(getLastBenchmarkColor(), '#ad5f43')
 
   clearBenchmarkHistory()

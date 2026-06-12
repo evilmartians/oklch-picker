@@ -121,6 +121,7 @@ function paintChart(type: 'c' | 'h' | 'l', value: number): void {
   let painted = renderer.paint({
     borderP3: [p3.r, p3.g, p3.b, p3.alpha],
     borderRec2020: [rec2020.r, rec2020.g, rec2020.b, rec2020.alpha],
+    borderWidth: 1.5,
     p3Output: support.get().p3,
     plane: CHART_PLANES[type],
     showP3: showP3.get(),
