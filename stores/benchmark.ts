@@ -7,17 +7,13 @@ export interface FrameRecord {
   freezeMax: number
   freezeSum: number
   paint: number
-  workerMax: number
-  workerSum: number
 }
 
 function emptyFrame(): FrameRecord {
   return {
     freezeMax: 0,
     freezeSum: 0,
-    paint: 0,
-    workerMax: 0,
-    workerSum: 0
+    paint: 0
   }
 }
 
@@ -27,7 +23,6 @@ const HISTORY_MAX = 1000
 
 let history: FrameRecord[] = []
 let current: FrameRecord = emptyFrame()
-let paintStart = 0
 let hasPending = false
 
 export function flushCurrentFrame(): void {
@@ -41,16 +36,13 @@ export function flushCurrentFrame(): void {
 export function startPainting(): void {
   if (!benchmarking.get()) return
   flushCurrentFrame()
-  paintStart = performance.now()
   lastBenchmark.set(emptyFrame())
 }
 
 export function reportPaint(ms: number): void {
   if (!benchmarking.get()) return
   hasPending = true
-  current.paint = performance.now() - paintStart
-  current.workerSum += ms
-  if (ms > current.workerMax) current.workerMax = ms
+  current.paint += ms
   lastBenchmark.set({ ...current })
 }
 
@@ -94,11 +86,10 @@ export function computeBenchmarkStats(values: number[]): {
 const BEST_HUE = 150
 const WORST_HUE = 40
 const MAX_FREEZE = 30
-const MAX_PAINT = 1000
 
 export function getLastBenchmarkColor(): string {
-  let { freezeSum, paint } = lastBenchmark.get()
-  let worstRate = Math.max(freezeSum / MAX_FREEZE, paint / MAX_PAINT)
+  let { freezeSum } = lastBenchmark.get()
+  let worstRate = freezeSum / MAX_FREEZE
   let hue = BEST_HUE - (BEST_HUE - WORST_HUE) * worstRate
   if (hue < WORST_HUE) hue = WORST_HUE
   return colordx({ c: 0.11, h: hue, l: 0.57 }).toHex()
