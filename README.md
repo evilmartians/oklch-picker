@@ -27,7 +27,7 @@ Additional links about Oklab and OKLCH:
 
 To run a local copy for development:
 
-1. Install Node.js and `pnpm`.
+1. Use Dev Container which is coming with right Node.js and `pnpm` (or install them manually).
 2. Install dependencies:
 
    ```sh
@@ -39,7 +39,10 @@ To run a local copy for development:
    ```sh
    pnpm start
    ```
+<<<<<<< Updated upstream
 
 We recommend installing Prettier and EditorConfig plugins to your text editor.
 
 We are using [`pinact`](https://github.com/suzuki-shunsuke/pinact) to pin GitHub actions. To update them run `pinact run --update`.
+=======
+>>>>>>> Stashed changes
