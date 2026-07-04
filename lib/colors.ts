@@ -81,6 +81,9 @@ function preprocess(value: string): string {
   if (/^[\w-]+:\s*(#\w+|\w+\([^)]+\))$/.test(v)) {
     v = v.replace(/^[\w-]+:\s*/, '')
   }
+  if (!v.startsWith('#') && isHexNotation(v)) {
+    v = `#${v}`
+  }
   if (/^\s*[\d.]+%?\s+[\d.]+\s+[\d.]+\s*$/.test(v)) {
     v = `${COLOR_FN}(${v})`
   }
