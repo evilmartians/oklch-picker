@@ -1,9 +1,10 @@
 .mode {
   display: flex;
   width: fit-content;
-  padding: 2px;
+  padding: 0;
   margin: 0 auto;
   background: var(--surface-ui-regular);
+  border: 2px solid transparent;
   border-radius: var(--radius);
 }
 
