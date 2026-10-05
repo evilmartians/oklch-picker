@@ -1,3 +1,5 @@
+import { colordx } from '@colordx/core'
+
 import { parseAnything } from '../../lib/colors.ts'
 import { colorToValue, current } from '../../stores/current.ts'
 import { visible } from '../../stores/visible.ts'
@@ -9,12 +11,17 @@ let specNote = document.querySelector<HTMLButtonElement>(
   '.sample_fallback.is-spec .sample_note'
 )!
 
+// CIEDE2000 / 100. Show fallbacks separately only when difference is visible.
+const VISIBLE_DELTA = 0.05
+
 visible.subscribe(({ fallback, fallbackBrowsers, real, space }) => {
   sample.classList.toggle('is-srgb', space === 'srgb')
   sample.classList.toggle('is-supported', !!real)
-  sample.classList.toggle('is-same-fallback', fallback === fallbackBrowsers)
-  specNote.innerText =
-    fallback === fallbackBrowsers ? 'Fallback' : 'Spec fallback'
+  let same =
+    fallback === fallbackBrowsers ||
+    colordx(fallback).delta(fallbackBrowsers) < VISIBLE_DELTA
+  sample.classList.toggle('is-same-fallback', same)
+  specNote.innerText = same ? 'Fallback' : 'Spec fallback'
 
   if (real) {
     unavailable.innerText = ''
