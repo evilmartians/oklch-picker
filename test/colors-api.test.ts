@@ -11,12 +11,13 @@ import {
   inRGB,
   parseAnything,
   Space,
+  type SpaceValue,
   toHex,
   toNativeString
 } from '../lib/colors.ts'
 import { colorToValue } from '../stores/current.ts'
 
-function spaceFor(input: string): Space {
+function spaceFor(input: string): SpaceValue {
   let parsed = parseAnything(input)
   if (!parsed) throw new Error(`unparseable: ${input}`)
   return getSpace(parsed)
@@ -82,18 +83,9 @@ test('parseAnything returns finite h for achromatic inputs (no NaN)', () => {
   ]) {
     let color = parseAnything(input)
     if (!color) throw new Error(`unparseable: ${input}`)
-    ok(
-      Number.isFinite(color.h),
-      `${input}: h must be finite, got ${color.h}`
-    )
-    ok(
-      Number.isFinite(color.l),
-      `${input}: l must be finite, got ${color.l}`
-    )
-    ok(
-      Number.isFinite(color.c),
-      `${input}: c must be finite, got ${color.c}`
-    )
+    ok(Number.isFinite(color.h), `${input}: h must be finite, got ${color.h}`)
+    ok(Number.isFinite(color.l), `${input}: l must be finite, got ${color.l}`)
+    ok(Number.isFinite(color.c), `${input}: c must be finite, got ${color.c}`)
   }
 })
 
@@ -128,7 +120,7 @@ test('native-input parseAnything preserves typed precision', () => {
 test('toHex gamut-maps out-of-sRGB colors via CSS Color 4 chroma reduction', () => {
   let cases: { hex: string; input: string }[] = [
     { hex: '#c30000', input: 'oklch(0.5 0.5 30)' },
-    { hex: '#14c000', input: 'oklch(0.7 0.4 140)' },
+    { hex: '#15c000', input: 'oklch(0.7 0.4 140)' },
     { hex: '#ccddff', input: 'oklch(0.9 0.35 270)' },
     { hex: '#001e17', input: 'oklch(0.2 0.3 180)' }
   ]

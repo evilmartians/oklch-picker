@@ -112,6 +112,14 @@ export interface SpinEvent extends Event {
 let currentNotifyCb = (): void => {}
 let pinchTimer: NodeJS.Timeout
 
+function onPinchButton(delay: number): void {
+  clearTimeout(pinchTimer)
+  currentNotifyCb()
+  pinchTimer = setTimeout(() => {
+    onPinchButton(50)
+  }, delay)
+}
+
 function useSpinButton(input: HTMLInputElement): void {
   let increase = input.nextElementSibling as HTMLButtonElement
   let decrease = increase.nextElementSibling as HTMLButtonElement
@@ -153,14 +161,6 @@ function useSpinButton(input: HTMLInputElement): void {
     }
 
     onPinchButton(400)
-  }
-
-  function onPinchButton(delay: number): void {
-    clearTimeout(pinchTimer)
-    currentNotifyCb()
-    pinchTimer = setTimeout(() => {
-      onPinchButton(50)
-    }, delay)
   }
 
   function onKeyPressed(e: KeyboardEvent): void {

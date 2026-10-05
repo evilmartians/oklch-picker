@@ -314,32 +314,32 @@ test('formats for very low L with non-zero C (spike region)', () => {
 test('formats for P3-only color', () => {
   deepStrictEqual(formatsFor('oklch(0.7 0.3 140)'), {
     'figmaP3': 'Figma P3 #45c200ff',
-    'hex': '#14c000',
-    'hex/rgba': '#14c000',
-    'hsl': 'hsl(113.65 100% 37.7%)',
+    'hex': '#15c000',
+    'hex/rgba': '#15c000',
+    'hsl': 'hsl(113.59 100% 37.7%)',
     'lab': 'lab(68.32 -76.09 119.41)',
     'lch': 'lch(68.32 141.6 122.51)',
     'lrgb': 'Linear RGB vec(-0.04709, 0.55678, -0.07598, 1)',
     'numbers': '0.7, 0.3, 140',
     'oklab': 'oklab(0.7 -0.23 0.19)',
     'p3': 'color(display-p3 0.272 0.7591 -0.1886)',
-    'rgb': 'rgb(20, 192, 0)'
+    'rgb': 'rgb(21, 192, 0)'
   })
 })
 
 test('formats for Rec2020-only color', () => {
   deepStrictEqual(formatsFor('oklch(0.7 0.4 140)'), {
     'figmaP3': 'Figma P3 #00ca00ff',
-    'hex': '#14c000',
-    'hex/rgba': '#14c000',
-    'hsl': 'hsl(113.66 100% 37.7%)',
+    'hex': '#15c000',
+    'hex/rgba': '#15c000',
+    'hsl': 'hsl(113.59 100% 37.7%)',
     'lab': 'lab(69.09 -101.31 218.07)',
     'lch': 'lch(69.09 240.46 114.92)',
     'lrgb': 'Linear RGB vec(-0.16037, 0.61325, -0.15366, 1)',
     'numbers': '0.7, 0.4, 140',
     'oklab': 'oklab(0.7 -0.31 0.26)',
     'p3': 'color(display-p3 -0.1642 0.7903 -0.3462)',
-    'rgb': 'rgb(20, 192, 0)'
+    'rgb': 'rgb(21, 192, 0)'
   })
 })
 

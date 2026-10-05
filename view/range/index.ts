@@ -185,10 +185,7 @@ function paintLhStrip(value: LchValue): void {
 let pending: { ch?: LchValue; lc?: LchValue; lh?: LchValue } = {}
 let rafScheduled = false
 
-function scheduleStripPaint(
-  key: 'ch' | 'lc' | 'lh',
-  value: LchValue
-): void {
+function scheduleStripPaint(key: 'ch' | 'lc' | 'lh', value: LchValue): void {
   pending[key] = value
   if (rafScheduled) return
   rafScheduled = true

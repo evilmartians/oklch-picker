@@ -25,12 +25,7 @@ function formatLrgb(color: {
   return `Linear RGB vec(${clean(color.r, 5)}, ${clean(color.g, 5)}, ${clean(color.b, 5)}, ${clean(color.alpha, 5)})`
 }
 
-function formatNumbers(
-  l: number,
-  c: number,
-  h: number,
-  alpha: number
-): string {
+function formatNumbers(l: number, c: number, h: number, alpha: number): string {
   let prefix = `${clean(l)}, ${clean(c)}, ${clean(h)}`
   return alpha < 1 ? `${prefix}, ${clean(alpha)}` : prefix
 }
@@ -59,7 +54,7 @@ export let formats = computed(current, value => {
     'oklab': toOklabString(color),
     'p3': toP3String(color),
     'rgb': toRgbString(color)
-  } as FormatsValue
+  }
 })
 
 export const OUTPUT_FORMATS = Object.keys(formats.get())

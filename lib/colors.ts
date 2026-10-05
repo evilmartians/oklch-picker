@@ -38,7 +38,7 @@ export const Space = {
   sRGB: 1
 } as const
 
-export type Space = (typeof Space)[keyof typeof Space]
+export type SpaceValue = (typeof Space)[keyof typeof Space]
 
 export function build(l: number, c: number, h: number, alpha = 1): Lch {
   return { alpha, c, h, l }
@@ -61,9 +61,9 @@ function toDx(color: Lch): AnyColor {
       colorSpace: 'lch' as const,
       h: color.h,
       l: color.l
-    } as AnyColor
+    }
   }
-  return color as AnyColor
+  return color
 }
 
 // colordx's `toLch`/`toOklch` round to 4 dp by default. For lossless
@@ -296,14 +296,14 @@ export function inRec2020(color: Lch): boolean {
   return inGamutRec2020(toDx(color))
 }
 
-export function getSpace(color: Lch): Space {
+export function getSpace(color: Lch): SpaceValue {
   if (inRGB(color)) return Space.sRGB
   if (inP3(color)) return Space.P3
   if (inRec2020(color)) return Space.Rec2020
   return Space.Out
 }
 
-export type GetSpace = (color: Lch) => Space
+export type GetSpace = (color: Lch) => SpaceValue
 
 export function generateGetSpace(
   showP3: boolean,
@@ -338,4 +338,3 @@ export function generateGetSpace(
 export function mapSrgb(color: Lch): Lch {
   return toCanonical(Colordx.toGamutSrgb(toDx(color)))
 }
-

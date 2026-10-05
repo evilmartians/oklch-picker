@@ -1,3 +1,4 @@
+import { colordx } from '@colordx/core'
 import Delaunator from 'delaunator'
 import {
   BufferGeometry,
@@ -19,8 +20,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 import { current, type LchValue } from '../stores/current.ts'
 import { biggestRgb, type RgbMode } from '../stores/settings.ts'
-import { colordx } from '@colordx/core'
-
 import { build, type Lch, toSrgb } from './colors.ts'
 
 ColorManagement.enabled = false

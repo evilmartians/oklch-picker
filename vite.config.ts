@@ -12,7 +12,7 @@ for (let feature in Features) {
 export default defineConfig({
   build: {
     assetsDir: '.',
-    rollupOptions: {
+    rolldownOptions: {
       output: {
         chunkFileNames: 'model-[hash].js'
       }

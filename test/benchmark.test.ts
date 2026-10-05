@@ -1,9 +1,9 @@
 import './set-globals.ts'
+import '../lib/colors.ts'
 
 import { deepStrictEqual } from 'node:assert'
 import { test } from 'node:test'
 
-import '../lib/colors.ts'
 import {
   clearBenchmarkHistory,
   computeBenchmarkStats,
@@ -48,15 +48,15 @@ test('computeBenchmarkStats: single value', () => {
 })
 
 test('computeBenchmarkStats: sorted input', () => {
-  deepStrictEqual(
-    computeBenchmarkStats([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
-    { median: 6, p95: 10 }
-  )
+  deepStrictEqual(computeBenchmarkStats([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), {
+    median: 6,
+    p95: 10
+  })
 })
 
 test('computeBenchmarkStats: unsorted input', () => {
-  deepStrictEqual(
-    computeBenchmarkStats([10, 1, 5, 2, 8, 3, 9, 4, 7, 6]),
-    { median: 6, p95: 10 }
-  )
+  deepStrictEqual(computeBenchmarkStats([10, 1, 5, 2, 8, 3, 9, 4, 7, 6]), {
+    median: 6,
+    p95: 10
+  })
 })

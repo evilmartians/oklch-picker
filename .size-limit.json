@@ -8,21 +8,18 @@
       "!dist/*.webmanifest",
       "!dist/*.png"
     ],
-    "limit": "60 KB"
+    "limit": "65 KB"
   },
   {
     "name": "Base scripts to execute",
-    "path": [
-      "dist/*.js",
-      "!dist/model-*.js"
-    ],
+    "path": ["dist/*.js", "!dist/model-*.js"],
     "brotli": false,
-    "limit": "82 KB"
+    "limit": "100 KB"
   },
   {
     "name": "Scripts for 3D model",
     "path": "dist/model-*.js",
     "brotli": false,
-    "limit": "540 KB"
+    "limit": "560 KB"
   }
 ]

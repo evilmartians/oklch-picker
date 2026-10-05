@@ -1,5 +1,9 @@
 import { colordx } from '@colordx/core'
-import { type ChartRenderer, createChartRenderer } from '@colordx/gpu'
+import {
+  type ChartRenderer,
+  createChartRenderer,
+  type GamutLayer
+} from '@colordx/gpu'
 
 import { initCanvasSize } from '../../lib/canvas.ts'
 import { getBorders } from '../../lib/dom.ts'
@@ -117,15 +121,35 @@ function paintChart(type: 'c' | 'h' | 'l', value: number): void {
   let p3 = parseBorderColor(cssP3)
   let rec2020 = parseBorderColor(cssRec2020)
 
+  let borderP3: GamutLayer['border'] = [p3.r, p3.g, p3.b, p3.alpha]
+  let borderRec2020: GamutLayer['border'] = [
+    rec2020.r,
+    rec2020.g,
+    rec2020.b,
+    rec2020.alpha
+  ]
+  let isP3 = showP3.get()
+  let isRec2020 = showRec2020.get()
+  let srgb: GamutLayer = { fill: true, space: 'srgb' }
+  let gamuts = [srgb]
+  if (isP3) {
+    srgb.border = borderP3
+    gamuts.push({
+      border: isRec2020 ? borderRec2020 : undefined,
+      fill: true,
+      space: 'p3'
+    })
+  } else if (isRec2020) {
+    srgb.border = borderRec2020
+  }
+  if (isRec2020) gamuts.push({ fill: true, space: 'rec2020' })
+
   let start = performance.now()
   let painted = renderer.paint({
-    borderP3: [p3.r, p3.g, p3.b, p3.alpha],
-    borderRec2020: [rec2020.r, rec2020.g, rec2020.b, rec2020.alpha],
     borderWidth: 1,
+    gamuts,
     p3Output: support.get().p3,
     plane: CHART_PLANES[type],
-    showP3: showP3.get(),
-    showRec2020: showRec2020.get(),
     value: type === 'l' ? L_MAX_COLOR * value : value,
     xMax: type === 'h' ? L_MAX_COLOR : H_MAX,
     yMax: type === 'c' ? L_MAX_COLOR : getMaxC()
