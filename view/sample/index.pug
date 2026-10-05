@@ -5,5 +5,7 @@
     .sample_unavailable
     .sample_real
       .sample_note P3
-    .sample_fallback( title="Browser and spec have different fallback algorithms" )
-      button.sample_note( title="Go fallback color" ) fallback
+    .sample_fallback.is-spec( title="Fallback by CSS Color 4 gamut mapping" )
+      button.sample_note( title="Go to spec fallback color" ) Fallback
+    .sample_fallback.is-browser( title="Fallback, which browsers use right now (channel clipping)" )
+      a.sample_note( href="https://github.com/w3c/csswg-drafts/issues/10579" ) Browsers

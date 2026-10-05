@@ -11,7 +11,6 @@
   display: none;
   align-items: center;
   justify-content: center;
-  width: 50%;
   height: 84px;
   padding: 0 8px;
   font-size: 10px;
@@ -27,7 +26,10 @@
 }
 
 .sample_compare {
-  display: flex;
+  display: grid;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+  gap: 4px;
 
   .sample.is-srgb & {
     display: none;
@@ -38,7 +40,6 @@
 .sample_real,
 .sample_fallback {
   position: relative;
-  flex-grow: 1;
   height: 84px;
   background: var(--opacity-pattern);
   border-radius: var(--radius);
@@ -68,8 +69,18 @@
   background: var(--sample-real);
 }
 
-.sample_fallback::before {
+.sample_fallback.is-spec::before {
   background: var(--sample-fallback);
+}
+
+.sample_fallback.is-browser {
+  .sample.is-same-fallback & {
+    display: none;
+  }
+
+  &::before {
+    background: var(--sample-fallback-browsers);
+  }
 }
 
 .sample_note {
@@ -80,7 +91,8 @@
   font-size: 11.25px;
   line-height: 13px;
   color: var(--text-badge);
-  text-transform: capitalize;
+  text-decoration: none;
+  white-space: nowrap;
   background: var(--surface-badge);
   border: none;
   border-radius: 8px;
@@ -89,5 +101,12 @@
   &:hover {
     color: var(--surface-badge);
     background: var(--text-badge);
+  }
+
+  .sample:not(.is-same-fallback) .sample_fallback & {
+    bottom: 3px;
+    padding: 3px 4px;
+    font-size: 10px;
+    line-height: 12px;
   }
 }
