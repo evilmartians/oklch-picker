@@ -174,7 +174,7 @@ export function toOklabString(color: Lch): string {
   return colordx(toDx(color)).toOklabString(PICKER_PRECISION)
 }
 
-export function toOklchString(color: Lch): string {
+function toOklchString(color: Lch): string {
   return colordx(toDx(color)).toOklchString(PICKER_PRECISION)
 }
 
@@ -303,7 +303,7 @@ export function getSpace(color: Lch): SpaceValue {
   return Space.Out
 }
 
-export type GetSpace = (color: Lch) => SpaceValue
+type GetSpace = (color: Lch) => SpaceValue
 
 export function generateGetSpace(
   showP3: boolean,

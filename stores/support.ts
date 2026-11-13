@@ -1,6 +1,6 @@
 import { map } from 'nanostores'
 
-export interface SupportValue {
+interface SupportValue {
   p3: boolean
   rec2020: boolean
 }

@@ -11,7 +11,7 @@ import {
 import { current, valueToColor } from './current.ts'
 import { support } from './support.ts'
 
-export interface VisibleValue {
+interface VisibleValue {
   color: Lch
   fallback: string
   fallbackBrowsers: string
