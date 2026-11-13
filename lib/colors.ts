@@ -333,8 +333,3 @@ export function generateGetSpace(
   }
   return color => (inRGB(color) ? Space.sRGB : Space.Out)
 }
-
-// CSS Color 4 chroma reduction; also snaps sub-byte fp noise (colordx 5.4.2+).
-export function mapSrgb(color: Lch): Lch {
-  return toCanonical(Colordx.toGamutSrgb(toDx(color)))
-}
