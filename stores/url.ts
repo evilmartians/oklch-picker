@@ -2,7 +2,7 @@ import { atom, computed } from 'nanostores'
 
 import { trackEvent } from '../view/analytics/index.ts'
 
-export type Urls = '3d' | 'bench' | 'main'
+type Urls = '3d' | 'bench' | 'main'
 
 export let url = atom<Urls>('main')
 export let benchmarking = computed(url, value => value === 'bench')

@@ -57,7 +57,7 @@ export let formats = computed(current, value => {
   }
 })
 
-export const OUTPUT_FORMATS = Object.keys(formats.get())
+const OUTPUT_FORMATS = Object.keys(formats.get())
 
 export function isOutputFormat(format: string): format is OutputFormats {
   return OUTPUT_FORMATS.includes(format)

@@ -174,7 +174,7 @@ export function toOklabString(color: Lch): string {
   return colordx(toDx(color)).toOklabString(PICKER_PRECISION)
 }
 
-export function toOklchString(color: Lch): string {
+function toOklchString(color: Lch): string {
   return colordx(toDx(color)).toOklchString(PICKER_PRECISION)
 }
 
@@ -303,7 +303,7 @@ export function getSpace(color: Lch): SpaceValue {
   return Space.Out
 }
 
-export type GetSpace = (color: Lch) => SpaceValue
+type GetSpace = (color: Lch) => SpaceValue
 
 export function generateGetSpace(
   showP3: boolean,
@@ -332,9 +332,4 @@ export function generateGetSpace(
     }
   }
   return color => (inRGB(color) ? Space.sRGB : Space.Out)
-}
-
-// CSS Color 4 chroma reduction; also snaps sub-byte fp noise (colordx 5.4.2+).
-export function mapSrgb(color: Lch): Lch {
-  return toCanonical(Colordx.toGamutSrgb(toDx(color)))
 }
